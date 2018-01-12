@@ -1,0 +1,16 @@
+import { createAction } from 'redux-actions'
+
+export default {
+  changeApplicationStatus: createAction('CHANGE_APPLICATION_STATUS'),
+
+  // darkStatusBar: createAction('DARK_STATUS_BAR'),
+  // lightStatusBar: createAction('LIGHT_STATUS_BAR'),
+  hideStatusBar: createAction('HIDE_STATUS_BAR'),
+  showStatusBar: createAction('SHOW_STATUS_BAR'),
+
+  openDrawer: createAction('DRAWER_OPEN'),
+  closeDrawer: action => {
+    if (action.type === 'Navigation/NAVIGATE' && action.routeName === 'DrawerClose') return true
+    return false
+  }
+}

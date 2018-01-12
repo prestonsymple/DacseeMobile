@@ -1,0 +1,1 @@
+export { default as ActApplication } from './action.application'
