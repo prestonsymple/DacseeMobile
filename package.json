@@ -5,12 +5,6 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build-android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
-    "air-ios": "code-push release-react freesia_ios ios -t 1.0.5 --entryFile index.ios.js",
-    "air-ios-release": "code-push promote freesia_ios Staging Production",
-    "air-ios-clear": "code-push deployment clear freesia_ios Production",
-    "air-android": "code-push release-react freesia_android android --entryFile index.android.js",
-    "air-android-release": "code-push promote freesia_android Staging Production",
-    "air-android-clear": "code-push deployment clear freesia_android Production",
     "test": "jest"
   },
   "dependencies": {
