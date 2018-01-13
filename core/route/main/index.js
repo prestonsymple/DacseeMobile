@@ -3,19 +3,20 @@ import { Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, D
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 
-import { AMapView } from '../../native/AMap'
+import { MapView, Marker, Polyline } from '../../native/AMap'
 import { Screen, Icons, Redux } from '../../utils'
 import { ActApplication } from '../../redux/actions'
 
 // Get Navigator Status
 import { HomeNavigator } from '../../app.routes'
 
-const AMAP_DEFINE = {
-  showsUserLocation: true,
+const MAP_DEFINE = {
+  locationEnabled: true,
   showsCompass: false,
   showsScale: false,
-  rotateCameraEnabled: false,
-  rotateEnabled: false
+  tiltEnabled: false,
+  rotateEnabled: false,
+  showsTraffic: true
 }
 
 class DrawerComponent extends Component {
@@ -73,12 +74,24 @@ export default Redux.connectAndBindAction(state => ({}), ActApplication)
 
     return (
       <View style={{ backgroundColor: 'green', flex: 1 }}>
-        <AMapView 
+        {/* <AMapView 
           {...AMAP_DEFINE}
           style={{ flex: 1 }} 
           logoCenter={{ x: Screen.Window.Width / 2, y: Screen.Window.Height - 100 }}
           currentZoomLevel={zoomLevel}
-        />
+        /> */}
+        <MapView {...MAP_DEFINE} style={{ flex: 1 }}>
+          {/* <Marker
+            draggable
+            title='这是一个可拖拽的标记'
+            onDragEnd={({nativeEvent}) =>
+              console.log(`${nativeEvent.latitude}, ${nativeEvent.longitude}`)}
+            coordinate={{
+              latitude: 39.91095,
+              longitude: 116.37296,
+            }}
+          /> */}
+        </MapView>
       </View>
     )
   }

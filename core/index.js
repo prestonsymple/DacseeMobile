@@ -11,7 +11,6 @@ import CodePush from 'react-native-code-push'
 import Store from './app.store'
 import Launch from './app.launch'
 import { network, application } from './redux/actions'
-import { AMapMethod } from './native/AMap'
 
 import { program } from './utils'
 
@@ -39,8 +38,6 @@ export default class Core extends Component {
     await InteractionManager.runAfterInteractions()
 
     //#AMap SDK Init
-    // AMapMethod.requestLocationAuthorization()
-    AMapMethod.initialization('b06eec333302b4faf9ae7397e273bc12')
     // this.initializationNavigator()
     this.initializationMomentConfig()
     // this.initializationApplicationLinstener()
