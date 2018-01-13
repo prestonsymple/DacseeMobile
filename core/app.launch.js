@@ -6,6 +6,8 @@ import { NavigationActions, addNavigationHelpers } from 'react-navigation'
 
 import { AppNavigator } from './app.routes'
 
+import ModalUpdate from './modal/modal.update'
+
 export default connect(state => {
   return {
     application: state.application,
@@ -29,6 +31,7 @@ export default connect(state => {
             addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.nav })
           } 
         />
+        <ModalUpdate />
       </View>
     )
   }
