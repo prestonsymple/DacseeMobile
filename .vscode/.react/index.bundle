@@ -71124,13 +71124,26 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+  var defaultStackOptions = {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: 'white',
+        shadowColor: 'transparent',
+        shadowOpacity: 0,
+        borderBottomWidth: 0,
+        elevation: 0
+      },
+      headerTintColor: 'white',
+      headerBackTitle: null
+    }
+  };
   var AppNavigator = (0, _reactNavigation.DrawerNavigator)({
     DrawerScreen: {
       screen: (0, _reactNavigation.StackNavigator)({
         MainScreen: {
           screen: _index2.default
         }
-      })
+      }, defaultStackOptions)
     }
   });
   exports.AppNavigator = AppNavigator;
@@ -81307,6 +81320,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _index2 = _interopRequireDefault(_index);
 
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
   var _jsxFileName = "/Users/quzhi/Develop/DacseeMobile/core/route/main/index.js",
       _class,
       _temp;
@@ -81327,7 +81342,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _actions = require(_dependencyMap[7], "../../redux/actions");
 
-  var _app = require(_dependencyMap[8], "../../app.routes");
+  var _reactNativeScrollableTabView = require(_dependencyMap[8], "react-native-scrollable-tab-view");
+
+  var _reactNativeScrollableTabView2 = _interopRequireDefault(_reactNativeScrollableTabView);
+
+  var _app = require(_dependencyMap[9], "../../app.routes");
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -81359,12 +81378,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
     };
   }
 
-  var AMAP_DEFINE = {
-    showsUserLocation: true,
+  var MAP_DEFINE = {
+    locationEnabled: true,
     showsCompass: false,
     showsScale: false,
-    rotateCameraEnabled: false,
-    rotateEnabled: false
+    tiltEnabled: false,
+    rotateEnabled: false,
+    showsTraffic: true
   };
 
   var DrawerComponent = _wrapComponent("DrawerComponent")(function (_Component) {
@@ -81385,7 +81405,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 24
+            lineNumber: 26
           }
         });
       }
@@ -81459,32 +81479,73 @@ __d(function (global, require, module, exports, _dependencyMap) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 75
+              lineNumber: 77
             }
           },
+          _react3.default.createElement(_AMap.MapView, _extends({}, MAP_DEFINE, {
+            onLongPress: function onLongPress(nativeEvent) {
+              console.log(nativeEvent);
+            },
+            style: {
+              flex: 1
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 84
+            }
+          })),
           _react3.default.createElement(
-            _AMap.MapView,
+            _reactNativeScrollableTabView2.default,
             {
-              locationEnabled: true,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 82
+                lineNumber: 99
               }
             },
-            _react3.default.createElement(_AMap.Marker, {
-              draggable: true,
-              title: "\u8FD9\u662F\u4E00\u4E2A\u53EF\u62D6\u62FD\u7684\u6807\u8BB0",
-              onDragEnd: function onDragEnd(_ref) {
-                var nativeEvent = _ref.nativeEvent;
-                return console.log(nativeEvent.latitude + ", " + nativeEvent.longitude);
-              },
-              coordinate: {
-                latitude: 39.91095,
-                longitude: 116.37296
-              },
+            _react3.default.createElement(_reactNative.View, {
+              tabLabel: "React",
+              style: [{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 44,
+                backgroundColor: 'white'
+              }, {
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowColor: '#666',
+                shadowOpacity: .3,
+                shadowRadius: 5
+              }],
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 83
+                lineNumber: 100
+              }
+            }),
+            _react3.default.createElement(_reactNative.View, {
+              tabLabel: "test2",
+              style: [{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 44,
+                backgroundColor: 'white'
+              }, {
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowColor: '#666',
+                shadowOpacity: .3,
+                shadowRadius: 5
+              }],
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 105
               }
             })
           )
@@ -81493,8 +81554,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }]);
 
     return MainScreen;
-  }(_react2.Component), _class.navigationOptions = function (_ref2) {
-    var navigation = _ref2.navigation;
+  }(_react2.Component), _class.navigationOptions = function (_ref) {
+    var navigation = _ref.navigation;
     return {
       drawerLockMode: 'locked-closed',
       drawerWidth: _utils.Screen.Window.Width * 0.5,
@@ -81503,6 +81564,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
         {
           activeOpacity: 0.7,
           style: {
+            marginLeft: 5,
             width: 44,
             justifyContent: 'center',
             alignItems: 'center'
@@ -81512,14 +81574,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 39
+            lineNumber: 41
           }
         },
-        _utils.Icons.Generator.Material('person', 23, '#333')
+        _utils.Icons.Generator.Octicons('three-bars', 23, '#666')
       )
     };
   }, _temp)));
-},651,[109,128,12,354,586,726,669,561,585],"dacsee/core/route/main/index.js");
+},651,[109,128,12,354,586,726,669,561,745,585],"dacsee/core/route/main/index.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -81597,6 +81659,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _FontAwesome2 = _interopRequireDefault(_FontAwesome);
 
+  var _Octicons2 = require(_dependencyMap[4], "react-native-vector-icons/Octicons");
+
+  var _Octicons3 = _interopRequireDefault(_Octicons2);
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   exports.default = {
@@ -81612,7 +81678,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
         }, setter, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 14
+            lineNumber: 15
           }
         }));
       },
@@ -81627,7 +81693,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
         }, setter, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 17
+            lineNumber: 18
           }
         }));
       },
@@ -81642,13 +81708,28 @@ __d(function (global, require, module, exports, _dependencyMap) {
         }, setter, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 20
+            lineNumber: 21
+          }
+        }));
+      },
+      Octicons: function Octicons(name) {
+        var size = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 20;
+        var color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '#fff';
+        var setter = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+        return _react2.default.createElement(_Octicons3.default, _extends({
+          name: name,
+          size: size,
+          color: color
+        }, setter, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 24
           }
         }));
       }
     }
   };
-},671,[109,672,718,720],"dacsee/core/utils/util.icons.js");
+},671,[109,672,718,720,743],"dacsee/core/utils/util.icons.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -87220,6 +87301,1347 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }
   };
 },742,[12],"dacsee/core/native/AMap/Offline.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.getImageSource = exports.ToolbarAndroid = exports.TabBarItemIOS = exports.TabBarItem = exports.Button = undefined;
+
+  var _createIconSet = require(_dependencyMap[0], "./lib/create-icon-set");
+
+  var _createIconSet2 = _interopRequireDefault(_createIconSet);
+
+  var _Octicons = require(_dependencyMap[1], "./glyphmaps/Octicons.json");
+
+  var _Octicons2 = _interopRequireDefault(_Octicons);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  var iconSet = (0, _createIconSet2.default)(_Octicons2.default, 'Octicons', 'Octicons.ttf');
+  exports.default = iconSet;
+  var Button = exports.Button = iconSet.Button;
+  var TabBarItem = exports.TabBarItem = iconSet.TabBarItem;
+  var TabBarItemIOS = exports.TabBarItemIOS = iconSet.TabBarItemIOS;
+  var ToolbarAndroid = exports.ToolbarAndroid = iconSet.ToolbarAndroid;
+  var getImageSource = exports.getImageSource = iconSet.getImageSource;
+},743,[673,744],"react-native-vector-icons/Octicons.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  module.exports = {
+    "alert": 61696,
+    "arrow-down": 61697,
+    "arrow-left": 61698,
+    "arrow-right": 61699,
+    "arrow-small-down": 61700,
+    "arrow-small-left": 61701,
+    "arrow-small-right": 61702,
+    "arrow-small-up": 61703,
+    "arrow-up": 61704,
+    "beaker": 61705,
+    "bell": 61706,
+    "bold": 61707,
+    "book": 61708,
+    "bookmark": 61709,
+    "briefcase": 61710,
+    "broadcast": 61711,
+    "browser": 61712,
+    "bug": 61713,
+    "calendar": 61714,
+    "check": 61715,
+    "checklist": 61716,
+    "chevron-down": 61717,
+    "chevron-left": 61718,
+    "chevron-right": 61719,
+    "chevron-up": 61720,
+    "circle-slash": 61721,
+    "circuit-board": 61722,
+    "clippy": 61723,
+    "clock": 61724,
+    "cloud-download": 61725,
+    "cloud-upload": 61726,
+    "code": 61727,
+    "comment": 61728,
+    "comment-discussion": 61729,
+    "credit-card": 61730,
+    "dash": 61731,
+    "dashboard": 61732,
+    "database": 61733,
+    "desktop-download": 61734,
+    "device-camera": 61735,
+    "device-camera-video": 61736,
+    "device-desktop": 61737,
+    "device-mobile": 61738,
+    "diff": 61739,
+    "diff-added": 61740,
+    "diff-ignored": 61741,
+    "diff-modified": 61742,
+    "diff-removed": 61743,
+    "diff-renamed": 61744,
+    "ellipsis": 61745,
+    "eye": 61746,
+    "file": 61747,
+    "file-binary": 61748,
+    "file-code": 61749,
+    "file-directory": 61750,
+    "file-media": 61751,
+    "file-pdf": 61752,
+    "file-submodule": 61753,
+    "file-symlink-directory": 61754,
+    "file-symlink-file": 61755,
+    "file-text": 61756,
+    "file-zip": 61757,
+    "flame": 61758,
+    "fold": 61759,
+    "gear": 61760,
+    "gift": 61761,
+    "gist": 61762,
+    "gist-secret": 61763,
+    "git-branch": 61764,
+    "git-commit": 61765,
+    "git-compare": 61766,
+    "git-merge": 61767,
+    "git-pull-request": 61768,
+    "globe": 61769,
+    "grabber": 61770,
+    "graph": 61771,
+    "heart": 61772,
+    "history": 61773,
+    "home": 61774,
+    "horizontal-rule": 61775,
+    "hubot": 61776,
+    "inbox": 61777,
+    "info": 61778,
+    "issue-closed": 61779,
+    "issue-opened": 61780,
+    "issue-reopened": 61781,
+    "italic": 61782,
+    "jersey": 61783,
+    "kebab-horizontal": 61784,
+    "kebab-vertical": 61785,
+    "key": 61786,
+    "keyboard": 61787,
+    "law": 61788,
+    "light-bulb": 61789,
+    "link": 61790,
+    "link-external": 61791,
+    "list-ordered": 61792,
+    "list-unordered": 61793,
+    "location": 61794,
+    "lock": 61795,
+    "logo-gist": 61796,
+    "logo-github": 61797,
+    "mail": 61798,
+    "mail-read": 61799,
+    "mail-reply": 61800,
+    "mark-github": 61801,
+    "markdown": 61802,
+    "megaphone": 61803,
+    "mention": 61804,
+    "milestone": 61805,
+    "mirror": 61806,
+    "mortar-board": 61807,
+    "mute": 61808,
+    "no-newline": 61809,
+    "note": 61810,
+    "octoface": 61811,
+    "organization": 61812,
+    "package": 61813,
+    "paintcan": 61814,
+    "pencil": 61815,
+    "person": 61816,
+    "pin": 61817,
+    "plug": 61818,
+    "plus": 61819,
+    "plus-small": 61820,
+    "primitive-dot": 61821,
+    "primitive-square": 61822,
+    "project": 61823,
+    "pulse": 61824,
+    "question": 61825,
+    "quote": 61826,
+    "radio-tower": 61827,
+    "reply": 61828,
+    "repo": 61829,
+    "repo-clone": 61830,
+    "repo-force-push": 61831,
+    "repo-forked": 61832,
+    "repo-pull": 61833,
+    "repo-push": 61834,
+    "rocket": 61835,
+    "rss": 61836,
+    "ruby": 61837,
+    "screen-full": 61838,
+    "screen-normal": 61839,
+    "search": 61840,
+    "server": 61841,
+    "settings": 61842,
+    "shield": 61843,
+    "sign-in": 61844,
+    "sign-out": 61845,
+    "smiley": 61846,
+    "squirrel": 61847,
+    "star": 61848,
+    "stop": 61849,
+    "sync": 61850,
+    "tag": 61851,
+    "tasklist": 61852,
+    "telescope": 61853,
+    "terminal": 61854,
+    "text-size": 61855,
+    "three-bars": 61856,
+    "thumbsdown": 61857,
+    "thumbsup": 61858,
+    "tools": 61859,
+    "trashcan": 61860,
+    "triangle-down": 61861,
+    "triangle-left": 61862,
+    "triangle-right": 61863,
+    "triangle-up": 61864,
+    "unfold": 61865,
+    "unmute": 61866,
+    "unverified": 61867,
+    "verified": 61868,
+    "versions": 61869,
+    "watch": 61870,
+    "x": 61871,
+    "zap": 61872
+  };
+},744,[],"react-native-vector-icons/glyphmaps/Octicons.json");
+__d(function (global, require, module, exports, _dependencyMap) {
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+  var _jsxFileName = "/Users/quzhi/Develop/DacseeMobile/node_modules/react-native-scrollable-tab-view/index.js";
+
+  function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+  var React = require(_dependencyMap[0], 'react');
+
+  var Component = React.Component;
+
+  var _ReactNative = ReactNative = require(_dependencyMap[1], 'react-native'),
+      ViewPropTypes = _ReactNative.ViewPropTypes;
+
+  var createReactClass = require(_dependencyMap[2], 'create-react-class');
+
+  var PropTypes = require(_dependencyMap[3], 'prop-types');
+
+  var _ReactNative2 = ReactNative,
+      Dimensions = _ReactNative2.Dimensions,
+      View = _ReactNative2.View,
+      Animated = _ReactNative2.Animated,
+      ScrollView = _ReactNative2.ScrollView,
+      Platform = _ReactNative2.Platform,
+      StyleSheet = _ReactNative2.StyleSheet,
+      ViewPagerAndroid = _ReactNative2.ViewPagerAndroid,
+      InteractionManager = _ReactNative2.InteractionManager;
+
+  var TimerMixin = require(_dependencyMap[4], 'react-timer-mixin');
+
+  var SceneComponent = require(_dependencyMap[5], './SceneComponent');
+
+  var DefaultTabBar = require(_dependencyMap[6], './DefaultTabBar');
+
+  var ScrollableTabBar = require(_dependencyMap[7], './ScrollableTabBar');
+
+  var AnimatedViewPagerAndroid = Platform.OS === 'android' ? Animated.createAnimatedComponent(ViewPagerAndroid) : undefined;
+  var ScrollableTabView = createReactClass({
+    displayName: "ScrollableTabView",
+    mixins: [TimerMixin],
+    statics: {
+      DefaultTabBar: DefaultTabBar,
+      ScrollableTabBar: ScrollableTabBar
+    },
+    scrollOnMountCalled: false,
+    propTypes: {
+      tabBarPosition: PropTypes.oneOf(['top', 'bottom', 'overlayTop', 'overlayBottom']),
+      initialPage: PropTypes.number,
+      page: PropTypes.number,
+      onChangeTab: PropTypes.func,
+      onScroll: PropTypes.func,
+      renderTabBar: PropTypes.any,
+      style: ViewPropTypes.style,
+      contentProps: PropTypes.object,
+      scrollWithoutAnimation: PropTypes.bool,
+      locked: PropTypes.bool,
+      prerenderingSiblingsNumber: PropTypes.number
+    },
+    getDefaultProps: function getDefaultProps() {
+      return {
+        tabBarPosition: 'top',
+        initialPage: 0,
+        page: -1,
+        onChangeTab: function onChangeTab() {},
+        onScroll: function onScroll() {},
+        contentProps: {},
+        scrollWithoutAnimation: false,
+        locked: false,
+        prerenderingSiblingsNumber: 0
+      };
+    },
+    getInitialState: function getInitialState() {
+      var _this = this;
+
+      var containerWidth = Dimensions.get('window').width;
+      var scrollValue = void 0;
+      var scrollXIOS = void 0;
+      var positionAndroid = void 0;
+      var offsetAndroid = void 0;
+
+      if (Platform.OS === 'ios') {
+        scrollXIOS = new Animated.Value(this.props.initialPage * containerWidth);
+        var containerWidthAnimatedValue = new Animated.Value(containerWidth);
+
+        containerWidthAnimatedValue.__makeNative();
+
+        scrollValue = Animated.divide(scrollXIOS, containerWidthAnimatedValue);
+
+        var callListeners = this._polyfillAnimatedValue(scrollValue);
+
+        scrollXIOS.addListener(function (_ref) {
+          var value = _ref.value;
+          return callListeners(value / _this.state.containerWidth);
+        });
+      } else {
+        positionAndroid = new Animated.Value(this.props.initialPage);
+        offsetAndroid = new Animated.Value(0);
+        scrollValue = Animated.add(positionAndroid, offsetAndroid);
+
+        var _callListeners = this._polyfillAnimatedValue(scrollValue);
+
+        var positionAndroidValue = this.props.initialPage;
+        var offsetAndroidValue = 0;
+        positionAndroid.addListener(function (_ref2) {
+          var value = _ref2.value;
+          positionAndroidValue = value;
+
+          _callListeners(positionAndroidValue + offsetAndroidValue);
+        });
+        offsetAndroid.addListener(function (_ref3) {
+          var value = _ref3.value;
+          offsetAndroidValue = value;
+
+          _callListeners(positionAndroidValue + offsetAndroidValue);
+        });
+      }
+
+      return {
+        currentPage: this.props.initialPage,
+        scrollValue: scrollValue,
+        scrollXIOS: scrollXIOS,
+        positionAndroid: positionAndroid,
+        offsetAndroid: offsetAndroid,
+        containerWidth: containerWidth,
+        sceneKeys: this.newSceneKeys({
+          currentPage: this.props.initialPage
+        })
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(props) {
+      if (props.children !== this.props.children) {
+        this.updateSceneKeys({
+          page: this.state.currentPage,
+          children: props.children
+        });
+      }
+
+      if (props.page >= 0 && props.page !== this.state.currentPage) {
+        this.goToPage(props.page);
+      }
+    },
+    componentWillUnmount: function componentWillUnmount() {
+      if (Platform.OS === 'ios') {
+        this.state.scrollXIOS.removeAllListeners();
+      } else {
+        this.state.positionAndroid.removeAllListeners();
+        this.state.offsetAndroid.removeAllListeners();
+      }
+    },
+    goToPage: function goToPage(pageNumber) {
+      if (Platform.OS === 'ios') {
+        var offset = pageNumber * this.state.containerWidth;
+
+        if (this.scrollView) {
+          this.scrollView.getNode().scrollTo({
+            x: offset,
+            y: 0,
+            animated: !this.props.scrollWithoutAnimation
+          });
+        }
+      } else {
+        if (this.scrollView) {
+          if (this.props.scrollWithoutAnimation) {
+            this.scrollView.getNode().setPageWithoutAnimation(pageNumber);
+          } else {
+            this.scrollView.getNode().setPage(pageNumber);
+          }
+        }
+      }
+
+      var currentPage = this.state.currentPage;
+      this.updateSceneKeys({
+        page: pageNumber,
+        callback: this._onChangeTab.bind(this, currentPage, pageNumber)
+      });
+    },
+    renderTabBar: function renderTabBar(props) {
+      if (this.props.renderTabBar === false) {
+        return null;
+      } else if (this.props.renderTabBar) {
+        return React.cloneElement(this.props.renderTabBar(props), props);
+      } else {
+        return React.createElement(DefaultTabBar, _extends({}, props, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 158
+          }
+        }));
+      }
+    },
+    updateSceneKeys: function updateSceneKeys(_ref4) {
+      var page = _ref4.page,
+          _ref4$children = _ref4.children,
+          children = _ref4$children === undefined ? this.props.children : _ref4$children,
+          _ref4$callback = _ref4.callback,
+          callback = _ref4$callback === undefined ? function () {} : _ref4$callback;
+      var newKeys = this.newSceneKeys({
+        previousKeys: this.state.sceneKeys,
+        currentPage: page,
+        children: children
+      });
+      this.setState({
+        currentPage: page,
+        sceneKeys: newKeys
+      }, callback);
+    },
+    newSceneKeys: function newSceneKeys(_ref5) {
+      var _this2 = this;
+
+      var _ref5$previousKeys = _ref5.previousKeys,
+          previousKeys = _ref5$previousKeys === undefined ? [] : _ref5$previousKeys,
+          _ref5$currentPage = _ref5.currentPage,
+          currentPage = _ref5$currentPage === undefined ? 0 : _ref5$currentPage,
+          _ref5$children = _ref5.children,
+          children = _ref5$children === undefined ? this.props.children : _ref5$children;
+      var newKeys = [];
+
+      this._children(children).forEach(function (child, idx) {
+        var key = _this2._makeSceneKey(child, idx);
+
+        if (_this2._keyExists(previousKeys, key) || _this2._shouldRenderSceneKey(idx, currentPage)) {
+          newKeys.push(key);
+        }
+      });
+
+      return newKeys;
+    },
+    _polyfillAnimatedValue: function _polyfillAnimatedValue(animatedValue) {
+      var listeners = new Set();
+
+      var addListener = function addListener(listener) {
+        listeners.add(listener);
+      };
+
+      var removeListener = function removeListener(listener) {
+        listeners.delete(listener);
+      };
+
+      var removeAllListeners = function removeAllListeners() {
+        listeners.clear();
+      };
+
+      animatedValue.addListener = addListener;
+      animatedValue.removeListener = removeListener;
+      animatedValue.removeAllListeners = removeAllListeners;
+      return function (value) {
+        return listeners.forEach(function (listener) {
+          return listener({
+            value: value
+          });
+        });
+      };
+    },
+    _shouldRenderSceneKey: function _shouldRenderSceneKey(idx, currentPageKey) {
+      var numOfSibling = this.props.prerenderingSiblingsNumber;
+      return idx < currentPageKey + numOfSibling + 1 && idx > currentPageKey - numOfSibling - 1;
+    },
+    _keyExists: function _keyExists(sceneKeys, key) {
+      return sceneKeys.find(function (sceneKey) {
+        return key === sceneKey;
+      });
+    },
+    _makeSceneKey: function _makeSceneKey(child, idx) {
+      return child.props.tabLabel + '_' + idx;
+    },
+    renderScrollableContent: function renderScrollableContent() {
+      var _this3 = this;
+
+      if (Platform.OS === 'ios') {
+        var scenes = this._composeScenes();
+
+        return React.createElement(
+          Animated.ScrollView,
+          _extends({
+            horizontal: true,
+            pagingEnabled: true,
+            automaticallyAdjustContentInsets: false,
+            contentOffset: {
+              x: this.props.initialPage * this.state.containerWidth
+            },
+            ref: function ref(scrollView) {
+              _this3.scrollView = scrollView;
+            },
+            onScroll: Animated.event([{
+              nativeEvent: {
+                contentOffset: {
+                  x: this.state.scrollXIOS
+                }
+              }
+            }], {
+              useNativeDriver: true,
+              listener: this._onScroll
+            }),
+            onMomentumScrollBegin: this._onMomentumScrollBeginAndEnd,
+            onMomentumScrollEnd: this._onMomentumScrollBeginAndEnd,
+            scrollEventThrottle: 16,
+            scrollsToTop: false,
+            showsHorizontalScrollIndicator: false,
+            scrollEnabled: !this.props.locked,
+            directionalLockEnabled: true,
+            alwaysBounceVertical: false,
+            keyboardDismissMode: "on-drag"
+          }, this.props.contentProps, {
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 221
+            }
+          }),
+          scenes
+        );
+      } else {
+        var _scenes = this._composeScenes();
+
+        return React.createElement(
+          AnimatedViewPagerAndroid,
+          _extends({
+            key: this._children().length,
+            style: styles.scrollableContentAndroid,
+            initialPage: this.props.initialPage,
+            onPageSelected: this._updateSelectedPage,
+            keyboardDismissMode: "on-drag",
+            scrollEnabled: !this.props.locked,
+            onPageScroll: Animated.event([{
+              nativeEvent: {
+                position: this.state.positionAndroid,
+                offset: this.state.offsetAndroid
+              }
+            }], {
+              useNativeDriver: true,
+              listener: this._onScroll
+            }),
+            ref: function ref(scrollView) {
+              _this3.scrollView = scrollView;
+            }
+          }, this.props.contentProps, {
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 246
+            }
+          }),
+          _scenes
+        );
+      }
+    },
+    _composeScenes: function _composeScenes() {
+      var _this4 = this;
+
+      return this._children().map(function (child, idx) {
+        var key = _this4._makeSceneKey(child, idx);
+
+        return React.createElement(
+          SceneComponent,
+          {
+            key: child.key,
+            shouldUpdated: _this4._shouldRenderSceneKey(idx, _this4.state.currentPage),
+            style: {
+              width: _this4.state.containerWidth
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 276
+            }
+          },
+          _this4._keyExists(_this4.state.sceneKeys, key) ? child : React.createElement(View, {
+            tabLabel: child.props.tabLabel,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 281
+            }
+          })
+        );
+      });
+    },
+    _onMomentumScrollBeginAndEnd: function _onMomentumScrollBeginAndEnd(e) {
+      var offsetX = e.nativeEvent.contentOffset.x;
+      var page = Math.round(offsetX / this.state.containerWidth);
+
+      if (this.state.currentPage !== page) {
+        this._updateSelectedPage(page);
+      }
+    },
+    _updateSelectedPage: function _updateSelectedPage(nextPage) {
+      var localNextPage = nextPage;
+
+      if (typeof localNextPage === 'object') {
+        localNextPage = nextPage.nativeEvent.position;
+      }
+
+      var currentPage = this.state.currentPage;
+      this.updateSceneKeys({
+        page: localNextPage,
+        callback: this._onChangeTab.bind(this, currentPage, localNextPage)
+      });
+    },
+    _onChangeTab: function _onChangeTab(prevPage, currentPage) {
+      this.props.onChangeTab({
+        i: currentPage,
+        ref: this._children()[currentPage],
+        from: prevPage
+      });
+    },
+    _onScroll: function _onScroll(e) {
+      if (Platform.OS === 'ios') {
+        var offsetX = e.nativeEvent.contentOffset.x;
+
+        if (offsetX === 0 && !this.scrollOnMountCalled) {
+          this.scrollOnMountCalled = true;
+        } else {
+          this.props.onScroll(offsetX / this.state.containerWidth);
+        }
+      } else {
+        var _e$nativeEvent = e.nativeEvent,
+            position = _e$nativeEvent.position,
+            offset = _e$nativeEvent.offset;
+        this.props.onScroll(position + offset);
+      }
+    },
+    _handleLayout: function _handleLayout(e) {
+      var _this5 = this;
+
+      var width = e.nativeEvent.layout.width;
+
+      if (Math.round(width) !== Math.round(this.state.containerWidth)) {
+        if (Platform.OS === 'ios') {
+          var containerWidthAnimatedValue = new Animated.Value(width);
+
+          containerWidthAnimatedValue.__makeNative();
+
+          scrollValue = Animated.divide(this.state.scrollXIOS, containerWidthAnimatedValue);
+          this.setState({
+            containerWidth: width,
+            scrollValue: scrollValue
+          });
+        } else {
+          this.setState({
+            containerWidth: width
+          });
+        }
+
+        this.requestAnimationFrame(function () {
+          _this5.goToPage(_this5.state.currentPage);
+        });
+      }
+    },
+    _children: function _children() {
+      var children = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props.children;
+      return React.Children.map(children, function (child) {
+        return child;
+      });
+    },
+    render: function render() {
+      var overlayTabs = this.props.tabBarPosition === 'overlayTop' || this.props.tabBarPosition === 'overlayBottom';
+      var tabBarProps = {
+        goToPage: this.goToPage,
+        tabs: this._children().map(function (child) {
+          return child.props.tabLabel;
+        }),
+        activeTab: this.state.currentPage,
+        scrollValue: this.state.scrollValue,
+        containerWidth: this.state.containerWidth
+      };
+
+      if (this.props.tabBarBackgroundColor) {
+        tabBarProps.backgroundColor = this.props.tabBarBackgroundColor;
+      }
+
+      if (this.props.tabBarActiveTextColor) {
+        tabBarProps.activeTextColor = this.props.tabBarActiveTextColor;
+      }
+
+      if (this.props.tabBarInactiveTextColor) {
+        tabBarProps.inactiveTextColor = this.props.tabBarInactiveTextColor;
+      }
+
+      if (this.props.tabBarTextStyle) {
+        tabBarProps.textStyle = this.props.tabBarTextStyle;
+      }
+
+      if (this.props.tabBarUnderlineStyle) {
+        tabBarProps.underlineStyle = this.props.tabBarUnderlineStyle;
+      }
+
+      if (overlayTabs) {
+        tabBarProps.style = _defineProperty({
+          position: 'absolute',
+          left: 0,
+          right: 0
+        }, this.props.tabBarPosition === 'overlayTop' ? 'top' : 'bottom', 0);
+      }
+
+      return React.createElement(
+        View,
+        {
+          style: [styles.container, this.props.style],
+          onLayout: this._handleLayout,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 387
+          }
+        },
+        this.props.tabBarPosition === 'top' && this.renderTabBar(tabBarProps),
+        this.renderScrollableContent(),
+        (this.props.tabBarPosition === 'bottom' || overlayTabs) && this.renderTabBar(tabBarProps)
+      );
+    }
+  });
+  module.exports = ScrollableTabView;
+  var styles = StyleSheet.create({
+    container: {
+      flex: 1
+    },
+    scrollableContentAndroid: {
+      flex: 1
+    }
+  });
+},745,[109,12,316,292,387,746,748,750],"react-native-scrollable-tab-view/index.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+  var _jsxFileName = "/Users/quzhi/Develop/DacseeMobile/node_modules/react-native-scrollable-tab-view/SceneComponent.js";
+
+  function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+  var React = require(_dependencyMap[0], 'react');
+
+  var ReactNative = require(_dependencyMap[1], 'react-native');
+
+  var Component = React.Component;
+  var View = ReactNative.View,
+      StyleSheet = ReactNative.StyleSheet;
+
+  var StaticContainer = require(_dependencyMap[2], './StaticContainer');
+
+  var SceneComponent = function SceneComponent(Props) {
+    var shouldUpdated = Props.shouldUpdated,
+        props = _objectWithoutProperties(Props, ["shouldUpdated"]);
+
+    return React.createElement(
+      View,
+      _extends({}, props, {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 10
+        }
+      }),
+      React.createElement(
+        StaticContainer,
+        {
+          shouldUpdate: shouldUpdated,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 11
+          }
+        },
+        props.children
+      )
+    );
+  };
+
+  module.exports = SceneComponent;
+},746,[109,12,747],"react-native-scrollable-tab-view/SceneComponent.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  var _react2 = require(_dependencyMap[0], "react");
+
+  var _react3 = _interopRequireDefault(_react2);
+
+  var _index = require(_dependencyMap[1], "./../react-transform-hmr/lib/index.js");
+
+  var _index2 = _interopRequireDefault(_index);
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var _components = {
+    StaticContainer: {
+      displayName: "StaticContainer"
+    }
+  };
+
+  var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+    filename: "/Users/quzhi/Develop/DacseeMobile/node_modules/react-native-scrollable-tab-view/StaticContainer.js",
+    components: _components,
+    locals: [module],
+    imports: [_react3.default]
+  });
+
+  function _wrapComponent(id) {
+    return function (Component) {
+      return _reactTransformHmrLibIndexJs2(Component, id);
+    };
+  }
+
+  var React = require(_dependencyMap[0], 'react');
+
+  var StaticContainer = _wrapComponent("StaticContainer")(function (_React$Component) {
+    _inherits(StaticContainer, _React$Component);
+
+    function StaticContainer() {
+      _classCallCheck(this, StaticContainer);
+
+      return _possibleConstructorReturn(this, (StaticContainer.__proto__ || Object.getPrototypeOf(StaticContainer)).apply(this, arguments));
+    }
+
+    _createClass(StaticContainer, [{
+      key: "shouldComponentUpdate",
+      value: function shouldComponentUpdate(nextProps) {
+        return !!nextProps.shouldUpdate;
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var child = this.props.children;
+
+        if (child === null || child === false) {
+          return null;
+        }
+
+        return React.Children.only(child);
+      }
+    }]);
+
+    return StaticContainer;
+  }(React.Component));
+
+  module.exports = StaticContainer;
+},747,[109,128],"react-native-scrollable-tab-view/StaticContainer.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  var _jsxFileName = "/Users/quzhi/Develop/DacseeMobile/node_modules/react-native-scrollable-tab-view/DefaultTabBar.js";
+
+  var React = require(_dependencyMap[0], 'react');
+
+  var _ReactNative = ReactNative = require(_dependencyMap[1], 'react-native'),
+      ViewPropTypes = _ReactNative.ViewPropTypes;
+
+  var PropTypes = require(_dependencyMap[2], 'prop-types');
+
+  var createReactClass = require(_dependencyMap[3], 'create-react-class');
+
+  var _ReactNative2 = ReactNative,
+      StyleSheet = _ReactNative2.StyleSheet,
+      Text = _ReactNative2.Text,
+      View = _ReactNative2.View,
+      Animated = _ReactNative2.Animated;
+
+  var Button = require(_dependencyMap[4], './Button');
+
+  var DefaultTabBar = createReactClass({
+    displayName: "DefaultTabBar",
+    propTypes: {
+      goToPage: PropTypes.func,
+      activeTab: PropTypes.number,
+      tabs: PropTypes.array,
+      backgroundColor: PropTypes.string,
+      activeTextColor: PropTypes.string,
+      inactiveTextColor: PropTypes.string,
+      textStyle: Text.propTypes.style,
+      tabStyle: ViewPropTypes.style,
+      renderTab: PropTypes.func,
+      underlineStyle: ViewPropTypes.style
+    },
+    getDefaultProps: function getDefaultProps() {
+      return {
+        activeTextColor: 'navy',
+        inactiveTextColor: 'black',
+        backgroundColor: null
+      };
+    },
+    renderTabOption: function renderTabOption(name, page) {},
+    renderTab: function renderTab(name, page, isTabActive, onPressHandler) {
+      var _props = this.props,
+          activeTextColor = _props.activeTextColor,
+          inactiveTextColor = _props.inactiveTextColor,
+          textStyle = _props.textStyle;
+      var textColor = isTabActive ? activeTextColor : inactiveTextColor;
+      var fontWeight = isTabActive ? 'bold' : 'normal';
+      return React.createElement(
+        Button,
+        {
+          style: {
+            flex: 1
+          },
+          key: name,
+          accessible: true,
+          accessibilityLabel: name,
+          accessibilityTraits: "button",
+          onPress: function onPress() {
+            return onPressHandler(page);
+          },
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 43
+          }
+        },
+        React.createElement(
+          View,
+          {
+            style: [styles.tab, this.props.tabStyle],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 51
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              style: [{
+                color: textColor,
+                fontWeight: fontWeight
+              }, textStyle],
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 52
+              }
+            },
+            name
+          )
+        )
+      );
+    },
+    render: function render() {
+      var _this = this;
+
+      var containerWidth = this.props.containerWidth;
+      var numberOfTabs = this.props.tabs.length;
+      var tabUnderlineStyle = {
+        position: 'absolute',
+        width: containerWidth / numberOfTabs,
+        height: 4,
+        backgroundColor: 'navy',
+        bottom: 0
+      };
+      var translateX = this.props.scrollValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, containerWidth / numberOfTabs]
+      });
+      return React.createElement(
+        View,
+        {
+          style: [styles.tabs, {
+            backgroundColor: this.props.backgroundColor
+          }, this.props.style],
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 75
+          }
+        },
+        this.props.tabs.map(function (name, page) {
+          var isTabActive = _this.props.activeTab === page;
+          var renderTab = _this.props.renderTab || _this.renderTab;
+          return renderTab(name, page, isTabActive, _this.props.goToPage);
+        }),
+        React.createElement(Animated.View, {
+          style: [tabUnderlineStyle, {
+            transform: [{
+              translateX: translateX
+            }]
+          }, this.props.underlineStyle],
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 81
+          }
+        })
+      );
+    }
+  });
+  var styles = StyleSheet.create({
+    tab: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingBottom: 10
+    },
+    tabs: {
+      height: 50,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      borderWidth: 1,
+      borderTopWidth: 0,
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+      borderColor: '#ccc'
+    }
+  });
+  module.exports = DefaultTabBar;
+},748,[109,12,292,316,749],"react-native-scrollable-tab-view/DefaultTabBar.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+  var _jsxFileName = "/Users/quzhi/Develop/DacseeMobile/node_modules/react-native-scrollable-tab-view/Button.ios.js";
+
+  var React = require(_dependencyMap[0], 'react');
+
+  var ReactNative = require(_dependencyMap[1], 'react-native');
+
+  var TouchableOpacity = ReactNative.TouchableOpacity,
+      View = ReactNative.View;
+
+  var Button = function Button(props) {
+    return React.createElement(
+      TouchableOpacity,
+      _extends({}, props, {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 9
+        }
+      }),
+      props.children
+    );
+  };
+
+  module.exports = Button;
+},749,[109,12],"react-native-scrollable-tab-view/Button.ios.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  var _jsxFileName = "/Users/quzhi/Develop/DacseeMobile/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js";
+
+  var React = require(_dependencyMap[0], 'react');
+
+  var _ReactNative = ReactNative = require(_dependencyMap[1], 'react-native'),
+      ViewPropTypes = _ReactNative.ViewPropTypes;
+
+  var PropTypes = require(_dependencyMap[2], 'prop-types');
+
+  var createReactClass = require(_dependencyMap[3], 'create-react-class');
+
+  var _ReactNative2 = ReactNative,
+      View = _ReactNative2.View,
+      Animated = _ReactNative2.Animated,
+      StyleSheet = _ReactNative2.StyleSheet,
+      ScrollView = _ReactNative2.ScrollView,
+      Text = _ReactNative2.Text,
+      Platform = _ReactNative2.Platform,
+      Dimensions = _ReactNative2.Dimensions;
+
+  var Button = require(_dependencyMap[4], './Button');
+
+  var WINDOW_WIDTH = Dimensions.get('window').width;
+  var ScrollableTabBar = createReactClass({
+    displayName: "ScrollableTabBar",
+    propTypes: {
+      goToPage: PropTypes.func,
+      activeTab: PropTypes.number,
+      tabs: PropTypes.array,
+      backgroundColor: PropTypes.string,
+      activeTextColor: PropTypes.string,
+      inactiveTextColor: PropTypes.string,
+      scrollOffset: PropTypes.number,
+      style: ViewPropTypes.style,
+      tabStyle: ViewPropTypes.style,
+      tabsContainerStyle: ViewPropTypes.style,
+      textStyle: Text.propTypes.style,
+      renderTab: PropTypes.func,
+      underlineStyle: ViewPropTypes.style,
+      onScroll: PropTypes.func
+    },
+    getDefaultProps: function getDefaultProps() {
+      return {
+        scrollOffset: 52,
+        activeTextColor: 'navy',
+        inactiveTextColor: 'black',
+        backgroundColor: null,
+        style: {},
+        tabStyle: {},
+        tabsContainerStyle: {},
+        underlineStyle: {}
+      };
+    },
+    getInitialState: function getInitialState() {
+      this._tabsMeasurements = [];
+      return {
+        _leftTabUnderline: new Animated.Value(0),
+        _widthTabUnderline: new Animated.Value(0),
+        _containerWidth: null
+      };
+    },
+    componentDidMount: function componentDidMount() {
+      this.props.scrollValue.addListener(this.updateView);
+    },
+    updateView: function updateView(offset) {
+      var position = Math.floor(offset.value);
+      var pageOffset = offset.value % 1;
+      var tabCount = this.props.tabs.length;
+      var lastTabPosition = tabCount - 1;
+
+      if (tabCount === 0 || offset.value < 0 || offset.value > lastTabPosition) {
+        return;
+      }
+
+      if (this.necessarilyMeasurementsCompleted(position, position === lastTabPosition)) {
+        this.updateTabPanel(position, pageOffset);
+        this.updateTabUnderline(position, pageOffset, tabCount);
+      }
+    },
+    necessarilyMeasurementsCompleted: function necessarilyMeasurementsCompleted(position, isLastTab) {
+      return this._tabsMeasurements[position] && (isLastTab || this._tabsMeasurements[position + 1]) && this._tabContainerMeasurements && this._containerMeasurements;
+    },
+    updateTabPanel: function updateTabPanel(position, pageOffset) {
+      var containerWidth = this._containerMeasurements.width;
+      var tabWidth = this._tabsMeasurements[position].width;
+      var nextTabMeasurements = this._tabsMeasurements[position + 1];
+      var nextTabWidth = nextTabMeasurements && nextTabMeasurements.width || 0;
+      var tabOffset = this._tabsMeasurements[position].left;
+      var absolutePageOffset = pageOffset * tabWidth;
+      var newScrollX = tabOffset + absolutePageOffset;
+      newScrollX -= (containerWidth - (1 - pageOffset) * tabWidth - pageOffset * nextTabWidth) / 2;
+      newScrollX = newScrollX >= 0 ? newScrollX : 0;
+
+      if (Platform.OS === 'android') {
+        this._scrollView.scrollTo({
+          x: newScrollX,
+          y: 0,
+          animated: false
+        });
+      } else {
+        var rightBoundScroll = this._tabContainerMeasurements.width - this._containerMeasurements.width;
+        newScrollX = newScrollX > rightBoundScroll ? rightBoundScroll : newScrollX;
+
+        this._scrollView.scrollTo({
+          x: newScrollX,
+          y: 0,
+          animated: false
+        });
+      }
+    },
+    updateTabUnderline: function updateTabUnderline(position, pageOffset, tabCount) {
+      var lineLeft = this._tabsMeasurements[position].left;
+      var lineRight = this._tabsMeasurements[position].right;
+
+      if (position < tabCount - 1) {
+        var nextTabLeft = this._tabsMeasurements[position + 1].left;
+        var nextTabRight = this._tabsMeasurements[position + 1].right;
+        var newLineLeft = pageOffset * nextTabLeft + (1 - pageOffset) * lineLeft;
+        var newLineRight = pageOffset * nextTabRight + (1 - pageOffset) * lineRight;
+
+        this.state._leftTabUnderline.setValue(newLineLeft);
+
+        this.state._widthTabUnderline.setValue(newLineRight - newLineLeft);
+      } else {
+        this.state._leftTabUnderline.setValue(lineLeft);
+
+        this.state._widthTabUnderline.setValue(lineRight - lineLeft);
+      }
+    },
+    renderTab: function renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler) {
+      var _props = this.props,
+          activeTextColor = _props.activeTextColor,
+          inactiveTextColor = _props.inactiveTextColor,
+          textStyle = _props.textStyle;
+      var textColor = isTabActive ? activeTextColor : inactiveTextColor;
+      var fontWeight = isTabActive ? 'bold' : 'normal';
+      return React.createElement(
+        Button,
+        {
+          key: name + "_" + page,
+          accessible: true,
+          accessibilityLabel: name,
+          accessibilityTraits: "button",
+          onPress: function onPress() {
+            return onPressHandler(page);
+          },
+          onLayout: onLayoutHandler,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 132
+          }
+        },
+        React.createElement(
+          View,
+          {
+            style: [styles.tab, this.props.tabStyle],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 140
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              style: [{
+                color: textColor,
+                fontWeight: fontWeight
+              }, textStyle],
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 141
+              }
+            },
+            name
+          )
+        )
+      );
+    },
+    measureTab: function measureTab(page, event) {
+      var _event$nativeEvent$la = event.nativeEvent.layout,
+          x = _event$nativeEvent$la.x,
+          width = _event$nativeEvent$la.width,
+          height = _event$nativeEvent$la.height;
+      this._tabsMeasurements[page] = {
+        left: x,
+        right: x + width,
+        width: width,
+        height: height
+      };
+      this.updateView({
+        value: this.props.scrollValue._value
+      });
+    },
+    render: function render() {
+      var _this = this;
+
+      var tabUnderlineStyle = {
+        position: 'absolute',
+        height: 4,
+        backgroundColor: 'navy',
+        bottom: 0
+      };
+      var dynamicTabUnderline = {
+        left: this.state._leftTabUnderline,
+        width: this.state._widthTabUnderline
+      };
+      return React.createElement(
+        View,
+        {
+          style: [styles.container, {
+            backgroundColor: this.props.backgroundColor
+          }, this.props.style],
+          onLayout: this.onContainerLayout,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 167
+          }
+        },
+        React.createElement(
+          ScrollView,
+          {
+            ref: function ref(scrollView) {
+              _this._scrollView = scrollView;
+            },
+            horizontal: true,
+            showsHorizontalScrollIndicator: false,
+            showsVerticalScrollIndicator: false,
+            directionalLockEnabled: true,
+            bounces: false,
+            scrollsToTop: false,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 171
+            }
+          },
+          React.createElement(
+            View,
+            {
+              style: [styles.tabs, {
+                width: this.state._containerWidth
+              }, this.props.tabsContainerStyle],
+              ref: 'tabContainer',
+              onLayout: this.onTabContainerLayout,
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 180
+              }
+            },
+            this.props.tabs.map(function (name, page) {
+              var isTabActive = _this.props.activeTab === page;
+              var renderTab = _this.props.renderTab || _this.renderTab;
+              return renderTab(name, page, isTabActive, _this.props.goToPage, _this.measureTab.bind(_this, page));
+            }),
+            React.createElement(Animated.View, {
+              style: [tabUnderlineStyle, dynamicTabUnderline, this.props.underlineStyle],
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 190
+              }
+            })
+          )
+        )
+      );
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      if (JSON.stringify(this.props.tabs) !== JSON.stringify(nextProps.tabs) && this.state._containerWidth) {
+        this.setState({
+          _containerWidth: null
+        });
+      }
+    },
+    onTabContainerLayout: function onTabContainerLayout(e) {
+      this._tabContainerMeasurements = e.nativeEvent.layout;
+      var width = this._tabContainerMeasurements.width;
+
+      if (width < WINDOW_WIDTH) {
+        width = WINDOW_WIDTH;
+      }
+
+      this.setState({
+        _containerWidth: width
+      });
+      this.updateView({
+        value: this.props.scrollValue._value
+      });
+    },
+    onContainerLayout: function onContainerLayout(e) {
+      this._containerMeasurements = e.nativeEvent.layout;
+      this.updateView({
+        value: this.props.scrollValue._value
+      });
+    }
+  });
+  module.exports = ScrollableTabBar;
+  var styles = StyleSheet.create({
+    tab: {
+      height: 49,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingLeft: 20,
+      paddingRight: 20
+    },
+    container: {
+      height: 50,
+      borderWidth: 1,
+      borderTopWidth: 0,
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+      borderColor: '#ccc'
+    },
+    tabs: {
+      flexDirection: 'row',
+      justifyContent: 'space-around'
+    }
+  });
+},750,[109,12,292,316,749],"react-native-scrollable-tab-view/ScrollableTabBar.js");
 require(23);
 require(11);
 //# sourceMappingURL=index.map

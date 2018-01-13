@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Material from 'react-native-vector-icons/MaterialIcons'
 import Ion from 'react-native-vector-icons/Ionicons'
 import Awesome from 'react-native-vector-icons/FontAwesome'
+import Octicons from 'react-native-vector-icons/Octicons'
 /* eslint-enable */
 
 export default {
@@ -19,5 +20,8 @@ export default {
     Awesome: (name, size = 20, color = '#fff', setter = {}) => {
       return (<Awesome name={name} size={size} color={color} {...setter} />)
     },
+    Octicons: (name, size = 20, color = '#fff', setter = {}) => {
+      return (<Octicons name={name} size={size} color={color} {...setter} />)
+    }
   }
 }

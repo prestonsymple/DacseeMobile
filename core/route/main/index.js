@@ -6,6 +6,7 @@ import { NavigationActions } from 'react-navigation'
 import { MapView, Marker, Polyline } from '../../native/AMap'
 import { Screen, Icons, Redux } from '../../utils'
 import { ActApplication } from '../../redux/actions'
+import  ScrollableTabView from 'react-native-scrollable-tab-view'
 
 // Get Navigator Status
 import { HomeNavigator } from '../../app.routes'
@@ -19,16 +20,6 @@ const MAP_DEFINE = {
   showsTraffic: true
 }
 
-class DrawerComponent extends Component {
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-
-      </View>
-    )
-  }
-}
-
 export default Redux.connectAndBindAction(state => ({}), ActApplication)
 (class MainScreen extends Component {
 
@@ -38,10 +29,10 @@ export default Redux.connectAndBindAction(state => ({}), ActApplication)
       drawerWidth: Screen.Window.Width * 0.5,
       headerLeft: (
         <TouchableOpacity 
-          activeOpacity={0.7} style={{ width: 44, justifyContent: 'center', alignItems: 'center' }} 
+          activeOpacity={0.7} style={{ marginLeft: 5, width: 44, justifyContent: 'center', alignItems: 'center' }} 
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN')}
         >
-          { Icons.Generator.Material('person', 23, '#333') }
+          { Icons.Generator.Octicons('three-bars', 23, '#666') }
         </TouchableOpacity>
       )
     }
@@ -56,9 +47,7 @@ export default Redux.connectAndBindAction(state => ({}), ActApplication)
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    this.subscription = {}
-    // TODO: Listener remove
-    DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.openDrawer())
+    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.openDrawer())
     this.setState({ zoomLevel: 14 })
   }
 
@@ -73,25 +62,21 @@ export default Redux.connectAndBindAction(state => ({}), ActApplication)
     // this.props.dispatch({ type: 'Navigation/NAVIGATE', routeName: 'DrawerClose' })
 
     return (
-      <View style={{ backgroundColor: 'green', flex: 1 }}>
-        {/* <AMapView 
-          {...AMAP_DEFINE}
-          style={{ flex: 1 }} 
-          logoCenter={{ x: Screen.Window.Width / 2, y: Screen.Window.Height - 100 }}
-          currentZoomLevel={zoomLevel}
-        /> */}
+      <View style={{ flex: 1 }}>
         <MapView {...MAP_DEFINE} style={{ flex: 1 }}>
-          {/* <Marker
-            draggable
-            title='这是一个可拖拽的标记'
-            onDragEnd={({nativeEvent}) =>
-              console.log(`${nativeEvent.latitude}, ${nativeEvent.longitude}`)}
-            coordinate={{
-              latitude: 39.91095,
-              longitude: 116.37296,
-            }}
-          /> */}
         </MapView>
+        <ScrollableTabView>
+          <View tabLabel="React" style={[
+            { position: 'absolute', top: 0, left: 0, right: 0, height: 44, backgroundColor: 'white' },
+            { shadowOffset: { width: 1, height: 1 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 5 }
+          ]}>
+          </View>
+          <View tabLabel="test2" style={[
+            { position: 'absolute', top: 0, left: 0, right: 0, height: 44, backgroundColor: 'white' },
+            { shadowOffset: { width: 1, height: 1 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 5 }
+          ]}>
+          </View>
+        </ScrollableTabView>
       </View>
     )
   }
