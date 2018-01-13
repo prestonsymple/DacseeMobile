@@ -13,10 +13,11 @@ const defaultStackOptions = {
       backgroundColor: 'white',
       shadowColor: 'transparent',
       shadowOpacity: 0,
-      borderBottomWidth: 0,
+      // borderBottomWidth: 0,
+      borderBottomColor: '#c8c8c8',
       elevation: 0,
     },
-    headerTintColor: 'white',
+    headerTintColor: '#333',
     headerBackTitle: null
   }
 }

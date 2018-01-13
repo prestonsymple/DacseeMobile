@@ -1,6 +1,6 @@
 @file:Suppress("OverridingDeprecatedMember", "DEPRECATION", "LeakingThis")
 
-package cn.qiuxiang.react.amap3d.navigation
+package com.dacsee.nativeBridge.AMap.navigation
 
 import com.amap.api.navi.AMapNavi
 import com.amap.api.navi.AMapNaviListener

@@ -1,12 +1,11 @@
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, DeviceEventEmitter } from 'react-native'
+import { Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, DeviceEventEmitter, TextInput } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 
 import { MapView, Marker, Polyline } from '../../native/AMap'
 import { Screen, Icons, Redux } from '../../utils'
 import { ActApplication } from '../../redux/actions'
-import  ScrollableTabView from 'react-native-scrollable-tab-view'
 
 // Get Navigator Status
 import { HomeNavigator } from '../../app.routes'
@@ -17,7 +16,8 @@ const MAP_DEFINE = {
   showsScale: false,
   tiltEnabled: false,
   rotateEnabled: false,
-  showsTraffic: true
+  showsTraffic: false,
+  showsZoomControls: false /* android fix */
 }
 
 export default Redux.connectAndBindAction(state => ({}), ActApplication)
@@ -29,12 +29,13 @@ export default Redux.connectAndBindAction(state => ({}), ActApplication)
       drawerWidth: Screen.Window.Width * 0.5,
       headerLeft: (
         <TouchableOpacity 
-          activeOpacity={0.7} style={{ marginLeft: 5, width: 44, justifyContent: 'center', alignItems: 'center' }} 
+          activeOpacity={0.7} style={{ marginLeft: 5, top: 1, width: 44, justifyContent: 'center', alignItems: 'center' }} 
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN')}
         >
-          { Icons.Generator.Octicons('three-bars', 23, '#666') }
+          { Icons.Generator.Octicons('three-bars', 23, '#2f2f2f') }
         </TouchableOpacity>
-      )
+      ),
+      title: 'DACSEE'
     }
   }
 
@@ -59,24 +60,37 @@ export default Redux.connectAndBindAction(state => ({}), ActApplication)
   render() {
     const { zoomLevel } = this.state
 
-    // this.props.dispatch({ type: 'Navigation/NAVIGATE', routeName: 'DrawerClose' })
-
     return (
       <View style={{ flex: 1 }}>
         <MapView {...MAP_DEFINE} style={{ flex: 1 }}>
         </MapView>
-        <ScrollableTabView>
-          <View tabLabel="React" style={[
-            { position: 'absolute', top: 0, left: 0, right: 0, height: 44, backgroundColor: 'white' },
-            { shadowOffset: { width: 1, height: 1 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 5 }
-          ]}>
+        <View style={[
+          { position: 'absolute', top: 15, left: 12, right: 12, height: 89, backgroundColor: 'white', borderRadius: 4 },
+          { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 }
+        ]}>
+          {/* Current */}
+          <View style={{ height: 44 }}>
+            <TouchableOpacity activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+              <View style={{ backgroundColor: '#52a732', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
+              <Text style={{ textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>西藏南路-地铁站</Text>
+            </TouchableOpacity>
           </View>
-          <View tabLabel="test2" style={[
-            { position: 'absolute', top: 0, left: 0, right: 0, height: 44, backgroundColor: 'white' },
-            { shadowOffset: { width: 1, height: 1 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 5 }
-          ]}>
+          <View style={{ backgroundColor: '#f2f2f2', height: 1, marginHorizontal: 18 }} />
+          {/* Target */}
+          <View style={{ height: 44 }}>
+            <TouchableOpacity activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+              <View style={{ backgroundColor: '#e54224', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
+              <Text style={{ textAlign: 'center', color: '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>请输入目的地</Text>
+            </TouchableOpacity>
           </View>
-        </ScrollableTabView>
+        </View>
+        <View style={[
+          { width: 36, height: 36, backgroundColor: 'white', position: 'absolute', right: 20, bottom: 20 },
+          { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 },
+          { borderRadius: 4, justifyContent: 'center', alignItems: 'center' }
+        ]}>
+          { Icons.Generator.Material('my-location', 22, '#666') }
+        </View>
       </View>
     )
   }

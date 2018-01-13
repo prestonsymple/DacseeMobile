@@ -2,7 +2,7 @@ package com.dacsee;
 
 import android.app.Application;
 
-import com.dacsee.nativeBridge.NativePackage;
+import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -35,7 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
          new MainReactPackage(),
          new VectorIconsPackage(),
          new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-         new NativePackage()
+         new AMap3DPackage()
       );
     }
 

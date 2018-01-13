@@ -1,4 +1,4 @@
-package cn.qiuxiang.react.amap3d.maps
+package com.dacsee.nativeBridge.AMap.maps
 
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap

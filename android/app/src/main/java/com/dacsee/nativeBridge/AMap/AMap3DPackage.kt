@@ -1,9 +1,11 @@
-package cn.qiuxiang.react.amap3d
+package com.dacsee.nativeBridge.AMap
 
-import cn.qiuxiang.react.amap3d.maps.*
-import cn.qiuxiang.react.amap3d.navigation.AMapDriveManager
-import cn.qiuxiang.react.amap3d.navigation.AMapRideManager
-import cn.qiuxiang.react.amap3d.navigation.AMapWalkManager
+import cn.qiuxiang.react.amap3d.AMapOfflineModule
+import cn.qiuxiang.react.amap3d.AMapUtilsModule
+import com.dacsee.nativeBridge.AMap.maps.*
+import com.dacsee.nativeBridge.AMap.navigation.AMapDriveManager
+import com.dacsee.nativeBridge.AMap.navigation.AMapRideManager
+import com.dacsee.nativeBridge.AMap.navigation.AMapWalkManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext

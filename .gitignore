@@ -5,9 +5,14 @@ node_modules/
 android/.gradle
 android/app/build
 android/build
+.idea/
 
 # OSX
 .DS_Store
 
 # iOS
 Pods/
+
+# ReactNative
+index.bundle
+index.map
