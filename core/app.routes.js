@@ -4,7 +4,11 @@ import React, { Component, PureComponent } from 'react'
 import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
 
 /*****************************************************************************************************/
-import MainScreen from './route/main/index'
+import MainScreen from './route/main'
+
+
+
+import LoginScreen from './route/login'
 /*****************************************************************************************************/
 
 const defaultStackOptions = {
@@ -22,14 +26,17 @@ const defaultStackOptions = {
   }
 }
 
-const AppNavigator = DrawerNavigator({
-  DrawerScreen: { 
-    screen: StackNavigator({ 
-      MainScreen: { screen: MainScreen }
-    }, defaultStackOptions)
-  }
+const HomeNavigator = DrawerNavigator({
+  Drawer: { screen: StackNavigator({ 
+    Main: { screen: MainScreen }
+  }, defaultStackOptions)}
+})
+
+const LoginNavigator = StackNavigator({
+  Login: { screen: LoginScreen }
 })
 
 export {
-  AppNavigator
+  HomeNavigator,
+  LoginNavigator
 }

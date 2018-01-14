@@ -37,7 +37,7 @@ export default connect(({ application }) => ({ }))(class _ extends Component {
     this.atom = false
   }
 
-  //TODO: ADD APPLICATION STATE CHANGE CHECK
+  //TODO: REDUX SAGA
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
@@ -129,6 +129,10 @@ export default connect(({ application }) => ({ }))(class _ extends Component {
                 color={'#666'}
                 unfilledColor={'#eee'}
               />
+            </View>
+
+            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: '#999', fontSize: 12, fontWeight: '200', backgroundColor: 'transparent' }}>0.2.0</Text>
             </View>
 
           </View>
