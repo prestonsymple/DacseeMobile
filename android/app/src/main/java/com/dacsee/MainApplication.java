@@ -12,6 +12,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    CrashReport.initCrashReport(getApplicationContext(), "71b843ec39", false);
     SoLoader.init(this, /* native exopackage */ false);
   }
 }
