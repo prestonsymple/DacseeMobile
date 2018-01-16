@@ -19,7 +19,7 @@ export default () => {
   /* redux store create */
   const middleware = applyMiddleware(...[
     sagaMiddleware,
-    logger
+    // logger
   ])
   const store = createStore(reducers, middleware)
   sagaMiddleware.run(sagas)

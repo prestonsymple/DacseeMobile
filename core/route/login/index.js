@@ -46,36 +46,24 @@ export default Redux.connectAndBindAction(state => ({}), Object.assign({}, appli
   async componentDidMount() {}
   componentWillUnmount() {}
 
-  async goStage1() {
-    await new Promise(resolve => {
-      Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 600, easing: Easing.linear })
-      .start(() => resolve())
-    })
-    this.setState({ stage: 1 })
+  goStage1() {
+    Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 600, easing: Easing.linear })
+    .start(() => this.setState({ stage: 1 }))
   }
 
-  async goStage2() {
-    await new Promise(resolve => {
-      Animated.timing(this.animated.enterLogin, { toValue: 3, duration: 200, easing: Easing.linear })
-      .start(() => resolve())
-    })
-    this.setState({ stage: 2 })
+  goStage2() {
+    Animated.timing(this.animated.enterLogin, { toValue: 3, duration: 200, easing: Easing.linear })
+    .start(() => this.setState({ stage: 2 }))
   }
 
   async backStage1() {
-    await new Promise(resolve => {
-      Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 200, easing: Easing.linear})
-      .start(() => resolve())
-    })
-    this.setState({ stage: 1 })
+    Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 200, easing: Easing.linear})
+    .start(this.setState({ stage: 1 }))
   }
 
   async backStage0() {
-    await new Promise(resolve => {
-      Animated.timing(this.animated.enterLogin, { toValue: 0, duration: 500, easing: Easing.linear})
-      .start(() => resolve())
-    })
-    this.setState({ stage: 0 })
+    Animated.timing(this.animated.enterLogin, { toValue: 0, duration: 500, easing: Easing.linear})
+    .start(this.setState({ stage: 0 }))
   }
 
   stageHandle() {
@@ -96,8 +84,8 @@ export default Redux.connectAndBindAction(state => ({}), Object.assign({}, appli
   }
 
   backgroundHandle() {
-    if (this.state.stage === 2) return;
     Keyboard.dismiss()
+    if (this.state.stage === 2) return;
     this.backStage0()
   }
 

@@ -15,7 +15,7 @@ export default class Button extends PureComponent {
           {props.children}
         </TouchableOpacity>
       ),
-      android: (
+      android: ( // TODO: Fix Android
         <TouchableOpacity {...props} style={[ styles.buttonWrap, props.style ]} activeOpacity={0.7}>
           {props.children}
         </TouchableOpacity>
