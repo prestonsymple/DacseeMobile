@@ -28,7 +28,7 @@ export default connect(state => {
 
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={status_bar_hidden} />
+        <StatusBar animated={true} hidden={status_bar_hidden} barStyle={status_bar_style} />
         {
           account.status ? 
           (<HomeNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} />) :

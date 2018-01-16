@@ -5,7 +5,7 @@ import { NavigationActions } from 'react-navigation'
 
 import { MapView, Marker, Polyline } from '../../native/AMap'
 import { Screen, Icons, Redux } from '../../utils'
-import { ActApplication } from '../../redux/actions'
+import { application } from '../../redux/actions'
 
 // Get Navigator Status
 import { HomeNavigator } from '../../app.routes'
@@ -20,7 +20,7 @@ const MAP_DEFINE = {
   showsZoomControls: false /* android fix */
 }
 
-export default Redux.connectAndBindAction(state => ({}), ActApplication)
+export default Redux.connectAndBindAction(state => ({}), application)
 (class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {

@@ -1,7 +1,7 @@
 'use strict'
 
 import {
-  ActApplication
+  application
 } from '../actions'
 
 import { handleActions } from 'redux-actions'
@@ -14,20 +14,18 @@ const initialState = {
 }
 
 export default handleActions({
-  [ActApplication.changeApplicationStatus]: (state, { payload }) => Object.assign({}, state, { application: payload }),
+  [application.changeApplicationStatus]: (state, { payload }) => Object.assign({}, state, { application: payload }),
 
-  [ActApplication.hideStatusBar]: (state) => Object.assign({}, state, { status_bar_hidden: true }),
-  [ActApplication.showStatusBar]: (state) => Object.assign({}, state, { status_bar_hidden: false }),
+  [application.hideStatusBar]: (state) => Object.assign({}, state, { status_bar_hidden: true }),
+  [application.showStatusBar]: (state) => Object.assign({}, state, { status_bar_hidden: false }),
   // [application.changeApplicationState]: (state, { payload }) => Object.assign({}, state, { application: payload }),
 
   // [application.toggleProgress]: (state,  _) => Object.assign({}, state, { progress: !state.progress }),
   // [application.showProgress]: (state, _) => Object.assign({}, state, { progress: true }),
   // [application.hideProgress]: (state, _) => Object.assign({}, state, { progress: false }),
 
-  // [application.darkStatusBar]: (state, _) => Object.assign({}, state, { statusBarColor: 'dark-content' }),
-  // [application.lightStatusBar]: (state, _) => Object.assign({}, state, { statusBarColor: 'light-content' }),
-  // [application.hideStatusBar]: (state, _) => Object.assign({}, state, { statusBarVisible: false }),
-  // [application.showStatusBar]: (state, _) => Object.assign({}, state, { statusBarVisible: true }),
+  [application.darkStatusBar]: (state, _) => Object.assign({}, state, { status_bar_style: 'dark-content' }),
+  [application.lightStatusBar]: (state, _) => Object.assign({}, state, { status_bar_style: 'light-content' }),
 
   // [application.showPreviewImage]: (state, { payload = {} }) => Object.assign({}, state, { previewImageVisible: true, previewImageSet: payload }),
   // [application.hidePreviewImage]: (state, _) => Object.assign({}, state, { previewImageVisible: false, previewImageSet: {} }),

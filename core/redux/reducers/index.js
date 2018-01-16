@@ -11,10 +11,6 @@ export default combineReducers({
   account,
 
 
-
-
-
-
   loginNav: LoginNav,
   homeNav: HomeNav
 })
