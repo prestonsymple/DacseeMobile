@@ -1,4 +1,5 @@
 #import <React/RCTUIManager.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 #import "AMapView.h"
 #import "AMapMarker.h"
 #import "AMapOverlay.h"
@@ -6,19 +7,25 @@
 #pragma ide diagnostic ignored "OCUnusedClassInspection"
 #pragma ide diagnostic ignored "-Woverriding-method-mismatch"
 
-@interface AMapViewManager : RCTViewManager <MAMapViewDelegate>
+@interface AMapViewManager : RCTViewManager <MAMapViewDelegate, AMapSearchDelegate>
 @end
 
-@implementation AMapViewManager
+@implementation AMapViewManager {
+  AMapSearchAPI *_search;
+  AMapView *_mapView;
+}
 
 RCT_EXPORT_MODULE()
 
 - (UIView *)view {
-    AMapView *mapView = [AMapView new];
-    mapView.centerCoordinate = CLLocationCoordinate2DMake(39.9242, 116.3979);
-    mapView.zoomLevel = 10;
-    mapView.delegate = self;
-    return mapView;
+    _search = [AMapSearchAPI new];
+    _search.delegate = self;
+  
+    _mapView = [AMapView new];
+    _mapView.centerCoordinate = CLLocationCoordinate2DMake(39.9242, 116.3979);
+    _mapView.zoomLevel = 10;
+    _mapView.delegate = self;
+    return _mapView;
 }
 
 RCT_EXPORT_VIEW_PROPERTY(locationEnabled, BOOL)
@@ -49,6 +56,28 @@ RCT_EXPORT_VIEW_PROPERTY(onLongPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLocation, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onStatusChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onStatusChangeComplete, RCTBubblingEventBlock)
+
+// ADD
+RCT_EXPORT_VIEW_PROPERTY(onPOISearchResponse, RCTBubblingEventBlock)
+
+RCT_EXPORT_METHOD(searchWithLocation: (double)lat
+                  longitude: (double)lng) {
+  AMapPOIAroundSearchRequest *request = [AMapPOIAroundSearchRequest new];
+  request.location = [AMapGeoPoint locationWithLatitude: lat longitude: lng];
+  request.sortrule = 0;
+  request.requireExtension = YES;
+  [_search AMapPOIAroundSearch: request];
+}
+
+RCT_EXPORT_METHOD(searchWithKeywords: (NSString *)keywords andCity: (NSString *)city) {
+  AMapPOIKeywordsSearchRequest *request = [[AMapPOIKeywordsSearchRequest alloc] init];
+  request.keywords            = keywords;
+  request.city                = city;
+  request.requireExtension    = YES;
+  request.cityLimit           = YES;
+  request.requireSubPOIs      = YES;
+  [_search AMapPOIKeywordsSearch: request];
+}
 
 RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)params duration:(NSInteger)duration) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
@@ -89,6 +118,31 @@ RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)
                 @"longitude": @(coordinate.longitude),
         });
     }
+}
+
+- (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response {
+  if (_mapView.onPOISearchResponse) {
+    
+    NSMutableArray *pois = [[NSMutableArray alloc] init];
+    [response.pois enumerateObjectsUsingBlock:^(AMapPOI * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      [pois addObject: @{
+                         @"uid": obj.uid,
+                         @"name": obj.name,
+                         @"location": @{ @"lng": @(obj.location.longitude), @"lat": @(obj.location.latitude) },
+                         @"address": obj.address,
+                         @"distance": @(obj.distance),
+                         @"city": obj.city,
+                         @"district": obj.district
+                         }];
+    }];
+    
+    if ([request isMemberOfClass: [AMapPOIAroundSearchRequest class]]) {
+      _mapView.onPOISearchResponse(@{ @"count": @(response.count), @"pois": pois, @"type": @"near" });
+    } else if ([request isMemberOfClass: [AMapPOIKeywordsSearchRequest class]]) {
+      _mapView.onPOISearchResponse(@{ @"count": @(response.count), @"pois": pois, @"type": @"keywords" });
+    }
+    
+  }
 }
 
 - (void)mapView:(AMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation {

@@ -7,8 +7,8 @@
 #pragma ide diagnostic ignored "OCUnusedMethodInspection"
 
 @implementation AMapView {
-    NSMutableDictionary *_markers;
-    MAUserLocationRepresentation *_locationStyle;
+  NSMutableDictionary *_markers;
+  MAUserLocationRepresentation *_locationStyle;
 }
 
 - (instancetype)init {
