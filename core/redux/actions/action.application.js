@@ -13,5 +13,10 @@ export default {
   closeDrawer: action => {
     if (action.type === 'Navigation/NAVIGATE' && action.routeName === 'DrawerClose') return true
     return false
-  }
+  },
+
+  showProgress: createAction('SHOW_PROGRESS_MODAL'),
+  hideProgress: createAction('HIDE_PROGRESS_MODAL'),
+
+  navigateTo: createAction('NAVIGATE_TO')
 }

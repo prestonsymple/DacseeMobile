@@ -7,6 +7,7 @@ import { NavigationActions, addNavigationHelpers } from 'react-navigation'
 import { HomeNavigator, LoginNavigator } from './app.routes'
 
 import ModalUpdate from './modal/modal.update'
+import ModalProgress from './modal/modal.progress'
 
 export default connect(state => {
   return {
@@ -34,7 +35,8 @@ export default connect(state => {
           (<HomeNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} />) :
           (<LoginNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} />)
         }
-        <ModalUpdate />
+        <ModalProgress />
+        {/* <ModalUpdate /> */}
       </View>
     )
   }

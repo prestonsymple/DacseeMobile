@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react'
-import { Animated, StyleSheet, TouchableOpacity, TouchableHighlight, TouchableNativeFeedback, Platform } from 'react-native'
+import { Animated, StyleSheet, TouchableOpacity, TouchableHighlight, TouchableNativeFeedback, Platform, View } from 'react-native'
 
 
 export default class Button extends PureComponent {
@@ -10,7 +10,11 @@ export default class Button extends PureComponent {
     const { props } = this
 
     return Platform.select({
-      ios: (
+      ios: props.underlayColor ? (
+        <TouchableHighlight {...props} style={[ styles.buttonWrap, props.style ]} activeOpacity={0.7}>
+          {props.children}
+        </TouchableHighlight>
+      ) : (
         <TouchableOpacity {...props} style={[ styles.buttonWrap, props.style ]} activeOpacity={0.7}>
           {props.children}
         </TouchableOpacity>

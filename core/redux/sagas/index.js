@@ -1,21 +1,17 @@
 import { Platform } from 'react-native'
 import { fork, all, take, call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import { application, account } from '../actions'
 import { NavigationActions } from 'react-navigation'
+
+
+import { application, account } from '../actions'
 import { System } from '../../utils'
+import loginSaga from './saga.login'
+import bookingSaga from './saga.booking'
 
 
 /******************************************************************************/
 /******************************* WATCHERS *************************************/
 /******************************************************************************/
-
-function* watchLoginDemo() {
-  while(true) {
-    yield take(account.requestVerify().type)
-    yield put(application.darkStatusBar())
-    yield put(account.loginSuccess())
-  }
-}
 
 function* watchClientVersion() {
   while(true) {
@@ -44,6 +40,7 @@ function* watchAndroidDrawerEvent() {
 export default function* sagaService() {
   yield all([
     fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
-    fork(watchLoginDemo)
+    fork(loginSaga),
+    fork(bookingSaga)
   ])
 }

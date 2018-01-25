@@ -14,5 +14,8 @@ export default {
     Name: Platform.OS,
     Android: Platform.OS === 'android',
     iOS: Platform.OS === 'ios'
+  },
+  Device: {
+    Name: DeviceInfo.getModel()
   }
 }

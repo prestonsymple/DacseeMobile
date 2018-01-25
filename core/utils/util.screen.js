@@ -5,8 +5,13 @@ export default {
   /***
   ****  define screen params
   ***/
-  Window: {
-    Width: width,
-    Height: height
-  }
+  window: {
+    width,
+    height
+  },
+  // Fix iPhone X
+  safaContent: {
+    width: 0,
+    height: 0
+  },
 }

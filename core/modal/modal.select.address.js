@@ -5,6 +5,7 @@ import InteractionManager from 'InteractionManager'
 import * as Progress from 'react-native-progress'
 import CodePush from 'react-native-code-push'
 import { connect } from 'react-redux'
+import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
 import { System, Icons, Screen } from '../utils'
@@ -12,11 +13,11 @@ import { Button } from '../components'
 /*****************************************************************************************************/
 
 
-export default class SelectAddress extends Component {
+export default class SelectAddressView extends Component {
   render() {
     const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field } = this.props
     return (
-      <Modal {...this.props} style={{ backgroundColor: 'white' }}>
+      <Modal onRequestClose={() => {}} {...this.props} style={{ backgroundColor: 'white' }}>
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>
           <View style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }} />
           {/* NavBar */}
@@ -45,7 +46,7 @@ export default class SelectAddress extends Component {
 
           {/* List */}
           <View style={[
-            { height: Screen.Window.Height - 64 - 10, marginTop: 15, marginHorizontal: 12, backgroundColor: 'white', borderRadius: 4 },
+            { height: Screen.window.height - 64 - 10, marginTop: 15, marginHorizontal: 12, backgroundColor: 'white', borderRadius: 4 },
             { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 }
           ]}>
             <ListView

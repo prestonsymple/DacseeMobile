@@ -27,11 +27,11 @@
   // #######################################################
   NSURL *jsCodeLocation;
   #ifdef DEBUG
+//    [[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.43.251"];
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
     jsCodeLocation = [CodePush bundleURL];
   #endif
-
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"dacsee"
                                                initialProperties:nil

@@ -7,13 +7,17 @@ import {
 import { handleActions } from 'redux-actions'
 
 const initialState = {
-  status: false
+  status: false,
+  // status: true, // LOGIN TEST
+  login_step: 0
 }
 
 export default handleActions({
+  [account.accountEnterLogin]: (state, { payload }) => Object.assign({}, state, { login_step: payload }),
+
   // TODO: SET ACCOUNT DATA
-  [account.loginSuccess]: (state, { payload }) => Object.assign({}, state, { status: true }),
+  [account.accountLoginSuccess]: (state, { payload }) => Object.assign({}, state, { status: true }),
 
   // TODO: DELETE ACCOUNT DATA
-  [account.logoutSuccess]: (state, { payload }) => Object.assign({}, state, { status: false }),
+  [account.accountLogoutSuccess]: (state, { payload }) => Object.assign({}, state, { status: false }),
 }, initialState)

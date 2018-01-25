@@ -10,7 +10,10 @@ const initialState = {
   application_status: 'active',
 
   status_bar_style: 'light-content',
+  // status_bar_style: 'dark-content',
   status_bar_hidden: false,
+
+  progress_modal_visible: false
 }
 
 export default handleActions({
@@ -26,6 +29,9 @@ export default handleActions({
 
   [application.darkStatusBar]: (state, _) => Object.assign({}, state, { status_bar_style: 'dark-content' }),
   [application.lightStatusBar]: (state, _) => Object.assign({}, state, { status_bar_style: 'light-content' }),
+
+  [application.showProgress]: (state, _) => Object.assign({}, state, { progress_modal_visible: true }),
+  [application.hideProgress]: (state, _) => Object.assign({}, state, { progress_modal_visible: false })
 
   // [application.showPreviewImage]: (state, { payload = {} }) => Object.assign({}, state, { previewImageVisible: true, previewImageSet: payload }),
   // [application.hidePreviewImage]: (state, _) => Object.assign({}, state, { previewImageVisible: false, previewImageSet: {} }),
