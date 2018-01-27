@@ -2,6 +2,7 @@
 import React, { Component, PureComponent } from 'react'
 import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules } from 'react-native'
 import { Provider, connect } from 'react-redux'
+import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
 
 import InteractionManager from 'InteractionManager'
@@ -37,10 +38,11 @@ export default class Core extends Component {
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
 
+    store.dispatch(application.changeApplicationStatus('inactive')) // CHECK UPDATE
     //#AMap SDK Init
     // this.initializationNavigator()
     this.initializationMomentConfig()
-    // this.initializationApplicationLinstener()
+    this.initializationApplicationLinstener()
     // this.initializationNetworkListener()
     // this.initializationPayment()
     // this.initializationLocation()
@@ -105,13 +107,15 @@ export default class Core extends Component {
   }
 
   initializationApplicationLinstener() {
-    AppState.addEventListener('change', (state) => store.dispatch(application.changeApplicationState(state)))
+    AppState.addEventListener('change', (state) => store.dispatch(application.changeApplicationStatus(state)))
   }
 
   render() {
     return (
       <Provider store={this.state.store}>
-        <Launch />
+        <PersistGate loading={null} persistor={store.persist}>
+          <Launch />
+        </PersistGate>
       </Provider>
     )
   }

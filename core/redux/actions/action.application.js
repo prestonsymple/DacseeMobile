@@ -18,5 +18,9 @@ export default {
   showProgress: createAction('SHOW_PROGRESS_MODAL'),
   hideProgress: createAction('HIDE_PROGRESS_MODAL'),
 
-  navigateTo: createAction('NAVIGATE_TO')
+  navigateTo: createAction('NAVIGATE_TO'),
+
+  checkUpdate: createAction('APPLICATION_CHECK_UPDATE'),
+  startUpdate: createAction('APPLICATION_START_UPDATE'),
+  finshUpdate: createAction('APPLICATION_FINSH_UPDATE')
 }

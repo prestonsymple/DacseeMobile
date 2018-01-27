@@ -13,14 +13,19 @@ const initialState = {
   // status_bar_style: 'dark-content',
   status_bar_hidden: false,
 
-  progress_modal_visible: false
+  progress_modal_visible: false, // TODO: 迁移到状态控制区
+  
+  update_remote_bundle: null,
 }
 
 export default handleActions({
-  [application.changeApplicationStatus]: (state, { payload }) => Object.assign({}, state, { application: payload }),
+  [application.changeApplicationStatus]: (state, { payload }) => Object.assign({}, state, { application_status: payload }),
 
   [application.hideStatusBar]: (state) => Object.assign({}, state, { status_bar_hidden: true }),
   [application.showStatusBar]: (state) => Object.assign({}, state, { status_bar_hidden: false }),
+
+  [application.startUpdate]: (state, { payload }) => Object.assign({}, state, { update_remote_bundle: payload }),
+  [application.finshUpdate]: (state) => Object.assign({}, state, { update_remote_bundle: null }),
   // [application.changeApplicationState]: (state, { payload }) => Object.assign({}, state, { application: payload }),
 
   // [application.toggleProgress]: (state,  _) => Object.assign({}, state, { progress: !state.progress }),

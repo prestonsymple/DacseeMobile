@@ -11,15 +11,17 @@ import { Button, Progress } from '../components'
 /*****************************************************************************************************/
 
 
-export default connect(state => ({ application: state.application }))(
+export default connect(({ application }) => ({ 
+  progressModalVisible: application.progress_modal_visible
+}))(
   class ProgressModal extends Component {
     render() {
-      const {  } = this.props
+      const { progressModalVisible } = this.props
       return (
         <Modal 
           onRequestClose={() => {}} 
           transparent={true} 
-          visible={this.props.application.progress_modal_visible} 
+          visible={progressModalVisible} 
           animationType={'fade'} 
           {...this.props} 
           style={{ backgroundColor: '' }}

@@ -16,6 +16,8 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 
+#import <Bugly/Bugly.h>
+
 
 @implementation AppDelegate
 
@@ -43,11 +45,27 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  [NSThread sleepForTimeInterval: 3]; // 延迟LAUNCH
   return YES;
 }
 
 -(void) nativeInit {
+  [Bugly startWithAppId: @"dc96c9eb54"];
   [AMapServices sharedServices].apiKey = @"b06eec333302b4faf9ae7397e273bc12";
 }
+
+//-(void) setLaunchScreen {
+//  [self.window makeKeyAndVisible];
+//  lunchView = [[NSBundle mainBundle ] loadNibNamed:@"LaunchScreen" owner:nil options:nil][0];
+//  lunchView.frame = CGRectMake(0, 0, self.window.screen.bounds.size.width, self.window.screen.bounds.size.height);
+//  [self.window addSubview:lunchView];
+//  UIImageView *imageV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 50, 320, 300)];
+//  NSString *str = @"http://club.dayoo.com/club_data/upload_photo/rtys/2008/07/21/988/2473.gif"; [imageV sd_setImageWithURL:[NSURL URLWithString:str] placeholderImage:[UIImage imageNamed:@"default1.jpg"]];
+//  [lunchView addSubview:imageV];
+//  [self.window bringSubviewToFront:lunchView];
+//  [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(removeLun) userInfo:nil repeats:NO];
+//  return YES;
+//}
 
 @end

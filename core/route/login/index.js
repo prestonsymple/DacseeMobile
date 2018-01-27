@@ -9,6 +9,7 @@ import { Screen, Icons, Redux, Define } from '../../utils'
 import resources from '../../resources'
 import { Button } from '../../components'
 import { application, account } from '../../redux/actions'
+import { connect } from 'react-redux'
 
 const codeInputWidth = ((Screen.window.width - 40 * 2) - 35 * 3) / 4
 const codeInputProps = {
@@ -19,7 +20,8 @@ const codeInputProps = {
   clearTextOnFocus: false
 }
 
-export default Redux.connectAndBindAction(state => ({ account: state.account }), Object.assign({}, application, account))
+
+export default connect(state => ({ account: state.account }))
 (class LoginScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -88,7 +90,7 @@ export default Redux.connectAndBindAction(state => ({ account: state.account }),
     const { v1, v2, v3 } = this.state
     const vCode = `${v1}${v2}${v3}${v4}`
     Keyboard.dismiss()
-    this.props.accountVerificationCodeInputCompletion(vCode)
+    this.props.dispatch(account.accountVerificationCodeInputCompletion(vCode))
   }
 
   stageHandle() {

@@ -14,6 +14,8 @@ const LOGIN_ACTIONS = createActions({},
   'ACCOUNT_LOGIN_SUCCESS',
   'ACCOUNT_LOGIN_FAIL',
 
+  'ACCOUNT_LOGOUT_SUCCESS',
+
   'ACCOUNT_ENTER_LOGIN',
   'ACCOUNT_ENTER_LOGOUT'
 )
@@ -25,6 +27,7 @@ export default {
   accountGotoRegister: LOGIN_ACTIONS.accountGotoRegister,
   accountLoginFail: LOGIN_ACTIONS.accountLoginFail,
   accountLoginSuccess: LOGIN_ACTIONS.accountLoginSuccess,
+  accountLogoutSuccess: LOGIN_ACTIONS.accountLogoutSuccess,
   accountVerificationCodeInputCompletion: LOGIN_ACTIONS.accountVerificationCodeInputCompletion,
   accountVerificationCodeTypo: LOGIN_ACTIONS.accountVerificationCodeTypo,
   accountVerificationCodeVaild: LOGIN_ACTIONS.accountVerificationCodeVaild

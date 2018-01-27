@@ -1,12 +1,17 @@
 
 // import { AsyncStorage } from 'react-native'
-import { persistStore } from 'redux-persist'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import { applyMiddleware, createStore, combineReducers } from 'redux'
 import { AsyncStorage } from 'react-native'
 import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 
-
+const persistConfig = {
+  key: 'base',
+  storage: storage,
+  whitelist: ['account', 'application']
+}
 /* Redux Reducers */
 import reducers from './redux/reducers'
 /* Redux Sagas */
@@ -21,8 +26,9 @@ export default () => {
     sagaMiddleware,
     // logger
   ])
-  const store = createStore(reducers, middleware)
+  const persistedReducer = persistReducer(persistConfig, reducers)
+  const store = createStore(persistedReducer, middleware)
   sagaMiddleware.run(sagas)
-  // store.persist = persistStore(store)
+  store.persist = persistStore(store)
   return store
 }

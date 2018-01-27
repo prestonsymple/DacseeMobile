@@ -6,9 +6,10 @@ import {
 import { connect } from 'react-redux'
 import { DrawerItems, SafeAreaView } from 'react-navigation'
 
-import resources from '../../resources'
-import { Screen, Icons } from '../../utils'
-import { Button } from '../../components'
+import resources from '../resources'
+import { Screen, Icons } from '../utils'
+import { Button } from '../components'
+import { application, account } from '../redux/actions'
 
 const ICONS_COLOR = '#888'
 
@@ -27,7 +28,8 @@ const MENUS_OPTIONS = [{
 }, {
   key: '3',
   name: '钱包',
-  icon: Icons.Generator.Material('account-balance-wallet', 24, ICONS_COLOR, { style: { left: .5 } })
+  icon: Icons.Generator.Material('account-balance-wallet', 24, ICONS_COLOR, { style: { left: .5 } }),
+  onPress: ({ navigation }) => navigation.navigate('WalletBalance')
 }, {
   key: '4',
   name: '收入',
@@ -45,7 +47,8 @@ const MENUS_OPTIONS = [{
 {
   key: '7',
   name: '设置',
-  icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } })
+  icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 }]
 
 export default connect(state => ({ account: state.account }))
@@ -68,7 +71,7 @@ export default connect(state => ({ account: state.account }))
               { backgroundColor: '#eee', overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
               { borderRadius: 50, width: 100, height: 100, justifyContent: 'center', alignItems: 'center' }
             ]}>
-              <Image style={{ width: 100, height: 100 }} source={require('../../resources/images/test.jpg')} />
+              <Image style={{ width: 100, height: 100 }} source={require('../resources/images/test.jpg')} />
               {/* { Icons.Generator.Material('account-circle', 100, '#fad723') } */}
             </View>
             <Text style={[
@@ -88,7 +91,7 @@ export default connect(state => ({ account: state.account }))
           <ScrollView style={{ paddingHorizontal: 25 }} containerStyle={{ flex: 1 }}>
             {
               MENUS_OPTIONS.map(pipe => (
-                <Button key={pipe.key} style={{ height: 44, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Button onPress={pipe.onPress ? pipe.onPress.bind(this, this.props) : () => {}} key={pipe.key} style={{ height: 44, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                   <View style={{ marginRight: 10 }}>{ pipe.icon }</View>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: '#333' }}>{pipe.name}</Text>
                 </Button>

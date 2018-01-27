@@ -6,12 +6,15 @@ android/.gradle
 android/app/build
 android/build
 .idea/
+android/build/
+
 
 # OSX
 .DS_Store
 
 # iOS
 Pods/
+ios/build/
 
 # ReactNative
 index.bundle

@@ -4,4 +4,5 @@ target 'dacsee' do
   pod 'AMapSearch'
   pod 'AMapLocation'
 
+  pod 'Bugly'
 end

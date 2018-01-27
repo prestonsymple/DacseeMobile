@@ -36,7 +36,7 @@ export default connect(state => {
           (<LoginNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} />)
         }
         <ModalProgress />
-        {/* <ModalUpdate /> */}
+        <ModalUpdate />
       </View>
     )
   }

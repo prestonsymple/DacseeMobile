@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build-android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
+    "ios-debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 0.2.1 -e index.js",
+    "ios-release": "appcenter codepush promote -a quzhi0323/Dacsee-iOS -s debug -d release",
     "test": "jest"
   },
   "dependencies": {

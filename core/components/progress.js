@@ -14,13 +14,15 @@ export default class ProgressView extends PureComponent {
       ios: (
         <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
           <View style={[
-            { width: 88, height: 88, borderRadius: 4, backgroundColor: '#FFFFFFEE', justifyContent: 'center', alignItems: 'center' },
+            { width: 88, height: 88, borderRadius: 4, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' },
             { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 },
           ]}>
             <Progress.Circle 
               size={50}
-              color={'#666666EE'} 
+              color={'#FFFFFFaa'} 
               indeterminate={true} 
+              thickness={6}
+              borderWidth={2}
               // borderRadius={4}
               // animationType={'decay'}
               // borderColor={'transparent'}

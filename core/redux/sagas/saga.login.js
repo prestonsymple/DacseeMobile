@@ -6,10 +6,7 @@ import { application, account } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { System } from '../../utils'
 
-
-
-
-export default function* watchLogin() {
+function* loginSaga() {
   while(true) {
     const payload = yield take(account.accountVerificationCodeInputCompletion().type)
     yield put(account.accountEnterLogin(1))
@@ -19,6 +16,7 @@ export default function* watchLogin() {
     yield delay(3000) // TODO: REPLACE FETCH API
     yield put(application.hideProgress())
 
+    yield delay(500)
     yield put(application.darkStatusBar())
     yield put(account.accountLoginSuccess())
 
@@ -35,4 +33,20 @@ export default function* watchLogin() {
     // yield call('请求远程服务器进行注销')
     // yield put('更新State为已注销')
   }
+}
+
+function* logoutSaga() {
+  while(true) {
+    const payload = yield take(account.accountEnterLogout().type)
+    yield put(NavigationActions.back())
+    // yield delay(500)
+    // TODO: CLEAN STATE && CACHE
+    yield put(account.accountLogoutSuccess())
+  }
+}
+
+
+export {
+  logoutSaga,
+  loginSaga
 }
