@@ -101,7 +101,7 @@ export default connect(({ application }) => ({
             </View>
 
             <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 60, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: '#999', fontSize: 12, fontWeight: '200', backgroundColor: 'transparent' }}>0.2.0</Text>
+              <Text style={{ color: '#999', fontSize: 12, fontWeight: '200', backgroundColor: 'transparent' }}>{ System.Version }</Text>
             </View>
 
           </View>

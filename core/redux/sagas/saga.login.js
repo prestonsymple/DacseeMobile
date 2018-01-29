@@ -19,11 +19,11 @@ function* loginSaga() {
     yield delay(500)
     yield put(application.darkStatusBar())
     yield put(account.accountLoginSuccess())
-
+    
     // yield 
     // yield take('等待用户发起登录动作')
     // yield call('请求远程服务器进行登录')
-         // yield put('更新状态到State')
+    // yield put('更新状态到State')
     // yield take('等待用户输入验证码')
     // yield call('请求远程服务器验证短信验证码')
     // yield put('更新结果到State')

@@ -1,8 +1,8 @@
-import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, StyleSheet, StatusBar, Image } from 'react-native'
+import React, { Component } from 'react'
+import { View, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
-import InteractionManager from 'InteractionManager'
-import { NavigationActions, addNavigationHelpers } from 'react-navigation'
+import PropTypes from 'prop-types'
+import { addNavigationHelpers } from 'react-navigation'
 
 import { HomeNavigator, LoginNavigator } from './app.routes'
 
@@ -16,8 +16,17 @@ export default connect(state => {
     loginNav: state.loginNav,
     account: state.account
   }
-})
-(class AppLaunch extends Component {
+})(class AppLaunch extends Component {
+
+  static propTypes = {
+    dispatch: PropTypes.func,
+
+    homeNav: PropTypes.object,
+    loginNav: PropTypes.object,
+
+    account: PropTypes.object,
+    application: PropTypes.object
+  }
 
   constructor(props) {
     super(props)
@@ -32,8 +41,8 @@ export default connect(state => {
         <StatusBar animated={true} hidden={status_bar_hidden} barStyle={status_bar_style} />
         {
           account.status ? 
-          (<HomeNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} />) :
-          (<LoginNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} />)
+            (<HomeNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} />) :
+            (<LoginNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} />)
         }
         <ModalProgress />
         <ModalUpdate />

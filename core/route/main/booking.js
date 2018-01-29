@@ -11,9 +11,10 @@ import { MapView, Marker, Polyline, Utils } from '../../native/AMap'
 import { Screen, Icons, Redux, Define } from '../../utils'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
+import { Button, SelectCarType } from '../../components'
+
 import ModalSelectAddress from '../../modal/modal.select.address'
 import ModalDriverRespond from '../../modal/modal.driver.respond'
-import { Button, SelectCarType } from '../../components'
 
 // Get Navigator Status
 import { HomeNavigator } from '../../app.routes'
@@ -203,13 +204,13 @@ export default connect(state => ({ data: state.booking }))
   }
 
   async cancelAdrEdit() {
-    this.setState({ editAdr: false })
+    this.setState({ editAdr: false, data: undefined })
     await new Promise((resolve) => Animated.timing(this.ui, { toValue: 0, duration: 200 }).start(() => resolve()))
   }
 
   async onSelectAddress(address, field) {
     this.props.dispatch(booking.journeyUpdateData({ [field]: address }))
-    // this.setState({ editAdr: false })
+    this.setState({ editAdr: false, data: undefined })
     await new Promise((resolve) => Animated.timing(this.ui, { toValue: 0, duration: 200 }).start(() => resolve()))
   }
 
@@ -247,7 +248,7 @@ export default connect(state => ({ data: state.booking }))
           to={this.props.data.to}
           from={this.props.data.from}
           onPressTo={() => this.activeAdrEdit('to')} 
-          onPressFrom={() => this.activeAdrEdit('from')} 
+          onPressFrom={() => this.activeAdrEdit('from')}
         />
         <SelectBookingOption 
           onPressChangeCarType={() => this.changeFormAnimated(1)}
@@ -284,12 +285,13 @@ class PickerAddress extends Component {
   render() {
     const { 
       timing, 
-      onPressTo = () => {}, 
-      onPressFrom = () => {},
+      onPressTo, 
+      onPressFrom,
       drag,
       from,
       to
     } = this.props
+
     return (
       <Animated.View style={[
         { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: Screen.window.width <= 375 ? .5 : 1 },
@@ -297,20 +299,16 @@ class PickerAddress extends Component {
         { opacity: timing.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
       ]}>
         {/* From */}
-        <View style={{ height: 44 }}>
-          <TouchableOpacity onPress={() => onPressTo()} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
-            <View style={{ backgroundColor: '#52a732', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text style={{ textAlign: 'center', color: drag ? '#a2a2a2' : '#333', fontSize: 14, fontWeight: '600' }}>{ drag ? '请选择上车地点' : from.name }</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+          <View style={{ backgroundColor: '#52a732', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
+          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: drag ? '#a2a2a2' : '#333', fontSize: 14, fontWeight: '600' }}>{ drag ? '请选择上车地点' : from.name }</Text>
+        </TouchableOpacity>
         <View style={{ backgroundColor: '#ccc', height: .5, marginHorizontal: 18 }} />
         {/* To */}
-        <View style={{ height: 44 }}>
-          <TouchableOpacity onPress={() => onPressFrom()} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
-            <View style={{ backgroundColor: '#e54224', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text style={{ textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{ to.name || '请输入目的地' }</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={onPressTo} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+          <View style={{ backgroundColor: '#e54224', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
+          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{ to.name || '请输入目的地' }</Text>
+        </TouchableOpacity>
       </Animated.View>
     )
   }
@@ -378,7 +376,7 @@ class SelectBookingOption extends Component {
         { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3 },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
         { top: timing[0].interpolate({ inputRange: [0, 1], outputRange: [Screen.window.height - 130 - 64 - 15 - BOTTOM_MARGIN, Screen.window.height - 180 - 64 - 15 - BOTTOM_MARGIN] }) },
-        { opacity: timing[1].interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
+        { opacity: timing[1].interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) },
       ]}>
         <View style={{ flex: 1 }}>
           <Animated.View style={[
@@ -452,8 +450,8 @@ class BookingInfo extends Component {
       <Animated.View style={[
         { position: 'absolute', left: 0, right: 0 },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-        { top: 0 },
-        { opacity: timing.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, 1] }) }
+        { top: timing.interpolate({ inputRange: [0, 1, 2], outputRange: [-100, -100, 0] }) },
+        { opacity: timing.interpolate({ inputRange: [0, 1, 2], outputRange: [1, 0, 1] }) }
       ]}>
         <View style={{ height: 88, backgroundColor: 'white', flexDirection: 'row', paddingHorizontal: 14, alignItems: 'center' }}>
           <View style={{ justifyContent: 'center', marginRight: 10 }}>

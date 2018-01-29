@@ -56,7 +56,6 @@ export default connect(state => ({ account: state.account }))
 
   constructor(props) {
     super(props)
-    console.log(props)
   }
 
   render() {

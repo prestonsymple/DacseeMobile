@@ -33,7 +33,7 @@ export default class App extends Component<{}> {
           {instructions}
         </Text>
       </View>
-    );
+    )
   }
 }
 
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
+})

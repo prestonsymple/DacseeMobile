@@ -1,16 +1,15 @@
-
-/* eslint-disable */
-import React, { Component, PureComponent } from 'react'
-import { View, TouchableOpacity } from 'react-native'
-import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
+import { StackNavigator, DrawerNavigator } from 'react-navigation'
 
 import { Icons } from './utils'
 
 /*****************************************************************************************************/
-import DrawerContent from './route/drawer.menu'
+import DrawerContent from './route/_menu'
 
 import { 
-  BookingScreen 
+  BookingScreen,
+  PickerAddressScreen
 } from './route/main'
 
 import { 
@@ -18,7 +17,13 @@ import {
 } from './route/wallet'
 
 import {
-  SettingMenuScreen
+  SettingMenuScreen,
+  SettingAboutScreen,
+  SettingAccountScreen,
+  SettingMessageNotificationScreen,
+  SettingLanguageRegionScreen,
+  SettingFeedbackScreen,
+  SettingHelpCenterScreen
 } from './route/setting'
 
 
@@ -68,10 +73,17 @@ const defaultDrawerOptions = {
 const HomeNavigator = DrawerNavigator({
   Drawer: { screen: StackNavigator({ 
     Main: { screen: BookingScreen },
+    PickerAddress: { screen: PickerAddressScreen },
+
     WalletBalance: { screen: WalletBalanceScreen },
+    
     SettingMenu: { screen: SettingMenuScreen },
-    // DriverVerification: { screen: DriverVerificationScreen },
-    // DriverHome: { screen: DriverHomeScreen }
+    SettingAbout: { screen: SettingAboutScreen },
+    SettingAccount: { screen: SettingAccountScreen },
+    SettingMessageNotification: { screen: SettingMessageNotificationScreen },
+    SettingLanguageRegion: { screen: SettingLanguageRegionScreen },
+    SettingFeedback: { screen: SettingFeedbackScreen },
+    SettingHelpCenter: { screen: SettingHelpCenterScreen }
   }, defaultStackOptions)}
 }, defaultDrawerOptions)
 

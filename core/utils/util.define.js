@@ -9,20 +9,22 @@ const TextInputArgs = {
   underlineColorAndroid: 'transparent'
 }
 
+const system = {
+  ios: {
+    std: (DeviceInfo.getModel().startsWith('iPhone') && !DeviceInfo.getModel().endsWith('Plus')),
+    plus: (DeviceInfo.getModel().startsWith('iPhone') && DeviceInfo.getModel().endsWith('Plus')),
+    x: DeviceInfo.getModel() === 'iPhone X',
+    mini: DeviceInfo.getModel().startsWith('iPad Mini'),
+    air: DeviceInfo.getModel().startsWith('iPad Air'),
+    pro: DeviceInfo.getModel().startsWith('iPad Pro')
+  },
+  android: {
+
+  }
+}
 
 export default {
   TextInputArgs,
-  system: {
-    ios: {
-      std: (DeviceInfo.getModel().startsWith('iPhone') && !DeviceInfo.getModel().endsWith('Plus')),
-      plus: (DeviceInfo.getModel().startsWith('iPhone') && DeviceInfo.getModel().endsWith('Plus')),
-      x: DeviceInfo.getModel() === 'iPhone X',
-      mini: DeviceInfo.getModel().startsWith('iPad Mini'),
-      air: DeviceInfo.getModel().startsWith('iPad Air'),
-      pro: DeviceInfo.getModel().startsWith('iPad Pro')
-    },
-    android: {
-
-    }
-  }
+  FixPlusPixel: system.ios.plus ? 1 : .5,
+  system: system
 }

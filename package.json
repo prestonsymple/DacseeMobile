@@ -4,20 +4,25 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "build-android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
-    "ios-debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 0.2.1 -e index.js",
-    "ios-release": "appcenter codepush promote -a quzhi0323/Dacsee-iOS -s debug -d release",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/dacsee/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
+    "build:android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
+    "build:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 0.2.1 -e index.js",
+    "build:ios:release": "appcenter codepush promote -a quzhi0323/Dacsee-iOS -s debug -d release",
     "test": "jest"
   },
   "dependencies": {
     "axios": "^0.17.1",
     "crypto-js": "^3.1.9-1",
+    "flow-bin": "0.61.0",
     "lodash": "^4.17.4",
+    "lottie-react-native": "2.2.7",
     "moment": "^2.20.1",
     "react": "16.2.0",
-    "react-native": "0.52.0",
+    "react-native": "^0.52.2",
     "react-native-code-push": "^5.2.1",
     "react-native-device-info": "^0.13.0",
+    "react-native-fs": "^2.9.7",
+    "react-native-maps": "^0.19.0",
     "react-native-progress": "^3.4.0",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.0.0-beta.23",
@@ -29,8 +34,13 @@
     "redux-saga": "^0.16.0"
   },
   "devDependencies": {
+    "appcenter": "^1.1.0",
+    "babel-eslint": "^8.2.1",
     "babel-jest": "22.0.4",
     "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.16.0",
+    "eslint-plugin-flow-vars": "^0.5.0",
+    "eslint-plugin-react": "^7.6.0",
     "jest": "22.0.5",
     "react-test-renderer": "16.2.0"
   },

@@ -10,7 +10,6 @@ const initialState = {
   application_status: 'active',
 
   status_bar_style: 'light-content',
-  // status_bar_style: 'dark-content',
   status_bar_hidden: false,
 
   progress_modal_visible: false, // TODO: 迁移到状态控制区

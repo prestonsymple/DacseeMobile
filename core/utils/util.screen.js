@@ -1,4 +1,6 @@
 import { Dimensions } from 'react-native'
+import Define from './util.define'
+
 const { width, height } = Dimensions.get('window')
 
 export default {
@@ -11,7 +13,7 @@ export default {
   },
   // Fix iPhone X
   safaContent: {
-    width: 0,
-    height: 0
+    width: width,
+    height: Define.system.ios.x ? height - 88 : height - 64
   },
 }

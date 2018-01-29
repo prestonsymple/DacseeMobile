@@ -1,8 +1,39 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+
 platform :ios, '8.0'
 target 'dacsee' do
-  pod 'AMapNavi'
-  pod 'AMapSearch'
-  pod 'AMapLocation'
-
-  pod 'Bugly'
+    
+    pod 'AMapNavi'
+    pod 'AMapSearch'
+    pod 'AMapLocation'
+    
+    pod 'Bugly'
+    
+    pod 'React', :path => '../node_modules/react-native', subspecs: [
+      'Core',
+      'RCTActionSheet',
+      'RCTAnimation',
+      'RCTGeolocation',
+      'RCTImage',
+      'RCTLinkingIOS',
+      'RCTNetwork',
+      'RCTSettings',
+      'RCTText',
+      'RCTVibration',
+      'RCTWebSocket',
+      'ART',
+      'RCTCameraRoll',
+      'RCTPushNotification',
+      'BatchedBridge',
+      'DevSupport'
+    ]
+    
+    pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+    
+    pod 'RNFS', :path => '../node_modules/react-native-fs'
+    pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+    pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+    pod 'lottie-ios', :path => '../node_modules/lottie-ios'
+    
 end

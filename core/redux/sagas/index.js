@@ -15,14 +15,13 @@ import bookingSaga from './saga.booking'
 /******************************* WATCHERS *************************************/
 /******************************************************************************/
 
-
 function* watchClientVersion(action) {
   try {
     const { payload } = action
-    if (payload !== 'inactive') return;
+    if (payload !== 'inactive') return
 
     const remoteBundle = yield call(CodePush.checkForUpdate)
-    if (!remoteBundle) return;
+    if (!remoteBundle) return
     
     yield delay(1000)
 
@@ -38,8 +37,6 @@ function* watchiOSDrawerEvent() {
     // yield put(application.hideStatusBar())
     // yield put(application.showStatusBar())
     yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
-
-    // yield take(application.closeDrawer/* callback */)
   }
 }
 
