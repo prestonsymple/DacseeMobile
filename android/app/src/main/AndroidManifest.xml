@@ -17,8 +17,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
 
-    //定位包、导航包需要的额外权限（注：基础权限也需要）
+  //定位包、导航包需要的额外权限（注：基础权限也需要）
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -34,6 +35,7 @@
       android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme">
       <meta-data android:name="com.amap.api.v2.apikey" android:value="766660e4a381b64422f0b0054477aa7c" />
+      <meta-data android:name="com.google.android.geo.API_KEY" android:value="Your Google maps API Key Here"/>
 
       <activity
         android:name=".MainActivity"

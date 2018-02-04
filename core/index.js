@@ -1,6 +1,8 @@
+
+/* global store */
 /*eslint-disable no-unused-vars*/
 import React, { Component, PureComponent } from 'react'
-import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules } from 'react-native'
+import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules, BackHandler } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
@@ -13,12 +15,12 @@ import Store from './app.store'
 import Launch from './app.launch'
 import { network, application } from './redux/actions'
 
-import { program } from './utils'
+import { Define } from './utils'
 
 const initializationModule = () => {}
 
 /*eslint-disable*/
-console.ignoredYellowBox = ['Warning: BackAndroid', 'Remote debugger'];
+// console.ignoredYellowBox = ['Warning: BackAndroid', 'Remote debugger'];
 /*eslint-enable*/
 
 global.store = Store()
@@ -43,6 +45,7 @@ export default class Core extends Component {
     // this.initializationNavigator()
     this.initializationMomentConfig()
     this.initializationApplicationLinstener()
+    this.initializationBackHandler()
     // this.initializationNetworkListener()
     // this.initializationPayment()
     // this.initializationLocation()
@@ -50,6 +53,12 @@ export default class Core extends Component {
 
   componentWillUnmount() {
     // navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  initializationBackHandler() {
+    if (Define.system.android) {
+      BackHandler.addEventListener('hardwareBackPress', () => store.dispatch(application.onPressAndroidBackButton()))
+    }
   }
 
   initializationMomentConfig() {

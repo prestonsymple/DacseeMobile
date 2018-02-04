@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import PropTypes from 'prop-types'
-import { processColor, requireNativeComponent, ViewPropTypes, NativeModules } from 'react-native'
+import { processColor, requireNativeComponent, ViewPropTypes } from 'react-native'
 import { LatLng, Region } from '../PropTypes'
 import Component from '../Component'
 
@@ -239,21 +239,10 @@ export default class MapView extends Component<any> {
      *   }
      * }}
      */
-    onStatusChangeComplete: PropTypes.func,
-
-
-    onPOISearchResponse: PropTypes.func,
+    onStatusChangeComplete: PropTypes.func
   }
 
   name = 'AMapView'
-
-  searchWithLocation(lat: Number, lng: Number) {
-    NativeModules.AMapViewManager.searchWithLocation(lat, lng)
-  }
-
-  searchWithKeywords(keywords, cityFilter = '') {
-    NativeModules.AMapViewManager.searchWithKeywords(keywords, cityFilter)
-  }
 
   /**
    * 动画过渡到某个状态（坐标、缩放级别、倾斜度、旋转角度）

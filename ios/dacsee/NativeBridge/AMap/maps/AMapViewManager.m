@@ -18,11 +18,8 @@
 RCT_EXPORT_MODULE()
 
 - (UIView *)view {
-    _search = [AMapSearchAPI new];
-    _search.delegate = self;
-  
     _mapView = [AMapView new];
-    _mapView.centerCoordinate = CLLocationCoordinate2DMake(39.9242, 116.3979);
+    _mapView.centerCoordinate = CLLocationCoordinate2DMake(0, 0);
     _mapView.zoomLevel = 10;
     _mapView.delegate = self;
     return _mapView;
@@ -56,28 +53,6 @@ RCT_EXPORT_VIEW_PROPERTY(onLongPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLocation, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onStatusChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onStatusChangeComplete, RCTBubblingEventBlock)
-
-// ADD
-RCT_EXPORT_VIEW_PROPERTY(onPOISearchResponse, RCTBubblingEventBlock)
-
-RCT_EXPORT_METHOD(searchWithLocation: (double)lat
-                  longitude: (double)lng) {
-  AMapPOIAroundSearchRequest *request = [AMapPOIAroundSearchRequest new];
-  request.location = [AMapGeoPoint locationWithLatitude: lat longitude: lng];
-  request.sortrule = 0;
-  request.requireExtension = YES;
-  [_search AMapPOIAroundSearch: request];
-}
-
-RCT_EXPORT_METHOD(searchWithKeywords: (NSString *)keywords andCity: (NSString *)city) {
-  AMapPOIKeywordsSearchRequest *request = [[AMapPOIKeywordsSearchRequest alloc] init];
-  request.keywords            = keywords;
-  request.city                = city;
-  request.requireExtension    = YES;
-  request.cityLimit           = YES;
-  request.requireSubPOIs      = YES;
-  [_search AMapPOIKeywordsSearch: request];
-}
 
 RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)params duration:(NSInteger)duration) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
@@ -118,31 +93,6 @@ RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)
                 @"longitude": @(coordinate.longitude),
         });
     }
-}
-
-- (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response {
-  if (_mapView.onPOISearchResponse) {
-    
-    NSMutableArray *pois = [[NSMutableArray alloc] init];
-    [response.pois enumerateObjectsUsingBlock:^(AMapPOI * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-      [pois addObject: @{
-                         @"uid": obj.uid,
-                         @"name": obj.name,
-                         @"location": @{ @"lng": @(obj.location.longitude), @"lat": @(obj.location.latitude) },
-                         @"address": obj.address,
-                         @"distance": @(obj.distance),
-                         @"city": obj.city,
-                         @"district": obj.district
-                         }];
-    }];
-    
-    if ([request isMemberOfClass: [AMapPOIAroundSearchRequest class]]) {
-      _mapView.onPOISearchResponse(@{ @"count": @(response.count), @"pois": pois, @"type": @"near" });
-    } else if ([request isMemberOfClass: [AMapPOIKeywordsSearchRequest class]]) {
-      _mapView.onPOISearchResponse(@{ @"count": @(response.count), @"pois": pois, @"type": @"keywords" });
-    }
-    
-  }
 }
 
 - (void)mapView:(AMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation {
@@ -237,8 +187,6 @@ RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)
 - (void)mapInitComplete:(AMapView *)mapView {
     mapView.loaded = YES;
 
-    // struct 里的值会被初始化为 0，这里以此作为条件，判断 initialRegion 是否被设置过
-    // 但实际上经度为 0 是一个合法的坐标，只是考虑到高德地图只在中国使用，就这样吧
     if (mapView.initialRegion.center.latitude != 0) {
         mapView.region = mapView.initialRegion;
     }

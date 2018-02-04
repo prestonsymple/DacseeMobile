@@ -16,7 +16,8 @@ const ICONS_COLOR = '#888'
 const MENUS_OPTIONS = [{
   key: '0',
   name: '加入DACSEE',
-  icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } }))
+  icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
+  onPress: ({ navigation }) => navigation.navigate('UpgradeDriver')
 }, {
   key: '1',
   name: '检验清单',
@@ -51,8 +52,7 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 }]
 
-export default connect(state => ({ account: state.account }))
-(class DrawerContentComponent extends Component {
+export default connect(state => ({ account: state.account }))(class DrawerContentComponent extends Component {
 
   constructor(props) {
     super(props)

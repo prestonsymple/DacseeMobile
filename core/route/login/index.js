@@ -66,22 +66,22 @@ export default connect(state => ({ account: state.account }))
 
   goStage1() {
     Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 600, easing: Easing.linear })
-    .start(() => this.setState({ stage: 1 }))
+      .start(() => this.setState({ stage: 1 }))
   }
 
   goStage2() {
     Animated.timing(this.animated.enterLogin, { toValue: 3, duration: 200, easing: Easing.linear })
-    .start(() => this.setState({ stage: 2 }))
+      .start(() => this.setState({ stage: 2 }))
   }
 
   async backStage1() {
     Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 200, easing: Easing.linear})
-    .start(this.setState({ stage: 1 }))
+      .start(this.setState({ stage: 1 }))
   }
 
   async backStage0() {
     Animated.timing(this.animated.enterLogin, { toValue: 0, duration: 500, easing: Easing.linear})
-    .start(this.setState({ stage: 0 }))
+      .start(this.setState({ stage: 0 }))
   }
 
   async vaildAccount(v4) {
@@ -112,13 +112,13 @@ export default connect(state => ({ account: state.account }))
 
   backgroundHandle() {
     Keyboard.dismiss()
-    if (this.state.stage === 2) return;
+    if (this.state.stage === 2) return
     this.backStage0()
   }
 
   isEmail(val) { 
-    var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/; 
-    return reg.test(val); 
+    var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+    return reg.test(val)
   }
 
   // TODO: Optimize Style

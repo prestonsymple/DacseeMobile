@@ -37,6 +37,7 @@ module.exports = {
             "never"
         ],
         "no-unused-vars": 1,
+        "react/prop-types": 0,
         "flow-vars/define-flow-type": 1,
         "flow-vars/use-flow-type": 1
     }

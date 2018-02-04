@@ -8,6 +8,7 @@ import MultiPoint from './maps/MultiPoint'
 import Navigation from './navigation'
 import Utils from './Utils'
 import Offline from './Offline'
+import Search from './Search'
 
 MapView.Marker = Marker
 MapView.Polyline = Polyline
@@ -28,4 +29,5 @@ export {
   Navigation,
   Utils,
   Offline,
+  Search
 }

@@ -32,7 +32,7 @@ export default class SelectAddressView extends Component {
                 </View> */}
                 {/* <View style={{ height: 22, width: 1, backgroundColor: '#f2f2f2' }} /> */}
                 <View style={{ flex: 1, paddingHorizontal: 12 }}>
-                  <TextInput onChangeText={keywords => onChangeKeywords(keywords)} placeholder={`Where ${field}?`} style={[
+                  <TextInput {...Define.TextInputArgs} onChangeText={keywords => onChangeKeywords(keywords)} placeholder={`Where ${field}?`} style={[
                     { height: 44, fontWeight: '600', fontSize: 15, color: '#666' }
                   ]} />
                 </View>

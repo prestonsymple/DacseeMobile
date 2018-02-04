@@ -15,7 +15,8 @@ class AMap3DPackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
         return listOf(
                 AMapUtilsModule(reactContext),
-                AMapOfflineModule(reactContext)
+                AMapOfflineModule(reactContext),
+                AMapSearchModule(reactContext)
         )
     }
 

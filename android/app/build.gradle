@@ -102,7 +102,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 26
     buildToolsVersion '25.0.0'
 
     defaultConfig {
@@ -111,6 +111,7 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
@@ -154,13 +155,13 @@ android {
 
 dependencies {
     compile project(':lottie-react-native')
-    compile project(':react-native-maps')
+//    compile project(':react-native-maps')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')
     compile project(':react-native-vector-icons')
     compile project(':react-native-code-push')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:26.0.1'
     compile 'com.facebook.react:react-native:+'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'

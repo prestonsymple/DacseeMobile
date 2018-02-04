@@ -1,15 +1,19 @@
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
+import {
+  Text, View, Animated, StyleSheet, Image, TouchableOpacity,
+  DeviceEventEmitter, ListView, Platform
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
-import { NavigationActions } from 'react-navigation'
+// import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
+import Lottie from 'lottie-react-native'
+import PropTypes from 'prop-types'
 
-import { MapView, Marker, Polyline, Utils } from '../../native/AMap'
-import { Screen, Icons, Redux, Define } from '../../utils'
 import Resources from '../../resources'
+import BaseScreenComponent from '../_base'
+
+import { MapView, Search } from '../../native/AMap'
+import { Screen, Icons, Define } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
 
@@ -31,7 +35,10 @@ const MAP_DEFINE = {
 }
 
 const PIN_HEIGHT = ((height - 20) / 2)
-const BOTTOM_MARGIN = Define.system.ios.x ? 35 : 5
+const BOTTOM_MARGIN = Platform.select({
+  ios: Define.system.ios.x ? 35 : 5,
+  android: 25
+}) 
 
 const DEMO_DATA = [[
   { value: 'SUV', title: 'SUV', key: 'suv', image: 'http://img.hb.aicdn.com/9087d7c3ee8a8d6e01e07a12d6ee3d0bb2fbda8656f6b-gdzrdR_fw658' },
@@ -50,8 +57,7 @@ const DEMO_DATA = [[
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({ data: state.booking }))
-(class MainScreen extends PureComponent {
+export default connect(state => ({ data: state.booking }))(class MainScreen extends BaseScreenComponent {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -60,11 +66,12 @@ export default connect(state => ({ data: state.booking }))
       //   <View style={{ backgroundColor: '#333', flex: 1, height: 300, width: 400 }}></View>
       // ),
       headerLeft: (
-        <TouchableOpacity 
-          activeOpacity={0.7} style={{ marginLeft: 5, top: 1, width: 44, justifyContent: 'center', alignItems: 'center' }} 
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN')}
         >
-          { Icons.Generator.Octicons('three-bars', 23, '#2f2f2f') }
+          {Icons.Generator.Octicons('three-bars', 23, '#2f2f2f', { style: { left: 8 } })}
         </TouchableOpacity>
       ),
       title: 'DACSEE'
@@ -79,6 +86,7 @@ export default connect(state => ({ data: state.booking }))
       ready: false,
       editAdr: false,
       field: 'to',
+      drag: false,
       defaultData: dataContrast.cloneWithRows([{
         type: 'favorite',
         address: '浦东新区xxx',
@@ -113,7 +121,6 @@ export default connect(state => ({ data: state.booking }))
     this.ui = new Animated.Value(0)
     this.form = new Animated.Value(0)
 
-    this._dragLock = false
     this.count = 0
   }
 
@@ -123,13 +130,13 @@ export default connect(state => ({ data: state.booking }))
   }
 
   componentWillUnmount() {
-    if (this.subscription === undefined || this.subscription === null || !('remove' in this.subscription)) return
-    this.subscription.remove()
+    this.timer && clearTimeout(this.timer)
+    this.subscription && this.subscription.remove()
   }
 
-  onLocationListener({nativeEvent}) {
+  onLocationListener({ nativeEvent }) {
     const { latitude, longitude } = nativeEvent
-    if (latitude === 0 || longitude === 0) return;
+    if (latitude === 0 || longitude === 0) return
     if (!this.state.ready) {
       this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
       this.setState({ ready: true })
@@ -137,28 +144,13 @@ export default connect(state => ({ data: state.booking }))
     this.currentLoc = { latitude, longitude }
   }
 
-  onStatusChangeListener({ nativeEvent }) {
-    const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
-    if (!this.props.data.from) {
-      this._dragLock = true // LOCK
-      this.props.dispatch(booking.journeyUpdateData({ from: {} }))
-      Animated.spring(this.pin, { toValue: 1, friction: 1.5 }).start()
-      Animated.timing(this.board, { toValue: 1, duration: 100 }).start()
-    }
-    clearTimeout(this.timer)
-    this.timer = setTimeout(() => {
+  async onLocationSearch(longitude, latitude) {
+    console.log(`[N][${Date.now()}]`)
+    try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
-      this.map.searchWithLocation(longitude, latitude)
-      this._dragLock = false
-    }, 1000)
-  }
+      const { count, type, pois } = await Search.searchLocation(longitude, latitude)
 
-  onPOISearchResponse({ nativeEvent }) {
-    const { count, pois, type } = nativeEvent
-  
-    if (type === 'near') {
-      // TODO: 优化位置算法
       const address = pois.find(pipe => {
         if (pipe.address.endsWith('米')) return pipe
         if (pipe.address.endsWith('站')) return pipe
@@ -167,33 +159,61 @@ export default connect(state => ({ data: state.booking }))
         return false
       })
       this.props.dispatch(booking.journeyUpdateData({ from: address || {} }))
-    } else if (type === 'keywords') {
-      const args = pois.map(pipe => ({
-        address: pipe.address,
-        location: pipe.location,
-        name: pipe.name,
-        type: 'keywords'
-      }))
-      this.setState({ data: dataContrast.cloneWithRows(args) })
+      this.setState({ drag: false })
+    } catch (e) {
+      return
     }
   }
 
+  onKeywordsSearch(keywords) {
+    return async () => {
+      try {
+        const { count, type, pois } = await Search.searchKeywords(keywords, '上海')
+        const args = pois.map(pipe => ({
+          address: pipe.address,
+          location: pipe.location,
+          name: pipe.name,
+          type: 'keywords'
+        }))
+        this.setState({ data: dataContrast.cloneWithRows(args) })
+      } catch (e) {
+        // Reject
+        return
+      }
+    }
+  }
+
+  onStatusChangeListener({ nativeEvent }) {
+    const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
+    if (!this.state.drag) {
+      this.setState({ drag: true })
+      this.props.dispatch(booking.journeyUpdateData({ from: {} }))
+      Animated.spring(this.pin, { toValue: 1, friction: 1.5 }).start()
+      Animated.timing(this.board, { toValue: 1, duration: 100 }).start()
+    }
+    this.timer && clearTimeout(this.timer)
+    this.timer = setTimeout(this.onLocationSearch.bind(this, longitude, latitude), 1500)
+  }
+
   onEnterKeywords(keywords) {
-    clearTimeout(this.timer)
-    this.timer = setTimeout(() => {
-      this.map.searchWithKeywords(keywords, '上海')
-    }, 250)
+    this.timer && clearTimeout(this.timer)
+    this.timer = setTimeout(this.onKeywordsSearch(keywords), 400)
   }
 
   async componentWillReceiveProps(props) {
     const { schedule } = props.data
-  
+
     if (schedule === 1) {
       await new Promise((resolve) => Animated.timing(this.ui, { toValue: 1, duration: 200 }).start(() => resolve()))
     }
 
     if (schedule === 3) {
       await new Promise((resolve) => Animated.timing(this.ui, { toValue: 2, duration: 200 }).start(() => resolve()))
+    }
+
+    if (('from' in props) && (props.from.address !== this.props.from.address)) {
+      const { location } = props.from
+      this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: location.lat, longitude: location.lng } }, 500)
     }
 
   }
@@ -224,52 +244,51 @@ export default connect(state => ({ data: state.booking }))
 
     return (
       <View style={{ flex: 1 }}>
-        <MapView 
-          {...MAP_DEFINE} 
+        <MapView
+          {...MAP_DEFINE}
           style={{ flex: 1 }}
-          locationEnabled={true} 
+          locationEnabled={true}
           mapType={'standard'}
           locationInterval={1000}
           locationStyle={{
-            
+
           }}
           onStatusChange={this.onStatusChangeListener.bind(this)}
           onLocation={this.onLocationListener.bind(this)}
-          onPOISearchResponse={this.onPOISearchResponse.bind(this)}
           ref={e => this.map = e}>
         </MapView>
 
         <MapPin timing={this.pin} />
         <MapPinTip timing={this.board} />
 
-        <PickerAddress 
-          timing={this.ui} 
+        <PickerAddress
+          timing={this.ui}
           drag={drag}
           to={this.props.data.to}
           from={this.props.data.from}
-          onPressTo={() => this.activeAdrEdit('to')} 
+          onPressTo={() => this.activeAdrEdit('to')}
           onPressFrom={() => this.activeAdrEdit('from')}
         />
-        <SelectBookingOption 
+        <SelectBookingOption
           onPressChangeCarType={() => this.changeFormAnimated(1)}
           onPressBack={() => this.changeFormAnimated(0)}
           onPressBooking={() => this.props.dispatch(booking.journeyUserStart())}
           data={this.props.data}
-          timing={[this.form, this.ui]} 
+          timing={[this.form, this.ui]}
         />
-        <BookingInfo 
+        <BookingInfo
           timing={this.ui}
         />
 
         {/* Modal - Where u? */}
-        <ModalSelectAddress 
-          onPressCancel={() => this.cancelAdrEdit()} 
+        <ModalSelectAddress
+          onPressCancel={() => this.cancelAdrEdit()}
           onSelectAddress={(props, field) => this.onSelectAddress(props, field)}
-          onRequestClose={() => {}}
+          onRequestClose={() => { }}
           onChangeKeywords={this.onEnterKeywords.bind(this)}
           field={field}
-          animationType={'slide'} 
-          transparent={true} 
+          animationType={'slide'}
+          transparent={true}
           visible={editAdr}
           defaultData={defaultData}
           data={data}
@@ -282,10 +301,34 @@ export default connect(state => ({ data: state.booking }))
 })
 
 class PickerAddress extends Component {
+
+  static propTypes = {
+    timing: PropTypes.any,
+    onPressTo: PropTypes.func,
+    onPressFrom: PropTypes.func,
+    drag: PropTypes.bool,
+    from: PropTypes.object,
+    to: PropTypes.object
+  }
+
+  constructor(props) {
+    super(props)
+    this.animated = new Animated.Value(0)
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.drag) {
+      Animated.loop(Animated.timing(this.animated, { toValue: 1, duration: 800, useNativeDriver: true })).start()
+    }
+    if (props.from.name) {
+      this.animated.stopAnimation()
+    }
+  }
+
   render() {
-    const { 
-      timing, 
-      onPressTo, 
+    const {
+      timing,
+      onPressTo,
       onPressFrom,
       drag,
       from,
@@ -294,20 +337,25 @@ class PickerAddress extends Component {
 
     return (
       <Animated.View style={[
-        { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: Screen.window.width <= 375 ? .5 : 1 },
+        styles.PickAddressWrap,
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
         { opacity: timing.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
       ]}>
         {/* From */}
-        <TouchableOpacity onPress={onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+        <TouchableOpacity onPress={drag ? () => { } : onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
           <View style={{ backgroundColor: '#52a732', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: drag ? '#a2a2a2' : '#333', fontSize: 14, fontWeight: '600' }}>{ drag ? '请选择上车地点' : from.name }</Text>
+          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
+          <View style={{ position: 'absolute', top: 0, bottom: 0, left: (Screen.window.width - 30 - 44) / 2, alignItems: 'center', justifyContent: 'center' }}>
+            {
+              (!from.name || drag) && (<Lottie progress={this.animated} style={{ width: 44, height: 44 }} source={Resources.animation.simpleLoader} />)
+            }
+          </View>
         </TouchableOpacity>
         <View style={{ backgroundColor: '#ccc', height: .5, marginHorizontal: 18 }} />
         {/* To */}
         <TouchableOpacity onPress={onPressTo} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
           <View style={{ backgroundColor: '#e54224', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{ to.name || '请输入目的地' }</Text>
+          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{to.name || '请输入目的地'}</Text>
         </TouchableOpacity>
       </Animated.View>
     )
@@ -319,14 +367,14 @@ class MapPinTip extends Component {
     const { timing } = this.props
     return (
       <Animated.View style={[
-        { position: 'absolute', backgroundColor: 'transparent', top: PIN_HEIGHT - 94, left: (Screen.window.width - 140) / 2  },
+        { position: 'absolute', backgroundColor: 'transparent', top: PIN_HEIGHT - 94, left: (Screen.window.width - 140) / 2 },
         { justifyContent: 'center', alignItems: 'center', paddingVertical: 6, width: 140 },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 },
-        { opacity: timing.interpolate({ inputRange: [ 0, 1 ], outputRange: [ 1, 0 ] }) }
+        { opacity: timing.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
       ]}>
         <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'white', flex: 1, borderRadius: 20 }} />
         <View style={{ position: 'absolute', bottom: -10 }}>
-          { Icons.Generator.Material('network-wifi', 20, 'white') }
+          {Icons.Generator.Material('network-wifi', 20, 'white')}
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontSize: 13, color: '#666', fontWeight: '600' }}>Board after </Text>
@@ -344,7 +392,7 @@ class MapPin extends Component {
       <View style={{ position: 'absolute', left: (Screen.window.width - 18) / 2 }}>
         <Animated.Image style={[
           { width: 18, height: 28 },
-          { top: timing.interpolate({ inputRange: [ 0, 1 ], outputRange: [ PIN_HEIGHT - 48, PIN_HEIGHT - 52 ] }) }
+          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 48, PIN_HEIGHT - 52] }) }
         ]} source={Resources.image.pin} />
       </View>
     )
@@ -362,7 +410,7 @@ class MoveToCurrentLocation extends Component {
         { top: this.form.interpolate({ inputRange: [0, 1], outputRange: [Screen.window.height - 155 - 64 - 15 - 19 - BOTTOM_MARGIN, Screen.window.height - 135 - 64 - 15 - 89 - BOTTOM_MARGIN] }) },
         { opacity: this.ui.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
       ]}>
-        { Icons.Generator.Material('my-location', 22, '#666') }
+        {Icons.Generator.Material('my-location', 22, '#666')}
       </Animated.View>
     )
   }
@@ -373,7 +421,7 @@ class SelectBookingOption extends Component {
     const { timing, onPressChangeCarType, onPressBack, onPressBooking } = this.props
     return (
       <Animated.View style={[
-        { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3 },
+        styles.SelectBookingWrap,
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
         { top: timing[0].interpolate({ inputRange: [0, 1], outputRange: [Screen.window.height - 130 - 64 - 15 - BOTTOM_MARGIN, Screen.window.height - 180 - 64 - 15 - BOTTOM_MARGIN] }) },
         { opacity: timing[1].interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) },
@@ -402,17 +450,17 @@ class SelectBookingOption extends Component {
             { flexDirection: 'row', backgroundColor: 'transparent' },
             { left: timing[0].interpolate({ inputRange: [0, .7], outputRange: [0, width], extrapolate: 'clamp' }) },
             { opacity: timing[0].interpolate({ inputRange: [0, .2], outputRange: [1, 0], extrapolate: 'clamp' }) }
-          ]}> 
+          ]}>
             <Button underlayColor={'#f2f2f299'} style={{ backgroundColor: 'transparent', height: 44, flex: 1 }}>
               <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                { Icons.Generator.Material('attach-money', 18, '#666', { style: { marginRight: 6, top: .5 } }) }
+                {Icons.Generator.Material('attach-money', 18, '#666', { style: { marginRight: 6, top: .5 } })}
                 <Text style={{ fontSize: 14, color: '#444', fontWeight: '600' }}>现金支付</Text>
               </View>
             </Button>
             <View style={{ backgroundColor: '#ccc', marginVertical: 8, width: .5 }} />
             <Button underlayColor={'#f2f2f299'} style={{ backgroundColor: 'transparent', height: 44, flex: 1 }}>
               <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                { Icons.Generator.Material('query-builder', 18, '#666', { style: { marginRight: 6, top: .5 } }) }
+                {Icons.Generator.Material('query-builder', 18, '#666', { style: { marginRight: 6, top: .5 } })}
                 <Text style={{ fontSize: 14, color: '#444', fontWeight: '600' }}>现在</Text>
               </View>
             </Button>
@@ -428,13 +476,13 @@ class SelectBookingOption extends Component {
           <Animated.View style={[
             { height: 44, width: (width - 30) * 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
             { left: timing[0].interpolate({ inputRange: [0, 1], outputRange: [0, -(width - 30)], extrapolate: 'clamp' }) },
-            {  }
+            {}
           ]}>
             <Button onPress={() => onPressBooking()} style={{ flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C', borderBottomLeftRadius: 3, borderBottomRightRadius: 3 }}>
               <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>开始</Text>
             </Button>
             <Button onPress={() => onPressBack()} style={{ flex: 1, height: 44, backgroundColor: '#FEA81C', borderBottomLeftRadius: 3, borderBottomRightRadius: 3 }}>
-              { Icons.Generator.Material('arrow-back', 28, 'white') }
+              {Icons.Generator.Material('arrow-back', 28, 'white')}
             </Button>
           </Animated.View>
         </View>
@@ -461,19 +509,19 @@ class BookingInfo extends Component {
             <Text style={{ fontSize: 16, fontWeight: '600', color: '#333' }}>陈师傅</Text>
             <Text style={{ fontSize: 12, fontWeight: '400', color: '#666' }}>沪A23N78</Text>
             <View style={{ flexDirection: 'row' }}>
-              { Icons.Generator.Material('star', 13, '#FEA81C') }
-              { Icons.Generator.Material('star', 13, '#FEA81C') }
-              { Icons.Generator.Material('star', 13, '#FEA81C') }
-              { Icons.Generator.Material('star', 13, '#FEA81C') }
-              { Icons.Generator.Material('star-half', 13, '#FEA81C') }
+              {Icons.Generator.Material('star', 13, '#FEA81C')}
+              {Icons.Generator.Material('star', 13, '#FEA81C')}
+              {Icons.Generator.Material('star', 13, '#FEA81C')}
+              {Icons.Generator.Material('star', 13, '#FEA81C')}
+              {Icons.Generator.Material('star-half', 13, '#FEA81C')}
             </View>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: 120, paddingHorizontal: 10 }}>
             <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
-              { Icons.Generator.Material('mail-outline', 24, 'white') }
+              {Icons.Generator.Material('mail-outline', 24, 'white')}
             </Button>
             <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
-              { Icons.Generator.Material('phone', 24, 'white') }
+              {Icons.Generator.Material('phone', 24, 'white')}
             </Button>
           </View>
         </View>
@@ -481,3 +529,14 @@ class BookingInfo extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  SelectBookingWrap: Platform.select({
+    ios: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3 },
+    android: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .8 }
+  }),
+  PickAddressWrap: Platform.select({
+    ios: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: Screen.window.width <= 375 ? .5 : 1 },
+    android: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
+  })
+})

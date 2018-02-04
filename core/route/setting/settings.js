@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent, Component } from 'react'
 import { StyleSheet, View, ListView, TouchableOpacity, Text, Switch, InteractionManager } from 'react-native'
+import { connect } from 'react-redux'
 // import InteractionManager from 'InteractionManager'
 import PropTypes from 'prop-types'
 
@@ -14,7 +15,7 @@ import {
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default class Settings extends BaseComponent {
+export default connect(state => ({ account: state }))(class Settings extends BaseComponent {
 
   static propTypes = {
     producer: PropTypes.func
@@ -78,7 +79,7 @@ export default class Settings extends BaseComponent {
 
     return React.createElement(View, wrapProps, (<ListView {...viewProps} />))
   }
-}
+})
 
 class ListViewItem extends Component {
 

@@ -12,6 +12,7 @@ import ModalProgress from './modal/modal.progress'
 export default connect(state => {
   return {
     application: state.application,
+    config: state.config,
     homeNav: state.homeNav,
     loginNav: state.loginNav,
     account: state.account
@@ -33,16 +34,41 @@ export default connect(state => {
   }
 
   render() {
-    const { account, application } = this.props
-    const { status_bar_style, status_bar_hidden } = application
+    const { account, application, config } = this.props
+    const { status_bar_hidden } = application
+    const { status_bar_style } = config
 
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={status_bar_hidden} barStyle={status_bar_style} />
+        <StatusBar animated={true} hidden={status_bar_hidden} backgroundColor={status_bar_style === 'light-content' ? 'black' : 'white'} barStyle={status_bar_style} />
         {
           account.status ? 
-            (<HomeNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} />) :
-            (<LoginNavigator navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} />)
+            (<HomeNavigator 
+              onNavigationStateChange={(prevState, currentState) => {
+                const currentScreen = getCurrentRouteName(currentState);
+                const prevScreen = getCurrentRouteName(prevState);
+          
+                if (prevScreen !== currentScreen) {
+                  // the line below uses the Google Analytics tracker
+                  // change the tracker here to use other Mobile analytics SDK.
+                  tracker.trackScreenView(currentScreen);
+                }
+              }}
+              navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} 
+            />) :
+            (<LoginNavigator 
+              onNavigationStateChange={(prevState, currentState) => {
+                const currentScreen = getCurrentRouteName(currentState);
+                const prevScreen = getCurrentRouteName(prevState);
+          
+                if (prevScreen !== currentScreen) {
+                  // the line below uses the Google Analytics tracker
+                  // change the tracker here to use other Mobile analytics SDK.
+                  tracker.trackScreenView(currentScreen);
+                }
+              }}
+              navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} 
+            />)
         }
         <ModalProgress />
         <ModalUpdate />

@@ -1,7 +1,7 @@
 import { Platform } from 'react-native'
 import { fork, all, take, call, put, takeEvery, takeLatest, apply } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, NavigationState } from 'react-navigation'
 import CodePush from 'react-native-code-push'
 
 
@@ -47,12 +47,19 @@ function* watchAndroidDrawerEvent() {
   }
 }
 
+function* watchAndroidBackButton() {
+  while (true) {
+    yield take(application.onPressAndroidBackButton().type)
+    yield put(NavigationActions.back())
+  }
+}
+
 export default function* sagaService() {
   yield all([
     takeLatest(application.changeApplicationStatus().type, watchClientVersion),
     fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
     fork(bookingSaga),
-
+    fork(watchAndroidBackButton),
 
     fork(logoutSaga),
     fork(loginSaga)

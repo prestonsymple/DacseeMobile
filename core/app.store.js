@@ -10,7 +10,7 @@ import logger from 'redux-logger'
 const persistConfig = {
   key: 'base',
   storage: storage,
-  whitelist: ['account', 'application']
+  whitelist: ['account', 'config']
 }
 /* Redux Reducers */
 import reducers from './redux/reducers'

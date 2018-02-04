@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Platform } from 'react-native'
 import { StackNavigator, DrawerNavigator } from 'react-navigation'
 
 import { Icons } from './utils'
@@ -26,6 +26,12 @@ import {
   SettingHelpCenterScreen
 } from './route/setting'
 
+import {
+  FormEditorScreen
+} from './components/form-builder'
+
+import UpgradeDriverScreen from './route/upgrade.driver'
+
 
 import LoginScreen from './route/login'
 /*****************************************************************************************************/
@@ -37,7 +43,7 @@ const defaultStackOptions = {
         backgroundColor: 'white',
         shadowColor: 'transparent',
         shadowOpacity: 0,
-        // borderBottomWidth: 0,
+        borderBottomWidth: Platform.select({ ios: 0, android: .5 }),
         borderBottomColor: '#c8c8c8',
         elevation: 0,
       },
@@ -48,7 +54,7 @@ const defaultStackOptions = {
       headerLeft: (
         <TouchableOpacity 
           activeOpacity={0.7} 
-          style={{ top: 1, width: 44, justifyContent: 'center', alignItems: 'center' }} 
+          style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
           onPress={() => navigation.goBack()}
         >
           { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
@@ -83,7 +89,11 @@ const HomeNavigator = DrawerNavigator({
     SettingMessageNotification: { screen: SettingMessageNotificationScreen },
     SettingLanguageRegion: { screen: SettingLanguageRegionScreen },
     SettingFeedback: { screen: SettingFeedbackScreen },
-    SettingHelpCenter: { screen: SettingHelpCenterScreen }
+    SettingHelpCenter: { screen: SettingHelpCenterScreen },
+
+    UpgradeDriver: { screen: UpgradeDriverScreen },
+
+    FormEditor: { screen: FormEditorScreen },
   }, defaultStackOptions)}
 }, defaultDrawerOptions)
 

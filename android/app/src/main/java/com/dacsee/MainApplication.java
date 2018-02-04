@@ -5,7 +5,7 @@ import android.app.Application;
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.facebook.react.ReactApplication;
 import com.airbnb.android.react.lottie.LottiePackage;
-import com.airbnb.android.react.maps.MapsPackage;
+//import com.airbnb.android.react.maps.MapsPackage;
 import com.rnfs.RNFSPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactInstanceManager;
@@ -39,7 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
          new MainReactPackage(),
             new LottiePackage(),
-            new MapsPackage(),
+//            new MapsPackage(),
             new RNFSPackage(),
             new RNDeviceInfo(),
          new VectorIconsPackage(),
