@@ -6,9 +6,9 @@ import { createAction, createActions } from 'redux-actions'
 const LOGIN_ACTIONS = createActions({},
   'LOGIN_NEXT',
   'LOGIN_BACK',
+  'LOGIN_PUT_VALUE',
 
-  'LOGIN_STAGE_THROW_ERROR',
-  'LOGIN_STAGE_ERROR_CLEAR',
+  'SET_ACCOUNT_VALUE',
 
   'LOGIN_SUCCESS',
   'LOGIN_FAIL',
@@ -19,6 +19,9 @@ const LOGIN_ACTIONS = createActions({},
 export default {
   loginNext: LOGIN_ACTIONS.loginNext,
   loginBack: LOGIN_ACTIONS.loginBack,
+  loginPutValue: LOGIN_ACTIONS.loginPutValue,
+
+  setAccountValue: LOGIN_ACTIONS.setAccountValue,
 
   loginSuccess: LOGIN_ACTIONS.loginSuccess,
   loginFail: LOGIN_ACTIONS.loginFail,

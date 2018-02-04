@@ -7,14 +7,10 @@ import {
 import { handleActions } from 'redux-actions'
 
 const initialState = {
-  status: false,
-  stage: 0
+  status: false
 }
 
 export default handleActions({
-  [account.loginNext]: (state, { payload }) => Object.assign({}, state, { stage: payload || state.stage + 1 }),
-  [account.loginBack]: (state, { payload }) => Object.assign({}, state, { stage: payload || state.stage - 1 }),
-
   // TODO: SET ACCOUNT DATA
   [account.loginSuccess]: (state, { payload }) => Object.assign({}, state, { status: true }),
 

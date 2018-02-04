@@ -3,7 +3,7 @@ import { fork, all, take, call, put, takeEvery, takeLatest, apply } from 'redux-
 import { delay } from 'redux-saga'
 import { NavigationActions, NavigationState } from 'react-navigation'
 import CodePush from 'react-native-code-push'
-
+import Toast from 'react-native-root-toast'
 
 import { application, account } from '../actions'
 import { System } from '../../utils'
@@ -54,10 +54,25 @@ function* watchAndroidBackButton() {
   }
 }
 
-function* watchNetworkStatus() {
+// function* watchNetworkStatus() {
+//   while (true) {
+//     const status = yield take(application.changeNetworkStatus().type)
+//     console.log(status)
+//   }
+// }
+
+function* watchThrowError() {
   while (true) {
-    const status = yield take(application.changeNetworkStatus().type)
-    console.log(status)
+    const { payload } = yield take(application.showMessage().type)
+    const title = typeof(payload) === 'object' ? payload.title : payload
+    const options = typeof(payload) === 'object' ? payload.options : {}
+    Toast.show(title, Object.assign({}, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+    }, options))
   }
 }
 
@@ -67,6 +82,7 @@ export default function* sagaService() {
     fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
     fork(bookingSaga),
     fork(watchAndroidBackButton),
+    fork(watchThrowError),
 
     fork(logoutSaga),
     fork(loginSaga)

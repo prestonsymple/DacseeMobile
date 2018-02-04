@@ -42,7 +42,7 @@ export default class Core extends Component {
 
     store.dispatch(application.changeApplicationStatus('inactive')) // CHECK UPDATE
     //#AMap SDK Init
-    // this.initializationNavigator()
+    // this.initializationStorePersist()
     this.initializationMomentConfig()
     this.initializationApplicationLinstener()
     this.initializationBackHandler()
@@ -81,12 +81,13 @@ export default class Core extends Component {
     })
   }
 
-  initializationNavigator() {
-    /* 监听Store */
-    // store.subscribe(() => {
-    //   if (store.getState().account.logined)
-    // })
-  }
+  // initializationStorePersist() {
+  //   // store.persist
+  //   /* 监听Store */
+  //   // store.subscribe(() => {
+  //   //   if (store.getState().account.logined)
+  //   // })
+  // }
   
   initializationPayment() {
   }

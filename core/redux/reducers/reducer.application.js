@@ -1,8 +1,11 @@
 'use strict'
 
 import {
-  application
+  application,
+  account
 } from '../actions'
+
+import _ from 'lodash'
 
 import { handleActions } from 'redux-actions'
 
@@ -15,10 +18,13 @@ const initialState = {
   status_bar_hidden: false,
   progress_modal_visible: false,
   
-  throw_error: {}
+  // throw_error: [],
+
+  login_stage: 0
 }
 
 export default handleActions({
+  [account.loginPutValue]: (state, { payload }) => Object.assign({}, state, { login_stage: payload }),
 
   [application.changeApplicationStatus]: (state, { payload }) => Object.assign({}, state, { application_status: payload }),
   [application.changeNetworkStatus]: (state, { payload }) => Object.assign({}, state, { network_status: payload }),
@@ -32,6 +38,11 @@ export default handleActions({
   [application.showProgress]: (state) => Object.assign({}, state, { progress_modal_visible: true }),
   [application.hideProgress]: (state) => Object.assign({}, state, { progress_modal_visible: false }),
 
-  [application.throwErrorMessage]: (state, { payload }) => Object.assign({}, state, { throw_error: payload }),
+  // [application.throwErrorMessage]: (state, { payload }) => {
+  //   const clone = state.throw_error
+  //   clone.push(payload)
+  //   // Object.assign({}, state, { })
+  //   // throw_error: _.cloneDeep(state.throw_error)
+  // },
   
 }, initialState)

@@ -33,7 +33,10 @@ import {
 import UpgradeDriverScreen from './route/upgrade.driver'
 
 
-import LoginScreen from './route/login'
+import {
+  LoginScreen,
+  RegisterScreen
+} from './route/login'
 /*****************************************************************************************************/
 
 const defaultStackOptions = {
@@ -104,7 +107,8 @@ const HomeNavigator = DrawerNavigator({
 
 
 const LoginNavigator = StackNavigator({
-  Login: { screen: LoginScreen }
+  Login: { screen: LoginScreen },
+  Register: { screen: RegisterScreen }
 })
 
 export {

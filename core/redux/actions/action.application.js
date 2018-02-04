@@ -27,5 +27,5 @@ export default {
 
   onPressAndroidBackButton: createAction('APPLICATION_ON_PRESS_BACK_BUTTON'),
   
-  throwErrorMessage: createAction('APPLICATION_THROW_ERROR_MESSAGE')
+  showMessage: createAction('APPLICATION_SHOW_MESSAGE')
 }

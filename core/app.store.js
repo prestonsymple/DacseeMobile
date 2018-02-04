@@ -2,13 +2,13 @@
 // import { AsyncStorage } from 'react-native'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { applyMiddleware, createStore, combineReducers } from 'redux'
-import { AsyncStorage } from 'react-native'
+import { applyMiddleware, createStore } from 'redux'
+// import { AsyncStorage } from 'react-native'
 import createSagaMiddleware from 'redux-saga'
-import logger from 'redux-logger'
+// import logger from 'redux-logger'
 
 const persistConfig = {
-  key: 'base',
+  key: 'v0.0.1',
   storage: storage,
   whitelist: ['account', 'config']
 }

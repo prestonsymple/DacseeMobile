@@ -9,6 +9,21 @@ const sessionBuilder = (baseUrl) => {
     // headers: {'X-Custom-Header':'foobar'}
   })
 
+  // DEBUG && API请求响应中间件 - 记录组件
+  instance.interceptors.response.use((response) => {
+    console.log('[DEBUG][SESSION][RESPONSE][+]', response, '[DEBUG][SESSION][RESPONSE][-]')
+    return response
+  }, (err) => {
+    return Promise.reject(err)
+  })
+
+  // API请求响应中间件 - 数据结构解析
+  instance.interceptors.response.use((response) => {
+    return { data: response.data }
+  }, (err) => {
+    return Promise.reject(err)
+  })
+
   return {
     post: async (path: string, body = {}) => {
       const response = await instance.post(`${path}`, body)
