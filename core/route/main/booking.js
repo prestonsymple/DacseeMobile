@@ -145,7 +145,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   }
 
   async onLocationSearch(longitude, latitude) {
-    console.log(`[N][${Date.now()}]`)
+    // console.log(`[N][${Date.now()}]`)
     try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     android: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .8 }
   }),
   PickAddressWrap: Platform.select({
-    ios: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: Screen.window.width <= 375 ? .5 : 1 },
+    ios: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
     android: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
   })
 })

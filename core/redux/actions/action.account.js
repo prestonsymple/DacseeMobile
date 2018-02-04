@@ -4,31 +4,24 @@ import { createAction, createActions } from 'redux-actions'
 
 // LOGIN ACTIONS
 const LOGIN_ACTIONS = createActions({},
-  'ACCOUNT_VERIFICATION_CODE_INPUT_COMPLETION',
-  'ACCOUNT_VERIFICATION_CODE_VAILD',
-  'ACCOUNT_VERIFICATION_CODE_TYPO',
+  'LOGIN_NEXT',
+  'LOGIN_BACK',
 
-  'ACCOUNT_GOTO_REGISTER',
-  'ACCOUNT_GOTO_LOGIN',
+  'LOGIN_STAGE_THROW_ERROR',
+  'LOGIN_STAGE_ERROR_CLEAR',
 
-  'ACCOUNT_LOGIN_SUCCESS',
-  'ACCOUNT_LOGIN_FAIL',
+  'LOGIN_SUCCESS',
+  'LOGIN_FAIL',
 
-  'ACCOUNT_LOGOUT_SUCCESS',
-
-  'ACCOUNT_ENTER_LOGIN',
-  'ACCOUNT_ENTER_LOGOUT'
+  'LOGOUT_SUCCESS'
 )
 
 export default {
-  accountEnterLogin: LOGIN_ACTIONS.accountEnterLogin,
-  accountEnterLogout: LOGIN_ACTIONS.accountEnterLogout,
-  accountGotoLogin: LOGIN_ACTIONS.accountGotoLogin,
-  accountGotoRegister: LOGIN_ACTIONS.accountGotoRegister,
-  accountLoginFail: LOGIN_ACTIONS.accountLoginFail,
-  accountLoginSuccess: LOGIN_ACTIONS.accountLoginSuccess,
-  accountLogoutSuccess: LOGIN_ACTIONS.accountLogoutSuccess,
-  accountVerificationCodeInputCompletion: LOGIN_ACTIONS.accountVerificationCodeInputCompletion,
-  accountVerificationCodeTypo: LOGIN_ACTIONS.accountVerificationCodeTypo,
-  accountVerificationCodeVaild: LOGIN_ACTIONS.accountVerificationCodeVaild
+  loginNext: LOGIN_ACTIONS.loginNext,
+  loginBack: LOGIN_ACTIONS.loginBack,
+
+  loginSuccess: LOGIN_ACTIONS.loginSuccess,
+  loginFail: LOGIN_ACTIONS.loginFail,
+  
+  logoutSuccess: LOGIN_ACTIONS.logoutSuccess
 }

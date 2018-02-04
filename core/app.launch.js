@@ -44,29 +44,29 @@ export default connect(state => {
         {
           account.status ? 
             (<HomeNavigator 
-              onNavigationStateChange={(prevState, currentState) => {
-                const currentScreen = getCurrentRouteName(currentState);
-                const prevScreen = getCurrentRouteName(prevState);
+              // onNavigationStateChange={(prevState, currentState) => {
+              //   const currentScreen = getCurrentRouteName(currentState);
+              //   const prevScreen = getCurrentRouteName(prevState);
           
-                if (prevScreen !== currentScreen) {
-                  // the line below uses the Google Analytics tracker
-                  // change the tracker here to use other Mobile analytics SDK.
-                  tracker.trackScreenView(currentScreen);
-                }
-              }}
+              //   if (prevScreen !== currentScreen) {
+              //     // the line below uses the Google Analytics tracker
+              //     // change the tracker here to use other Mobile analytics SDK.
+              //     tracker.trackScreenView(currentScreen);
+              //   }
+              // }}
               navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} 
             />) :
             (<LoginNavigator 
-              onNavigationStateChange={(prevState, currentState) => {
-                const currentScreen = getCurrentRouteName(currentState);
-                const prevScreen = getCurrentRouteName(prevState);
+              // onNavigationStateChange={(prevState, currentState) => {
+              //   const currentScreen = getCurrentRouteName(currentState);
+              //   const prevScreen = getCurrentRouteName(prevState);
           
-                if (prevScreen !== currentScreen) {
-                  // the line below uses the Google Analytics tracker
-                  // change the tracker here to use other Mobile analytics SDK.
-                  tracker.trackScreenView(currentScreen);
-                }
-              }}
+              //   if (prevScreen !== currentScreen) {
+              //     // the line below uses the Google Analytics tracker
+              //     // change the tracker here to use other Mobile analytics SDK.
+              //     tracker.trackScreenView(currentScreen);
+              //   }
+              // }}
               navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} 
             />)
         }

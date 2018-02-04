@@ -38,7 +38,7 @@ export default class SettingAboutScreen extends Component {
 
   async componentDidMount() {
     const runningBundle = await CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING)
-    this.setState({ rnVersion: runningBundle.label })
+    this.setState({ rnVersion: (runningBundle ? runningBundle.label : '0') })
   }
 
   renderHtml(html: string) {

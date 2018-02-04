@@ -46,7 +46,7 @@ export default class Core extends Component {
     this.initializationMomentConfig()
     this.initializationApplicationLinstener()
     this.initializationBackHandler()
-    // this.initializationNetworkListener()
+    this.initializationNetworkListener()
     // this.initializationPayment()
     // this.initializationLocation()
   }
@@ -101,17 +101,8 @@ export default class Core extends Component {
   // }
 
   initializationNetworkListener() {
-    NetInfo.addEventListener('change', (connect) => {
-      const payload = connect.toLowerCase()
-      store.dispatch(network.changeTheNetworkState(payload))
-      if (payload === 'none' || payload === 'unknown') {
-        this.connected = false
-        // return Toast.show('网络连接已断开', { position: Toast.positions.CENTER, shadow: false })
-      }
-      if (payload !== 'none' && payload !== 'unknown' && !this.connected) {
-        this.connected = true
-        // return Toast.show('网络连接已恢复', { position: Toast.positions.CENTER, shadow: false })
-      }
+    NetInfo.addEventListener('connectionChange', ({ type, effectiveType }) => {
+      store.dispatch(application.changeNetworkStatus(type))
     })
   }
 

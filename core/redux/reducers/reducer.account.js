@@ -8,16 +8,16 @@ import { handleActions } from 'redux-actions'
 
 const initialState = {
   status: false,
-  // status: true, // LOGIN TEST
-  login_step: 0
+  stage: 0
 }
 
 export default handleActions({
-  [account.accountEnterLogin]: (state, { payload }) => Object.assign({}, state, { login_step: payload }),
+  [account.loginNext]: (state, { payload }) => Object.assign({}, state, { stage: payload || state.stage + 1 }),
+  [account.loginBack]: (state, { payload }) => Object.assign({}, state, { stage: payload || state.stage - 1 }),
 
   // TODO: SET ACCOUNT DATA
-  [account.accountLoginSuccess]: (state, { payload }) => Object.assign({}, state, { status: true }),
+  [account.loginSuccess]: (state, { payload }) => Object.assign({}, state, { status: true }),
 
   // TODO: DELETE ACCOUNT DATA
-  [account.accountLogoutSuccess]: (state, { payload }) => Object.assign({}, state, { status: false }),
+  [account.logoutSuccess]: (state, { payload }) => Object.assign({}, state, { status: false }),
 }, initialState)

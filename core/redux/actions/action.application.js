@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions'
 
 export default {
   changeApplicationStatus: createAction('CHANGE_APPLICATION_STATUS'),
+  changeNetworkStatus: createAction('CHANGE_NETWORK_STATUS'),
 
   darkStatusBar: createAction('DARK_STATUS_BAR'),
   lightStatusBar: createAction('LIGHT_STATUS_BAR'),
@@ -24,5 +25,7 @@ export default {
   startUpdate: createAction('APPLICATION_START_UPDATE'),
   finshUpdate: createAction('APPLICATION_FINSH_UPDATE'),
 
-  onPressAndroidBackButton: createAction('APPLICATION_ON_PRESS_BACK_BUTTON')
+  onPressAndroidBackButton: createAction('APPLICATION_ON_PRESS_BACK_BUTTON'),
+  
+  throwErrorMessage: createAction('APPLICATION_THROW_ERROR_MESSAGE')
 }

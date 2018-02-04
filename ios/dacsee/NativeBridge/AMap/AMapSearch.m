@@ -15,8 +15,8 @@
   AMapSearchAPI *_search;
 }
 
-@property(assign, nonatomic) RCTPromiseResolveBlock resolve;
-@property(assign, nonatomic) RCTPromiseRejectBlock reject;
+@property(copy, nonatomic) RCTPromiseResolveBlock resolve;
+@property(copy, nonatomic) RCTPromiseRejectBlock reject;
 
 
 @end

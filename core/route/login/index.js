@@ -4,6 +4,7 @@ import { Text, View, Animated, StyleSheet, StatusBar, Image,
   ScrollView, Easing, I18nManager, TouchableNativeFeedback, Platform, Keyboard } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
+import Toast from 'react-native-root-toast'
 
 import { Screen, Icons, Redux, Define } from '../../utils'
 import resources from '../../resources'
@@ -21,27 +22,19 @@ const codeInputProps = {
 }
 
 
-export default connect(state => ({ account: state.account }))
-(class LoginScreen extends Component {
+export default connect(state => ({ account: state.account }))(class LoginScreen extends Component {
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      header: null   
-    }
-  }
+  static navigationOptions = { header: null }
 
   constructor(props) {
     super(props)
     this.state = {
-      stage: 0,
-      v1: '',
-      v2: '',
-      v3: '',
-      v4: ''
+      value: '',
+      v1: '', v2: '', v3: '', v4: ''
     }
     this.codeInput = {}
     this.animated = {}
-    this.animated.enterLogin = new Animated.Value(0)
+    this.animated.stage = new Animated.Value(0)
     this.animated.enterRegister = new Animated.Value(0)
     this.animated.isMail = new Animated.Value(1)
   }
@@ -50,38 +43,18 @@ export default connect(state => ({ account: state.account }))
   componentWillUnmount() {}
 
   componentWillReceiveProps(props) {
-    const { account: { login_step } } = props
-    if (login_step === 1) {
-      Animated.sequence([
-        Animated.timing(this.animated.enterRegister, { toValue: 1, duration: 200, easing: Easing.linear }),
-        Animated.timing(this.animated.enterLogin, { toValue: 4, duration: 200, easing: Easing.linear })
-      ]).start()
-    } else if (login_step === 0) {
-      Animated.sequence([
-        Animated.timing(this.animated.enterRegister, { toValue: 0, duration: 200, easing: Easing.linear }),
-        Animated.timing(this.animated.enterLogin, { toValue: 3, duration: 200, easing: Easing.linear })
-      ]).start()
-    }
-  }
+    const { account } = this.props
+    const { stage } = props.account
+    const valid = stage !== account.stage
+    if (!valid) return
 
-  goStage1() {
-    Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 600, easing: Easing.linear })
-      .start(() => this.setState({ stage: 1 }))
-  }
-
-  goStage2() {
-    Animated.timing(this.animated.enterLogin, { toValue: 3, duration: 200, easing: Easing.linear })
-      .start(() => this.setState({ stage: 2 }))
-  }
-
-  async backStage1() {
-    Animated.timing(this.animated.enterLogin, { toValue: 2, duration: 200, easing: Easing.linear})
-      .start(this.setState({ stage: 1 }))
-  }
-
-  async backStage0() {
-    Animated.timing(this.animated.enterLogin, { toValue: 0, duration: 500, easing: Easing.linear})
-      .start(this.setState({ stage: 0 }))
+    const STAGE_VALUE_MAP = [0, 2, 3, 4]
+    const STAGE_DURATION_MAP = [500, 200, 200, 200]
+    const STAGE_MIN_MAX_VALUE = stage > account.stage ? { max: stage, min: account.stage } : { max: account.stage, min: stage }
+    const duration = STAGE_DURATION_MAP
+      .filter((_, index) => (index >= STAGE_MIN_MAX_VALUE.min && index < STAGE_MIN_MAX_VALUE.max))
+      .reduce((p, n) => p + n)
+    Animated.timing(this.animated.stage, { toValue: STAGE_VALUE_MAP[stage], duration, easing: Easing.linear })
   }
 
   async vaildAccount(v4) {
@@ -94,20 +67,33 @@ export default connect(state => ({ account: state.account }))
   }
 
   stageHandle() {
-    const { stage } = this.state
-    if (stage === 0) return this.goStage1()
-    if (stage === 1) {
-      this.goStage2()
-      this.codeInput.v1.focus()
-    }
-    if (stage === 2) {
-      Keyboard.dismiss()
-      this.backStage1()
-      this.codeInput.v1.clear()
-      this.codeInput.v2.clear()
-      this.codeInput.v3.clear()
-      this.codeInput.v4.clear()
-    }
+    const { stage } = this.props
+    const { value } = this.state
+
+    if (stage === 0) return this.props.dispatch(account.loginNext())
+    // if (stage === 1) {
+    //   if (!value.length) return Toast.show('请输入正确的邮箱或手机号', {
+    //     duration: Toast.durations.LONG,
+    //     position: Toast.positions.CENTER,
+    //     shadow: true,
+    //     animation: true,
+    //     hideOnPress: true,
+    //   })
+      
+    //   const isMail = this.isEmail(value)
+    //   const body = isMail ? { email: value } : { phoneCountryCode: '+86', phoneNo: value }
+    //   this.props.dispatch(account.accountSendVerificationCode({ isMail, body }))
+    //   this.goStage2()
+    //   this.codeInput.v1.focus()
+    // }
+    // if (stage === 2) {
+    //   Keyboard.dismiss()
+    //   this.backStage1()
+    //   this.codeInput.v1.clear()
+    //   this.codeInput.v2.clear()
+    //   this.codeInput.v3.clear()
+    //   this.codeInput.v4.clear()
+    // }
   }
 
   backgroundHandle() {
@@ -160,9 +146,10 @@ export default connect(state => ({ account: state.account }))
             ]}>DACSEE</Animated.Text>
 
             <Animated.View style={[
-              { position: 'absolute', right: 0, top: (height / 2) - 60 },
+              { position: 'absolute', top: (height / 2) - 60 },
               { justifyContent: 'center' },
               { left: enterLogin.interpolate({ inputRange: [0, 1.2, 2, 3], outputRange: [-width, 0, 0, -width], extrapolate: 'clamp' }) },
+              { right: enterLogin.interpolate({ inputRange: [0, .01, 2, 3], outputRange: [width, 0, 0, width], extrapolate: 'clamp' }) },
               { opacity: enterLogin.interpolate({ inputRange: [0, 0.8, 2, 2.4, 3], outputRange: [0, 0, 1, 0, 0], extrapolate: 'clamp' }) }
             ]}>
               <View style={{ flexDirection: 'row', marginHorizontal: 45 }}>
@@ -178,9 +165,12 @@ export default connect(state => ({ account: state.account }))
                 </Animated.View>
                 <TextInput
                   {...Define.TextInputArgs}
+                  clearTextOnFocus={false}
                   placeholderTextColor={'#eee'}
                   placeholder={'Phone Number / Email'}
+                  returnKeyType={'done'}
                   onChangeText={text => {
+                    this.setState({ value: text })
                     if (this.isEmail(text)) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear}).start()
                     Animated.timing(this.animated.isMail, { toValue: 0, duration: 250, easing: Easing.linear}).start()
                   }}

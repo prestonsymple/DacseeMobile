@@ -54,6 +54,13 @@ function* watchAndroidBackButton() {
   }
 }
 
+function* watchNetworkStatus() {
+  while (true) {
+    const status = yield take(application.changeNetworkStatus().type)
+    console.log(status)
+  }
+}
+
 export default function* sagaService() {
   yield all([
     takeLatest(application.changeApplicationStatus().type, watchClientVersion),
