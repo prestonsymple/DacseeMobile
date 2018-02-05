@@ -6,9 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/dacsee/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "build:android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
-    "build:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 0.2.1 -e index.js",
+    "build:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 0.22.0 -e index.js",
     "build:ios:release": "appcenter codepush promote -a quzhi0323/Dacsee-iOS -s debug -d release",
-    "build:android:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-Android -t 0.2.1 -e index.js",
+    "build:android:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-Android -t \"~0.22.0\" -e index.js",
     "build:android:release": "appcenter codepush promote -a quzhi0323/Dacsee-Android -s debug -d release",
     "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
     "test": "jest"
@@ -23,7 +23,6 @@
     "moment": "^2.20.1",
     "react": "16.2.0",
     "react-native": "^0.52.2",
-    "react-native-background-timer": "^2.0.0",
     "react-native-code-push": "^5.2.1",
     "react-native-device-info": "^0.13.0",
     "react-native-fs": "^2.9.7",
@@ -38,7 +37,8 @@
     "redux-actions": "^2.2.1",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.4.0",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "rn-splash-screen": "^5.2.0"
   },
   "devDependencies": {
     "appcenter": "^1.1.0",

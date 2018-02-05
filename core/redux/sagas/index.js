@@ -18,9 +18,12 @@ import bookingSaga from './saga.booking'
 function* watchClientVersion(action) {
   try {
     const { payload } = action
+    console.log(payload)
     if (payload !== 'inactive') return
 
+    console.log('[检查更新]')
     const remoteBundle = yield call(CodePush.checkForUpdate)
+    console.log('[BUNDLE]', remoteBundle)
     if (!remoteBundle) return
     
     yield delay(1000)

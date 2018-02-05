@@ -52,13 +52,15 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 }]
 
-export default connect(state => ({ account: state.account }))(class DrawerContentComponent extends Component {
+export default connect(state => ({ user: state.account.user }))(class DrawerContentComponent extends Component {
 
   constructor(props) {
     super(props)
   }
 
   render() {
+    const { fullName } = this.props.user
+
     return (
       <View style={{ flex: 1 }}>
         {/* TODO: Fix iPhone X */}
@@ -76,7 +78,7 @@ export default connect(state => ({ account: state.account }))(class DrawerConten
             <Text style={[
               { marginTop: 10 },
               { color: '#333', fontWeight: '600', fontSize: 18 }
-            ]}>Sam Li</Text>
+            ]}>{ fullName }</Text>
             <View style={[
               { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.5 },
               { backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }

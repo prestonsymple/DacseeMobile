@@ -15,7 +15,9 @@ import {
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ account: state }))(class Settings extends BaseComponent {
+export default connect(state => ({ 
+  user: state.account.user
+}))(class Settings extends BaseComponent {
 
   static propTypes = {
     producer: PropTypes.func

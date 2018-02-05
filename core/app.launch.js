@@ -3,8 +3,10 @@ import { View, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { addNavigationHelpers } from 'react-navigation'
+import SplashScreen from 'rn-splash-screen'
 
 import { HomeNavigator, LoginNavigator } from './app.routes'
+
 
 import ModalUpdate from './modal/modal.update'
 import ModalProgress from './modal/modal.progress'
@@ -31,6 +33,10 @@ export default connect(state => {
 
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    SplashScreen.hide()
   }
 
   render() {

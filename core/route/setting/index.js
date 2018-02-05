@@ -10,7 +10,7 @@ import SettingHelpCenterScreen from './setting.help.center'
 import SettingWetViewScreen from './setting.web.view'
 
 import {
-  account
+  account, application
 } from '../../redux/actions'
 
 
@@ -43,17 +43,25 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
     title: '关于', type: 'text', onPress: () => navigation.navigate('SettingAbout')
   }],
   [{
-    title: '切换账号', type: 'button', onPress: () => dispatch(account.accountEnterLogout())
+    title: '切换账号', type: 'button', onPress: () => dispatch(account.logoutSuccess())
   }]
 ])
 
 
 // 账号与安全
-const SettingAccountScreen = createTemplate('账号与安全', () => ([
+const SettingAccountScreen = createTemplate('账号与安全', ({ navigation, dispatch, user }) => ([
   [{
-    title: '手机号', type: 'text', value: '(+86) 176211269696', onPress: () => {}
+    title: '账号', type: 'text', value: user.userId, editable: false
+  },{
+    title: '手机号', type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, onPress: () => dispatch(application.showMessage('暂不支持手机号修改'))
   }, {
-    title: '邮箱账号', type: 'text', value: '尚未绑定', onPress: () => {}
+    title: '邮箱账号', type: 'text', value: user.email || '尚未绑定', onPress: () => dispatch(application.showMessage('暂不支持邮箱修改'))
+  }], [{
+    title: '绑定至微信', type: '', value: '', onPress: () => { this.props }
+  },{
+    title: '绑定至微博', type: 'text', value: '', onPress: () => {}
+  }, {
+    title: '绑定至QQ', type: 'text', value: '', onPress: () => {}
   }]
 ]))
 

@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.facebook.react.ReactApplication;
+import com.mehcode.reactnative.splashscreen.SplashScreenPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 //import com.airbnb.android.react.maps.MapsPackage;
 import com.rnfs.RNFSPackage;
@@ -38,6 +40,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
          new MainReactPackage(),
+            new SplashScreenPackage(),
+            new ReactNativePushNotificationPackage(),
             new LottiePackage(),
 //            new MapsPackage(),
             new RNFSPackage(),

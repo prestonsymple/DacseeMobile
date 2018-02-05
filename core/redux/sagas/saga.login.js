@@ -64,13 +64,13 @@ function* loginSaga() {
           const { data }  = yield call(session.user.post, path, body)
           
           yield all([ // 登录完成
-            delay(500),
-            put(account.setAccountValue(data)),
-            delay(1000),
+            put(application.darkStatusBar()),
             put(application.hideProgress()),
-            delay(500),
-            put(account.loginSuccess())
+            put(account.setAccountValue(data)),
+            put(account.loginSuccess()),
+            delay(2000),
           ])
+
         } catch (e) {
           if (e.response && e.response.data.code == 'INVALID_VERIFICATION_CODE') {
             yield all([
@@ -114,12 +114,11 @@ function* loginSaga() {
           })
 
           yield all([ // 登录完成
-            delay(500),
+            put(application.darkStatusBar()),
             put(account.setAccountValue(data)),
-            delay(1000),
             put(application.hideProgress()),
-            delay(500),
-            put(account.loginSuccess())
+            put(account.loginSuccess()),
+            delay(2000)
           ])
 
         } catch (e) {
@@ -148,10 +147,8 @@ function* loginSaga() {
 function* logoutSaga() {
   while(true) {
     const payload = yield take(account.logoutSuccess().type)
-    yield put(NavigationActions.back())
     // yield delay(500)
     // TODO: CLEAN STATE && CACHE
-    yield put(account.accountLogoutSuccess())
   }
 }
 
