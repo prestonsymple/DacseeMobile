@@ -24,60 +24,80 @@ label, packageHash, packageSize
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
-export default connect(({ application }) => ({ 
-  remoteBundle: application.update_remote_bundle
-}))(class _ extends Component {
+class CodePushComponent extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
       indeterminate: true,
-      progress: 0
+      progress: 0,
+      visible: false
     }
     this.running = false
   }
 
-  componentWillReceiveProps(props) {
-    if (props.remoteBundle === null || this.running) return;
-    
-    this.downloadBundle(props.remoteBundle)
+  // codePushStatusDidChange(status) {
+  //   switch(status) {
+  //   case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
+  //     console.log('Checking for updates.')
+  //     break
+  //   case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+  //     console.log('Downloading package.')
+  //     break
+  //   case CodePush.SyncStatus.INSTALLING_UPDATE:
+  //     console.log('Installing update.')
+  //     break
+  //   case CodePush.SyncStatus.UP_TO_DATE:
+  //     console.log('Up-to-date.')
+  //     break
+  //   case CodePush.SyncStatus.UPDATE_INSTALLED:
+  //     console.log('Update installed.')
+  //     break
+  //   }
+  // }
+
+  async componentDidMount() {
+    const remoteBundle = await CodePush.checkForUpdate()
+    if (!remoteBundle) return
+    this.setState({ visible: true })
+    this.downloadBundle(remoteBundle)
   }
 
   async downloadBundle(remoteBundle) {
-    this.running = true
-    await delay(3100)
-    this.setState({ indeterminate: false })
-    const bundle = await remoteBundle.download(progress => {
-      const { receivedBytes, totalBytes } = progress
-      const rate = (receivedBytes / totalBytes).toFixed(2)
-      if (receivedBytes < totalBytes) {
-        this.setState({ progress: parseFloat(rate) })
-      } else {
-        this.setState({ progress: 1 })
-      }
-    })
+    if (!this.running) {
+      this.running = true
+      await delay(3100)
+      this.setState({ indeterminate: false })
+      const bundle = await remoteBundle.download(progress => {
+        const { receivedBytes, totalBytes } = progress
+        const rate = (receivedBytes / totalBytes).toFixed(2)
+        if (receivedBytes < totalBytes) {
+          this.setState({ progress: parseFloat(rate) })
+        } else {
+          this.setState({ progress: 1 })
+        }
+      })
 
-    await delay(1500)
-    this.setState({ indeterminate: true })
-    await bundle.install()
-    await delay(1000)
-    this.setState({ indeterminate: false, progress: 100 })
+      await delay(1500)
+      this.setState({ indeterminate: true })
+      await bundle.install()
+      await delay(1000)
+      this.setState({ indeterminate: false, progress: 100 })
 
-    Alert.alert('更新完成', '重启应用后完成更新', [
-      { text: '确定', onPress: async () => {
-        this.props.dispatch(application.finshUpdate())
-        await CodePush.notifyAppReady()
-        await CodePush.restartApp()
-      }}
-    ])
+      Alert.alert('更新完成', '已将应用升级为最新版', [
+        { text: '确定', onPress: async () => {
+          await CodePush.notifyAppReady()
+          await CodePush.restartApp()
+        }}
+      ])
+    }
   }
 
   render() {
-    const { remoteBundle } = this.props
-    const { indeterminate, progress } = this.state
+    const { indeterminate, progress, visible } = this.state
 
     return (
-      <Modal onRequestClose={() => {}} animationType={'slide'} transparent={false} visible={remoteBundle !== null}>
+      <Modal onRequestClose={() => {}} animationType={'slide'} transparent={false} visible={visible}>
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 
@@ -110,4 +130,11 @@ export default connect(({ application }) => ({
     )
   }
 
-})
+}
+
+// const CODE_PUSH_OPTIONS = {
+//   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
+//   installMode: CodePush.InstallMode.IMMEDIATE
+// }
+
+export default CodePushComponent

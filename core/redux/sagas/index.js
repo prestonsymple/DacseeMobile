@@ -15,24 +15,24 @@ import bookingSaga from './saga.booking'
 /******************************* WATCHERS *************************************/
 /******************************************************************************/
 
-function* watchClientVersion(action) {
-  try {
-    const { payload } = action
-    console.log(payload)
-    if (payload !== 'inactive') return
+// function* watchClientVersion(action) {
+//   try {
+//     const { payload } = action
+//     console.log(payload)
+//     if (payload !== 'inactive') return
 
-    console.log('[检查更新]')
-    const remoteBundle = yield call(CodePush.checkForUpdate)
-    console.log('[BUNDLE]', remoteBundle)
-    if (!remoteBundle) return
+//     console.log('[检查更新]')
+//     const remoteBundle = yield call(CodePush.checkForUpdate)
+//     console.log('[BUNDLE]', remoteBundle)
+//     if (!remoteBundle) return
     
-    yield delay(1000)
+//     yield delay(1000)
 
-    yield put(application.startUpdate(remoteBundle))
-  } catch (e) {
-    console.log(e)
-  }
-}
+//     yield put(application.startUpdate(remoteBundle))
+//   } catch (e) {
+//     console.log(e)
+//   }
+// }
 
 function* watchiOSDrawerEvent() {
   while(true) {
@@ -64,7 +64,7 @@ function* watchAndroidBackButton() {
 //   }
 // }
 
-function* watchThrowError() {
+function* watchShowMessage() {
   while (true) {
     const { payload } = yield take(application.showMessage().type)
     const title = typeof(payload) === 'object' ? payload.title : payload
@@ -81,11 +81,11 @@ function* watchThrowError() {
 
 export default function* sagaService() {
   yield all([
-    takeLatest(application.changeApplicationStatus().type, watchClientVersion),
+    // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
     fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
     fork(bookingSaga),
     fork(watchAndroidBackButton),
-    fork(watchThrowError),
+    fork(watchShowMessage),
 
     fork(logoutSaga),
     fork(loginSaga)

@@ -167,6 +167,8 @@ dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
+
+    compile ('com.google.android.gms:play-services-gcm:8.1.0') { force = true }
     // From node_modules
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

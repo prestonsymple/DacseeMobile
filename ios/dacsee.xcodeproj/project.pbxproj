@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -87,6 +88,8 @@
 		F5D3FB54201FE7ED00EAB3F6 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D3FAEA201FE77400EAB3F6 /* libRNFS.a */; };
 		F5D3FC00201FEAC200EAB3F6 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D3FAFC201FE7AF00EAB3F6 /* Lottie.framework */; };
 		F5D3FC01201FEAC200EAB3F6 /* Lottie.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F5D3FAFC201FE7AF00EAB3F6 /* Lottie.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F5DBEBE52028A73300F4A9DF /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DBEBE42028A6E600F4A9DF /* libRCTSplashScreen.a */; };
+		F5DBEBEF2028A8BC00F4A9DF /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DBEBEC2028A8B100F4A9DF /* libRCTPushNotification.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -468,6 +471,27 @@
 			remoteGlobalIDString = 62CA59B71E3C173B002D7188;
 			remoteInfo = Lottie_iOS;
 		};
+		F5DBEBE32028A6E600F4A9DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3245CDED1BFEE35C00EABF68;
+			remoteInfo = RCTSplashScreen;
+		};
+		F5DBEBEB2028A8B100F4A9DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
+		F5DBEBED2028A8B100F4A9DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
+			remoteInfo = "RCTPushNotification-tvOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -591,6 +615,9 @@
 		F5D3FAA9201FE77400EAB3F6 /* RNFS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		F5D3FAF4201FE7AF00EAB3F6 /* Lottie.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lottie.xcodeproj; path = "../node_modules/lottie-ios/Lottie.xcodeproj"; sourceTree = "<group>"; };
 		F5D3FB03201FE7B800EAB3F6 /* LottieReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LottieReactNative.xcodeproj; path = "../node_modules/lottie-react-native/lib/ios/LottieReactNative.xcodeproj"; sourceTree = "<group>"; };
+		F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/rn-splash-screen/ios/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
+		F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		F5DBEBF02028AAE100F4A9DF /* dacsee.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = dacsee.entitlements; path = dacsee/dacsee.entitlements; sourceTree = "<group>"; };
 		F83003D7435241979684458E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FBBA790CE36040B99ED31E6E /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -608,6 +635,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5DBEBEF2028A8BC00F4A9DF /* libRCTPushNotification.a in Frameworks */,
+				F5DBEBE52028A73300F4A9DF /* libRCTSplashScreen.a in Frameworks */,
 				F5D3FB54201FE7ED00EAB3F6 /* libRNFS.a in Frameworks */,
 				F5D3FB53201FE7E500EAB3F6 /* libLottieReactNative.a in Frameworks */,
 				F5669E5C2009FE6300A0159A /* libRNDeviceInfo.a in Frameworks */,
@@ -740,6 +769,7 @@
 		13B07FAE1A68108700A75B9A /* dacsee */ = {
 			isa = PBXGroup;
 			children = (
+				F5DBEBF02028AAE100F4A9DF /* dacsee.entitlements */,
 				F59CD5932005934E00F2824A /* NativeBridge */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -845,6 +875,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */,
+				F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */,
 				F5D3FAF4201FE7AF00EAB3F6 /* Lottie.xcodeproj */,
 				F5D3FAA9201FE77400EAB3F6 /* RNFS.xcodeproj */,
 				F5669E292009FE5700A0159A /* RNDeviceInfo.xcodeproj */,
@@ -1065,6 +1097,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F5DBEBE02028A6E500F4A9DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5DBEBE42028A6E600F4A9DF /* libRCTSplashScreen.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5DBEBE72028A8B100F4A9DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5DBEBEC2028A8B100F4A9DF /* libRCTPushNotification.a */,
+				F5DBEBEE2028A8B100F4A9DF /* libRCTPushNotification-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1165,6 +1214,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -1235,8 +1287,16 @@
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
 				},
 				{
+					ProductGroup = F5DBEBE72028A8B100F4A9DF /* Products */;
+					ProjectRef = F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */;
+				},
+				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
 					ProjectRef = 139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */;
+				},
+				{
+					ProductGroup = F5DBEBE02028A6E500F4A9DF /* Products */;
+					ProjectRef = F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */;
 				},
 				{
 					ProductGroup = 832341B11AAA6A8300B99B32 /* Products */;
@@ -1635,6 +1695,27 @@
 			remoteRef = F5D3FB07201FE7B800EAB3F6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F5DBEBE42028A6E600F4A9DF /* libRCTSplashScreen.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTSplashScreen.a;
+			remoteRef = F5DBEBE32028A6E600F4A9DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5DBEBEC2028A8B100F4A9DF /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = F5DBEBEB2028A8B100F4A9DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5DBEBEE2028A8B100F4A9DF /* libRCTPushNotification-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTPushNotification-tvOS.a";
+			remoteRef = F5DBEBED2028A8B100F4A9DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1908,6 +1989,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = dacsee/dacsee.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = K9D7EKGRKD;
@@ -1939,6 +2021,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = dacsee/dacsee.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K9D7EKGRKD;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2192,6 +2275,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = dacsee/dacsee.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K9D7EKGRKD;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

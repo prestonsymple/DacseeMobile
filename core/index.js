@@ -2,13 +2,13 @@
 /* global store */
 /*eslint-disable no-unused-vars*/
 import React, { Component, PureComponent } from 'react'
-import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules, BackHandler } from 'react-native'
+import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules, BackHandler, PushNotificationIOS } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
+import PushNotification from 'react-native-push-notification'
 
 import InteractionManager from 'InteractionManager'
-import CodePush from 'react-native-code-push'
 /*eslint-enabled no-unused-vars*/
 
 import Store from './app.store'
@@ -25,7 +25,7 @@ const initializationModule = () => {}
 
 global.store = Store()
 
-export default class Core extends Component {
+class Core extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -42,7 +42,7 @@ export default class Core extends Component {
 
     store.dispatch(application.changeApplicationStatus('inactive')) // CHECK UPDATE
     //#AMap SDK Init
-    // this.initializationStorePersist()
+    this.initializationPushNotification()
     this.initializationMomentConfig()
     this.initializationApplicationLinstener()
     this.initializationBackHandler()
@@ -51,8 +51,45 @@ export default class Core extends Component {
     // this.initializationLocation()
   }
 
-  componentWillUnmount() {
-    // navigator.geolocation.clearWatch(this.watchID);
+  initializationPushNotification() {
+    PushNotification.configure({
+
+      // (optional) Called when Token is generated (iOS and Android)
+      onRegister: function(token) {
+        console.log('[PN][TOEKN]',token)
+      },
+  
+      // (required) Called when a remote or local notification is opened or received
+      onNotification: function(notification) {
+        console.log('[PN][RECEIVED]', notification)
+
+        // process the notification
+        
+        // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
+        notification.finish(PushNotificationIOS.FetchResult.NoData)
+      },
+  
+      // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
+      // senderID: "YOUR GCM SENDER ID",
+  
+      // IOS ONLY (optional): default: all - Permissions to register.
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true
+      },
+  
+      // Should the initial notification be popped automatically
+      // default: true
+      popInitialNotification: true,
+  
+      /**
+        * (optional) default: true
+        * - Specified if permissions (ios) and token (android and ios) will requested or not,
+        * - if not, you must call PushNotificationsHandler.requestPermissions() later
+        */
+      requestPermissions: true
+    })
   }
 
   initializationBackHandler() {
@@ -121,3 +158,5 @@ export default class Core extends Component {
     )
   }
 }
+
+export default Core

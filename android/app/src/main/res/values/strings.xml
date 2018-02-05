@@ -1,5 +1,5 @@
 <resources>
-  <string name="reactNativeCodePush_androidDeploymentKey" moduleConfig="true">50X6Bx8Z_NoVXPtj3D8FC-2sG80-BkF6K4PNz</string>
+  <string name="reactNativeCodePush_androidDeploymentKey" moduleConfig="true">5Tk5dUDPQF9qA1AN_EzpcSvKmw3oB14AF4w4M</string>
   <string name="app_name">大喜搭车</string>
   <string name="title_activity_splash">SplashActivity</string>
 </resources>
