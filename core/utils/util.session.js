@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const SESSION_TIMEOUT = 2500
+const SESSION_TIMEOUT = 5000
 
 const sessionBuilder = (baseUrl) => {
   const instance = axios.create({
@@ -14,6 +14,7 @@ const sessionBuilder = (baseUrl) => {
     console.log('[DEBUG][SESSION][RESPONSE][+]', response, '[DEBUG][SESSION][RESPONSE][-]')
     return response
   }, (err) => {
+    console.log(err)
     return Promise.reject(err)
   })
 

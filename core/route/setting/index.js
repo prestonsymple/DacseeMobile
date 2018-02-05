@@ -7,6 +7,7 @@ import Settings from './settings'
 import SettingAboutScreen from './setting.about'
 import SettingFeedbackScreen from './setting.feedback'
 import SettingHelpCenterScreen from './setting.help.center'
+import SettingWetViewScreen from './setting.web.view'
 
 import {
   account
@@ -79,5 +80,6 @@ export {
   SettingMessageNotificationScreen,
   SettingLanguageRegionScreen,
   SettingFeedbackScreen,
-  SettingHelpCenterScreen
+  SettingHelpCenterScreen,
+  SettingWetViewScreen
 }

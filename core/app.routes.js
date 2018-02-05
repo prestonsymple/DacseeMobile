@@ -23,7 +23,8 @@ import {
   SettingMessageNotificationScreen,
   SettingLanguageRegionScreen,
   SettingFeedbackScreen,
-  SettingHelpCenterScreen
+  SettingHelpCenterScreen,
+  SettingWetViewScreen
 } from './route/setting'
 
 import {
@@ -93,6 +94,7 @@ const HomeNavigator = DrawerNavigator({
     SettingLanguageRegion: { screen: SettingLanguageRegionScreen },
     SettingFeedback: { screen: SettingFeedbackScreen },
     SettingHelpCenter: { screen: SettingHelpCenterScreen },
+    SettingWetView: { screen: SettingWetViewScreen },
 
     UpgradeDriver: { screen: UpgradeDriverScreen },
 
@@ -108,7 +110,7 @@ const HomeNavigator = DrawerNavigator({
 
 const LoginNavigator = StackNavigator({
   Login: { screen: LoginScreen },
-  Register: { screen: RegisterScreen }
+  SettingWetView: { screen: SettingWetViewScreen }
 })
 
 export {

@@ -1,11 +1,13 @@
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, StyleSheet, StatusBar, Image, 
-  TouchableOpacity, TouchableHighlight, DeviceEventEmitter, TextInput,
-  ScrollView, Easing, I18nManager, TouchableNativeFeedback, Platform, Keyboard } from 'react-native'
-import InteractionManager from 'InteractionManager'
-import { NavigationActions, SafeAreaView } from 'react-navigation'
+import {
+  Text, View, Animated, StyleSheet, Image,
+  TouchableOpacity, TextInput, Easing, Platform, Keyboard
+} from 'react-native'
+// import InteractionManager from 'InteractionManager'
+// import { NavigationActions, SafeAreaView } from 'react-navigation'
+import marked from 'marked'
 
-import { Screen, Icons, Redux, Define } from '../../utils'
+import { Screen, Icons, Define } from '../../utils'
 import resources from '../../resources'
 import { Button } from '../../components'
 import { application as app, account } from '../../redux/actions'
@@ -21,7 +23,7 @@ const codeInputProps = {
 }
 
 
-export default connect(state => ({ 
+export default connect(state => ({
   account: state.account,
   stage: state.application.login_stage
 }))(class LoginScreen extends Component {
@@ -32,7 +34,10 @@ export default connect(state => ({
     super(props)
     this.state = {
       value: '',
-      v1: '', v2: '', v3: '', v4: ''
+      v1: '', v2: '', v3: '', v4: '',
+      referralUserId: '',
+      fullName: '',
+      countryCode: '+86'
     }
     this.codeInput = {}
     this.animated = {}
@@ -41,8 +46,8 @@ export default connect(state => ({
     this.animated.isMail = new Animated.Value(1)
   }
 
-  async componentDidMount() {}
-  componentWillUnmount() {}
+  async componentDidMount() { }
+  componentWillUnmount() { }
 
   componentWillReceiveProps(props) {
 
@@ -61,7 +66,7 @@ export default connect(state => ({
 
     if (stage === 2) { this.codeInput.v1.focus() }
     // if (stage === 3 && !('id' in props.account)) {
-      
+
     // }
   }
 
@@ -71,26 +76,28 @@ export default connect(state => ({
     const { v1, v2, v3, value } = this.state
     const vCode = `${v1}${v2}${v3}${v4}`
     Keyboard.dismiss()
-    this.props.dispatch(account.loginNext({ stage: 3, value: {
-      id: value,
-      code: vCode,
-      isMail: this.isEmail(value)
-    } }))
+    this.props.dispatch(account.loginNext({
+      stage: 3, value: {
+        id: value,
+        code: vCode,
+        isMail: this.isEmail(value)
+      }
+    }))
   }
 
   stageHandle() {
     const { stage } = this.props
     const { value } = this.state
 
-    if 
+    if
     (stage === 0) {
       this.props.dispatch(account.loginNext({ stage: 1 }))
-    } else if 
+    } else if
     (stage === 1) {
       if (!value.length) return this.props.dispatch(app.showMessage('请输入正确的邮箱或手机号'))
       const body = this.isEmail(value) ? { email: value } : { phoneCountryCode: '+86', phoneNo: value }
       this.props.dispatch(account.loginNext({ stage: 2, value: body }))
-    } else if 
+    } else if
     (stage === 2) {
       this.props.dispatch(account.loginBack(1))
       this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
@@ -98,12 +105,45 @@ export default connect(state => ({
     }
   }
 
+  onPressComplate() {
+    const { value, countryCode, fullName, referralUserId, v1, v2 ,v3, v4 } = this.state
+    const vCode = `${v1}${v2}${v3}${v4}`
+    const data = {
+      fullName: fullName,
+      phoneCountryCode: countryCode,
+      phoneNo: value,
+      phoneVerificationCode: vCode,
+      // _id1: '5a4dfb482dd97f23dc6a06c4',
+      referralUserId: referralUserId
+    }
+
+    this.props.dispatch(account.loginNext({ stage: 5, value: data }))
+  }
+
+  renderHtml(html) {
+    return `
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta charset="utf-8" />
+          <style>
+            h3, h4 { font-weight: 400 }
+            h3 { font-size: 16px; color: '#333' }
+            h4 { font-size: 14px; color: '#666' }
+            p { font-size: 13px; color: '#666' }
+          </style>
+        </head>
+        <body>${html}</body>
+      </html>
+    `
+  }
+
   backgroundHandle() {
     Keyboard.dismiss()
     if (this.props.stage === 1 && this.state.value.length === 0) return this.props.dispatch(account.loginBack(0))
   }
 
-  isEmail(val) { 
+  isEmail(val) {
     var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
     return reg.test(val)
   }
@@ -161,7 +201,7 @@ export default connect(state => ({
                   { width: isMail.interpolate({ inputRange: [0, 0.6, 1], outputRange: [65, 65, 0], extrapolate: 'clamp' }) },
                   { marginRight: isMail.interpolate({ inputRange: [0, 0.6, 1], outputRange: [15, 15, 0], extrapolate: 'clamp' }) }
                 ]}>
-                  <Button activeOpacity={0.9} style={[ { borderColor: '#f2f2f2', borderBottomWidth: 1, flex: 1, height: 44, justifyContent: 'center' } ]}>
+                  <Button activeOpacity={0.9} style={[{ borderColor: '#f2f2f2', borderBottomWidth: 1, flex: 1, height: 44, justifyContent: 'center' }]}>
                     <Text style={styles.stdInput}>+86</Text>
                   </Button>
                 </Animated.View>
@@ -173,10 +213,10 @@ export default connect(state => ({
                   returnKeyType={'done'}
                   onChangeText={text => {
                     this.setState({ value: text })
-                    if (this.isEmail(text)) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear}).start()
-                    Animated.timing(this.animated.isMail, { toValue: 0, duration: 250, easing: Easing.linear}).start()
+                    if (this.isEmail(text)) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear }).start()
+                    Animated.timing(this.animated.isMail, { toValue: 0, duration: 250, easing: Easing.linear }).start()
                   }}
-                  style={[ styles.stdInput, { flex: 7, borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 } ]} />
+                  style={[styles.stdInput, { flex: 7, borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 }]} />
               </View>
             </Animated.View>
 
@@ -187,24 +227,24 @@ export default connect(state => ({
               { opacity: stage.interpolate({ inputRange: [0, 2, 3], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
             ]}>
               <View style={{ flexDirection: 'row', marginHorizontal: 45, justifyContent: 'space-between' }}>
-                <TextInput ref={e => this.codeInput.v1 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps} 
+                <TextInput ref={e => this.codeInput.v1 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps}
                   onChangeText={text => {
                     this.setState({ v1: text })
                     if (text.length === 1) return this.codeInput.v2.focus()
                   }} />
-                <TextInput ref={e => this.codeInput.v2 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps} 
+                <TextInput ref={e => this.codeInput.v2 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps}
                   onChangeText={text => {
                     this.setState({ v2: text })
                     if (text.length === 0) return this.codeInput.v1.focus()
                     this.codeInput.v3.focus()
                   }} />
-                <TextInput ref={e => this.codeInput.v3 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps} 
+                <TextInput ref={e => this.codeInput.v3 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps}
                   onChangeText={text => {
                     this.setState({ v3: text })
                     if (text.length === 0) return this.codeInput.v2.focus()
                     this.codeInput.v4.focus()
                   }} />
-                <TextInput ref={e => this.codeInput.v4 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps} 
+                <TextInput ref={e => this.codeInput.v4 = e} style={styles.codeInput} {...Define.TextInputArgs} {...codeInputProps}
                   onChangeText={text => this.validAccount(text)} />
               </View>
             </Animated.View>
@@ -212,13 +252,15 @@ export default connect(state => ({
             <Animated.View style={[
               { position: 'absolute', overflow: 'hidden' },
               { height: stage.interpolate({ inputRange: [0, 1], outputRange: [bottomBtnHeight, 44], extrapolate: 'clamp' }) },
-              { top: Platform.select({
-                ios: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [height - bottomBtnHeight, (height / 2) + 24, (height / 2) + 24]}),
-                android: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [height - bottomBtnHeight - 22, (height / 2) + 24, (height / 2) + 24]}),
-              })},
-              { right: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 35, 35]}) },
-              { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 35, 35]}) },
-              { borderRadius: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 22, 22]}) },
+              {
+                top: Platform.select({
+                  ios: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [height - bottomBtnHeight, (height / 2) + 24, (height / 2) + 24] }),
+                  android: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [height - bottomBtnHeight - 22, (height / 2) + 24, (height / 2) + 24] }),
+                })
+              },
+              { right: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 35, 35] }) },
+              { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 35, 35] }) },
+              { borderRadius: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 22, 22] }) },
             ]}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.stageHandle.bind(this)}>
                 <Animated.View style={[
@@ -236,14 +278,14 @@ export default connect(state => ({
                     { opacity: stage.interpolate({ inputRange: [0, 1.5, 1.9, 2, 2.4], outputRange: [0, 0, 1, 1, 0], extrapolate: 'clamp' }) },
                     { left: stage.interpolate({ inputRange: [0, 1, 2, 3], outputRange: [0, 0, -(width - 70), -((width - 70) * 2)], extrapolate: 'clamp' }) }
                   ]}>
-                    { Icons.Generator.Material('arrow-forward', 28, 'white') }
+                    {Icons.Generator.Material('arrow-forward', 28, 'white')}
                   </Animated.View>
                   <Animated.View style={[
                     { flex: 1, alignItems: 'center' },
                     { opacity: stage.interpolate({ inputRange: [0, 2, 3], outputRange: [0, 0, 1], extrapolate: 'clamp' }) },
                     { left: stage.interpolate({ inputRange: [0, 2, 3], outputRange: [0, 0, -((width - 70) * 2)], extrapolate: 'clamp' }) }
                   ]}>
-                    { Icons.Generator.Material('arrow-back', 28, 'white') }
+                    {Icons.Generator.Material('arrow-back', 28, 'white')}
                   </Animated.View>
                 </Animated.View>
               </TouchableOpacity>
@@ -258,13 +300,13 @@ export default connect(state => ({
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>Or connect using a social account</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 150, marginTop: 25 }}>
                 <Button style={styles.socialBtn}>
-                  { Icons.Generator.Awesome('google-plus', 24, '#333') }
+                  {Icons.Generator.Awesome('google-plus', 24, '#333')}
                 </Button>
                 <Button style={styles.socialBtn}>
-                  { Icons.Generator.Awesome('facebook', 24, '#333') }
+                  {Icons.Generator.Awesome('facebook', 24, '#333')}
                 </Button>
                 <Button style={styles.socialBtn}>
-                  { Icons.Generator.Awesome('twitter', 24, '#333') }
+                  {Icons.Generator.Awesome('twitter', 24, '#333')}
                 </Button>
               </View>
             </Animated.View>
@@ -277,42 +319,62 @@ export default connect(state => ({
           { opacity: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
         ]}>
           <View style={{
-            flex: 1, paddingHorizontal: 45, justifyContent: 'center'
+            flex: 1, paddingHorizontal: 45, justifyContent: 'center', top: -35
           }}>
-            <View>
-              <Text>最后一步</Text>
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
+              <Text style={{ fontSize: 26, color: '#f2f2f2', fontWeight: '400' }}>激活您的账号</Text>
             </View>
-            <View>
+            <View style={{ marginBottom: 15 }}>
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
                 editable={false}
                 defaultValue={this.state.value}
-                style={[ styles.stdInput, { borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 } ]} />
+                style={[styles.stdInput, styles.registerTextInput]} />
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
-                placeholderTextColor={'#eee'}
-                placeholder={'Phone Number / Email'}
+                placeholderTextColor={'#999'}
+                placeholder={'请输入您的姓名'}
                 returnKeyType={'done'}
-                onChangeText={text => {}}
-                style={[ styles.stdInput, { borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 } ]} />
+                value={this.state.fullName}
+                onChangeText={text => this.setState({ fullName: text })}
+                style={[styles.stdInput, styles.registerTextInput]} />
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
-                placeholderTextColor={'#eee'}
-                placeholder={'Phone Number / Email'}
+                placeholderTextColor={'#999'}
+                placeholder={'请输入您的推荐人ID'}
                 returnKeyType={'done'}
-                onChangeText={text => {}}
-                style={[ styles.stdInput, { borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 } ]} />
+                value={this.state.referralUserId}
+                onChangeText={text => this.setState({ referralUserId: text })}
+                style={[styles.stdInput, styles.registerTextInput]} />
             </View>
-            <View>
-              <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={() => {}}>
+            <View style={{ flexDirection: 'row', marginBottom: 25, justifyContent: 'center' }}>
+              <Text style={{ fontSize: 12, color: '#f2f2f2', fontWeight: '200' }}>点击「完成」视为您已阅读并同意</Text>
+              <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', { 
+                title: '隐私协议及使用条款',
+                source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
+              })} style={{  }}>
+                <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>《用户使用协议》</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{  }}>
+              <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.onPressComplate.bind(this)}>
                 <View style={{ height: 44, alignItems: 'center', flexDirection: 'row', backgroundColor: '#ffa81d', borderRadius: 22 }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' }}>COMPLATE</Text>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>完成</Text>
                 </View>
               </TouchableOpacity>
             </View>
+          </View>
+          <View style={{ position: 'absolute', left: 15, top: 42, width: 120, height: 120 }}>
+            <TouchableOpacity 
+              activeOpacity={0.7} 
+              style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
+              onPress={() => this.props.dispatch(account.loginBack(2))}
+            >
+              { Icons.Generator.Material('keyboard-arrow-left', 38, 'white') }
+            </TouchableOpacity>
           </View>
         </Animated.View>
       </View>
@@ -321,8 +383,9 @@ export default connect(state => ({
 })
 
 const styles = StyleSheet.create({
+  registerTextInput: { borderColor: '#f2f2f2', borderBottomWidth: .8, height: 44, marginBottom: 15 },
   codeInput: {
-    color: '#fff', 
+    color: '#fff',
     fontWeight: '600',
     textAlign: 'center',
     fontSize: 16,
@@ -331,18 +394,18 @@ const styles = StyleSheet.create({
     borderColor: '#f2f2f2',
     borderBottomWidth: 1
   },
-  socialBtn: { 
+  socialBtn: {
     backgroundColor: '#eaeaea',
     width: 38,
     height: 38,
     borderRadius: 19,
     justifyContent: 'center',
-    alignItems: 'center' 
+    alignItems: 'center'
   },
-  stdInput: { 
-    color: '#fff', 
-    fontWeight: '600', 
-    textAlign: 'center', 
+  stdInput: {
+    color: '#fff',
+    fontWeight: '600',
+    textAlign: 'center',
     fontSize: 16
   },
 })

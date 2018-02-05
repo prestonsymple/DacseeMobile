@@ -13,7 +13,8 @@ const STAGE_DEFINE = {
   ENTER_MOBILE: 1,
   ENTER_MOBILE_COMPLATE: 2,
   VERIFICATION_CODE: 3,
-  WAIT_RESPONSE: 4
+  WAIT_RESPONSE: 4,
+  READY_REGISTER: 5
 }
 
 const PUT_SCREEN_DEFINE = {
@@ -60,13 +61,17 @@ function* loginSaga() {
             { phoneCountryCode: '+86', phoneNo: id, phoneVerificationCode: code, _id1: '' }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
-          const userData = yield call(session.user.post, path, body)
-          console.log(userData)
-          // 获取用户数据，跳转用户选择或登录
-          // yield put(account.loginPutValue(4))
-          yield put(application.hideProgress())
+          const { data }  = yield call(session.user.post, path, body)
+          
+          yield all([ // 登录完成
+            delay(500),
+            put(account.setAccountValue(data)),
+            delay(1000),
+            put(application.hideProgress()),
+            delay(500),
+            put(account.loginSuccess())
+          ])
         } catch (e) {
-          console.log(e)
           if (e.response && e.response.data.code == 'INVALID_VERIFICATION_CODE') {
             yield all([
               put(account.loginPutValue(2)),
@@ -89,17 +94,51 @@ function* loginSaga() {
         }
       }
 
-      if (stage === STAGE_DEFINE.WAIT_RESPONSE) {
+      if (stage === STAGE_DEFINE.READY_REGISTER) {
         try {
-          const { type } = value
-          console.log(type)
+          yield all([
+            put(account.loginPutValue(3)), 
+            put(application.showProgress())
+          ])
+
+          const register = yield call(session.user.post, 'v1/register', Object.assign({}, 
+            value, 
+            { latitude: 3.321, longitude: 1.23 }
+          ))
+
+          const { data } = yield call(session.user.post, 'v1/auth/phone', { 
+            phoneCountryCode: value.phoneCountryCode, 
+            phoneNo: value.phoneNo, 
+            phoneVerificationCode: value.phoneVerificationCode, 
+            _id1: ''
+          })
+
+          yield all([ // 登录完成
+            delay(500),
+            put(account.setAccountValue(data)),
+            delay(1000),
+            put(application.hideProgress()),
+            delay(500),
+            put(account.loginSuccess())
+          ])
+
         } catch (e) {
-          console.log(e)
+          if (e.response && e.response.data.message) {
+            yield all([
+              put(account.loginPutValue(2)),
+              put(application.hideProgress()), 
+              put(application.showMessage(e.response.data.message)),
+            ])
+          } else {
+            yield all([
+              put(account.loginPutValue(2)),
+              put(application.hideProgress()), 
+              put(application.showMessage('无法连接到服务器，请稍后再试')),
+            ])
+          }
           continue
         }
       }
-
-
 
       yield put(account.loginPutValue(stage))
     }
