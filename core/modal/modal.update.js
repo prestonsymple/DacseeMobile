@@ -58,7 +58,7 @@ class CodePushComponent extends Component {
 
   async componentDidMount() {
     const remoteBundle = await CodePush.checkForUpdate()
-    if (!remoteBundle) return
+    if (!remoteBundle || this.state.visible) return
     this.setState({ visible: true })
     this.downloadBundle(remoteBundle)
   }

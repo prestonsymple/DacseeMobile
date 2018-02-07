@@ -9,10 +9,7 @@ target 'dacsee' do
     
     pod 'Bugly'
 
-  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
-
-
-
-  pod 'rn-splash-screen', :path => '../node_modules/rn-splash-screen'
+    # pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+    # pod 'rn-splash-screen', :path => '../node_modules/rn-splash-screen'
 
 end

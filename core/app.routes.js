@@ -36,7 +36,7 @@ import UpgradeDriverScreen from './route/upgrade.driver'
 
 import {
   LoginScreen,
-  RegisterScreen
+  PickerCountryScreen
 } from './route/login'
 /*****************************************************************************************************/
 
@@ -110,7 +110,8 @@ const HomeNavigator = DrawerNavigator({
 
 const LoginNavigator = StackNavigator({
   Login: { screen: LoginScreen },
-  SettingWetView: { screen: SettingWetViewScreen }
+  SettingWetView: { screen: SettingWetViewScreen },
+  PickerCountry: { screen: PickerCountryScreen }
 })
 
 export {

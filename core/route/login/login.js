@@ -73,11 +73,12 @@ export default connect(state => ({
   async validAccount(v4) {
     this.setState({ v4 })
     if (v4.length === 0) return this.codeInput.v3.focus()
-    const { v1, v2, v3, value } = this.state
+    const { v1, v2, v3, value, countryCode } = this.state
     const vCode = `${v1}${v2}${v3}${v4}`
     Keyboard.dismiss()
     this.props.dispatch(account.loginNext({
       stage: 3, value: {
+        phoneCountryCode: countryCode,
         id: value,
         code: vCode,
         isMail: this.isEmail(value)
@@ -87,7 +88,7 @@ export default connect(state => ({
 
   stageHandle() {
     const { stage } = this.props
-    const { value } = this.state
+    const { value, countryCode } = this.state
 
     if
     (stage === 0) {
@@ -95,7 +96,7 @@ export default connect(state => ({
     } else if
     (stage === 1) {
       if (!value.length) return this.props.dispatch(app.showMessage('请输入正确的邮箱或手机号'))
-      const body = this.isEmail(value) ? { email: value } : { phoneCountryCode: '+86', phoneNo: value }
+      const body = this.isEmail(value) ? { email: value } : { phoneCountryCode: countryCode, phoneNo: value }
       this.props.dispatch(account.loginNext({ stage: 2, value: body }))
     } else if
     (stage === 2) {
@@ -201,8 +202,14 @@ export default connect(state => ({
                   { width: isMail.interpolate({ inputRange: [0, 0.6, 1], outputRange: [65, 65, 0], extrapolate: 'clamp' }) },
                   { marginRight: isMail.interpolate({ inputRange: [0, 0.6, 1], outputRange: [15, 15, 0], extrapolate: 'clamp' }) }
                 ]}>
-                  <Button activeOpacity={0.9} style={[{ borderColor: '#f2f2f2', borderBottomWidth: 1, flex: 1, height: 44, justifyContent: 'center' }]}>
-                    <Text style={styles.stdInput}>+86</Text>
+                  <Button 
+                    onPress={() => this.props.navigation.navigate('PickerCountry', {
+                      onPress: ({ name, code }) => this.setState({ countryCode: code })
+                    })} 
+                    activeOpacity={0.9} 
+                    style={[{ borderColor: '#f2f2f2', borderBottomWidth: 1, flex: 1, height: 44, justifyContent: 'center' }]}
+                  >
+                    <Text style={styles.stdInput}>{this.state.countryCode}</Text>
                   </Button>
                 </Animated.View>
                 <TextInput
@@ -299,13 +306,13 @@ export default connect(state => ({
             ]}>
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>Or connect using a social account</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 150, marginTop: 25 }}>
-                <Button style={styles.socialBtn}>
+                <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('google-plus', 24, '#333')}
                 </Button>
-                <Button style={styles.socialBtn}>
+                <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('facebook', 24, '#333')}
                 </Button>
-                <Button style={styles.socialBtn}>
+                <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('twitter', 24, '#333')}
                 </Button>
               </View>

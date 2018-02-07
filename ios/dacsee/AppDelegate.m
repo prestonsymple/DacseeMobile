@@ -26,12 +26,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   // #######################################################
-  [self nativeInit];
-  
+  [Bugly startWithAppId: @"dc96c9eb54"];
+  [AMapServices sharedServices].apiKey = @"b06eec333302b4faf9ae7397e273bc12";
   // #######################################################
+  
   NSURL *jsCodeLocation;
   #ifdef DEBUG
-//    [[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.43.251"];
+    //[[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.43.251"];
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
     jsCodeLocation = [CodePush bundleURL];
@@ -52,11 +53,6 @@
   [self.window makeKeyAndVisible];
   
   return YES;
-}
-
--(void) nativeInit {
-  [Bugly startWithAppId: @"dc96c9eb54"];
-  [AMapServices sharedServices].apiKey = @"b06eec333302b4faf9ae7397e273bc12";
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {

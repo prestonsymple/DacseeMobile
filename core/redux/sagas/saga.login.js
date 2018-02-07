@@ -53,12 +53,12 @@ function* loginSaga() {
             put(account.loginPutValue(3)), 
             put(application.showProgress())
           ])
-
-          const { id, code, isMail } = value
+          
+          const { id, code, isMail, phoneCountryCode } = value
           const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
           const base = isMail ? 
             { email: id, emailVerificationCode: code, } : 
-            { phoneCountryCode: '+86', phoneNo: id, phoneVerificationCode: code, _id1: '' }
+            { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id1: '' }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
           const { data }  = yield call(session.user.post, path, body)

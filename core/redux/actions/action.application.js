@@ -26,6 +26,8 @@ export default {
   finshUpdate: createAction('APPLICATION_FINSH_UPDATE'),
 
   onPressAndroidBackButton: createAction('APPLICATION_ON_PRESS_BACK_BUTTON'),
+
+  setPushServiceParams: createAction('APPLICATION_SET_PUSH_SERVICE_PARAMS'),
   
   showMessage: createAction('APPLICATION_SHOW_MESSAGE')
 }

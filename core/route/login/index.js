@@ -1,8 +1,8 @@
 import LoginScreen from './login'
-import RegisterScreen from './register'
+import PickerCountryScreen from './picker.country'
 
 
 export {
   LoginScreen,
-  RegisterScreen
+  PickerCountryScreen
 }

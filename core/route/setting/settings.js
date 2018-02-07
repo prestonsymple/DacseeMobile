@@ -154,5 +154,5 @@ const styles = StyleSheet.create({
   itemTitle: { color: '#333', fontSize: 15, fontWeight: '400' },
   buttonText: { color: '#333', fontSize: 15 },
   buttonWrap: { justifyContent: 'center', alignItems: 'center', height: 44, backgroundColor: 'white' },
-  list: { flex: 1, backgroundColor: '#f4f7fb' },
+  list: { flex: 1, backgroundColor: '#f2f2f2' },
 })
