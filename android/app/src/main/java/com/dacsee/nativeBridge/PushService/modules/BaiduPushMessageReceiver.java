@@ -25,6 +25,8 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Random;
 
+import static com.dacsee.nativeBridge.PushService.modules.RNPushNotification.LOG_TAG;
+
 import static android.content.Context.ACTIVITY_SERVICE;
 
 public class BaiduPushMessageReceiver extends PushMessageReceiver {
@@ -34,14 +36,15 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
     }
 
     @Override
-    public void onBind(Context context, int errorCode, String appid, String userId, final String channelId,
-            String requestId) {
+    public void onBind(Context context, int errorCode, String appid, final String userId, final String channelId,
+                       String requestId) {
         Log.d(RNPushNotification.LOG_TAG, "onBind");
         Context applicationContext = context.getApplicationContext();
         handleEvent(applicationContext, new ReactContextInitListener() {
             @Override
             public void contextInitialized(ReactApplicationContext context) {
                 WritableMap params = Arguments.createMap();
+                params.putString("userId", userId);
                 params.putString("deviceToken", channelId);
                 RNPushNotificationJsDelivery jsDelivery = new RNPushNotificationJsDelivery(context);
                 jsDelivery.sendEvent("remoteNotificationsRegistered", params);
@@ -178,33 +181,33 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
 
     @Override
     public void onNotificationClicked(Context context, String title, String description, String customContentString) {
-        Log.d(RNPushNotification.LOG_TAG, "onNotificationClicked");
+        Log.d(LOG_TAG, "onNotificationClicked");
     }
 
     @Override
     public void onNotificationArrived(Context context, String title, String description, String customContentString) {
-        Log.d(RNPushNotification.LOG_TAG, "onNotificationArrived");
+        Log.d(LOG_TAG, "onNotificationArrived");
     }
 
     @Override
     public void onUnbind(Context context, int errorCode, String s) {
-        Log.d(RNPushNotification.LOG_TAG, "onUnbind");
+        Log.d(LOG_TAG, "onUnbind");
     }
 
     @Override
     public void onSetTags(Context context, int errorCode, List<String> list, List<String> list1, String s) {
-        Log.d(RNPushNotification.LOG_TAG, "onSetTags");
+        Log.d(LOG_TAG, "onSetTags");
     }
 
     @Override
     public void onDelTags(Context context, int errorCode, List<String> list, List<String> list1, String s) {
-        Log.d(RNPushNotification.LOG_TAG, "onDelTags");
+        Log.d(LOG_TAG, "onDelTags");
 
     }
 
     @Override
     public void onListTags(Context context, int i, List<String> list, String s) {
-        Log.d(RNPushNotification.LOG_TAG, "onListTags");
+        Log.d(LOG_TAG, "onListTags");
     }
 
 }

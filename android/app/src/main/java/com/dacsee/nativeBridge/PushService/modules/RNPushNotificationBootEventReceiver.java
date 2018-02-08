@@ -9,6 +9,8 @@ import android.util.Log;
 
 import java.util.Set;
 
+import static com.dacsee.nativeBridge.PushService.modules.RNPushNotification.LOG_TAG;
+
 /**
  * Set alarms for scheduled notification after system reboot.
  */
@@ -16,7 +18,7 @@ public class RNPushNotificationBootEventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(RNPushNotification.LOG_TAG, "RNPushNotificationBootEventReceiver loading scheduled notifications");
+        Log.i(LOG_TAG, "RNPushNotificationBootEventReceiver loading scheduled notifications");
 
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             SharedPreferences sharedPreferences = context.getSharedPreferences(RNPushNotificationHelper.PREFERENCES_KEY, Context.MODE_PRIVATE);
@@ -32,17 +34,17 @@ public class RNPushNotificationBootEventReceiver extends BroadcastReceiver {
                         RNPushNotificationAttributes notificationAttributes = RNPushNotificationAttributes.fromJson(notificationAttributesJson);
 
                         if (notificationAttributes.getFireDate() < System.currentTimeMillis()) {
-                            Log.i(RNPushNotification.LOG_TAG, "RNPushNotificationBootEventReceiver: Showing notification for " +
+                            Log.i(LOG_TAG, "RNPushNotificationBootEventReceiver: Showing notification for " +
                                     notificationAttributes.getId());
                             rnPushNotificationHelper.sendToNotificationCentre(notificationAttributes.toBundle());
                         } else {
-                            Log.i(RNPushNotification.LOG_TAG, "RNPushNotificationBootEventReceiver: Scheduling notification for " +
+                            Log.i(LOG_TAG, "RNPushNotificationBootEventReceiver: Scheduling notification for " +
                                     notificationAttributes.getId());
                             rnPushNotificationHelper.sendNotificationScheduledCore(notificationAttributes.toBundle());
                         }
                     }
                 } catch (Exception e) {
-                    Log.e(RNPushNotification.LOG_TAG, "Problem with boot receiver loading notification " + id, e);
+                    Log.e(LOG_TAG, "Problem with boot receiver loading notification " + id, e);
                 }
             }
         }

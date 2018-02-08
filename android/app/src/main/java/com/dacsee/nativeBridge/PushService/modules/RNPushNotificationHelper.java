@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.dacsee.nativeBridge.PushService.modules.RNPushNotificationAttributes;
+import com.dacsee.nativeBridge.PushService.modules.RNPushNotificationPublisher;
 import com.facebook.react.bridge.ReadableMap;
 
 import org.json.JSONArray;
@@ -28,8 +30,11 @@ import org.json.JSONException;
 
 import java.util.Arrays;
 
+import static com.dacsee.nativeBridge.PushService.modules.RNPushNotification.LOG_TAG;
+import static com.dacsee.nativeBridge.PushService.modules.RNPushNotificationAttributes.fromJson;
+
 public class RNPushNotificationHelper {
-    public static final String PREFERENCES_KEY = "rn_baidu_push_notification";
+    public static final String PREFERENCES_KEY = "rn_push_notification";
     private static final long DEFAULT_VIBRATION = 300L;
 
     private Context context;
@@ -72,30 +77,30 @@ public class RNPushNotificationHelper {
     public void sendNotificationScheduled(Bundle bundle) {
         Class intentClass = getMainActivityClass();
         if (intentClass == null) {
-            Log.e(RNPushNotification.LOG_TAG, "No activity class found for the scheduled notification");
+            Log.e(LOG_TAG, "No activity class found for the scheduled notification");
             return;
         }
 
         if (bundle.getString("message") == null) {
-            Log.e(RNPushNotification.LOG_TAG, "No message specified for the scheduled notification");
+            Log.e(LOG_TAG, "No message specified for the scheduled notification");
             return;
         }
 
         if (bundle.getString("id") == null) {
-            Log.e(RNPushNotification.LOG_TAG, "No notification ID specified for the scheduled notification");
+            Log.e(LOG_TAG, "No notification ID specified for the scheduled notification");
             return;
         }
 
         double fireDate = bundle.getDouble("fireDate");
         if (fireDate == 0) {
-            Log.e(RNPushNotification.LOG_TAG, "No date specified for the scheduled notification");
+            Log.e(LOG_TAG, "No date specified for the scheduled notification");
             return;
         }
 
         RNPushNotificationAttributes notificationAttributes = new RNPushNotificationAttributes(bundle);
         String id = notificationAttributes.getId();
 
-        Log.d(RNPushNotification.LOG_TAG, "Storing push notification with id " + id);
+        Log.d(LOG_TAG, "Storing push notification with id " + id);
 
         SharedPreferences.Editor editor = scheduledNotificationsPersistence.edit();
         editor.putString(id, notificationAttributes.toJson().toString());
@@ -103,7 +108,7 @@ public class RNPushNotificationHelper {
 
         boolean isSaved = scheduledNotificationsPersistence.contains(id);
         if (!isSaved) {
-            Log.e(RNPushNotification.LOG_TAG, "Failed to save " + id);
+            Log.e(LOG_TAG, "Failed to save " + id);
         }
 
         sendNotificationScheduledCore(bundle);
@@ -116,7 +121,7 @@ public class RNPushNotificationHelper {
         // notification to the user
         PendingIntent pendingIntent = toScheduleNotificationIntent(bundle);
 
-        Log.d(RNPushNotification.LOG_TAG, String.format("Setting a notification with id %s at time %s",
+        Log.d(LOG_TAG, String.format("Setting a notification with id %s at time %s",
                 bundle.getString("id"), Long.toString(fireDate)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
@@ -129,19 +134,19 @@ public class RNPushNotificationHelper {
         try {
             Class intentClass = getMainActivityClass();
             if (intentClass == null) {
-                Log.e(RNPushNotification.LOG_TAG, "No activity class found for the notification");
+                Log.e(LOG_TAG, "No activity class found for the notification");
                 return;
             }
 
             if (bundle.getString("message") == null) {
                 // this happens when a 'data' notification is received - we do not synthesize a local notification in this case
-                Log.d(RNPushNotification.LOG_TAG, "Cannot send to notification centre because there is no 'message' field in: " + bundle);
+                Log.d(LOG_TAG, "Cannot send to notification centre because there is no 'message' field in: " + bundle);
                 return;
             }
 
             String notificationIdString = bundle.getString("id");
             if (notificationIdString == null) {
-                Log.e(RNPushNotification.LOG_TAG, "No notification ID specified for the notification");
+                Log.e(LOG_TAG, "No notification ID specified for the notification");
                 return;
             }
 
@@ -283,7 +288,7 @@ public class RNPushNotificationHelper {
             try {
                 actionsArray = bundle.getString("actions") != null ? new JSONArray(bundle.getString("actions")) : null;
             } catch (JSONException e) {
-                Log.e(RNPushNotification.LOG_TAG, "Exception while converting actions to JSON object.", e);
+                Log.e(LOG_TAG, "Exception while converting actions to JSON object.", e);
             }
 
             if (actionsArray != null) {
@@ -296,7 +301,7 @@ public class RNPushNotificationHelper {
                     try {
                         action = actionsArray.getString(i);
                     } catch (JSONException e) {
-                        Log.e(RNPushNotification.LOG_TAG, "Exception while getting action from actionsArray.", e);
+                        Log.e(LOG_TAG, "Exception while getting action from actionsArray.", e);
                         continue;
                     }
 
@@ -341,7 +346,7 @@ public class RNPushNotificationHelper {
             // late by many minutes.
             this.scheduleNextNotificationIfRepeating(bundle);
         } catch (Exception e) {
-            Log.e(RNPushNotification.LOG_TAG, "failed to send push notification", e);
+            Log.e(LOG_TAG, "failed to send push notification", e);
         }
     }
 
@@ -356,12 +361,12 @@ public class RNPushNotificationHelper {
 
             // Sanity checks
             if (!validRepeatType) {
-                Log.w(RNPushNotification.LOG_TAG, String.format("Invalid repeatType specified as %s", repeatType));
+                Log.w(LOG_TAG, String.format("Invalid repeatType specified as %s", repeatType));
                 return;
             }
 
             if ("time".equals(repeatType) && repeatTime <= 0) {
-                Log.w(RNPushNotification.LOG_TAG, "repeatType specified as time but no repeatTime " +
+                Log.w(LOG_TAG, "repeatType specified as time but no repeatTime " +
                         "has been mentioned");
                 return;
             }
@@ -388,7 +393,7 @@ public class RNPushNotificationHelper {
 
             // Sanity check, should never happen
             if (newFireDate != 0) {
-                Log.d(RNPushNotification.LOG_TAG, String.format("Repeating notification with id %s at time %s",
+                Log.d(LOG_TAG, String.format("Repeating notification with id %s at time %s",
                         bundle.getString("id"), Long.toString(newFireDate)));
                 bundle.putDouble("fireDate", newFireDate);
                 this.sendNotificationScheduled(bundle);
@@ -397,14 +402,14 @@ public class RNPushNotificationHelper {
     }
 
     public void clearNotifications() {
-        Log.i(RNPushNotification.LOG_TAG, "Clearing alerts from the notification centre");
+        Log.i(LOG_TAG, "Clearing alerts from the notification centre");
 
         NotificationManager notificationManager = notificationManager();
         notificationManager.cancelAll();
     }
 
     public void cancelAllScheduledNotifications() {
-        Log.i(RNPushNotification.LOG_TAG, "Cancelling all notifications");
+        Log.i(LOG_TAG, "Cancelling all notifications");
 
         for (String id : scheduledNotificationsPersistence.getAll().keySet()) {
             cancelScheduledNotification(id);
@@ -416,19 +421,19 @@ public class RNPushNotificationHelper {
             try {
                 String notificationAttributesJson = scheduledNotificationsPersistence.getString(id, null);
                 if (notificationAttributesJson != null) {
-                    RNPushNotificationAttributes notificationAttributes = RNPushNotificationAttributes.fromJson(notificationAttributesJson);
+                    RNPushNotificationAttributes notificationAttributes = fromJson(notificationAttributesJson);
                     if (notificationAttributes.matches(userInfo)) {
                         cancelScheduledNotification(id);
                     }
                 }
             } catch (JSONException e) {
-                Log.w(RNPushNotification.LOG_TAG, "Problem dealing with scheduled notification " + id, e);
+                Log.w(LOG_TAG, "Problem dealing with scheduled notification " + id, e);
             }
         }
     }
 
     private void cancelScheduledNotification(String notificationIDString) {
-        Log.i(RNPushNotification.LOG_TAG, "Cancelling notification: " + notificationIDString);
+        Log.i(LOG_TAG, "Cancelling notification: " + notificationIDString);
 
         // remove it from the alarm manger schedule
         Bundle b = new Bundle();
@@ -441,7 +446,7 @@ public class RNPushNotificationHelper {
             editor.remove(notificationIDString);
             commit(editor);
         } else {
-            Log.w(RNPushNotification.LOG_TAG, "Unable to find notification " + notificationIDString);
+            Log.w(LOG_TAG, "Unable to find notification " + notificationIDString);
         }
 
         // removed it from the notification center

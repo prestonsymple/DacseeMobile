@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import static com.dacsee.nativeBridge.PushService.modules.RNPushNotification.LOG_TAG;
+
 public class RNPushNotificationPublisher extends BroadcastReceiver {
     final static String NOTIFICATION_ID = "notificationId";
 
@@ -14,11 +16,10 @@ public class RNPushNotificationPublisher extends BroadcastReceiver {
         int id = intent.getIntExtra(NOTIFICATION_ID, 0);
         long currentTime = System.currentTimeMillis();
 
-        Log.i(RNPushNotification.LOG_TAG, "NotificationPublisher: Prepare To Publish: " + id + ", Now Time: " + currentTime);
+        Log.i(LOG_TAG, "NotificationPublisher: Prepare To Publish: " + id + ", Now Time: " + currentTime);
 
         Application applicationContext = (Application) context.getApplicationContext();
 
-        new RNPushNotificationHelper(applicationContext)
-                .sendToNotificationCentre(intent.getExtras());
+        new RNPushNotificationHelper(applicationContext).sendToNotificationCentre(intent.getExtras());
     }
 }
