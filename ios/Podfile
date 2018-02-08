@@ -3,12 +3,30 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 target 'dacsee' do
     
-    pod 'AMapNavi'
+    pod 'AMapNavi' #(was 5.4.0)
     pod 'AMapSearch'
     pod 'AMapLocation'
     
     pod 'Bugly'
 
+    pod 'UMCCommon'
+    pod 'UMCSecurityPlugins'
+    # U-Share SDK UI模块（分享面板，建议添加）
+    pod 'UMCShare/UI'
+    # 集成微信(完整版14.4M)
+    pod 'UMCShare/Social/WeChat'
+    # 集成QQ/QZone/TIM(完整版7.6M)
+    pod 'UMCShare/Social/QQ'
+    # 集成新浪微博(完整版25.3M)
+    pod 'UMCShare/Social/Sina'
+    # 集成Facebook/Messenger
+    pod 'UMCShare/Social/Facebook'
+    # 集成Twitter
+    pod 'UMCShare/Social/Twitter'
+    # 集成WhatsApp
+    pod 'UMCShare/Social/WhatsApp'
+    # 集成Google+
+    pod 'UMCShare/Social/GooglePlus'
     # pod 'react-native-maps', :path => '../node_modules/react-native-maps'
     # pod 'rn-splash-screen', :path => '../node_modules/rn-splash-screen'
 

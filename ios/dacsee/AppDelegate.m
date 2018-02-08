@@ -20,6 +20,9 @@
 #import <Bugly/Bugly.h>
 #import <RCTSplashScreen/RCTSplashScreen.h>
 
+#import "RNUMConfigure.h"
+#import <UMShare/UMSocialManager.h>
+
 
 @implementation AppDelegate
 
@@ -28,6 +31,10 @@
   // #######################################################
   [Bugly startWithAppId: @"dc96c9eb54"];
   [AMapServices sharedServices].apiKey = @"b06eec333302b4faf9ae7397e273bc12";
+  
+  [UMConfigure setLogEnabled:YES];
+  [RNUMConfigure initWithAppkey:@"5a7aa3f2a40fa355a700002a" channel:@"App Store"];
+  [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1106730946" appSecret:@"cpXqcASFJs2r6vH3" redirectURL:nil];
   // #######################################################
   
   NSURL *jsCodeLocation;

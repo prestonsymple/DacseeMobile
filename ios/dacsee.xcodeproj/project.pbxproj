@@ -37,6 +37,8 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* dacseeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* dacseeTests.m */; };
+		49411FDE202BF92300EEBE1C /* RNUMConfigure.m in Sources */ = {isa = PBXBuildFile; fileRef = 49411FDC202BF92300EEBE1C /* RNUMConfigure.m */; };
+		49411FE1202C2E2A00EEBE1C /* UMShareModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 49411FDF202C2E2A00EEBE1C /* UMShareModule.m */; };
 		4DB98CD5049A4889BD799906 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF5E87C75CCF40D1946A1A7C /* Entypo.ttf */; };
 		58036141D7594B1284443C56 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 779B2CE0BEF64E19A5E78A13 /* FontAwesome.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -536,6 +538,10 @@
 		2D02E4901E0B4A5D006451C7 /* dacsee-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dacsee-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A09AC0A9A1458A72709E705 /* Pods-dacsee.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dacsee.staging.xcconfig"; path = "Pods/Target Support Files/Pods-dacsee/Pods-dacsee.staging.xcconfig"; sourceTree = "<group>"; };
+		49411FDC202BF92300EEBE1C /* RNUMConfigure.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNUMConfigure.m; sourceTree = "<group>"; };
+		49411FDD202BF92300EEBE1C /* RNUMConfigure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNUMConfigure.h; sourceTree = "<group>"; };
+		49411FDF202C2E2A00EEBE1C /* UMShareModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMShareModule.m; sourceTree = "<group>"; };
+		49411FE0202C2E2A00EEBE1C /* UMShareModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMShareModule.h; sourceTree = "<group>"; };
 		57EC4F205FAE489198B11BE5 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5F08DE14CBB525457CD36FCC /* libPods-dacsee.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dacsee.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -844,6 +850,17 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		49411F8C202BEE9B00EEBE1C /* Umeng */ = {
+			isa = PBXGroup;
+			children = (
+				49411FE0202C2E2A00EEBE1C /* UMShareModule.h */,
+				49411FDF202C2E2A00EEBE1C /* UMShareModule.m */,
+				49411FDD202BF92300EEBE1C /* RNUMConfigure.h */,
+				49411FDC202BF92300EEBE1C /* RNUMConfigure.m */,
+			);
+			name = Umeng;
+			sourceTree = "<group>";
+		};
 		4ADC599330B7F0035E53BDD3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1045,6 +1062,7 @@
 		F59CD5932005934E00F2824A /* NativeBridge */ = {
 			isa = PBXGroup;
 			children = (
+				49411F8C202BEE9B00EEBE1C /* Umeng */,
 				F59CD5BC2005935D00F2824A /* AMap */,
 			);
 			name = NativeBridge;
@@ -1833,6 +1851,12 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-dacsee/Pods-dacsee-resources.sh",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
 				"${PODS_ROOT}/AMapNavi/AMapNaviKit.framework/AMapNavi.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/UMSocialSDKPlugin/UMSocialSDKPromptResources.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/SocialLibraries/QQ/QQSDK/TencentOpenApi_IOS_Bundle.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/SocialLibraries/Sina/SinaSDK/WeiboSDK.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/SocialLibraries/Twitter/TwitterKitResources.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/SocialLibraries/Twitter/TwitterShareExtensionUIResources.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/UMSocialUI/UMSocialSDKResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1870,6 +1894,7 @@
 				F5669BD020098BD900A0159A /* AMapCallout.m in Sources */,
 				F5669BD320098BD900A0159A /* AMapOverlay.m in Sources */,
 				F5669BCA20098BD900A0159A /* AMapMultiPoint.m in Sources */,
+				49411FE1202C2E2A00EEBE1C /* UMShareModule.m in Sources */,
 				F59CD5D6200593A400F2824A /* AMapView.m in Sources */,
 				F5669BBF20098BD900A0159A /* AMapDriveManager.m in Sources */,
 				F5669BC820098BD900A0159A /* AMapMultiPointManager.m in Sources */,
@@ -1884,6 +1909,7 @@
 				F5669BC420098BD900A0159A /* AMapCalloutManager.m in Sources */,
 				F5669BD120098BD900A0159A /* AMapView.m in Sources */,
 				F5669BBA20098BD900A0159A /* AMapDrive.m in Sources */,
+				49411FDE202BF92300EEBE1C /* RNUMConfigure.m in Sources */,
 				F5669BCB20098BD900A0159A /* AMapPolygonManager.m in Sources */,
 				F5669BC120098BD900A0159A /* AMapOffline.m in Sources */,
 				F5669BC720098BD900A0159A /* AMapPolyline.m in Sources */,

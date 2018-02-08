@@ -1,4 +1,5 @@
 import React, { Component, PureComponent } from 'react'
+import ShareUtile from '../../utils/ShareUtil'
 import {
   Text, View, Animated, StyleSheet, Image,
   TouchableOpacity, TextInput, Easing, Platform, Keyboard
@@ -148,6 +149,15 @@ export default connect(state => ({
     var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
     return reg.test(val)
   }
+
+  // _googlePlus() {
+  //   ShareUtile.auth(0,(code,result,message) =>{
+  //     this.setState({result:message})
+  //     if (code == 0){
+  //       this.setState({result:result.uid})
+  //     }
+  //   })
+  // }
 
   // TODO: Optimize Style
   render() {
@@ -306,7 +316,16 @@ export default connect(state => ({
             ]}>
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>Or connect using a social account</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 150, marginTop: 25 }}>
-                <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
+                <Button onPress={() => {
+                  ShareUtile.auth(0,(code,result,message) =>{
+                    this.setState({result:message})
+                    if (code == 0){
+                      this.setState({result:result.uid})
+                    } else {
+                      console.log('第三方登录' + code)
+                    }
+                  })
+                }} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('google-plus', 24, '#333')}
                 </Button>
                 <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
