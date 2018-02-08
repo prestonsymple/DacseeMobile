@@ -72,7 +72,9 @@ class Core extends PureComponent {
     // const msg = await PushService.component.getInitialNotification()
     // console.log('init', msg)
     PushService.configure({
-      onRegister: function({ token, os, baidu_id }) {
+      onRegister: function(register) {
+        console.log(register)
+        const { token, os, baidu_id } = register
         const state = {
           push_service_token: token,
           baidu_user_id: baidu_id
@@ -92,7 +94,9 @@ class Core extends PureComponent {
       },
   
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-      senderID: 'oDKwrgBkPKIyXpBsmVTx2dP3',
+      // senderID: 'oDKwrgBkPKIyXpBsmVTx2dP3', // BAIDU TEST KEY
+      senderID: 'dvzSIimOD9ipnqwssO5L1VNH', // AWS KEY
+
   
       // IOS ONLY (optional): default: all - Permissions to register.
       permissions: {

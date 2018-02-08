@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-const SESSION_TIMEOUT = 5000
+const SESSION_TIMEOUT = 10000
 
 const sessionBuilder = (baseUrl) => {
   const instance = axios.create({
@@ -14,9 +14,7 @@ const sessionBuilder = (baseUrl) => {
   instance.interceptors.request.use((request) => {
     const state = store.getState()
     if (!state.account.authToken) {
-      request.headers = {
-        'Authorization': state.account.authToken
-      }
+      instance.defaults.headers.common['Authorization'] = state.account.authToken
     }
     return request
   }, err => {

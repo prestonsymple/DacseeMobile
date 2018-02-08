@@ -1,6 +1,5 @@
 // @flow
 import React from 'react'
-import PushNotification from 'react-native-push-notification'
 // import PropTypes from 'prop-types'
 // import lodash from 'lodash'
 
@@ -11,7 +10,7 @@ import SettingHelpCenterScreen from './setting.help.center'
 import SettingWetViewScreen from './setting.web.view'
 
 import { Session as session } from '../../utils'
-
+import PushService from '../../native/push-service'
 
 import {
   account, application
@@ -57,7 +56,7 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
   [{
     title: '新消息通知', type: 'text', onPress: () => navigation.navigate('SettingMessageNotification')
   }, {
-    title: '推送测试', type: 'text', onPress: async () => testPushService()
+    title: '推送测试', type: 'text', onPress: async () => PushService.checkPermissions((cb) => console.log(cb))
   }, {
     title: '语言和地区', type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
   }],
@@ -73,7 +72,6 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
   }]
 ])
 
-
 // 账号与安全
 const SettingAccountScreen = createTemplate('账号与安全', ({ navigation, dispatch, user }) => ([
   [{
@@ -83,7 +81,7 @@ const SettingAccountScreen = createTemplate('账号与安全', ({ navigation, di
   }, {
     title: '邮箱账号', type: 'text', value: user.email || '尚未绑定', onPress: () => dispatch(application.showMessage('暂不支持邮箱修改'))
   }], [{
-    title: '绑定至微信', type: '', value: '', onPress: () => { this.props }
+    title: '绑定至微信', type: 'text', value: '', onPress: () => { this.props }
   },{
     title: '绑定至微博', type: 'text', value: '', onPress: () => {}
   }, {

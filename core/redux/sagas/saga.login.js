@@ -143,34 +143,44 @@ function* logoutFlow() {
   }
 }
 
-function* loginSuccess(data: object) {
-  const { token, userId } = yield select(state => ({ 
-    token: state.config.push_service_token,
-    userId: state.config.baidu_user_id
-  }))
-  yield put(account.setAccountValue(data))
+function* registerDevice() {
+  while(true) {
+    yield take(account.loginSuccess().type)
+    const { token, userId, user_id } = yield select(state => ({ 
+      token: state.config.push_service_token,
+      userId: state.config.baidu_user_id,
+      user_id: state.account.user._id
+    }))
+    try {
+      const extendFields = System.Platform.Android ? { channelId: token, userId } : { token }
+      const postData = Object.assign({}, {
+        'device' : {
+          'available' : true, 
+          'platform' : System.Platform.Android ? 'Android' : 'iOS', 
+          'version' : System.Device.Version, 
+          'uuid' : System.UUID, 
+          'cordova' : '0.0.0', 
+          'model' : System.Device.Name, 
+          'manufacturer' : System.Device.Brand, 
+          'isVirtual' : false, 
+          'serial' : 'UNKNOW'
+        }, 
+        'status' : 'active',
+        'type' : System.Platform.Name, 
+        'uuid' : System.UUID,
+        'user_id': user_id
+      }, extendFields)
+    
+      yield call(session.push.post, 'v1/register', postData) 
+    } catch (e) {
+      console.log('[注册设备]', ['失败'], e)
+    }
+  }
+}
 
-  const extendFields = System.Platform.Android ? { channelId: token, userId } : { token }
-  const postData = Object.assign({}, {
-    'device' : {
-      'available' : true, 
-      'platform' : System.Platform.Android ? 'Android' : 'iOS', 
-      'version' : System.Device.Version, 
-      'uuid' : System.UUID, 
-      'cordova' : '0.0.0', 
-      'model' : System.Device.Name, 
-      'manufacturer' : System.Device.Brand, 
-      'isVirtual' : false, 
-      'serial' : 'UNKNOW'
-    }, 
-    'status' : 'active',
-    'type' : System.Platform.Name, 
-    'uuid' : System.UUID,
-    'user_id': data.user._id
-  }, extendFields)
-  // ChannelId
-  yield call(session.push.post, 'v1/register', postData)
-  
+function* loginSuccess(data: object) {
+  yield put(account.setAccountValue(data))
+  yield delay(2000)
   yield put(application.darkStatusBar())
   yield put(application.hideProgress())
   yield put(account.loginSuccess())
@@ -179,6 +189,7 @@ function* loginSuccess(data: object) {
 export default function* watch() {
   yield all([
     fork(loginFlow),
-    fork(logoutFlow)
+    fork(logoutFlow),
+    fork(registerDevice)
   ])
 }
