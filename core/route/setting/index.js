@@ -31,13 +31,11 @@ const createTemplate = (title: string, producer, navigationOptions?: Object) => 
 const testPushService = async () => {
   try {
     await session.push.post('v1/push', {
-      subject: 'Balance Transfer',
-      message: '5 RM were transferred to your wallet by abdo.',
+      subject: 'Balance',
+      message: '5 RM',
       priority: 'high',
       sound: 'notification',
       notId: 1491559662126,
-      led: '255,235,92,50',
-      avatar: 'http://clientstaging.incredible-qr.com/clients/wedrive/icon.png',
       staging: true,
       routeParams: {'id':'01001378060'},
       to: '5a77ff35e5259a40deb60872',
@@ -53,17 +51,25 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
   [{
     title: '账号与安全', type: 'text', onPress: () => navigation.navigate('SettingAccount')
   }],
-  [{
-    title: '新消息通知', type: 'text', onPress: () => navigation.navigate('SettingMessageNotification')
-  }, {
-    title: '推送测试', type: 'text', onPress: async () => PushService.checkPermissions((cb) => console.log(cb))
+  [
+  //   {
+  //   title: '新消息通知', type: 'text', onPress: () => navigation.navigate('SettingMessageNotification')
+  // }, 
+  {
+    title: '推送测试', type: 'text', onPress: async () => testPushService()
   }, {
     title: '语言和地区', type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
   }],
   [{
-    title: '意见反馈', type: 'text', onPress: async () => navigation.navigate('SettingFeedback')
+    title: '意见反馈', type: 'text', onPress: async () => navigation.navigate('SettingWetView', { 
+      title: '意见反馈 - 演示',
+      source: { uri: 'https://m.connect.aliyun.com/?utm_source=mmenu' }
+    })
   }, {
-    title: '帮助中心', type: 'text', onPress: () => navigation.navigate('SettingHelpCenter')
+    title: '帮助中心', type: 'text', onPress: () => navigation.navigate('SettingWetView', { 
+      title: '帮助中心 - 演示',
+      source: { uri: 'https://m.aliyun.com/doc/index.html' }
+    })
   }, {
     title: '关于', type: 'text', onPress: () => navigation.navigate('SettingAbout')
   }],

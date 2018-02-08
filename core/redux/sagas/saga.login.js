@@ -173,7 +173,7 @@ function* registerDevice() {
     
       yield call(session.push.post, 'v1/register', postData) 
     } catch (e) {
-      console.log('[注册设备]', ['失败'], e)
+      console.log('[注册设备]', '[失败]', e)
     }
   }
 }

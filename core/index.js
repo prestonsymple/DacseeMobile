@@ -85,6 +85,15 @@ class Core extends PureComponent {
   
       // (required) Called when a remote or local notification is opened or received
       onNotification: function(notification) {
+        const { 
+          foreground, // 正在前台
+          id, // 推送ID
+          message, // 推送消息内容
+          title, // 推送标题
+          userInteraction, // 用户触发 
+          badge,
+          route
+        } = notification
         console.log('[PN][RECEIVED]', notification)
 
         // process the notification

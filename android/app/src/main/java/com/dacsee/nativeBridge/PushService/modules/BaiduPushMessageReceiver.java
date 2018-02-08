@@ -111,11 +111,17 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         JSONObject jsonObject;
         Bundle extras = null;
         try {
-            jsonObject = new JSONObject(message);
+            jsonObject = (new JSONObject(message)).optJSONObject(BaiduPushConstants.DATA);
             extras = new Bundle();
             extras.putString(BaiduPushConstants.TITLE, jsonObject.optString(BaiduPushConstants.TITLE));
             extras.putString(BaiduPushConstants.MESSAGE, jsonObject.optString(BaiduPushConstants.DESCRIPTION));
-            JSONObject customContent = jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT);
+            if (jsonObject.optJSONObject(BaiduPushConstants.ROUTE) != null) {
+                extras.putString(BaiduPushConstants.ROUTE, jsonObject.optJSONObject(BaiduPushConstants.ROUTE).toString());
+            }
+            if (jsonObject.optJSONObject(BaiduPushConstants.BADGE) != null) {
+                extras.putString(BaiduPushConstants.BADGE, jsonObject.optJSONObject(BaiduPushConstants.BADGE).toString());
+            }
+            JSONObject customContent = jsonObject.optJSONObject(BaiduPushConstants.CUSTOM);
             if (customContent != null) {
                 extras.putString(BaiduPushConstants.DATA, jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT).toString());
             }

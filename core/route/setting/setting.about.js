@@ -8,7 +8,7 @@ import moment from 'moment'
 import CodePush from 'react-native-code-push'
 // import fs, { DocumentDirectoryPath } from 'react-native-fs'
 import { connect } from 'react-redux'
-// import marked from 'marked'
+import marked from 'marked'
 
 /*****************************************************************************************************/
 import {
@@ -77,7 +77,10 @@ export default class SettingAboutScreen extends Component {
                 { Icons.Generator.Material('chevron-right', 24, '#bbb') }
               </TouchableOpacity>
               <View style={{ paddingLeft: 12, backgroundColor: 'white' }}><View style={{ borderTopWidth: .5, borderColor: '#eaeaea' }} /></View>
-              <TouchableOpacity onPress={() => Alert.alert('', '还没有拿到文案')} activeOpacity={0.7} style={{ paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' }}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('SettingWetView', { 
+                title: '隐私协议及使用条款',
+                source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
+              })} activeOpacity={0.7} style={{ paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' }}>
                 <Text style={{ color: '#333', fontSize: 15, fontWeight: '400' }}>隐私协议及使用条款</Text>
                 { Icons.Generator.Material('chevron-right', 24, '#bbb') }
               </TouchableOpacity>
