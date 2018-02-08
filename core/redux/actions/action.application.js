@@ -27,7 +27,7 @@ export default {
 
   onPressAndroidBackButton: createAction('APPLICATION_ON_PRESS_BACK_BUTTON'),
 
-  setPushServiceParams: createAction('APPLICATION_SET_PUSH_SERVICE_PARAMS'),
+  setPushServiceToken: createAction('APPLICATION_SET_PUSH_SERVICE_TOKEN'),
   
   showMessage: createAction('APPLICATION_SHOW_MESSAGE')
 }

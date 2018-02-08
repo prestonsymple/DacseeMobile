@@ -10,17 +10,8 @@ const initialState = {
 
   status_bar_style: 'light-content',
 
-  push_service: {
-    android: {
-      appid: '',
-      userId: '',
-      channelId: '',
-      requestId: ''
-    },
-    ios: {
-      token: ''
-    }
-  }
+  push_service_token: '',
+  baidu_user_id: ''
   
 }
 
@@ -29,6 +20,6 @@ export default handleActions({
   [application.darkStatusBar]: (state) => Object.assign({}, state, { status_bar_style: 'dark-content' }),
   [application.lightStatusBar]: (state) => Object.assign({}, state, { status_bar_style: 'light-content' }),
 
-  [application.setPushServiceParams]: (state, { payload }) => Object.assign({}, state, { push_service: payload })
+  [application.setPushServiceToken]: (state, { payload }) => Object.assign({}, state, payload)
 
 }, initialState)

@@ -1,12 +1,25 @@
+/* global store */
+
 import axios from 'axios'
 
-const SESSION_TIMEOUT = 5000
+const SESSION_TIMEOUT = 10000
 
 const sessionBuilder = (baseUrl) => {
   const instance = axios.create({
     baseURL: baseUrl,
     timeout: SESSION_TIMEOUT,
     // headers: {'X-Custom-Header':'foobar'}
+  })
+
+  instance.interceptors.request.use((request) => {
+    const state = store.getState()
+    if (!state.account.authToken) {
+      instance.defaults.headers.common['Authorization'] = state.account.authToken
+    }
+    return request
+  }, err => {
+    console.log(err)
+    return Promise.reject(err)
   })
 
   // DEBUG && API请求响应中间件 - 记录组件
@@ -58,6 +71,10 @@ export default {
 
   driver: sessionBuilder(
     'http://driver-verification-dev.dacsee.io/api/'
+  ),
+
+  push: sessionBuilder(
+    'http://push-dev.dacsee.io/api/'
   )
 }
 

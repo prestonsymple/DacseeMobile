@@ -1,12 +1,12 @@
 import { Keyboard } from 'react-native'
 
-import { fork, all, take, call, put, takeEvery, takeLatest, race, cancel } from 'redux-saga/effects'
+import { select, fork, all, take, call, put, takeEvery, takeLatest, race, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import Toast from 'react-native-root-toast'
 
 import { application, account } from '../actions'
 import { NavigationActions } from 'react-navigation'
-import { Session as session } from '../../utils'
+import { Session as session, System } from '../../utils'
 
 const STAGE_DEFINE = {
   INIT: 0,
@@ -17,11 +17,7 @@ const STAGE_DEFINE = {
   READY_REGISTER: 5
 }
 
-const PUT_SCREEN_DEFINE = {
-
-}
-
-function* loginSaga() {
+function* loginFlow() {
   while (true) {
     const { next, back } = yield race({
       next: take(account.loginNext().type),
@@ -63,15 +59,10 @@ function* loginSaga() {
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
           const { data }  = yield call(session.user.post, path, body)
           
-          yield all([ // 登录完成
-            put(application.darkStatusBar()),
-            put(application.hideProgress()),
-            put(account.setAccountValue(data)),
-            put(account.loginSuccess()),
-            delay(2000),
-          ])
+          yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
+          console.log(e)
           if (e.response && e.response.data.code == 'INVALID_VERIFICATION_CODE') {
             yield all([
               put(account.loginPutValue(2)),
@@ -113,16 +104,16 @@ function* loginSaga() {
             _id1: ''
           })
 
-          yield all([ // 登录完成
-            put(application.darkStatusBar()),
-            put(account.setAccountValue(data)),
-            put(application.hideProgress()),
-            put(account.loginSuccess()),
-            delay(2000)
-          ])
+          yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
-          if (e.response && e.response.data.message) {
+          console.log(e)
+          if (e.response && e.response.data.message === 'INVALID_REFERRAL') {
+            yield all([
+              put(application.hideProgress()), 
+              put(application.showMessage(e.response.data.message)),
+            ])
+          } else if (e.response && e.response.data.message) {
             yield all([
               put(account.loginPutValue(2)),
               put(application.hideProgress()), 
@@ -144,7 +135,7 @@ function* loginSaga() {
   }
 }
 
-function* logoutSaga() {
+function* logoutFlow() {
   while(true) {
     const payload = yield take(account.logoutSuccess().type)
     // yield delay(500)
@@ -152,8 +143,53 @@ function* logoutSaga() {
   }
 }
 
+function* registerDevice() {
+  while(true) {
+    yield take(account.loginSuccess().type)
+    const { token, userId, user_id } = yield select(state => ({ 
+      token: state.config.push_service_token,
+      userId: state.config.baidu_user_id,
+      user_id: state.account.user._id
+    }))
+    try {
+      const extendFields = System.Platform.Android ? { channelId: token, userId } : { token }
+      const postData = Object.assign({}, {
+        'device' : {
+          'available' : true, 
+          'platform' : System.Platform.Android ? 'Android' : 'iOS', 
+          'version' : System.Device.Version, 
+          'uuid' : System.UUID, 
+          'cordova' : '0.0.0', 
+          'model' : System.Device.Name, 
+          'manufacturer' : System.Device.Brand, 
+          'isVirtual' : false, 
+          'serial' : 'UNKNOW'
+        }, 
+        'status' : 'active',
+        'type' : System.Platform.Name, 
+        'uuid' : System.UUID,
+        'user_id': user_id
+      }, extendFields)
+    
+      yield call(session.push.post, 'v1/register', postData) 
+    } catch (e) {
+      console.log('[注册设备]', '[失败]', e)
+    }
+  }
+}
 
-export {
-  logoutSaga,
-  loginSaga
+function* loginSuccess(data: object) {
+  yield put(account.setAccountValue(data))
+  yield delay(2000)
+  yield put(application.darkStatusBar())
+  yield put(application.hideProgress())
+  yield put(account.loginSuccess())
+}
+
+export default function* watch() {
+  yield all([
+    fork(loginFlow),
+    fork(logoutFlow),
+    fork(registerDevice)
+  ])
 }

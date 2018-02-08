@@ -16,7 +16,7 @@ import Store from './app.store'
 import Launch from './app.launch'
 import { network, application } from './redux/actions'
 
-import { Define } from './utils'
+import { Define, System } from './utils'
 
 const initializationModule = () => {}
 
@@ -40,8 +40,8 @@ class Core extends PureComponent {
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-
-    store.dispatch(application.changeApplicationStatus('inactive')) // CHECK UPDATE
+    console.log('初始化')
+    
     //#AMap SDK Init
     this.initializationPushNotification()
     this.initializationMomentConfig()
@@ -53,60 +53,78 @@ class Core extends PureComponent {
   }
 
   async initializationPushNotification() {
-    PushService.component.addEventListener('register', (handle) => {
-      console.log('register', handle)
-    })
+    // PushService.component.addEventListener('register', (handle) => {
+    //   console.log('register', handle)
+    // })
 
-    PushService.component.addEventListener('notification', (handle) => {
-      console.log('notification', handle)
-    })
+    // PushService.component.addEventListener('notification', async (handle) => {
+    //   console.log(handle)
+    //   const msg = await PushService.component.getInitialNotification()
+    //   console.log(msg)
+    // })
 
-    PushService.component.addEventListener('remoteFetch', (handle) => {
-      console.log('remoteFetch', handle)
-    })
+    // PushService.component.addEventListener('remoteFetch', (handle) => {
+    //   console.log('remoteFetch', handle)
+    // })
 
-    PushService.component.requestPermissions('oDKwrgBkPKIyXpBsmVTx2dP3')
+    // PushService.component.requestPermissions('')
 
     // const msg = await PushService.component.getInitialNotification()
     // console.log('init', msg)
-    // PushNotification.configure({
-
-    //   // (optional) Called when Token is generated (iOS and Android)
-    //   onRegister: function(token) {
-    //     console.log('[PN][TOEKN]',token)
-    //   },
+    PushService.configure({
+      onRegister: function(register) {
+        console.log(register)
+        const { token, os, baidu_id } = register
+        const state = {
+          push_service_token: token,
+          baidu_user_id: baidu_id
+        }
+        if (System.Platform.iOS) delete state.baidu_user_id
+        store.dispatch(application.setPushServiceToken(state))
+      },
   
-    //   // (required) Called when a remote or local notification is opened or received
-    //   onNotification: function(notification) {
-    //     console.log('[PN][RECEIVED]', notification)
+      // (required) Called when a remote or local notification is opened or received
+      onNotification: function(notification) {
+        const { 
+          foreground, // 正在前台
+          id, // 推送ID
+          message, // 推送消息内容
+          title, // 推送标题
+          userInteraction, // 用户触发 
+          badge,
+          route
+        } = notification
+        console.log('[PN][RECEIVED]', notification)
 
-    //     // process the notification
+        // process the notification
         
-    //     // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
-    //     notification.finish(PushNotificationIOS.FetchResult.NoData)
-    //   },
+        // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
+        notification.finish(PushNotificationIOS.FetchResult.NoData)
+      },
   
-    //   // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-    //   // senderID: "YOUR GCM SENDER ID",
+      // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
+      // senderID: 'oDKwrgBkPKIyXpBsmVTx2dP3', // BAIDU TEST KEY
+      senderID: 'dvzSIimOD9ipnqwssO5L1VNH', // AWS KEY
+
   
-    //   // IOS ONLY (optional): default: all - Permissions to register.
-    //   permissions: {
-    //     alert: true,
-    //     badge: true,
-    //     sound: true
-    //   },
+      // IOS ONLY (optional): default: all - Permissions to register.
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true
+      },
   
-    //   // Should the initial notification be popped automatically
-    //   // default: true
-    //   popInitialNotification: true,
+      // Should the initial notification be popped automatically
+      // default: true
+      popInitialNotification: true,
   
-    //   /**
-    //     * (optional) default: true
-    //     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-    //     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-    //     */
-    //   requestPermissions: true
-    // })
+      /**
+        * (optional) default: true
+        * - Specified if permissions (ios) and token (android and ios) will requested or not,
+        * - if not, you must call PushNotificationsHandler.requestPermissions() later
+        */
+      requestPermissions: true
+    })
   }
 
   initializationBackHandler() {

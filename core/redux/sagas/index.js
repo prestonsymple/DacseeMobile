@@ -7,7 +7,7 @@ import Toast from 'react-native-root-toast'
 
 import { application, account } from '../actions'
 import { System } from '../../utils'
-import { loginSaga, logoutSaga } from './saga.login'
+import loginSaga from './saga.login'
 import bookingSaga from './saga.booking'
 
 
@@ -87,7 +87,6 @@ export default function* sagaService() {
     fork(watchAndroidBackButton),
     fork(watchShowMessage),
 
-    fork(logoutSaga),
     fork(loginSaga)
   ])
 }
