@@ -86,6 +86,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
       ready: false,
       editAdr: false,
       field: 'to',
+      city: '',
       drag: false,
       defaultData: dataContrast.cloneWithRows([{
         type: 'favorite',
@@ -145,11 +146,17 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   }
 
   async onLocationSearch(longitude, latitude) {
-    // console.log(`[N][${Date.now()}]`)
     try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
       const { count, type, pois } = await Search.searchLocation(longitude, latitude)
+
+      if (!this.state.city) {
+        let city = pois[0].city
+        city = city.length > 2 ? city.substr(0, 2) : city
+        this.setState({ city })
+      }
+
 
       const address = pois.find(pipe => {
         if (pipe.address.endsWith('米')) return pipe
@@ -168,7 +175,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   onKeywordsSearch(keywords) {
     return async () => {
       try {
-        const { count, type, pois } = await Search.searchKeywords(keywords, '上海')
+        const { count, type, pois } = await Search.searchKeywords(keywords, this.state.city)
         const args = pois.map(pipe => ({
           address: pipe.address,
           location: pipe.location,
@@ -288,7 +295,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
           onChangeKeywords={this.onEnterKeywords.bind(this)}
           field={field}
           animationType={'slide'}
-          transparent={true}
+          transparent={false}
           visible={editAdr}
           defaultData={defaultData}
           data={data}

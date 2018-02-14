@@ -25,6 +25,6 @@ const system = {
 
 export default {
   TextInputArgs,
-  FixPlusPixel: system.ios.plus ? 1 : .5,
+  FixPlusPixel: system.ios.plus ? 1 : .6,
   system: system
 }

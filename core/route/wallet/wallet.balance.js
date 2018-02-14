@@ -8,7 +8,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
-import { Screen, Icons, Redux, Define } from '../../utils'
+import { Screen, Icons, Redux, Define, System } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
@@ -49,8 +49,7 @@ const DEMO_DATA = [{
 }]
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({ data: state.booking }))
-(class WalletBalanceScreen extends PureComponent {
+export default connect(state => ({ data: state.booking }))(class WalletBalanceScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -69,11 +68,11 @@ export default connect(state => ({ data: state.booking }))
         prefix: 'RM ',
         content: (
           <View style={{ marginTop: 12, flexDirection: 'row', height: 28, width: 200, justifyContent: 'space-between' }}>
-            <Button style={{ width: 90, backgroundColor: '#f2f2f2', borderRadius: 4 }}>
-              <Text style={{ fontSize: 12, color: '#484b66', fontWeight: '600' }}>Deposit</Text>
+            <Button onPress={() => this.props.dispatch(application.showMessage('无法请求到服务器'))} style={{ width: 90, backgroundColor: '#f2f2f2', borderRadius: 4 }}>
+              <Text style={{ fontSize: 12, color: '#444', fontWeight: System.Platform.Android ? '400' : '600' }}>Deposit</Text>
             </Button>
-            <Button style={{ width: 90, backgroundColor: '#484b66', borderRadius: 4 }}>
-              <Text style={{ fontSize: 12, color: 'white', fontWeight: '600' }}>Withdraw</Text>
+            <Button onPress={() => this.props.dispatch(application.showMessage('无法请求到服务器'))} style={{ width: 90, backgroundColor: '#6bd19e', borderRadius: 4 }}>
+              <Text style={{ fontSize: 12, color: 'white', fontWeight: System.Platform.Android ? '400' : '600' }}>Withdraw</Text>
             </Button>
           </View>
         )
@@ -85,8 +84,8 @@ export default connect(state => ({ data: state.booking }))
         suffix: ' TOKEN',
         content: (
           <View style={{ marginTop: 12, flexDirection: 'row', height: 28, width: 200, justifyContent: 'center' }}>
-            <Button style={{ width: 90, backgroundColor: '#484b66', borderRadius: 4 }}>
-              <Text style={{ fontSize: 12, color: 'white', fontWeight: '600' }}>Sell</Text>
+            <Button onPress={() => this.props.dispatch(application.showMessage('无法请求到服务器'))} style={{ width: 90, backgroundColor: '#6bd19e', borderRadius: 4 }}>
+              <Text style={{ fontSize: 12, color: 'white', fontWeight: System.Platform.Android ? '400' : '600' }}>Sell</Text>
             </Button>
           </View>
         )
@@ -106,14 +105,14 @@ export default connect(state => ({ data: state.booking }))
     const wrapWidth = width
 
     return (
-      <View style={{ backgroundColor: '#f4f7fb', flex: 1 }}>
+      <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
         {/* CARD */}
         <View style={{ height: 232 }}>
           <ScrollView 
             pagingEnabled={true}
             onScroll={({ nativeEvent }) => { 
               const { contentInset, contentOffset, contentSize, layoutMeasurement, velocity, zoomScale } = nativeEvent
-              if (contentOffset.x < 0) return;
+              if (contentOffset.x < 0) { return }
               this.page.setValue(contentOffset.x)
             }}
             scrollEventThrottle={(width - 30) / 15}
@@ -133,9 +132,9 @@ export default connect(state => ({ data: state.booking }))
                     ]}>
                       <Text style={{ color: '#939699', fontWeight: '200', fontSize: 15}}>{ item.describer }</Text>
                       <View style={{ flexDirection: 'row', marginTop: 6, alignItems: 'center' }}>
-                        <Text style={{ color: '#484b66', fontWeight: '600', fontSize: 28, fontFamily: 'Cochin' }}>{ item.prefix }</Text>
-                        <Text style={{ color: '#484b66', fontWeight: '600', fontSize: 28, fontFamily: 'Cochin' }}>{ item.balance.toFixed(2) }</Text>
-                        <Text style={{ color: '#484b66', fontWeight: '600', fontSize: 28, fontFamily: 'Cochin' }}>{ item.suffix }</Text>
+                        <Text style={{ color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 28, fontFamily: 'Cochin' }}>{ item.prefix }</Text>
+                        <Text style={{ color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 28, fontFamily: 'Cochin' }}>{ item.balance.toFixed(2) }</Text>
+                        <Text style={{ color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 28, fontFamily: 'Cochin' }}>{ item.suffix }</Text>
                       </View>
                       { item.content }
                     </View>
@@ -150,22 +149,22 @@ export default connect(state => ({ data: state.booking }))
                 { height: 2, marginHorizontal: 1 },
                 { backgroundColor: this.page.interpolate({
                   inputRange: [0, wrapWidth, wrapWidth * 2],
-                  outputRange: ['#484b66', '#ddd', '#ddd']
+                  outputRange: ['#333', '#ddd', '#ddd']
                 })},
                 { width: this.page.interpolate({
-                    inputRange: [0, wrapWidth, wrapWidth * 2],
-                    outputRange: [10, 6, 6]
+                  inputRange: [0, wrapWidth, wrapWidth * 2],
+                  outputRange: [10, 6, 6]
                 })}
               ]} />
               <Animated.View style={[
                 { height: 2, marginHorizontal: 1 },
                 { backgroundColor: this.page.interpolate({
                   inputRange: [0, wrapWidth, wrapWidth * 2],
-                  outputRange: ['#ddd', '#484b66', '#ddd']
+                  outputRange: ['#ddd', '#333', '#ddd']
                 })},
                 { width: this.page.interpolate({
-                    inputRange: [0, wrapWidth, wrapWidth * 2],
-                    outputRange: [6, 10, 6]
+                  inputRange: [0, wrapWidth, wrapWidth * 2],
+                  outputRange: [6, 10, 6]
                 })}
               ]} />
             </View>
@@ -177,7 +176,7 @@ export default connect(state => ({ data: state.booking }))
           dataSource={detail}
           enableEmptySections={true}
           renderRow={(row) => <DetailItem data={row} />}
-          renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f4f7fb' }} />}
+          renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
           style={{ flex: 1, height: 30, marginTop: 15 }}
         />
       </View>
@@ -193,28 +192,28 @@ class DetailItem extends Component {
     return (
       <View style={{ paddingHorizontal: 26, flex: 1, height: 64, backgroundColor: 'white', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
         {/* <View style={{  }}> */}
-          <View style={{ width: 40 }}>
-            { 
-              type === 'in' ?
+        <View style={{ width: 40 }}>
+          { 
+            type === 'in' ?
               Icons.Generator.Material('arrow-upward', 18, '#e74a6e') :
               Icons.Generator.Material('arrow-downward', 18, '#6bd19e')
-            }
+          }
+        </View>
+        <View style={{ flex: 1, justifyContent: 'space-between' }}>
+          <Text style={{ fontSize: 14, color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ title }</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text>
+            <Text style={{ fontSize: 11, color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ time }</Text>
           </View>
-          <View style={{ flex: 1, justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 14, color: '#555', fontWeight: '600', marginBottom: 8 }}>{ title }</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text>
-              <Text style={{ fontSize: 11, color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ time }</Text>
-            </View>
-          </View>
-          <View style={{ width: 80, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-            {
-              type === 'in' ?
-              <Text style={{ fontSize: 18, textAlign: 'right', color: '#e74a6e', fontWeight: '400', fontFamily: 'Cochin', top: -2.5, marginRight: 5 }}>+</Text> :
-              <Text style={{ fontSize: 18, textAlign: 'right', color: '#6bd19e', fontWeight: '400', fontFamily: 'Cochin', top: -2.5, marginRight: 5 }}>-</Text>
-            }
-            <Text style={{ fontSize: 18, textAlign: 'right', color: '#555', fontWeight: '400', fontFamily: 'Cochin' }}>{ cost.toFixed(2) }</Text>
-          </View>
+        </View>
+        <View style={{ width: 80, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+          {
+            type === 'in' ?
+              <Text style={{ fontSize: 18, textAlign: 'right', color: '#e74a6e', fontWeight: '400', fontFamily: 'Cochin', top: System.Platform.Android ? 0 : -2.5, marginRight: 5 }}>+</Text> :
+              <Text style={{ fontSize: 18, textAlign: 'right', color: '#6bd19e', fontWeight: '400', fontFamily: 'Cochin', top: System.Platform.Android ? 0 : -2.5, marginRight: 5 }}>-</Text>
+          }
+          <Text style={{ fontSize: 18, textAlign: 'right', color: '#555', fontWeight: System.Platform.Android ? '200' : '400', fontFamily: 'Cochin' }}>{ cost.toFixed(2) }</Text>
+        </View>
         {/* </View> */}
       </View>
     )

@@ -385,7 +385,7 @@ export default connect(state => ({
                 <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>《用户使用协议》</Text>
               </TouchableOpacity>
             </View>
-            <View style={{  }}>
+            <View style={{ height: 44 }}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.onPressComplate.bind(this)}>
                 <View style={{ height: 44, alignItems: 'center', flexDirection: 'row', backgroundColor: '#ffa81d', borderRadius: 22 }}>
                   <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>完成</Text>

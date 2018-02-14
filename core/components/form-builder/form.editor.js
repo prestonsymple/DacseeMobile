@@ -88,10 +88,9 @@ class FormEditorScreen extends Component {
       drawerLockMode: 'locked-closed', 
       title: params.title,
       headerRight: (
-        
         <TouchableOpacity 
           activeOpacity={0.7}
-          style={{ width: 54, paddingRight: 8, justifyContent: 'center', alignItems: 'flex-end' }} 
+          style={{ width: 54, paddingRight: 15, justifyContent: 'center', alignItems: 'flex-end' }} 
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.EDITOR.CHANGE.VALUE')}
         >
           <Text style={{ fontSize: 16, color: '#333', fontWeight: '600' }}>完成</Text>

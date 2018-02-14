@@ -31,6 +31,10 @@ import {
   FormEditorScreen
 } from './components/form-builder'
 
+import {
+  IncomeListScreen
+} from './route/income'
+
 import UpgradeDriverScreen from './route/upgrade.driver'
 
 
@@ -86,6 +90,8 @@ const HomeNavigator = DrawerNavigator({
     PickerAddress: { screen: PickerAddressScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },
+
+    IncomeList: { screen: IncomeListScreen },
     
     SettingMenu: { screen: SettingMenuScreen },
     SettingAbout: { screen: SettingAboutScreen },

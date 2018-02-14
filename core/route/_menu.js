@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { DrawerItems, SafeAreaView } from 'react-navigation'
 
 import resources from '../resources'
-import { Screen, Icons } from '../utils'
+import { Screen, Icons, System } from '../utils'
 import { Button } from '../components'
 import { application, account } from '../redux/actions'
 
@@ -34,7 +34,8 @@ const MENUS_OPTIONS = [{
 }, {
   key: '4',
   name: '收入',
-  icon: Icons.Generator.Material('monetization-on', 24, ICONS_COLOR, { style: { left: 1 } })
+  icon: Icons.Generator.Material('monetization-on', 24, ICONS_COLOR, { style: { left: 1 } }),
+  onPress: ({ navigation }) => navigation.navigate('IncomeList')
 }, 
 // {
 //   key: '5',
@@ -77,7 +78,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
             </View>
             <Text style={[
               { marginTop: 10 },
-              { color: '#333', fontWeight: '600', fontSize: 18 }
+              { color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 18 }
             ]}>{ fullName }</Text>
             <View style={[
               { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.5 },
@@ -94,7 +95,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
               MENUS_OPTIONS.map(pipe => (
                 <Button onPress={pipe.onPress ? pipe.onPress.bind(this, this.props) : () => {}} key={pipe.key} style={{ height: 44, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                   <View style={{ marginRight: 10 }}>{ pipe.icon }</View>
-                  <Text style={{ fontSize: 14, fontWeight: '600', color: '#333' }}>{pipe.name}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: System.Platform.Android ? '400' : '600', color: '#333' }}>{pipe.name}</Text>
                 </Button>
               ))
             }
