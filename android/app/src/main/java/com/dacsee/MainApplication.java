@@ -6,6 +6,7 @@ import android.content.Context;
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactApplication;
+import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -47,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new PickerViewPackage(),
               new SplashScreenPackage(),
               new LottiePackage(),
               new ReactNativePushNotificationPackage(),

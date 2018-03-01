@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import PropTypes from 'prop-types'
-import { processColor, requireNativeComponent, ViewPropTypes } from 'react-native'
+import { processColor, requireNativeComponent, ViewPropTypes, NativeModules } from 'react-native'
 import { LatLng, Region } from '../PropTypes'
 import Component from '../Component'
 
@@ -10,6 +10,11 @@ export type MapStatus = {
   coordinate?: LatLng,
   titl?: number,
   rotation?: number,
+}
+
+export type AMapNaviPoint = {
+  latitude: number,
+  longitude: number
 }
 
 export const LocationStyle = PropTypes.shape({
@@ -249,6 +254,10 @@ export default class MapView extends Component<any> {
    */
   animateTo(target: MapStatus, duration?: number = 500) {
     this.sendCommand('animateTo', [target, duration])
+  }
+
+  calculateDriveRouteWithStartPoints(startPoint: AMapNaviPoint, endPoint: AMapNaviPoint) {
+    this.sendCommand('calculateDriveRouteWithStartPoints', [startPoint, endPoint])
   }
 
   render() {

@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from 'react'
 import {
   Text, View, Animated, StyleSheet, Image, TouchableOpacity,
-  DeviceEventEmitter, ListView, Platform
+  DeviceEventEmitter, ListView, Platform, ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 // import { NavigationActions } from 'react-navigation'
@@ -11,6 +11,8 @@ import PropTypes from 'prop-types'
 
 import Resources from '../../resources'
 import BaseScreenComponent from '../_base'
+
+import HeaderSection from './com.header.section'
 
 import { MapView, Search } from '../../native/AMap'
 import { Screen, Icons, Define } from '../../utils'
@@ -40,18 +42,14 @@ const BOTTOM_MARGIN = Platform.select({
   android: 25
 }) 
 
-const DEMO_DATA = [[
+const DEMO_DATA = [
+  { value: '朋友圈', title: '朋友圈', key: 'uid-3', image: 'http://img.hb.aicdn.com/c2728cdc04a2b36f76538141de1332d2bc84672372692-Fvgu5H_fw658' },
   { value: 'SUV', title: 'SUV', key: 'suv', image: 'http://img.hb.aicdn.com/9087d7c3ee8a8d6e01e07a12d6ee3d0bb2fbda8656f6b-gdzrdR_fw658' },
   { value: '7座商务', title: '7座商务', key: 'business', image: 'http://img.hb.aicdn.com/9087d7c3ee8a8d6e01e07a12d6ee3d0bb2fbda8656f6b-gdzrdR_fw658' },
-], [
   { value: '出租车', title: '出租车', key: 'taxi', image: 'http://img.hb.aicdn.com/1c215f103cbad1fe3ed429776d7fa8b739028df013249-yhmYe2_fw658' },
   { value: '优选', title: '优选', key: 'nearbest', image: 'http://img.hb.aicdn.com/1c215f103cbad1fe3ed429776d7fa8b739028df013249-yhmYe2_fw658' },
   { value: '豪华', title: '豪华', key: 'nearpremium', image: 'http://img.hb.aicdn.com/1c215f103cbad1fe3ed429776d7fa8b739028df013249-yhmYe2_fw658' }
-], [
-  { value: '朋友-Vito', title: 'Vito', key: 'uid-1', image: 'http://img.hb.aicdn.com/0bd774bc66f9719a438efaa3cbe11cf21d21ce93166f7-wBCvyo_fw658' },
-  { value: '朋友-San', title: 'San', key: 'uid-2', image: 'http://img.hb.aicdn.com/219be644fe1a95fc979fefb0c233535c55c119321753a-JbXLGf_fw658' },
-  { value: '朋友-Chim', title: 'Chim', key: 'uid-3', image: 'http://img.hb.aicdn.com/c2728cdc04a2b36f76538141de1332d2bc84672372692-Fvgu5H_fw658' }
-]]
+]
 
 // TODO: Optimize the callback
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -65,6 +63,13 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
       // contentComponent: () => (
       //   <View style={{ backgroundColor: '#333', flex: 1, height: 300, width: 400 }}></View>
       // ),
+      headerStyle: {
+        shadowColor: 'transparent',
+        shadowOpacity: 0,
+        borderBottomWidth: 0,
+        borderBottomColor: 'transparent',
+        elevation: 0,
+      },
       headerLeft: (
         <TouchableOpacity
           activeOpacity={0.7}
@@ -145,33 +150,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.currentLoc = { latitude, longitude }
   }
 
-  async onLocationSearch(longitude, latitude) {
-    try {
-      Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
-      Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
-      const { count, type, pois } = await Search.searchLocation(longitude, latitude)
-
-      if (!this.state.city) {
-        let city = pois[0].city
-        city = city.length > 2 ? city.substr(0, 2) : city
-        this.setState({ city })
-      }
-
-
-      const address = pois.find(pipe => {
-        if (pipe.address.endsWith('米')) return pipe
-        if (pipe.address.endsWith('站')) return pipe
-        if (pipe.address.endsWith('号')) return pipe
-        if (pipe.address.endsWith('弄')) return pipe
-        return false
-      })
-      this.props.dispatch(booking.journeyUpdateData({ from: address || {} }))
-      this.setState({ drag: false })
-    } catch (e) {
-      return
-    }
-  }
-
   onKeywordsSearch(keywords) {
     return async () => {
       try {
@@ -202,13 +180,39 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.timer = setTimeout(this.onLocationSearch.bind(this, longitude, latitude), 1500)
   }
 
+  async onLocationSearch(longitude, latitude) {
+    try {
+      Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
+      Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
+      const { count, type, pois } = await Search.searchLocation(longitude, latitude)
+
+      if (!this.state.city) {
+        let city = pois[0].city
+        city = city.length > 2 ? city.substr(0, 2) : city
+        this.setState({ city })
+      }
+
+      const address = pois.find(pipe => {
+        if (pipe.address.endsWith('米')) return pipe
+        if (pipe.address.endsWith('站')) return pipe
+        if (pipe.address.endsWith('号')) return pipe
+        if (pipe.address.endsWith('弄')) return pipe
+        return false
+      })
+      this.props.dispatch(booking.journeyUpdateData({ from: address || {} }))
+      this.setState({ drag: false })
+    } catch (e) {
+      return
+    }
+  }
+
   onEnterKeywords(keywords) {
     this.timer && clearTimeout(this.timer)
     this.timer = setTimeout(this.onKeywordsSearch(keywords), 400)
   }
 
   async componentWillReceiveProps(props) {
-    const { schedule } = props.data
+    const { schedule, to } = props.data
 
     if (schedule === 1) {
       await new Promise((resolve) => Animated.timing(this.ui, { toValue: 1, duration: 200 }).start(() => resolve()))
@@ -218,9 +222,8 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
       await new Promise((resolve) => Animated.timing(this.ui, { toValue: 2, duration: 200 }).start(() => resolve()))
     }
 
-    if (('from' in props) && (props.from.address !== this.props.from.address)) {
-      const { location } = props.from
-      this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: location.lat, longitude: location.lng } }, 500)
+    if (('location' in to) && (to.address !== this.props.data.to.address)) {
+      this.props.navigation.navigate('BookingOptions')
     }
 
   }
@@ -247,7 +250,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
 
   render() {
     const { editAdr, drag, defaultData, data, field } = this.state
-    const { schedule } = this.props.data
+    const { schedule, type } = this.props.data
 
     return (
       <View style={{ flex: 1 }}>
@@ -265,6 +268,8 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
           ref={e => this.map = e}>
         </MapView>
 
+        <HeaderSection type={this.props.data.type} dispatch={this.props.dispatch} />
+
         <MapPin timing={this.pin} />
         <MapPinTip timing={this.board} />
 
@@ -275,16 +280,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
           from={this.props.data.from}
           onPressTo={() => this.activeAdrEdit('to')}
           onPressFrom={() => this.activeAdrEdit('from')}
-        />
-        <SelectBookingOption
-          onPressChangeCarType={() => this.changeFormAnimated(1)}
-          onPressBack={() => this.changeFormAnimated(0)}
-          onPressBooking={() => this.props.dispatch(booking.journeyUserStart())}
-          data={this.props.data}
-          timing={[this.form, this.ui]}
-        />
-        <BookingInfo
-          timing={this.ui}
         />
 
         {/* Modal - Where u? */}
@@ -300,8 +295,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
           defaultData={defaultData}
           data={data}
         />
-
-        <ModalDriverRespond visible={schedule === 2} />
       </View>
     )
   }
@@ -408,7 +401,7 @@ class MapPin extends Component {
 
 class MoveToCurrentLocation extends Component {
   render() {
-    const { } = this.props
+    // const { } = this.props
     return (
       <Animated.View style={[
         { width: 36, height: 36, backgroundColor: 'white', position: 'absolute', right: 15, borderRadius: 3, borderColor: '#ccc', borderWidth: Screen.window.width <= 375 ? .5 : 1 },
@@ -423,127 +416,13 @@ class MoveToCurrentLocation extends Component {
   }
 }
 
-class SelectBookingOption extends Component {
-  render() {
-    const { timing, onPressChangeCarType, onPressBack, onPressBooking } = this.props
-    return (
-      <Animated.View style={[
-        styles.SelectBookingWrap,
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-        { top: timing[0].interpolate({ inputRange: [0, 1], outputRange: [Screen.window.height - 130 - 64 - 15 - BOTTOM_MARGIN, Screen.window.height - 180 - 64 - 15 - BOTTOM_MARGIN] }) },
-        { opacity: timing[1].interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) },
-      ]}>
-        <View style={{ flex: 1 }}>
-          <Animated.View style={[
-            { left: timing[0].interpolate({ inputRange: [0, .7], outputRange: [0, width], extrapolate: 'clamp' }) },
-            { opacity: timing[0].interpolate({ inputRange: [0, .2], outputRange: [1, 0], extrapolate: 'clamp' }) }
-          ]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Button underlayColor={'#f2f2f299'} onPress={() => onPressChangeCarType()} style={{ backgroundColor: 'transparent', height: 44, flex: 1 }}>
-                <Text style={{ fontSize: 14, color: '#444', fontWeight: '600' }}>优选</Text>
-              </Button>
-            </View>
-            <Animated.View style={{ height: timing[0].interpolate({ inputRange: [0, 1], outputRange: [0, 50] }) }} />
-          </Animated.View>
-
-          <Animated.View style={[
-            { backgroundColor: '#ccc', height: .5, marginHorizontal: 18 },
-            { top: timing[0].interpolate({ inputRange: [0, .3, .9], outputRange: [0, 0, 44], extrapolate: 'clamp' }) },
-            { opacity: timing[0].interpolate({ inputRange: [0, .7], outputRange: [1, 0], extrapolate: 'clamp' }) }
-          ]} />
-
-          {/* Payment */}
-          <Animated.View style={[
-            { flexDirection: 'row', backgroundColor: 'transparent' },
-            { left: timing[0].interpolate({ inputRange: [0, .7], outputRange: [0, width], extrapolate: 'clamp' }) },
-            { opacity: timing[0].interpolate({ inputRange: [0, .2], outputRange: [1, 0], extrapolate: 'clamp' }) }
-          ]}>
-            <Button underlayColor={'#f2f2f299'} style={{ backgroundColor: 'transparent', height: 44, flex: 1 }}>
-              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                {Icons.Generator.Material('attach-money', 18, '#666', { style: { marginRight: 6, top: .5 } })}
-                <Text style={{ fontSize: 14, color: '#444', fontWeight: '600' }}>现金支付</Text>
-              </View>
-            </Button>
-            <View style={{ backgroundColor: '#ccc', marginVertical: 8, width: .5 }} />
-            <Button underlayColor={'#f2f2f299'} style={{ backgroundColor: 'transparent', height: 44, flex: 1 }}>
-              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                {Icons.Generator.Material('query-builder', 18, '#666', { style: { marginRight: 6, top: .5 } })}
-                <Text style={{ fontSize: 14, color: '#444', fontWeight: '600' }}>现在</Text>
-              </View>
-            </Button>
-          </Animated.View>
-        </View>
-
-        <SelectCarType style={[
-          { left: timing[0].interpolate({ inputRange: [.6, 1], outputRange: [width, 0], extrapolate: 'clamp' }) },
-          { opacity: timing[0].interpolate({ inputRange: [.8, 1], outputRange: [0, 1], extrapolate: 'clamp' }) }
-        ]} data={DEMO_DATA} onSelected={value => console.log(value)} />
-        {/* Button Groups */}
-        <View style={{ overflow: 'hidden', flex: 1 }}>
-          <Animated.View style={[
-            { height: 44, width: (width - 30) * 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-            { left: timing[0].interpolate({ inputRange: [0, 1], outputRange: [0, -(width - 30)], extrapolate: 'clamp' }) },
-            {}
-          ]}>
-            <Button onPress={() => onPressBooking()} style={{ flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C', borderBottomLeftRadius: 3, borderBottomRightRadius: 3 }}>
-              <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>开始</Text>
-            </Button>
-            <Button onPress={() => onPressBack()} style={{ flex: 1, height: 44, backgroundColor: '#FEA81C', borderBottomLeftRadius: 3, borderBottomRightRadius: 3 }}>
-              {Icons.Generator.Material('arrow-back', 28, 'white')}
-            </Button>
-          </Animated.View>
-        </View>
-      </Animated.View>
-    )
-  }
-}
-
-class BookingInfo extends Component {
-  render() {
-    const { timing } = this.props
-    return (
-      <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0 },
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-        { top: timing.interpolate({ inputRange: [0, 1, 2], outputRange: [-100, -100, 0] }) },
-        { opacity: timing.interpolate({ inputRange: [0, 1, 2], outputRange: [1, 0, 1] }) }
-      ]}>
-        <View style={{ height: 88, backgroundColor: 'white', flexDirection: 'row', paddingHorizontal: 14, alignItems: 'center' }}>
-          <View style={{ justifyContent: 'center', marginRight: 10 }}>
-            <Image style={{ width: 54, height: 54, borderRadius: 27 }} source={require('../../resources/images/test.jpg')} />
-          </View>
-          <View style={{ justifyContent: 'space-between', height: 54, top: 2, flex: 1 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#333' }}>陈师傅</Text>
-            <Text style={{ fontSize: 12, fontWeight: '400', color: '#666' }}>沪A23N78</Text>
-            <View style={{ flexDirection: 'row' }}>
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star-half', 13, '#FEA81C')}
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: 120, paddingHorizontal: 10 }}>
-            <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
-              {Icons.Generator.Material('mail-outline', 24, 'white')}
-            </Button>
-            <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
-              {Icons.Generator.Material('phone', 24, 'white')}
-            </Button>
-          </View>
-        </View>
-      </Animated.View>
-    )
-  }
-}
-
 const styles = StyleSheet.create({
   SelectBookingWrap: Platform.select({
     ios: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3 },
     android: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .8 }
   }),
   PickAddressWrap: Platform.select({
-    ios: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
-    android: { position: 'absolute', top: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
+    ios: { position: 'absolute', bottom: Define.system.ios.x ? 45 : 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
+    android: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
   })
 })

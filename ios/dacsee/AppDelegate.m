@@ -35,11 +35,13 @@
   [UMConfigure setLogEnabled:YES];
   [RNUMConfigure initWithAppkey:@"5a7aa3f2a40fa355a700002a" channel:@"App Store"];
   [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1106730946" appSecret:@"cpXqcASFJs2r6vH3" redirectURL:nil];
+  [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_Twitter appKey:@"75sUPCwmmjb7R4VP8F7mIly8B" appSecret:@"gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX" redirectURL:nil];
+  [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_Facebook appKey:@"189854555110129" appSecret:@"5242579ad95a1347a9a55be82156e810" redirectURL:nil];
   // #######################################################
   
   NSURL *jsCodeLocation;
   #ifdef DEBUG
-    //[[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.43.251"];
+    [[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.80.100"];
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
     jsCodeLocation = [CodePush bundleURL];

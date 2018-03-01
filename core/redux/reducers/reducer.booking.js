@@ -12,8 +12,9 @@ const initialState = {
   from: {},
   type: 'standard',
   name: '优选',
-  payment: '现金',
-  book: false
+  payment: '现金支付',
+  book: false,
+  time: 'now'
 }
 
 export default handleActions({

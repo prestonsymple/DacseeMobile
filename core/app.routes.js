@@ -9,7 +9,10 @@ import DrawerContent from './route/_menu'
 
 import { 
   BookingScreen,
-  PickerAddressScreen
+  BookingOptionsScreen,
+  PickerAddressScreen,
+  FriendsCircleScreen,
+  FriendsCircleAddScreen
 } from './route/main'
 
 import { 
@@ -87,6 +90,9 @@ const defaultDrawerOptions = {
 const HomeNavigator = DrawerNavigator({
   Drawer: { screen: StackNavigator({ 
     Main: { screen: BookingScreen },
+    BookingOptions: { screen: BookingOptionsScreen },
+    FriendsCircle: { screen: FriendsCircleScreen },
+    FriendsCircleAdd: { screen: FriendsCircleAddScreen },
     PickerAddress: { screen: PickerAddressScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },

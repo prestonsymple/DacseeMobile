@@ -1,13 +1,19 @@
 #import <React/RCTUIManager.h>
 #import <AMapSearchKit/AMapSearchKit.h>
+#import <AMapNaviKit/AMapNaviKit.h>
 #import "AMapView.h"
 #import "AMapMarker.h"
 #import "AMapOverlay.h"
 
+
 #pragma ide diagnostic ignored "OCUnusedClassInspection"
 #pragma ide diagnostic ignored "-Woverriding-method-mismatch"
 
-@interface AMapViewManager : RCTViewManager <MAMapViewDelegate, AMapSearchDelegate>
+@interface AMapViewManager : RCTViewManager <MAMapViewDelegate, AMapSearchDelegate, AMapNaviDriveManagerDelegate>
+
+@property(copy, nonatomic) RCTPromiseResolveBlock resolve;
+@property(copy, nonatomic) RCTPromiseRejectBlock reject;
+
 @end
 
 @implementation AMapViewManager {
@@ -18,11 +24,13 @@
 RCT_EXPORT_MODULE()
 
 - (UIView *)view {
-    _mapView = [AMapView new];
-    _mapView.centerCoordinate = CLLocationCoordinate2DMake(0, 0);
-    _mapView.zoomLevel = 10;
-    _mapView.delegate = self;
-    return _mapView;
+  [AMapNaviDriveManager sharedInstance].delegate = self;
+  
+  _mapView = [AMapView new];
+  _mapView.centerCoordinate = CLLocationCoordinate2DMake(0, 0);
+  _mapView.zoomLevel = 10;
+  _mapView.delegate = self;
+  return _mapView;
 }
 
 RCT_EXPORT_VIEW_PROPERTY(locationEnabled, BOOL)
@@ -54,6 +62,8 @@ RCT_EXPORT_VIEW_PROPERTY(onLocation, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onStatusChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onStatusChangeComplete, RCTBubblingEventBlock)
 
+
+
 RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)params duration:(NSInteger)duration) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
         AMapView *mapView = (AMapView *) viewRegistry[reactTag];
@@ -75,6 +85,75 @@ RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)
         }
         [mapView setMapStatus:mapStatus animated:YES duration:duration / 1000.0];
     }];
+}
+
+RCT_EXPORT_METHOD(calculateDriveRouteWithStartPoints:(nonnull NSNumber *)reactTag startPoint: (AMapNaviPoint *)startPoint endPoint: (AMapNaviPoint *)endPoint) {
+  [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+    [[AMapNaviDriveManager sharedInstance] calculateDriveRouteWithStartPoints: @[startPoint]
+                                                                    endPoints: @[endPoint]
+                                                                    wayPoints: nil
+                                                              drivingStrategy: 1];
+  }];
+}
+
+// 绘制折线的回调
+//- (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id<MAOverlay>)overlay
+//{
+//  if ([overlay isKindOfClass:[SelectableOverlay class]])
+//  {
+//    SelectableOverlay * selectableOverlay = (SelectableOverlay *)overlay;
+//    id<MAOverlay> actualOverlay = selectableOverlay.overlay;
+//
+//    MAPolylineRenderer *polylineRenderer = [[MAPolylineRenderer alloc] initWithPolyline:actualOverlay];
+//
+//    polylineRenderer.lineWidth = 8.f;
+//    polylineRenderer.strokeColor = selectableOverlay.selectedColor;
+//
+//    return polylineRenderer;
+//  }
+//
+//  return nil;
+//}
+
+-(void)driveManagerOnCalculateRouteSuccess:(AMapNaviDriveManager *)driveManager {
+  if ([[AMapNaviDriveManager sharedInstance].naviRoutes count] <= 0) {
+    return [self.bridge.eventDispatcher sendAppEventWithName:@"EVENT_AMAP_VIEW_ROUTE_SUCCESS" body: @[]];
+  }
+  
+  NSMutableArray *args = [NSMutableArray new];
+  for (NSNumber *aRouteID in [[AMapNaviDriveManager sharedInstance].naviRoutes allKeys])
+  {
+    AMapNaviRoute *aRoute = [[[AMapNaviDriveManager sharedInstance] naviRoutes] objectForKey:aRouteID];
+    
+    NSMutableArray *naviPoint = [NSMutableArray new];
+    [[aRoute routeCoordinates] enumerateObjectsUsingBlock:^(AMapNaviPoint * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      [naviPoint addObject: @{ @"lat": @(obj.latitude), @"lng": @(obj.longitude) }];
+    }];
+    
+    [args addObject: @{
+                       @"routeTime": @(aRoute.routeTime),
+                       @"routeCenterPoint": @{
+                           @"longitude": @(aRoute.routeCenterPoint.longitude),
+                           @"latitude": @(aRoute.routeCenterPoint.latitude)
+                       },
+                       @"routeBounds": @{
+                           @"northEast": @{
+                               @"longitude": @(aRoute.routeBounds.northEast.longitude),
+                               @"latitude": @(aRoute.routeBounds.northEast.latitude)
+                           },
+                           @"southWest": @{
+                               @"longitude": @(aRoute.routeBounds.southWest.longitude),
+                               @"latitude": @(aRoute.routeBounds.southWest.latitude)
+                           },
+                       },
+                       @"routeLength": @(aRoute.routeLength),
+                       @"routeTollCost": @(aRoute.routeTollCost),
+                       @"routeNaviPoint": naviPoint
+                       }];
+  }
+  
+  
+  [self.bridge.eventDispatcher sendAppEventWithName:@"EVENT_AMAP_VIEW_ROUTE_SUCCESS" body: args];
 }
 
 - (void)mapView:(AMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate {
@@ -116,13 +195,6 @@ RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)
     return nil;
 }
 
-- (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay {
-    if ([overlay isKindOfClass:[AMapOverlay class]]) {
-        return ((AMapOverlay *) overlay).renderer;
-    }
-    return nil;
-}
-
 - (void)mapView:(AMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
     AMapMarker *marker = [mapView getMarker:view.annotation];
     if (marker.onPress) {
@@ -155,6 +227,14 @@ RCT_EXPORT_METHOD(animateTo:(nonnull NSNumber *)reactTag params:(NSDictionary *)
         });
     }
 }
+
+- (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay {
+  if ([overlay isKindOfClass:[AMapOverlay class]]) {
+    return ((AMapOverlay *) overlay).renderer;
+  }
+  return nil;
+}
+
 
 - (void)mapViewRegionChanged:(AMapView *)mapView {
     if (mapView.onStatusChange) {

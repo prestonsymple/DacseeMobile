@@ -92,6 +92,7 @@
 		F5D3FC01201FEAC200EAB3F6 /* Lottie.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F5D3FAFC201FE7AF00EAB3F6 /* Lottie.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F5DBEBE52028A73300F4A9DF /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DBEBE42028A6E600F4A9DF /* libRCTSplashScreen.a */; };
 		F5DBEBEF2028A8BC00F4A9DF /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DBEBEC2028A8B100F4A9DF /* libRCTPushNotification.a */; };
+		F5DF448C20451530002D0E64 /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DF44612045150F002D0E64 /* libRCTBEEPickerManager.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -494,6 +495,13 @@
 			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
 			remoteInfo = "RCTPushNotification-tvOS";
 		};
+		F5DF44602045150F002D0E64 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5DF44512045150F002D0E64 /* RCTBEEPickerManager.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 17D41E551D7EE0CA0031415E;
+			remoteInfo = RCTBEEPickerManager;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -624,6 +632,7 @@
 		F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/rn-splash-screen/ios/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F5DBEBF02028AAE100F4A9DF /* dacsee.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = dacsee.entitlements; path = dacsee/dacsee.entitlements; sourceTree = "<group>"; };
+		F5DF44512045150F002D0E64 /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
 		F83003D7435241979684458E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FBBA790CE36040B99ED31E6E /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -641,6 +650,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5DF448C20451530002D0E64 /* libRCTBEEPickerManager.a in Frameworks */,
 				F5DBEBEF2028A8BC00F4A9DF /* libRCTPushNotification.a in Frameworks */,
 				F5DBEBE52028A73300F4A9DF /* libRCTSplashScreen.a in Frameworks */,
 				F5D3FB54201FE7ED00EAB3F6 /* libRNFS.a in Frameworks */,
@@ -892,6 +902,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5DF44512045150F002D0E64 /* RCTBEEPickerManager.xcodeproj */,
 				F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */,
 				F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */,
 				F5D3FAF4201FE7AF00EAB3F6 /* Lottie.xcodeproj */,
@@ -966,16 +977,16 @@
 		F5669B8D20098BD900A0159A /* navigation */ = {
 			isa = PBXGroup;
 			children = (
-				F5669B8E20098BD900A0159A /* AMapDrive.m */,
-				F5669B8F20098BD900A0159A /* AMapWalk.h */,
-				F5669B9020098BD900A0159A /* AMapRide.m */,
-				F5669B9120098BD900A0159A /* AMapNavigationManager.h */,
-				F5669B9220098BD900A0159A /* AMapWalkManager.m */,
-				F5669B9320098BD900A0159A /* AMapWalk.m */,
-				F5669B9420098BD900A0159A /* AMapRideManager.m */,
 				F5669B9520098BD900A0159A /* AMapDrive.h */,
+				F5669B8E20098BD900A0159A /* AMapDrive.m */,
 				F5669B9620098BD900A0159A /* AMapDriveManager.m */,
+				F5669B9120098BD900A0159A /* AMapNavigationManager.h */,
 				F5669B9720098BD900A0159A /* AMapRide.h */,
+				F5669B9020098BD900A0159A /* AMapRide.m */,
+				F5669B9420098BD900A0159A /* AMapRideManager.m */,
+				F5669B8F20098BD900A0159A /* AMapWalk.h */,
+				F5669B9320098BD900A0159A /* AMapWalk.m */,
+				F5669B9220098BD900A0159A /* AMapWalkManager.m */,
 			);
 			name = navigation;
 			path = dacsee/NativeBridge/AMap/navigation;
@@ -1132,6 +1143,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F5DF44522045150F002D0E64 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5DF44612045150F002D0E64 /* libRCTBEEPickerManager.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1283,6 +1302,10 @@
 				{
 					ProductGroup = 5E91572E1DD0AC6500FF2AA8 /* Products */;
 					ProjectRef = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
+				},
+				{
+					ProductGroup = F5DF44522045150F002D0E64 /* Products */;
+					ProjectRef = F5DF44512045150F002D0E64 /* RCTBEEPickerManager.xcodeproj */;
 				},
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
@@ -1732,6 +1755,13 @@
 			fileType = archive.ar;
 			path = "libRCTPushNotification-tvOS.a";
 			remoteRef = F5DBEBED2028A8B100F4A9DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5DF44612045150F002D0E64 /* libRCTBEEPickerManager.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTBEEPickerManager.a;
+			remoteRef = F5DF44602045150F002D0E64 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
