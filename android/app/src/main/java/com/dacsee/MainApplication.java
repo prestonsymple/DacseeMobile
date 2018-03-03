@@ -80,7 +80,7 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
   }
 
-  public static void sendEvent(ReactApplicationContext appContext, String eventName, WritableMap map) {
+  public static void sendEvent(ReactContext appContext, String eventName, WritableMap map) {
     appContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, map);
   }
 }

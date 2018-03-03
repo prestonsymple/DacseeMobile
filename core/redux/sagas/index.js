@@ -34,21 +34,21 @@ import bookingSaga from './saga.booking'
 //   }
 // }
 
-function* watchiOSDrawerEvent() {
-  while(true) {
-    yield take(application.openDrawer().type)
-    // yield put(application.hideStatusBar())
-    // yield put(application.showStatusBar())
-    yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
-  }
-}
+// function* watchiOSDrawerEvent() {
+//   while(true) {
+//     yield take(application.openDrawer().type)
+//     // yield put(application.hideStatusBar())
+//     // yield put(application.showStatusBar())
+//     yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
+//   }
+// }
 
-function* watchAndroidDrawerEvent() {
-  while(true) {
-    yield take(application.openDrawer().type)
-    yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
-  }
-}
+// function* watchAndroidDrawerEvent() {
+//   while(true) {
+//     yield take(application.openDrawer().type)
+//     yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
+//   }
+// }
 
 function* watchAndroidBackButton() {
   while (true) {
@@ -82,7 +82,7 @@ function* watchShowMessage() {
 export default function* sagaService() {
   yield all([
     // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
-    fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
+    // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
     fork(bookingSaga),
     fork(watchAndroidBackButton),
     fork(watchShowMessage),

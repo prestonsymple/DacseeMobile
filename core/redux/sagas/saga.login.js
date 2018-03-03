@@ -181,7 +181,6 @@ function* registerDevice() {
 function* loginSuccess(data: object) {
   yield put(account.setAccountValue(data))
   yield delay(2000)
-  yield put(application.darkStatusBar())
   yield put(application.hideProgress())
   yield put(account.loginSuccess())
 }

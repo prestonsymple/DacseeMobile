@@ -17,7 +17,7 @@ export default handleActions({
   [account.loginSuccess]: (state, { payload }) => Object.assign({}, state, { status: true }),
 
   // TODO: DELETE ACCOUNT DATA
-  [account.logoutSuccess]: (state, { payload }) => Object.assign({}, state, { status: false }),
+  [account.logoutSuccess]: (state, { payload }) => Object.assign({}, state, { status: false, authToken: '' }),
 
   [account.setAccountValue]: (state, { payload }) => Object.assign({}, state, payload)
 }, initialState)

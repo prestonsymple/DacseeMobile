@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.23.1</string>
+	<string>0.24.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -98,9 +98,19 @@
 			<key>CFBundleURLName</key>
 			<string>alipay</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>dacsee</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>dacsee</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20180209</string>
+	<string>20180304</string>
 	<key>CodePushDeploymentKey</key>
 	<string>xnBqrpY4wmN1izwRxCb1dlX5dn6_Sy2xqVDVM</string>
 	<key>LSApplicationQueriesSchemes</key>

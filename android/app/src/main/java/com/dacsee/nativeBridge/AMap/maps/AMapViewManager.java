@@ -8,14 +8,35 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.navi.AMapNavi;
+import com.amap.api.navi.AMapNaviListener;
+import com.amap.api.navi.model.AMapLaneInfo;
+import com.amap.api.navi.model.AMapModelCross;
+import com.amap.api.navi.model.AMapNaviCameraInfo;
+import com.amap.api.navi.model.AMapNaviCross;
+import com.amap.api.navi.model.AMapNaviInfo;
+import com.amap.api.navi.model.AMapNaviLocation;
+import com.amap.api.navi.model.AMapNaviPath;
+import com.amap.api.navi.model.AMapNaviTrafficFacilityInfo;
+import com.amap.api.navi.model.AMapServiceAreaInfo;
+import com.amap.api.navi.model.AimLessModeCongestionInfo;
+import com.amap.api.navi.model.AimLessModeStat;
+import com.amap.api.navi.model.NaviInfo;
+import com.amap.api.navi.model.NaviLatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.autonavi.tbt.TrafficFacilityInfo;
+import com.dacsee.MainApplication;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableNativeArray;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
@@ -36,7 +57,215 @@ import java.util.Map;
 public class AMapViewManager extends ViewGroupManager<AMapView> {
 
   private static final int ANIMATE_TO = 1;
+  private static final int CALCULATE_DRIVE_ROUTE = 2;
+
+
+  private Boolean navInitStatus = false;
+  private final AMapNaviListener aMapNaviListener = new AMapNaviListener() {
+    @Override
+    public void onInitNaviFailure() {
+      navInitStatus = false;
+    }
+
+    @Override
+    public void onInitNaviSuccess() {
+      navInitStatus = true;
+    }
+
+    @Override
+    public void onStartNavi(int i) {
+
+    }
+
+    @Override
+    public void onTrafficStatusUpdate() {
+
+    }
+
+    @Override
+    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
+
+    }
+
+    @Override
+    public void onGetNavigationText(int i, String s) {
+
+    }
+
+    @Override
+    public void onGetNavigationText(String s) {
+
+    }
+
+    @Override
+    public void onEndEmulatorNavi() {
+
+    }
+
+    @Override
+    public void onArriveDestination() {
+
+    }
+
+    @Override
+    public void onCalculateRouteFailure(int i) {
+
+    }
+
+    @Override
+    public void onReCalculateRouteForYaw() {
+
+    }
+
+    @Override
+    public void onReCalculateRouteForTrafficJam() {
+
+    }
+
+    @Override
+    public void onArrivedWayPoint(int i) {
+
+    }
+
+    @Override
+    public void onGpsOpenStatus(boolean b) {
+
+    }
+
+    @Override
+    public void onNaviInfoUpdate(NaviInfo naviInfo) {
+
+    }
+
+    @Override
+    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {
+
+    }
+
+    @Override
+    public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {
+
+    }
+
+    @Override
+    public void onServiceAreaUpdate(AMapServiceAreaInfo[] aMapServiceAreaInfos) {
+
+    }
+
+    @Override
+    public void showCross(AMapNaviCross aMapNaviCross) {
+
+    }
+
+    @Override
+    public void hideCross() {
+
+    }
+
+    @Override
+    public void showModeCross(AMapModelCross aMapModelCross) {
+
+    }
+
+    @Override
+    public void hideModeCross() {
+
+    }
+
+    @Override
+    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {
+
+    }
+
+    @Override
+    public void hideLaneInfo() {
+
+    }
+
+    @Override
+    public void onCalculateRouteSuccess(int[] ints) {
+      // 路线规划成功
+      AMapNaviPath path = _aMapNaviInstace.getNaviPath();
+
+//      WritableArray args = Arguments.createArray();
+
+
+      WritableMap arg = Arguments.createMap();
+      arg.putInt("routeTime", path.getAllTime());
+
+
+      WritableMap routeCenterPoint = Arguments.createMap();
+      routeCenterPoint.putDouble("longitude", path.getCenterForPath().getLongitude());
+      routeCenterPoint.putDouble("latitude", path.getCenterForPath().getLatitude());
+      arg.putMap("routeCenterPoint", routeCenterPoint);
+
+      WritableMap routeBounds = Arguments.createMap();
+      WritableMap northEast = Arguments.createMap();
+      northEast.putDouble("longitude", path.getBoundsForPath().northeast.longitude);
+      northEast.putDouble("latitude", path.getBoundsForPath().northeast.latitude);
+      routeBounds.putMap("northEast", northEast);
+      WritableMap southWest = Arguments.createMap();
+      southWest.putDouble("longitude", path.getBoundsForPath().southwest.longitude);
+      southWest.putDouble("latitude", path.getBoundsForPath().southwest.latitude);
+      routeBounds.putMap("southWest", southWest);
+      arg.putMap("routeBounds", routeBounds);
+
+      arg.putInt("routeLength", path.getAllLength());
+
+      arg.putInt("routeTollCost", path.getTollCost());
+
+
+      WritableArray routeNaviPoint = Arguments.createArray();
+      for(NaviLatLng coord:path.getCoordList()){
+        WritableMap map = Arguments.createMap();
+        map.putDouble("lat", coord.getLatitude());
+        map.putDouble("lng", coord.getLongitude());
+        routeNaviPoint.pushMap(map);
+      }
+      arg.putArray("routeNaviPoint", routeNaviPoint);
+
+//      args.pushMap(arg);
+      MainApplication.sendEvent(_context, "EVENT_AMAP_VIEW_ROUTE_SUCCESS", arg);
+    }
+
+    @Override
+    public void notifyParallelRoad(int i) {
+
+    }
+
+    @Override
+    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {
+
+    }
+
+    @Override
+    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
+
+    }
+
+    @Override
+    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {
+
+    }
+
+    @Override
+    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
+
+    }
+
+    @Override
+    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
+
+    }
+
+    @Override
+    public void onPlayRing(int i) {
+
+    }
+  };
+
   private ThemedReactContext _context;
+  private AMapNavi _aMapNaviInstace;
 
   public String getName() {
     return "AMapView";
@@ -45,6 +274,8 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
   @Override
   protected AMapView createViewInstance(ThemedReactContext reactContext) {
     this._context = reactContext;
+    this._aMapNaviInstace = AMapNavi.getInstance(reactContext);
+    this._aMapNaviInstace.addAMapNaviListener(this.aMapNaviListener);
     return new AMapView(reactContext);
   }
 
@@ -56,6 +287,7 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
   public Map getCommandsMap() {
     Map maps = new HashMap<String, Integer>();
     maps.put("animateTo", this.ANIMATE_TO);
+    maps.put("calculateDriveRouteWithStartPoints", this.CALCULATE_DRIVE_ROUTE);
     return maps;
   }
 
@@ -63,6 +295,30 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
     if (commandId == this.ANIMATE_TO) {
       overlay.animateTo(args);
     }
+
+    if (commandId == this.CALCULATE_DRIVE_ROUTE) {
+      this.calculateDriveRoute(args);
+    }
+  }
+
+  private void calculateDriveRoute(ReadableArray args) {
+    if (!this.navInitStatus) return;
+    ReadableMap startPoint = args.getMap(0);
+    ReadableMap endPoint = args.getMap(1);
+
+    List startArgs = new ArrayList();
+    startArgs.add(new NaviLatLng(startPoint.getDouble("latitude"), startPoint.getDouble("longitude")));
+
+    List endArgs = new ArrayList();
+    endArgs.add(new NaviLatLng(endPoint.getDouble("latitude"), endPoint.getDouble("longitude")));
+
+    int strategy = 1;
+    try {
+      strategy = _aMapNaviInstace.strategyConvert(true, false, false, false, false);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    _aMapNaviInstace.calculateDriveRoute(startArgs, endArgs, null, strategy);
   }
 
   @Override

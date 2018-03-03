@@ -13,6 +13,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <React/RCTPushNotificationManager.h>
+#import <React/RCTLinkingManager.h>
 
 #import <MAMapKit/MAMapKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
@@ -41,7 +42,7 @@
   
   NSURL *jsCodeLocation;
   #ifdef DEBUG
-    [[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.80.100"];
+//    [[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.80.100"];
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
     jsCodeLocation = [CodePush bundleURL];
@@ -64,6 +65,15 @@
   return YES;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+  return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+  return [RCTLinkingManager application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
+}
+
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
   [RCTPushNotificationManager didRegisterUserNotificationSettings:notificationSettings];
 }
@@ -83,18 +93,5 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
 }
-
-//-(void) setLaunchScreen {
-//  [self.window makeKeyAndVisible];
-//  lunchView = [[NSBundle mainBundle ] loadNibNamed:@"LaunchScreen" owner:nil options:nil][0];
-//  lunchView.frame = CGRectMake(0, 0, self.window.screen.bounds.size.width, self.window.screen.bounds.size.height);
-//  [self.window addSubview:lunchView];
-//  UIImageView *imageV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 50, 320, 300)];
-//  NSString *str = @"http://club.dayoo.com/club_data/upload_photo/rtys/2008/07/21/988/2473.gif"; [imageV sd_setImageWithURL:[NSURL URLWithString:str] placeholderImage:[UIImage imageNamed:@"default1.jpg"]];
-//  [lunchView addSubview:imageV];
-//  [self.window bringSubviewToFront:lunchView];
-//  [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(removeLun) userInfo:nil repeats:NO];
-//  return YES;
-//}
 
 @end

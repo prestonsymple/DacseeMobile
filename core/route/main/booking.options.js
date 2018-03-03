@@ -86,7 +86,7 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
     await InteractionManager.runAfterInteractions()
     this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', async (args) => {
       // 初始化
-      const route = args[0]
+      const route = Array.isArray(args) ? args[0] : args
       const distance = await Utils.distance(from.location.lat, from.location.lng, to.location.lat, to.location.lng)
       const km = distance / 1000
 

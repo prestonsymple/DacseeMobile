@@ -9,7 +9,8 @@ export default class WebViewComponent extends PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { title } = navigation.state.params
     return {
-      title
+      title,
+      drawerLockMode: 'locked-closed'
     }
   }
   

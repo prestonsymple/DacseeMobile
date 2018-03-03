@@ -1,11 +1,13 @@
 import React from 'react'
 import { TouchableOpacity, Platform } from 'react-native'
-import { StackNavigator, DrawerNavigator } from 'react-navigation'
+import { StackNavigator, DrawerNavigator, SwitchNavigator } from 'react-navigation'
 
 import { Icons } from './utils'
 
 /*****************************************************************************************************/
 import DrawerContent from './route/_menu'
+
+import AppAuthLoadingScreen from './app.auth.loading'
 
 import { 
   BookingScreen,
@@ -16,7 +18,9 @@ import {
 } from './route/main'
 
 import { 
-  WalletBalanceScreen 
+  WalletBalanceScreen,
+  WalletWithdrawScreen,
+  WalletBalanceListScreen
 } from './route/wallet'
 
 import {
@@ -87,7 +91,7 @@ const defaultDrawerOptions = {
   }
 }
 
-const HomeNavigator = DrawerNavigator({
+const AppNavigator = DrawerNavigator({
   Drawer: { screen: StackNavigator({ 
     Main: { screen: BookingScreen },
     BookingOptions: { screen: BookingOptionsScreen },
@@ -96,6 +100,8 @@ const HomeNavigator = DrawerNavigator({
     PickerAddress: { screen: PickerAddressScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },
+    WalletWithdraw: { screen: WalletWithdrawScreen },
+    WalletBalanceList: { screen: WalletBalanceListScreen },
 
     IncomeList: { screen: IncomeListScreen },
     
@@ -120,13 +126,16 @@ const HomeNavigator = DrawerNavigator({
 
 
 
-const LoginNavigator = StackNavigator({
+const AuthNavigator = StackNavigator({
   Login: { screen: LoginScreen },
   SettingWetView: { screen: SettingWetViewScreen },
   PickerCountry: { screen: PickerCountryScreen }
 })
 
-export {
-  HomeNavigator,
-  LoginNavigator
-}
+export default SwitchNavigator(
+  {
+    AuthLoading: AppAuthLoadingScreen,
+    App: AppNavigator,
+    Auth: AuthNavigator,
+  }, { initialRouteName: 'AuthLoading' }
+)

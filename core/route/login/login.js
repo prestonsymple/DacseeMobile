@@ -52,6 +52,10 @@ export default connect(state => ({
 
   componentWillReceiveProps(props) {
 
+    if (this.props.account.status !== props.account.status) {
+      this.props.navigation.navigate(props.account.status && 'App')
+    }
+
     const { stage } = props
     const valid = stage !== this.props.stage
     if (!valid) return
@@ -66,9 +70,6 @@ export default connect(state => ({
     Animated.timing(this.animated.stage, { toValue: STAGE_VALUE_MAP[stage], duration, easing: Easing.linear }).start()
 
     if (stage === 2) { this.codeInput.v1.focus() }
-    // if (stage === 3 && !('id' in props.account)) {
-
-    // }
   }
 
   async validAccount(v4) {

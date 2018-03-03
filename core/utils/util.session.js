@@ -11,12 +11,12 @@ const sessionBuilder = (baseUrl) => {
     // headers: {'X-Custom-Header':'foobar'}
   })
 
-  instance.interceptors.request.use((request) => {
+  instance.interceptors.request.use((config) => {
     const state = store.getState()
-    if (!state.account.authToken) {
+    if (state.account.authToken) {
       instance.defaults.headers.common['Authorization'] = state.account.authToken
     }
-    return request
+    return config
   }, err => {
     console.log(err)
     return Promise.reject(err)
@@ -75,6 +75,14 @@ export default {
 
   push: sessionBuilder(
     'http://push-dev.dacsee.io/api/'
+  ),
+
+  lookup: sessionBuilder(
+    'https://lookup-dev.dacsee.io/api/'
+  ),
+
+  wallet: sessionBuilder(
+    'https://wallet-dev.dacsee.io/api/'
   )
 }
 

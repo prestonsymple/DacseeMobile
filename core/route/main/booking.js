@@ -132,7 +132,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.dispatch(application.openDrawer()))
+    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
   }
 
   componentWillUnmount() {

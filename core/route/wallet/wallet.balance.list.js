@@ -82,10 +82,10 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
               </View>
               <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 12, flexDirection: 'row', paddingHorizontal: 15, height: 48, justifyContent: 'flex-end', alignItems: 'center' }}>
                 <Button onPress={() => this.props.navigation.navigate('WalletDeposit')} style={{ paddingHorizontal: 10, height: 28, marginRight: 15, borderRadius: 4 }}>
-                  <Text style={{ fontSize: 12, color: '#a5a5a5', fontWeight: System.Platform.Android ? '400' : '600' }}>DEPOSIT</Text>
+                  <Text style={{ fontSize: 12, color: '#a5a5a5', fontWeight: System.Platform.Android ? '400' : '600' }}>充值</Text>
                 </Button>
                 <Button onPress={() => this.props.navigation.navigate('WalletWithdraw')} style={{ paddingHorizontal: 10, height: 28, backgroundColor: '#e5e5e5', borderRadius: 4 }}>
-                  <Text style={{ fontSize: 12, color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>WITHDRAW</Text>
+                  <Text style={{ fontSize: 12, color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>提现</Text>
                 </Button>
               </View>
             </View>
@@ -111,7 +111,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
               </View>
               <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 12, flexDirection: 'row', paddingHorizontal: 15, height: 48, justifyContent: 'flex-end', alignItems: 'center' }}>
                 <Button onPress={() => this.props.dispatch(application.showMessage('无法请求到服务器'))} style={{ paddingHorizontal: 10, height: 28, backgroundColor: '#e5e5e5', borderRadius: 4 }}>
-                  <Text style={{ fontSize: 12, color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>SELL</Text>
+                  <Text style={{ fontSize: 12, color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>出售</Text>
                 </Button>
               </View>
             </View>

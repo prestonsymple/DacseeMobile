@@ -74,7 +74,10 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
     title: '关于', type: 'text', onPress: () => navigation.navigate('SettingAbout')
   }],
   [{
-    title: '切换账号', type: 'button', onPress: () => dispatch(account.logoutSuccess())
+    title: '切换账号', type: 'button', onPress: () => {
+      dispatch(account.logoutSuccess())
+      navigation.navigate('Auth')
+    }
   }]
 ])
 

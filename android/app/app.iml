@@ -194,6 +194,7 @@
     <orderEntry type="module" module-name="rn-splash-screen" exported="" />
     <orderEntry type="module" module-name="react-native-device-info" exported="" />
     <orderEntry type="module" module-name="react-native-vector-icons" exported="" />
+    <orderEntry type="module" module-name="react-native-picker" exported="" />
     <orderEntry type="module" module-name="react-native-code-push" exported="" />
   </component>
 </module>
