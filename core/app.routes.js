@@ -20,7 +20,12 @@ import {
 import { 
   WalletBalanceScreen,
   WalletWithdrawScreen,
-  WalletBalanceListScreen
+  WalletBalanceListScreen,
+  WalletTransactionListScreen,
+  WalletDetailScreen,
+  WalletTransferScreen,
+  WalletTransferSelectionScreen,
+  WalletTransferSummaryScreen
 } from './route/wallet'
 
 import {
@@ -102,6 +107,11 @@ const AppNavigator = DrawerNavigator({
     WalletBalance: { screen: WalletBalanceScreen },
     WalletWithdraw: { screen: WalletWithdrawScreen },
     WalletBalanceList: { screen: WalletBalanceListScreen },
+    WalletTransaction: { screen: WalletTransactionListScreen },
+    WalletDetail: { screen: WalletDetailScreen },
+    WalletTransfer: { screen: WalletTransferScreen },
+    WalletTransferSelection: { screen: WalletTransferSelectionScreen },
+    WalletTransferSummary: { screen: WalletTransferSummaryScreen },
 
     IncomeList: { screen: IncomeListScreen },
     

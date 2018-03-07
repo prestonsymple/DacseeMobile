@@ -17,7 +17,7 @@ export default class IncomeList extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, width: width}}>
         <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
           <IncomeCardContent>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>

@@ -26,6 +26,25 @@ const styles = StyleSheet.create({
 // TODO: Optimize the callback
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
+const DEMO_DATA = [
+  {
+    type: 'DS-MY',
+    name: 'DACSEED WALLET',
+    country: 'MALAYSIA',
+    countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-MY.jpg',
+    availableAmount: 95,
+    floatingDriverAmount: 20,
+    floatingPassengerAmount: 10
+  },
+  {
+    type: 'DSA-MY',
+    name: 'DACSEED AGENT WALLET',
+    country: 'MALAYSIA',
+    countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-MY.jpg',
+    availableAmount: 1000
+  }
+]
+
 // export default connect(state => ({ data: state.booking })) // TEST
 export default connect(state => ({ data: state.booking }))(class WalletBalanceScreen extends Component {
 
@@ -38,7 +57,10 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
 
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      loading: false,
+      detail: dataContrast.cloneWithRows(DEMO_DATA)
+    }
   }
 
   async componentDidMount() {
@@ -58,66 +80,69 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
   }
 
   render() {
-    const { wallet, detail } = this.state
-    const wrapWidth = width
+    const { detail } = this.state
+    const wrapWidth = width    
 
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
-        {/* CARD */}
-        <ScrollView style={{ }} contentContainerStyle={{ paddingTop: 15 }}>
-          <View style={{ marginBottom: 15, width, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <View style={[
-              { width: width - 30, height: 200, borderRadius: 6, backgroundColor: '#4cb1f7' },
-              { shadowOffset: { width: 0, height: 0 }, shadowColor: '#a2a3a8', shadowOpacity: .5, shadowRadius: 3 },
-              {  }
-            ]}>
-              <View style={{ flex: 1, paddingHorizontal: 15, paddingVertical: 15 }}>
-                <Text style={{ flex: 1, textAlign: 'left', color: '#000', fontWeight: '400', fontSize: 16}}>LOCAL CURRENCY</Text>
-                <Text style={{ color: 'white', fontWeight: '200', fontSize: 13}}>YOUR BALANCE</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                  <Text style={{ color: 'white', fontWeight: System.Platform.Android ? '400' : '600', top: -3, marginRight: 10, fontSize: 22, fontFamily: 'Cochin' }}>RM</Text>
-                  <Text style={{ color: 'white', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 34, fontFamily: 'Cochin' }}>{ (3420.80).toFixed(2) }</Text>
-                  {/* <Text style={{ color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 28, fontFamily: 'Cochin' }}>RM</Text> */}
-                </View>
-              </View>
-              <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 12, flexDirection: 'row', paddingHorizontal: 15, height: 48, justifyContent: 'flex-end', alignItems: 'center' }}>
-                <Button onPress={() => this.props.navigation.navigate('WalletDeposit')} style={{ paddingHorizontal: 10, height: 28, marginRight: 15, borderRadius: 4 }}>
-                  <Text style={{ fontSize: 12, color: '#a5a5a5', fontWeight: System.Platform.Android ? '400' : '600' }}>DEPOSIT</Text>
-                </Button>
-                <Button onPress={() => this.props.navigation.navigate('WalletWithdraw')} style={{ paddingHorizontal: 10, height: 28, backgroundColor: '#e5e5e5', borderRadius: 4 }}>
-                  <Text style={{ fontSize: 12, color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>WITHDRAW</Text>
-                </Button>
-              </View>
-            </View>
-          </View>
-
-          <View style={{ marginBottom: 15, width, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <View style={[
-              { width: width - 30, height: 275, borderRadius: 6, backgroundColor: '#f6b854' },
-              { shadowOffset: { width: 0, height: 0 }, shadowColor: '#a2a3a8', shadowOpacity: .5, shadowRadius: 3 },
-              {  }
-            ]}>
-              <View style={{ flex: 1, paddingHorizontal: 15, paddingVertical: 15 }}>
-                <Text style={{ flex: 1, textAlign: 'left', color: '#000', fontWeight: '400', fontSize: 16}}>DACSEE WALLET</Text>
-                <Text style={{ color: 'white', fontWeight: '200', fontSize: 13}}>YOUR BALANCE</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                  <Text style={{ color: 'white', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 34, fontFamily: 'Cochin' }}>{ (2400).toFixed(2) }</Text>
-                  <Text style={{ color: 'white', fontWeight: System.Platform.Android ? '400' : '600', top: -3, marginLeft: 10, fontSize: 22, fontFamily: 'Cochin' }}>TOKEN</Text>
-                </View>
-                <Text style={{ marginTop: 22, color: 'white', fontWeight: '200', fontSize: 13}}>CURRENT MARKET VALUE</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'flex-end', borderRadius: 4, marginTop: 5 }}>
-                  <Text style={{ backgroundColor: '#373a44', paddingHorizontal: 6, paddingVertical: 2, color: 'white', fontWeight: System.Platform.Android ? '400' : '600', fontSize: 18, fontFamily: 'Cochin' }}>RM { (2400).toFixed(2) }</Text>
-                </View>
-              </View>
-              <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 12, flexDirection: 'row', paddingHorizontal: 15, height: 48, justifyContent: 'flex-end', alignItems: 'center' }}>
-                <Button onPress={() => this.props.dispatch(application.showMessage('无法请求到服务器'))} style={{ paddingHorizontal: 10, height: 28, backgroundColor: '#e5e5e5', borderRadius: 4 }}>
-                  <Text style={{ fontSize: 12, color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>SELL</Text>
-                </Button>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
+        <ListView 
+          dataSource={detail}
+          enableEmptySections={true}
+          renderRow={(row) => <TouchableOpacity onPress={() => this.props.navigation.navigate('WalletDetail', { walletInfo: row })}><ListItem data={row} /></TouchableOpacity>}
+          // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
+          style={{ flex: 1, height: 30, marginTop: 15 }}
+        />
       </View>
     )
   }
 })
+
+class ListItem extends Component {
+  render() {
+    const { data } = this.props
+    const { type, name, country, countryFlag, availableAmount, floatingDriverAmount, floatingPassengerAmount } = data
+    return (
+      <View style={{ marginBottom: 15, width, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={[
+          { width: width - 30, borderRadius: 6, backgroundColor: 'white' },
+          { shadowOffset: { width: 0, height: 0 }, shadowColor: '#a2a3a8', shadowOpacity: .5, shadowRadius: 3 },
+          {  }
+        ]}>
+
+          <View style={{ flex: 1, flexDirection: 'column', height: 106 }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <Image style={{ backgroundColor: '#4cb1f7', marginLeft: 15, width: 66, height: 66, borderRadius: 33}}
+                source={{ uri: countryFlag }}/>
+              <View style={{ marginLeft: 10, justifyContent: 'center'}}>
+                <Text style={{ fontSize: 13 }}>{ country }</Text>
+                <Text style={{ fontSize: 11, color: '#a5a5a5' }}>{ name }</Text>
+              </View>
+              <View style={{ flex: 1, marginRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}>
+                <Text style={{ fontSize: 11, color: '#a5a5a5' }}>AVAILABLE BALANCE</Text>
+                <View style={{ flexDirection: 'row'}}>
+                  <Text style={{ fontSize: 15, marginTop: 12}}>RM</Text>
+                  <Text style={{ fontSize: 27}}>{ availableAmount.toFixed(2) }</Text>
+                </View>
+              </View>
+            </View>
+            <View style={{ backgroundColor: '#D8D8D8', opacity: 0.5, height: 1}}></View>
+          </View>
+          {
+            type.indexOf('DSA') >= 0 ? 
+              null : 
+              <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 1, borderRadius: 6, flexDirection: 'column', height: 100}}>            
+                <View style={{ flex: 1, paddingLeft:15, paddingTop: 10}}>
+                  <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Passenger)</Text>
+                  <Text style={{ fontSize: 13 }}>RM { floatingPassengerAmount.toFixed(2) }</Text>
+                </View>
+                <View style={{ flex: 1, paddingLeft:15, paddingTop: 5}}>
+                  <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Driver)</Text>
+                  <Text style={{ fontSize: 13 }}>RM { floatingDriverAmount.toFixed(2) }</Text>
+                </View>
+              </View>                        
+          }             
+        </View>
+      </View>
+    )
+  }
+}
