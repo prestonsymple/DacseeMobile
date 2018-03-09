@@ -59,9 +59,10 @@ export default class WalletDetailScreen extends Component {
 class ScrollTabView extends Component {
   constructor(props) {
     super(props)
-    console.log(this.props.walletInfo)
+    // console.log(this.props.walletInfo)
     this.state = {
-
+      containerWidth: width,
+      currentPage: 0
     }
   }
 
@@ -83,7 +84,10 @@ class ScrollTabView extends Component {
         {
           ['OverView', 'Trasaction', 'Floating Comm'].map((item, index) => {
             return (
-              <TouchableOpacity key={ item+index } style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+              <TouchableOpacity key={ item+index } style={{flex: 1, justifyContent: 'center', alignItems:'center'}}
+                onPress={ () => {
+                  
+                }}>
                 <Text style={{ fontSize: 15}}>{ item }</Text>
               </TouchableOpacity>
             )
@@ -153,7 +157,6 @@ class OverView extends Component {
           })
         }
         <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-          {/* TODO: 如何进行跳转 */}
           <Button onPress={ this.props.onNavigate } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
             <Text style={{ fontSize: 20, color: 'white' }}>TRANSFER</Text>
           </Button>
