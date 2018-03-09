@@ -32,10 +32,10 @@ module.exports = {
             "error",
             "single"
         ],
-        "semi": [
-            "error",
-            "never"
-        ],
+        // "semi": [
+        //     "error",
+        //     "never"
+        // ],
         "no-unused-vars": 1,
         "react/prop-types": 0,
         "flow-vars/define-flow-type": 1,
