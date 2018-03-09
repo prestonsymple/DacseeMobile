@@ -2,9 +2,11 @@ package com.dacsee;
 
 import android.app.Application;
 import android.content.Context;
+//import android.support.multidex.MultiDex;
 
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
+import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.facebook.react.ReactApplication;
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -23,6 +25,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +63,8 @@ public class MainApplication extends Application implements ReactApplication {
               new RNDeviceInfo(),
               new VectorIconsPackage(),
               new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-              new AMap3DPackage()
+              new AMap3DPackage(),
+              new DplusReactPackage()
       );
     }
 
@@ -68,6 +75,12 @@ public class MainApplication extends Application implements ReactApplication {
   };
 
   @Override
+  protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+//    MultiDex.install(this);
+  }
+
+  @Override
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
   }
@@ -76,8 +89,9 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     context = this.getApplicationContext();
+
     CrashReport.initCrashReport(getApplicationContext(), "71b843ec39", false);
-    SoLoader.init(this, /* native exopackage */ false);
+    SoLoader.init(getApplicationContext(), /* native exopackage */ false);
   }
 
   public static void sendEvent(ReactContext appContext, String eventName, WritableMap map) {

@@ -9,6 +9,7 @@
 #import "UMShareModule.h"
 #import <UMShare/UMShare.h>
 #import <UShareUI/UShareUI.h>
+#import <UMShare/UMSocialManager.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventDispatcher.h>
 
@@ -167,6 +168,14 @@ RCT_EXPORT_METHOD(share:(NSString *)text icon:(NSString *)icon link:(NSString *)
   }];
   
 }
+
+RCT_EXPORT_METHOD(enabledDebug) {
+  [[UMSocialManager defaultManager] openLog: true];
+}
+
+//RCT_EXPORT_METHOD(setPlatformConfig:(int)Channel String id, String key) {
+//  [[UMSocialManager defaultManager] openLog: true];
+//}
 
 RCT_EXPORT_METHOD(shareboard:(NSString *)text icon:(NSString *)icon link:(NSString *)link title:(NSString *)title platform:(NSArray *)platforms completion:(RCTResponseSenderBlock)completion)
 {

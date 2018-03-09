@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import {
-  Text, View, TouchableOpacity, ScrollView
+  Text, View, TouchableOpacity, ScrollView, Platform
 } from 'react-native'
 
 import { booking } from '../../redux/actions'
@@ -10,7 +10,11 @@ export default class HeaderSection extends PureComponent {
   render() {
     return (
       <View style={[
-        { position: 'absolute', top: 0, left: 0, right: 0, height: 34, backgroundColor: '#f7f7f7' },
+        { position: 'absolute', top: 0, left: 0, right: 0, height: 34 },
+        Platform.select({
+          ios: { backgroundColor: '#f7f7f7' },
+          android: { backgroundColor: '#fff' }
+        }),
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 }
       ]}>
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ height: 34 }}>

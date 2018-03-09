@@ -1,16 +1,22 @@
+/* global store */
+
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Alert
 } from 'react-native'
+import ActionSheet from 'react-native-actionsheet'
+import { connect } from 'react-redux'
 
 import { } from '../../redux/actions'
 import { Icons, Screen } from '../../utils'
+import ShareUtil from '../../native/umeng/ShareUtil'
+import { application } from '../../redux/actions'
 
 const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default class FriendsCircleAddComponent extends Component {
+export default connect(state => ({ account: state.account }))(class FriendsCircleAddComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -24,14 +30,36 @@ export default class FriendsCircleAddComponent extends Component {
     this.state = {
       dataSource: dataContrast.cloneWithRows([
         { describer: '使用用户ID查找', label: 'DACSEE', icon: Icons.Generator.Awesome('id-badge', 36, '#333', { style: { left: 7 } }) },
-        { describer: '邀请来自微信的好友', label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#333', { style: { left: 0 } }) },
-        { describer: '授权获取微博好友列表', label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#333', { style: { left: 1.5 } }) },
-        { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }
+        { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#333', { style: { left: 0 } }) },
+        { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#333', { style: { left: 1.5 } }) },
+        // { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }
       ])
     }
   }
 
   async componentDidMount() {
+  }
+
+  async _pressActionSheet(index) {
+    if (index === 0) {
+      await ShareUtil.share(
+        '分享至微信', 
+        'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
+        `http://47.98.40.59/?referrer=${this.props.account.user._id}&id=${this.props.account.user.userId}`, 
+        '加入DACSEE', 
+        3, 
+        (arg) => { console.log(arg) }
+      )
+    } else if (index === 1) {
+      await ShareUtil.share(
+        '分享至微信', 
+        'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
+        `http://47.98.40.59/?referrer=${this.props.account.user._id}&id=${this.props.account.user.userId}`, 
+        '加入DACSEE', 
+        2, 
+        (arg) => { console.log(arg) }
+      )
+    }
   }
 
   render() {
@@ -47,10 +75,18 @@ export default class FriendsCircleAddComponent extends Component {
             <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
           )}
         />
+        <ActionSheet
+          ref={e => this.ActionSheet = e}
+          title={'分享到微信'}
+          options={['朋友圈', '好友', '取消']}
+          cancelButtonIndex={2}
+          // destructiveButtonIndex={0}
+          onPress={this._pressActionSheet.bind(this)}
+        />
       </View>
     )
   }
-}
+})
 
 class ItemPerson extends Component {
   render() {

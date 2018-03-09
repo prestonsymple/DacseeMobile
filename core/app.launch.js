@@ -7,11 +7,11 @@ import PropTypes from 'prop-types'
 import SplashScreen from 'rn-splash-screen'
 
 import SwitchNavigation from './app.routes'
-import DeepLink from './app.deep.link'
-
+import { System } from './utils'
 
 import ModalUpdate from './modal/modal.update'
 import ModalProgress from './modal/modal.progress'
+import { application } from './redux/actions'
 
 
 export default connect(state => {
@@ -54,31 +54,20 @@ export default connect(state => {
   }
 
   handleOpenURL(url) {
-    const path = url.split(':/')[1]
-    DeepLink(path)
+    const _url = System.Platform.Android ? url.replace('dacsee://dacsee/', '') : url.replace('dacsee://', '')
+    const _args = _url.split('/')
+    if (_args && _args.length > 0 && _args[0] === 'invite') {
+      if (!this.props.account.status) this.props.dispatch(application.setReferrerValue(_args[2])) 
+    }
   }
 
   render() {
     const { account, application, config } = this.props
-    const { status_bar_hidden } = application
-    const { status_bar_style } = config
+    const prefix = System.Platform.Android ? 'dacsee://dacsee/' : 'dacsee://'
 
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={status_bar_hidden} backgroundColor={status_bar_style === 'light-content' ? 'black' : 'white'} barStyle={status_bar_style} />
-        
-        {/* {
-          account.status ? 
-            (<HomeNavigator 
-              // uriPrefix={prefix}
-              navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.homeNav })} 
-            />) :
-            (<LoginNavigator 
-              // uriPrefix={prefix}
-              navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.loginNav })} 
-            />)
-        } */}
-        <SwitchNavigation />
+        <SwitchNavigation uriPrefix={prefix} />
         <ModalProgress />
         <ModalUpdate />
       </View>

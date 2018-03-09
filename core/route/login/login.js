@@ -1,8 +1,7 @@
 import React, { Component, PureComponent } from 'react'
-import ShareUtile from '../../utils/ShareUtil'
 import {
   Text, View, Animated, StyleSheet, Image,
-  TouchableOpacity, TextInput, Easing, Platform, Keyboard
+  TouchableOpacity, TextInput, Easing, Platform, Keyboard, StatusBar
 } from 'react-native'
 // import InteractionManager from 'InteractionManager'
 // import { NavigationActions, SafeAreaView } from 'react-navigation'
@@ -11,6 +10,7 @@ import marked from 'marked'
 import { Screen, Icons, Define } from '../../utils'
 import resources from '../../resources'
 import { Button } from '../../components'
+import ShareUtile from '../../native/umeng/ShareUtil'
 import { application as app, account } from '../../redux/actions'
 import { connect } from 'react-redux'
 
@@ -168,6 +168,7 @@ export default connect(state => ({
 
     return (
       <View style={{ flex: 1 }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'black'} barStyle={'light-content'} />
         {/**/}
         <Image resizeMode={'cover'} style={{ width, height }} source={resources.image.login_bg} />
         <Animated.View style={[

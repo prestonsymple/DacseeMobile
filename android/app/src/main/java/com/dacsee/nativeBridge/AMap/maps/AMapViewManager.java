@@ -1,6 +1,7 @@
 package com.dacsee.nativeBridge.AMap.maps;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -60,16 +61,15 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
   private static final int CALCULATE_DRIVE_ROUTE = 2;
 
 
-  private Boolean navInitStatus = false;
   private final AMapNaviListener aMapNaviListener = new AMapNaviListener() {
     @Override
     public void onInitNaviFailure() {
-      navInitStatus = false;
+
     }
 
     @Override
     public void onInitNaviSuccess() {
-      navInitStatus = true;
+
     }
 
     @Override
@@ -195,8 +195,14 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
 
 
       WritableMap routeCenterPoint = Arguments.createMap();
-      routeCenterPoint.putDouble("longitude", path.getCenterForPath().getLongitude());
-      routeCenterPoint.putDouble("latitude", path.getCenterForPath().getLatitude());
+      if (path.getCenterForPath().getLongitude() != 0 || path.getCenterForPath().getLatitude() != 0) {
+        routeCenterPoint.putDouble("longitude", path.getCenterForPath().getLongitude());
+        routeCenterPoint.putDouble("latitude", path.getCenterForPath().getLatitude());
+      } else {
+        NaviLatLng centerPoint = getCenterPoint(path.getCoordList());
+        routeCenterPoint.putDouble("longitude", centerPoint.getLongitude());
+        routeCenterPoint.putDouble("latitude", centerPoint.getLatitude());
+      }
       arg.putMap("routeCenterPoint", routeCenterPoint);
 
       WritableMap routeBounds = Arguments.createMap();
@@ -226,6 +232,12 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
 
 //      args.pushMap(arg);
       MainApplication.sendEvent(_context, "EVENT_AMAP_VIEW_ROUTE_SUCCESS", arg);
+
+
+      if (_aMapNaviInstace != null) {
+        _aMapNaviInstace.destroy();
+        _aMapNaviInstace = null;
+      }
     }
 
     @Override
@@ -274,8 +286,6 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
   @Override
   protected AMapView createViewInstance(ThemedReactContext reactContext) {
     this._context = reactContext;
-    this._aMapNaviInstace = AMapNavi.getInstance(reactContext);
-    this._aMapNaviInstace.addAMapNaviListener(this.aMapNaviListener);
     return new AMapView(reactContext);
   }
 
@@ -301,8 +311,40 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
     }
   }
 
+  private NaviLatLng getCenterPoint(List<NaviLatLng> geoCoordinateList)
+  {
+    int total = geoCoordinateList.size();
+    double X = 0, Y = 0, Z = 0;
+    for (NaviLatLng geo : geoCoordinateList) {
+      double lat, lon, x, y, z;
+      lat = geo.getLatitude() * Math.PI / 180;
+      lon = geo.getLongitude() * Math.PI / 180;
+      x = Math.cos(lat) * Math.cos(lon);
+      y = Math.cos(lat) * Math.sin(lon);
+      z = Math.sin(lat);
+      X += x;
+      Y += y;
+      Z += z;
+    }
+    X = X / total;
+    Y = Y / total;
+    Z = Z / total;
+    double Lon = Math.atan2(Y, X);
+    double Hyp = Math.sqrt(X * X + Y * Y);
+    double Lat = Math.atan2(Z, Hyp);
+    return new NaviLatLng(Lat * 180 / Math.PI, Lon * 180 / Math.PI);
+  }
+
   private void calculateDriveRoute(ReadableArray args) {
-    if (!this.navInitStatus) return;
+
+    if (_aMapNaviInstace != null) {
+      _aMapNaviInstace.destroy();
+      _aMapNaviInstace = null;
+    }
+
+    _aMapNaviInstace = AMapNavi.getInstance(_context);
+    _aMapNaviInstace.addAMapNaviListener(this.aMapNaviListener);
+
     ReadableMap startPoint = args.getMap(0);
     ReadableMap endPoint = args.getMap(1);
 
@@ -318,6 +360,7 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
     _aMapNaviInstace.calculateDriveRoute(startArgs, endArgs, null, strategy);
   }
 
@@ -329,8 +372,12 @@ public class AMapViewManager extends ViewGroupManager<AMapView> {
 
   @Override
   public void removeViewAt(AMapView parent, int index) {
-    parent.removeViewAt(index);
-    super.removeViewAt(parent, index);
+    try {
+      parent.removeViewAt(index);
+      super.removeViewAt(parent, index);
+    } catch (Exception e) {
+      Log.e("[发生错误]", e.toString());
+    }
   }
 
   @javax.annotation.Nullable

@@ -15,6 +15,7 @@ import InteractionManager from 'InteractionManager'
 import Store from './app.store'
 import Launch from './app.launch'
 import { network, application } from './redux/actions'
+import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
 
@@ -40,7 +41,6 @@ class Core extends PureComponent {
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    console.log('初始化')
     
     //#AMap SDK Init
     this.initializationPushNotification()
@@ -48,6 +48,7 @@ class Core extends PureComponent {
     this.initializationApplicationLinstener()
     this.initializationBackHandler()
     this.initializationNetworkListener()
+    this.initializationSocialConfig()
     // this.initializationPayment()
     // this.initializationLocation()
   }
@@ -125,6 +126,12 @@ class Core extends PureComponent {
         */
       requestPermissions: true
     })
+  }
+
+  initializationSocialConfig() {
+    ShareUtil.enabledDebug()
+    ShareUtil.setPlatformConfig(2, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
+    ShareUtil.setPlatformConfig(3, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
   }
 
   initializationBackHandler() {

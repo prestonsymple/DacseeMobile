@@ -2,8 +2,10 @@ package com.dacsee;
 
 import android.os.Bundle;
 
+import com.dacsee.nativeBridge.UMeng.ShareModule;
 import com.facebook.react.ReactActivity;
 import com.mehcode.reactnative.splashscreen.SplashScreen;
+import com.umeng.socialize.UMShareAPI;
 
 public class MainActivity extends ReactActivity {
 
@@ -19,6 +21,7 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.show(this, getReactInstanceManager());
+        ShareModule.initSocialSDK(this);
         super.onCreate(savedInstanceState);
     }
 }

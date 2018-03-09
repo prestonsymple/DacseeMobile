@@ -17,7 +17,7 @@ export default class SelectAddressView extends Component {
   render() {
     const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field } = this.props
     return (
-      <Modal onRequestClose={() => {}} {...this.props} style={{ backgroundColor: 'white' }}>
+      <Modal onRequestClose={onPressCancel} {...this.props} style={{ backgroundColor: 'white' }}>
         {
           Platform.select({
             ios: (

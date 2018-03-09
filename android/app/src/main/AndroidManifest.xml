@@ -77,6 +77,48 @@
     </activity>
     <activity android:screenOrientation="portrait" android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
 
+    <meta-data
+      android:name="UMENG_APPKEY"
+      android:value="5a7aa3f2a40fa355a700002a" >
+    </meta-data>
+
+    // Weibo
+    <activity
+      android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+      android:exported="false"
+      android:launchMode="singleTask"
+      android:screenOrientation="portrait" >
+    </activity>
+    <activity
+      android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+      android:launchMode="singleTask"
+      android:name="com.sina.weibo.sdk.share.WbShareTransActivity">
+      <intent-filter>
+        <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+
+    // QQ
+    <activity
+      android:name="com.tencent.tauth.AuthActivity"
+      android:launchMode="singleTask"
+      android:noHistory="true" >
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="tencent100424468" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name="com.tencent.connect.common.AssistActivity"
+      android:screenOrientation="portrait"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+      android:configChanges="orientation|keyboardHidden|screenSize"/>
+
     // AMap Service
     <service android:name="com.amap.api.location.APSService"/>
 

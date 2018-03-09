@@ -19,6 +19,7 @@ const initialState = {
   progress_modal_visible: false,
   
   // throw_error: [],
+  referrerValue: undefined,
 
   login_stage: 0
 }
@@ -37,6 +38,8 @@ export default handleActions({
 
   [application.showProgress]: (state) => Object.assign({}, state, { progress_modal_visible: true }),
   [application.hideProgress]: (state) => Object.assign({}, state, { progress_modal_visible: false }),
+
+  [application.setReferrerValue]: (state, { payload }) => Object.assign({}, state, { referrerValue: payload }),
 
   // [application.throwErrorMessage]: (state, { payload }) => {
   //   const clone = state.throw_error

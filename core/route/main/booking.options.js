@@ -16,7 +16,7 @@ import Resources from '../../resources'
 import HeaderSection from './com.header.section'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
-import { Screen, Icons, Define } from '../../utils'
+import { Screen, Icons, Define, System } from '../../utils'
 import { booking } from '../../redux/actions'
 import { Button } from '../../components'
 
@@ -104,7 +104,11 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
 
       const { routeCenterPoint, routeLength } = route
 
-      this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 0)
+      if (System.Platform.Android) { // TODO: Android 中心点存在偏移
+        this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500) 
+      } else {
+        this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
+      }
       this.setState({ route })
 
       Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
@@ -177,8 +181,8 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
           mapType={'standard'}
           ref={e => this.map = e}
         >
-          <Marker image={'StartPoint'} coordinate={{ latitude: from.location.lat, longitude: from.location.lng }} />
-          <Marker image={'EndPoint'} coordinate={{ latitude: to.location.lat, longitude: to.location.lng }} />
+          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.location.lat, longitude: from.location.lng }} />
+          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: to.location.lat, longitude: to.location.lng }} />
         </MapView>
         <HeaderSection type={this.props.data.type} dispatch={this.props.dispatch} />
 
@@ -187,12 +191,16 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
         ]}>
           <View style={[
             { marginBottom: 6, backgroundColor: 'white' }, 
+            { borderColor: '#ccc', borderWidth: .8 },
             { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
           ]}>
             <View style={{ height: 116, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               {
                 (carArgs.length === 0) ? (
-                  <View style={{ position: 'absolute', height: 96, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' }}>
+                  <View style={Platform.select({
+                    android: { position: 'absolute', height: 116, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' },
+                    ios: { position: 'absolute', height: 96, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' }
+                  })}>
                     <Lottie progress={this.indicator} style={{ width: 66, height: 66 }} source={Resources.animation.simpleLoader} />
                   </View>
                 ) : (
@@ -246,15 +254,19 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
             }}
             style={[
               { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
+              { borderColor: '#ccc', borderWidth: .8 },
               { backgroundColor: 'white' }
             ]}
             reachTime={reachTime}
-            onPressBooking={() => this.props.dispatch(booking.journeyUserStart())}
+            onPressBooking={() => {
+              this.map.animateTo({ zoomLevel: 14, coordinate: { latitude: 31.04510555, longitude: 121.16909333 } }, 500)
+              // this.props.dispatch(booking.journeyUserStart())
+            }}
             data={this.props.data}
           />
         </View>
 
-        <Modal animationType={'slide'} transparent={true} visible={this.state.selectPayTypeShow}>
+        <Modal onRequestClose={() => this.setState({ selectTimeShow: false })} animationType={'slide'} transparent={true} visible={this.state.selectPayTypeShow}>
           {
             Platform.select({
               ios: (
@@ -318,7 +330,6 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
                     dateInput: {
                       marginLeft: 36
                     }
-                    // ... You can check the source to find the other keys.
                   }}
                   onDateChange={(date) => {this.setState({date: date})}}
                 />     
@@ -326,7 +337,7 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
             })
           }
         </Modal>
-        <Modal animationType={'slide'} transparent={true} visible={this.state.selectTimeShow}>
+        <Modal onRequestClose={() => this.setState({ selectTimeShow: false })} animationType={'slide'} transparent={true} visible={this.state.selectTimeShow}>
           {
             Platform.select({
               ios: (
@@ -527,7 +538,7 @@ class SelectBookingOption extends Component {
             { height: 44, width: (width - 30), flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
             { left: 0 }
           ]}>
-            <Button onPress={() => onPressBooking()} style={{ flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C' }}>
+            <Button onPress={onPressBooking} style={{ flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C' }}>
               <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>开始 - 预计到达{reachTime}</Text>
             </Button>
           </View>
@@ -579,7 +590,7 @@ class BookingInfo extends Component {
 const styles = StyleSheet.create({
   SelectBookingWrap: Platform.select({
     ios: { position: 'absolute', bottom: Define.system.ios.x ? 40 : 30, left: 15, right: 15, borderRadius: 3 },
-    android: { position: 'absolute', left: 15, right: 15, borderRadius: 3, borderColor: '#ccc', borderWidth: .8 }
+    android: { position: 'absolute', bottom: 15, left: 15, right: 15, borderRadius: 3 }
   }),
   PickAddressWrap: Platform.select({
     ios: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },

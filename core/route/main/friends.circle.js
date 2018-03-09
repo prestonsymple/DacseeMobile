@@ -1,11 +1,11 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform
 } from 'react-native'
 
 import InteractionManager from 'InteractionManager'
 import { } from '../../redux/actions'
-import { Icons, Screen } from '../../utils'
+import { Icons, Screen, Define } from '../../utils'
 
 const { width, height } = Screen.window
 
@@ -93,7 +93,11 @@ class HeaderSearchBar extends Component {
     return (
       <View style={{ height: 48, width, backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }}>
         <View style={{ marginHorizontal: 15, paddingHorizontal: 15, backgroundColor: 'white', borderRadius: 17, alignItems: 'center' }}>
-          <TextInput placeholder={'请输入姓名快速查询'} style={{ height: 34, width: width - 45 }} />
+          <TextInput {...Define.TextInputArgs} placeholder={'请输入姓名快速查询'} style={
+            Platform.select({
+              android: { height: 38, width: width - 45 },
+              ios: { height: 34, width: width - 45 }
+            })} />
         </View>
       </View>
     )

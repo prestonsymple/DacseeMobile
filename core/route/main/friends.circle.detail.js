@@ -43,6 +43,7 @@ export default class FriendsCircleComponent extends Component {
   }
 
   omponentWillUnmount() {
+    console.log(this.subscription)
     this.subscription && this.subscription.remove()
   }
 

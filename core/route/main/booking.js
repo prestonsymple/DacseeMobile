@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from 'react'
 import {
   Text, View, Animated, StyleSheet, Image, TouchableOpacity,
-  DeviceEventEmitter, ListView, Platform, ScrollView
+  DeviceEventEmitter, ListView, Platform, ScrollView, StatusBar
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 // import { NavigationActions } from 'react-navigation'
@@ -254,6 +254,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
 
     return (
       <View style={{ flex: 1 }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
         <MapView
           {...MAP_DEFINE}
           style={{ flex: 1 }}
@@ -423,6 +424,6 @@ const styles = StyleSheet.create({
   }),
   PickAddressWrap: Platform.select({
     ios: { position: 'absolute', bottom: Define.system.ios.x ? 45 : 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
-    android: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
+    android: { position: 'absolute', bottom: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
   })
 })

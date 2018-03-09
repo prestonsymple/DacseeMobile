@@ -1242,11 +1242,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = K9D7EKGRKD;
+						DevelopmentTeam = 32M2LXJ5GM;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = K9D7EKGRKD;
+						DevelopmentTeam = 32M2LXJ5GM;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1999,7 +1999,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = K9D7EKGRKD;
+				DEVELOPMENT_TEAM = 32M2LXJ5GM;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -2027,7 +2027,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = K9D7EKGRKD;
+				DEVELOPMENT_TEAM = 32M2LXJ5GM;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
@@ -2055,7 +2055,7 @@
 				CODE_SIGN_ENTITLEMENTS = dacsee/dacsee.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = K9D7EKGRKD;
+				DEVELOPMENT_TEAM = 32M2LXJ5GM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/dacsee/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2072,7 +2072,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.react.native.dacsee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dacsee;
 				PRODUCT_NAME = dacsee;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2086,7 +2086,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = dacsee/dacsee.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K9D7EKGRKD;
+				DEVELOPMENT_TEAM = 32M2LXJ5GM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/dacsee/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2103,7 +2103,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.react.native.dacsee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dacsee;
 				PRODUCT_NAME = dacsee;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2340,7 +2340,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = dacsee/dacsee.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K9D7EKGRKD;
+				DEVELOPMENT_TEAM = 32M2LXJ5GM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/dacsee/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2357,7 +2357,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.react.native.dacsee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dacsee;
 				PRODUCT_NAME = dacsee;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2368,7 +2368,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = K9D7EKGRKD;
+				DEVELOPMENT_TEAM = 32M2LXJ5GM;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
