@@ -1,17 +1,19 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView
 } from 'react-native'
 
 import InteractionManager from 'InteractionManager'
-import { } from '../../redux/actions'
-import { Icons, Screen, Define } from '../../utils'
+import { connect } from 'react-redux'
+
+import { application } from '../../redux/actions'
+import { Icons, Screen, Define, Session } from '../../utils'
 
 const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default class FriendsCircleComponent extends Component {
+export default connect(state => ({ account: state.account }))(class FriendsCircleComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -32,7 +34,7 @@ export default class FriendsCircleComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: dataContrast.cloneWithRows([]),
+      dataSource: dataContrast.cloneWithRowsAndSections([[], []]),
       loading: false
     }
   }
@@ -40,16 +42,25 @@ export default class FriendsCircleComponent extends Component {
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd'))
+    this.fetchData()
+  }
 
-    await new Promise(resolve => setTimeout(() => resolve(), 1000))
-    this.setState({
-      dataSource: dataContrast.cloneWithRows([
-        { name: 'Vito', role: 'Driver', image: { uri: 'https://hbimg.b0.upaiyun.com/42c4da5880d187c52d5b5f4ed96fd13de57d48d1126e3-NxtDwz_fw658' } },
-        { name: 'San', role: 'Passenger', image: { uri: 'https://hbimg.b0.upaiyun.com/1bce054ced7a13eb4eff8218f7a6b36c554b9b3125617-19o1EY_fw658' } },
-        { name: 'Chim', role: 'Passenger', image: { uri: 'https://hbimg.b0.upaiyun.com/a476c4d19408c077bd6f0985827772ff6ebb677314bec-UNqdPS_fw658' } },
-        { name: 'Jacky', role: 'Passenger', image: { uri: 'https://hbimg.b0.upaiyun.com/bb5c6a527ba21dcad49bf515a1f851d294809a0917064-rkFyzP_fw658' } },
+  async fetchData(index = 0) {
+    this.setState({ loading: true })
+    try {
+      const circleResp = await Promise.all([
+        Session.circle.get('v1/requests?skip=0&limit=30'),
+        Session.circle.get(`v1/circle?skip=${index}&limit=30`)
       ])
-    })
+      const circleData = circleResp.map(pipe => pipe.data)
+  
+      await new Promise(resolve => setTimeout(() => resolve(), 1000))
+      this.setState({ dataSource: dataContrast.cloneWithRowsAndSections(circleData) })
+    } catch (e) {
+      console.log(e)
+    } finally {
+      this.setState({ loading: false })
+    }
   }
 
   omponentWillUnmount() {
@@ -57,36 +68,80 @@ export default class FriendsCircleComponent extends Component {
   }
 
   render() {
-    const { dataSource } = this.state
+    const { dataSource, loading } = this.state
 
     return (
       <View style={{ flex: 1 }}>
         <HeaderSearchBar />
-        <ListView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.loading}
-              onRefresh={async () => {
-                this.setState({ loading: true })
-                await new Promise(resolve => setTimeout(() => resolve(), 1500))
-                this.setState({ loading: false })
+        {
+          (dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0) ? (
+            <ScrollView refreshControl={
+              <RefreshControl
+                refreshing={this.state.loading}
+                onRefresh={this.fetchData.bind(this)}
+                title={'下拉进行刷新'}
+                colors={['#ffffff']}
+                progressBackgroundColor={'#1c99fb'}
+              />
+            } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', height: Screen.safaContent.height - 48 }} style={{ flex: 1 }}>
+              <Text style={{ top: -64, color: '#777', fontSize: 15, fontWeight: '400' }}>暂无好友，点击右侧按钮进行添加</Text>
+            </ScrollView>
+          ) : (
+            <ListView
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.loading}
+                  onRefresh={this.fetchData.bind(this)}
+                  title={'下拉进行刷新'}
+                  colors={['#ffffff']}
+                  progressBackgroundColor={'#1c99fb'}
+                />
+              }
+              enableEmptySections={true}
+              dataSource={dataSource}
+              renderSectionHeader={(data, section) => {
+                return (data.length > 0) && (
+                  <View style={{ height: 24, justifyContent: 'flex-end', paddingBottom: 4, paddingLeft: 8, backgroundColor: '#F8F8F8' }}>
+                    <Text style={{ fontSize: 11, color: '#999', fontWeight: '200' }}>{ section === '0' ? '好友请求' : '好友列表' }</Text>
+                  </View>
+                )
               }}
-              title={'下拉进行刷新'}
-              colors={['#ffffff']}
-              progressBackgroundColor={'#1c99fb'}
+              renderRow={(data, section) => 
+                section === '0' ? 
+                  (<RequestorPerson 
+                    onPressAccept={async (requestor_id) => {
+                      try {
+                        const data = await Session.circle.put(`v1/requests/${requestor_id}`, { action: 'accept' })
+                        console.log(data)
+                      } catch (e) {
+                        this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
+                      } finally {
+                        this.fetchData()
+                      }
+                    }} 
+                    onPressReject={async (requestor_id) => {
+                      try {
+                        const data = await Session.circle.put(`v1/requests/${requestor_id}`, { action: 'reject' })
+                        console.log(data)
+                      } catch (e) {
+                        this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
+                      } finally {
+                        this.fetchData()
+                      }
+                    }} 
+                    data={data} />) : 
+                  (<ItemPerson data={data} />)
+              }
+              renderSeparator={() => (
+                <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
+              )}
             />
-          }
-          enableEmptySections={true}
-          dataSource={dataSource}
-          renderRow={(data) => <ItemPerson data={data} />}
-          renderSeparator={() => (
-            <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
-          )}
-        />
+          )
+        }
       </View>
     )
   }
-}
+})
 
 class HeaderSearchBar extends Component {
   render() {
@@ -117,6 +172,34 @@ class ItemPerson extends Component {
           <Text style={{ fontSize: 13, color: '#999' }}>{role}</Text>
         </View>
       </TouchableOpacity>
+    )
+  }
+}
+
+class RequestorPerson extends Component {
+  render() {
+    const { onPressAccept = () => {}, onPressReject = () => {}, data } = this.props
+    const { _id, requestor_id, requestor_info } = data
+    const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = requestor_info
+
+    return (
+      <View activeOpacity={.7} style={{ height: 60, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 15 }}>
+        <View style={{ justifyContent: 'center', width: 60 }}>
+          <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{ fullName }</Text>
+          <Text style={{ fontSize: 13, color: '#999' }}>{ userId }</Text>
+        </View>
+        <View style={{ marginRight: 0, width: 80, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <TouchableOpacity onPress={() => onPressAccept(requestor_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#70c040', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
+            { Icons.Generator.Material('check', 18, '#70c040') }
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onPressReject(requestor_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#e43c39', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
+            { Icons.Generator.Material('close', 18, '#e43c39') }
+          </TouchableOpacity>
+        </View>
+      </View>
     )
   }
 }

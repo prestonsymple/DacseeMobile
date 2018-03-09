@@ -199,7 +199,6 @@
     <orderEntry type="library" exported="" name="com.facebook.react:react-native-0.52.2" level="project" />
     <orderEntry type="library" exported="" name="org.jetbrains:annotations:13.0@jar" level="project" />
     <orderEntry type="library" exported="" name="com.android.support:animated-vector-drawable-26.1.0" level="project" />
-    <orderEntry type="library" exported="" name="__local_jars__:/Users/quzhi/Develop/DacseeMobile/android/app/libs/android-support-v4.jar:unspecified@jar" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-gcm-11.8.0" level="project" />
     <orderEntry type="library" exported="" name="com.facebook.fbui.textlayoutbuilder:textlayoutbuilder-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="org.webkit:android-jsc-r174650" level="project" />

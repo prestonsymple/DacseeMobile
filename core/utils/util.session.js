@@ -1,5 +1,4 @@
 /* global store */
-
 import axios from 'axios'
 
 const SESSION_TIMEOUT = 10000
@@ -14,7 +13,7 @@ const sessionBuilder = (baseUrl) => {
   instance.interceptors.request.use((config) => {
     const state = store.getState()
     if (state.account.authToken) {
-      instance.defaults.headers.common['Authorization'] = state.account.authToken
+      config.headers.Authorization = state.account.authToken
     }
     return config
   }, err => {
@@ -59,6 +58,10 @@ const sessionBuilder = (baseUrl) => {
 export default {
   user: sessionBuilder(
     'http://user-dev.dacsee.io/api/'
+  ),
+
+  circle: sessionBuilder(
+    'http://circle-dev.dacsee.io/api/'
   ),
 
   booking: sessionBuilder(

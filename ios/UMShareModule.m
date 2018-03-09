@@ -173,9 +173,10 @@ RCT_EXPORT_METHOD(enabledDebug) {
   [[UMSocialManager defaultManager] openLog: true];
 }
 
-//RCT_EXPORT_METHOD(setPlatformConfig:(int)Channel String id, String key) {
-//  [[UMSocialManager defaultManager] openLog: true];
-//}
+RCT_EXPORT_METHOD(setPlatformConfig:(NSInteger)Channel key:(NSString *)key secret:(NSString *)secret redirectUrl:(NSString *)redirectUrl) {
+  UMSocialPlatformType _platform = [self platformType: Channel];
+  [[UMSocialManager defaultManager] setPlaform:_platform appKey:key appSecret:secret redirectURL: [redirectUrl isEqualToString: @""] ? nil : redirectUrl];
+}
 
 RCT_EXPORT_METHOD(shareboard:(NSString *)text icon:(NSString *)icon link:(NSString *)link title:(NSString *)title platform:(NSArray *)platforms completion:(RCTResponseSenderBlock)completion)
 {

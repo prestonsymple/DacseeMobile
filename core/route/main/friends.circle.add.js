@@ -29,15 +29,17 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
     super(props)
     this.state = {
       dataSource: dataContrast.cloneWithRows([
-        { describer: '使用用户ID查找', label: 'DACSEE', icon: Icons.Generator.Awesome('id-badge', 36, '#333', { style: { left: 7 } }) },
-        { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#333', { style: { left: 0 } }) },
-        { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#333', { style: { left: 1.5 } }) },
+        { describer: '使用电话号码进行搜索', label: '电话号码', icon: Icons.Generator.Awesome('phone', 36, '#666', { style: { left: 5 } }) },
+        { describer: '使用邮箱/用户账号进行搜索', label: '邮箱/用户账号', icon: Icons.Generator.Awesome('envelope', 36, '#666', { style: { left: 2 } }) },
+        { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#666', { style: { left: 0 } }) },
+        { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#666', { style: { left: 1.5 } }) },
         // { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }
       ])
     }
   }
 
   async componentDidMount() {
+    
   }
 
   async _pressActionSheet(index) {
@@ -45,7 +47,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
       await ShareUtil.share(
         '分享至微信', 
         'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-        `http://47.98.40.59/?referrer=${this.props.account.user._id}&id=${this.props.account.user.userId}`, 
+        `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
         '加入DACSEE', 
         3, 
         (arg) => { console.log(arg) }
@@ -54,7 +56,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
       await ShareUtil.share(
         '分享至微信', 
         'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-        `http://47.98.40.59/?referrer=${this.props.account.user._id}&id=${this.props.account.user.userId}`, 
+        `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
         '加入DACSEE', 
         2, 
         (arg) => { console.log(arg) }

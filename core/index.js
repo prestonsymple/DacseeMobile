@@ -193,7 +193,7 @@ class Core extends PureComponent {
   render() {
     return (
       <Provider store={this.state.store}>
-        <PersistGate loading={null} persistor={store.persist}>
+        <PersistGate loading={<ActivityIndicator size="small" color="#00ff00" />} persistor={store.persist}>
           <Launch />
         </PersistGate>
       </Provider>
