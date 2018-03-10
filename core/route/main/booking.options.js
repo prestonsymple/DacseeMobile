@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
-  Text, View, Animated, StyleSheet, Image, ListView, Platform, ScrollView, DatePickerIOS, Modal, TouchableOpacity
+  Text, View, Animated, StyleSheet, Image, ListView, Platform, ScrollView, DatePickerIOS, Modal, TouchableOpacity,
+  DeviceEventEmitter
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
@@ -44,9 +45,15 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      // contentComponent: () => (
-      //   <View style={{ backgroundColor: '#333', flex: 1, height: 300, width: 400 }}></View>
-      // ),
+      headerLeft: (
+        <TouchableOpacity 
+          activeOpacity={0.7} 
+          style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
+          onPress={() => DeviceEventEmitter.emit('NAVIGATION.EVENT.ON.PRESS.BACK.BOOKING')}
+        >
+          { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
+        </TouchableOpacity>
+      ),
       headerStyle: {
         shadowColor: 'transparent',
         shadowOpacity: 0,
@@ -84,6 +91,10 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
   async componentDidMount() {
     const { from, to } = this.props.data
     await InteractionManager.runAfterInteractions()
+    this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.BACK.BOOKING', () => {
+      this.props.navigation.goBack()
+      this.props.dispatch(booking.journeyUpdateData({ to: { location: { lat: 0, lng: 0 } } }))
+    })
     this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', async (args) => {
       // 初始化
       const route = Array.isArray(args) ? args[0] : args
@@ -112,7 +123,7 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
       this.setState({ route })
 
       Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
-      this.selectCarType(this.props.data.type, routeLength)
+      this.selectCarType(this.props.data.type, routeLength, this.props.data)
     })
 
     this.map.calculateDriveRouteWithStartPoints({
@@ -126,28 +137,29 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
 
   componentWillUnmount() {
     this.eventListener && this.eventListener.remove()
+    this.subscription && this.subscription.remove()
   }
 
   componentWillReceiveProps(props) {
     if (props.data.type !== this.props.data.type) {
       this.setState({ carArgs: [] })
       Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
-      this.selectCarType(props.data.type, this.state.route.routeLength)
+      this.selectCarType(props.data.type, this.state.route.routeLength, props.data)
+    }
+
+    if (props.data.selected_friends !== this.props.data.selected_friends) {
+      this.setState({ carArgs: [] })
+      Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
+      this.selectCarType(props.data.type, this.state.route.routeLength, props.data)
     }
   }
 
-  async selectCarType(key, length) {
+  async selectCarType(key, length, data) {
     const DEMO_DATA = {
       standard: [
         { price: `${((length / 1000) * 1.6).toFixed(1)}0`, title: '优选', key: 'standard-1', image: require('../../resources/images/Slice_Lux_Car.png') }
       ],
-      circle: [
-        { title: 'Vito', key: 'circle-1', circle: true, image: { uri: 'https://hbimg.b0.upaiyun.com/42c4da5880d187c52d5b5f4ed96fd13de57d48d1126e3-NxtDwz_fw658' } },
-        { title: 'San', key: 'circle-2', circle: true, image: { uri: 'https://hbimg.b0.upaiyun.com/1bce054ced7a13eb4eff8218f7a6b36c554b9b3125617-19o1EY_fw658' } },
-        { title: 'Chim', key: 'circle-3', circle: true, image: { uri: 'https://hbimg.b0.upaiyun.com/a476c4d19408c077bd6f0985827772ff6ebb677314bec-UNqdPS_fw658' } },
-        { title: 'Jacky', key: 'circle-4', circle: true, image: { uri: 'https://hbimg.b0.upaiyun.com/bb5c6a527ba21dcad49bf515a1f851d294809a0917064-rkFyzP_fw658' } },
-        { title: 'More', key: 'circle-5', circle: true, icon: Icons.Generator.Material('more-horiz', 34, '#666'), onPress: () => this.props.navigation.navigate('FriendsCircle') }
-      ], 
+      circle: [], 
       taxi: [
         { label: '打表计费', title: '出租车', key: 'taxi-1', image: require('../../resources/images/Slice_Taxi_Car.png') }
       ],
@@ -161,6 +173,22 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
       ]
     }
 
+    if (key === 'circle') {
+      DEMO_DATA.circle = data.selected_friends.map(pipe => Object.assign({}, {
+        title: pipe.friend_info.fullName,
+        key: pipe._id,
+        circle: true,
+        image: { uri: pipe.friend_info.avatars[0].url }
+      }))
+      DEMO_DATA.circle.push({ 
+        title: '选择朋友', 
+        key: 'circle-select-button', 
+        circle: true, 
+        icon: Icons.Generator.Material('add', 34, '#999'), 
+        onPress: () => this.props.navigation.navigate('FriendsCircle') 
+      })
+    }
+
     await (new Promise(resolve => setTimeout(() => resolve(), 1500)))
     this.indicator && this.indicator.stopAnimation()
     this.setState({ carArgs: DEMO_DATA[key] })
@@ -168,9 +196,10 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
 
   render() {
     const { route, carArgs } = this.state
-    const { schedule, to, from, payment, type } = this.props.data
+    const { schedule, to = { location: { lat: 0, lng: 0 } }, from = { location: { lat: 0, lng: 0 } }, payment, type } = this.props.data
 
     // 计算到达时间
+
     const reachTime = moment(Date.now()).add(route.routeTime, 'seconds').format('HH:mm')
 
     return (
@@ -191,7 +220,10 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
         ]}>
           <View style={[
             { marginBottom: 6, backgroundColor: 'white' }, 
-            { borderColor: '#ccc', borderWidth: .8 },
+            Platform.select({
+              ios: {},
+              android: { borderColor: '#ccc', borderWidth: .8 },
+            }),
             { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
           ]}>
             <View style={{ height: 116, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -254,7 +286,10 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
             }}
             style={[
               { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-              { borderColor: '#ccc', borderWidth: .8 },
+              Platform.select({
+                ios: {},
+                android: { borderColor: '#ccc', borderWidth: .8 },
+              }),
               { backgroundColor: 'white' }
             ]}
             reachTime={reachTime}
@@ -424,7 +459,7 @@ class SelectButton extends Component {
     const { data = {} } = this.props
     const { image, title, price, circle, label, key, icon, onPress = () => {} } = data
     return !circle ? (
-      <Button onPress={() => {}} key={key} style={{ alignItems: 'center', justifyContent: 'center', marginHorizontal: 15, top: 3 }}>
+      <View key={key} style={{ alignItems: 'center', justifyContent: 'center', marginHorizontal: 15, top: 3 }}>
         <Text style={{ color: '#333', fontSize: 14, fontWeight: '400', marginBottom: 4 }}>{ title }</Text>
         <Animated.Image 
           style={{ opacity: 0.7, width: 125, height: 45, resizeMode: 'cover' }} 
@@ -443,26 +478,26 @@ class SelectButton extends Component {
             </View>
           )
         }
-      </Button>
+      </View>
     ) : (
       <Button onPress={onPress} key={key} style={{ alignItems: 'center', justifyContent: 'center', marginHorizontal: 12, top: 3 }}>
         <Animated.View style={[
-          { width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#fff' }
+          { width: 58, height: 58, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#fff' }
         ]}>
           {
             icon ? (
-              <View style={{ backgroundColor: '#f2f2f2', width: 66, height: 66, borderRadius: 33, justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ backgroundColor: '#f2f2f2', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center' }}>
                 { icon }
               </View>
             ) : (
               <Animated.Image 
-                style={{ opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }} 
+                style={{ opacity: 0.7, width: 58, height: 58, borderRadius: 29, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }} 
                 source={image}
               />
             )
           }
         </Animated.View>
-        <Text style={{ color: '#666', fontSize: 14, fontWeight: '400', marginTop: 4 }}>{ title }</Text>
+        <Text style={{ color: '#666', fontSize: 14, fontWeight: '400', marginTop: 6 }}>{ title }</Text>
       </Button>
     )
   }
@@ -592,8 +627,8 @@ const styles = StyleSheet.create({
     ios: { position: 'absolute', bottom: Define.system.ios.x ? 40 : 30, left: 15, right: 15, borderRadius: 3 },
     android: { position: 'absolute', bottom: 15, left: 15, right: 15, borderRadius: 3 }
   }),
-  PickAddressWrap: Platform.select({
-    ios: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
-    android: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
-  })
+  // PickAddressWrap: Platform.select({
+  //   ios: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
+  //   android: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
+  // })
 })

@@ -2,7 +2,7 @@
 /* global store */
 /*eslint-disable no-unused-vars*/
 import React, { Component, PureComponent } from 'react'
-import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules, BackHandler, PushNotificationIOS } from 'react-native'
+import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules, BackHandler, PushNotificationIOS, Platform } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
@@ -20,6 +20,16 @@ import ShareUtil from './native/umeng/ShareUtil'
 import { Define, System } from './utils'
 
 const initializationModule = () => {}
+
+const SHARE_MEDIA = {
+  WECHAT_SESSION: Platform.select({ ios: 1, android: 2 }),
+  WECHAT_CIRCLE: Platform.select({ ios: 2, android: 3 }),
+  SINA_WEIBO: Platform.select({ ios: 0, android: 1 }),
+  TENCENT_QQ: Platform.select({ ios: 4, android: 0 }),
+  TENCENT_QQ_ZONE: Platform.select({ ios: 5, android: 4 }),
+  FACEBOOK: Platform.select({ ios: 16, android: 7 }),
+  TWITTER: Platform.select({ ios: 17, android: 8 })
+}
 
 /*eslint-disable*/
 // console.ignoredYellowBox = ['Warning: BackAndroid', 'Remote debugger'];
@@ -74,7 +84,6 @@ class Core extends PureComponent {
     // console.log('init', msg)
     PushService.configure({
       onRegister: function(register) {
-        console.log(register)
         const { token, os, baidu_id } = register
         const state = {
           push_service_token: token,
@@ -82,6 +91,7 @@ class Core extends PureComponent {
         }
         if (System.Platform.iOS) delete state.baidu_user_id
         store.dispatch(application.setPushServiceToken(state))
+        store.dispatch(application.updatePushToken())
       },
   
       // (required) Called when a remote or local notification is opened or received
@@ -130,18 +140,13 @@ class Core extends PureComponent {
 
   initializationSocialConfig() {
     ShareUtil.enabledDebug()
-    // Weibo
-    ShareUtil.setPlatformConfig(0, '3853690678', '8c509b8ac029138d30e07e74d8a174b7', '')
-    // Wechat Session
-    ShareUtil.setPlatformConfig(2, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
-    // Wechat Circle
-    ShareUtil.setPlatformConfig(3, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
-    // QQ
-    ShareUtil.setPlatformConfig(4, '1106730946', 'cpXqcASFJs2r6vH3', '')
-    // Facebook
-    ShareUtil.setPlatformConfig(16, '189854555110129', '5242579ad95a1347a9a55be82156e810', '')
-    // Twitter
-    ShareUtil.setPlatformConfig(17, '75sUPCwmmjb7R4VP8F7mIly8B', 'gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.SINA_WEIBO, '3853690678', '8c509b8ac029138d30e07e74d8a174b7', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.WECHAT_SESSION, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.WECHAT_CIRCLE, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ, '1106730946', 'cpXqcASFJs2r6vH3', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ_ZONE, '1106730946', 'cpXqcASFJs2r6vH3', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.FACEBOOK, '189854555110129', '5242579ad95a1347a9a55be82156e810', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.TWITTER, '75sUPCwmmjb7R4VP8F7mIly8B', 'gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX', '')
   }
 
   initializationBackHandler() {

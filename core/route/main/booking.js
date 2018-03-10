@@ -118,7 +118,8 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
         address: 'xxx',
         name: 'Raub,Pahang'
       }]),
-      data: undefined
+      data: undefined,
+      carArgs: []
     }
     this.currentLoc = {}
     this.timer = null
@@ -126,6 +127,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.board = new Animated.Value(0)
     this.ui = new Animated.Value(0)
     this.form = new Animated.Value(0)
+    this.indicator = new Animated.Value(0)
 
     this.count = 0
   }
@@ -133,6 +135,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
+    this.makeMyCircle(this.props.data)
   }
 
   componentWillUnmount() {
@@ -222,10 +225,35 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
       await new Promise((resolve) => Animated.timing(this.ui, { toValue: 2, duration: 200 }).start(() => resolve()))
     }
 
-    if (('location' in to) && (to.address !== this.props.data.to.address)) {
+    if (('location' in to) && (to.address !== this.props.data.to.address) && (to.location.lat !== 0) && (to.location.lng !== 0)) {
       this.props.navigation.navigate('BookingOptions')
     }
 
+    if (props.data.selected_friends !== this.props.data.selected_friends) {
+      this.setState({ carArgs: [] })
+      Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
+      this.makeMyCircle(props.data)
+    }
+  }
+
+  async makeMyCircle(data) {
+    const circle = data.selected_friends.map(pipe => Object.assign({}, {
+      title: pipe.friend_info.fullName,
+      key: pipe._id,
+      circle: true,
+      image: { uri: pipe.friend_info.avatars[0].url }
+    }))
+    circle.push({ 
+      title: '选择朋友', 
+      key: 'circle-select-button', 
+      circle: true, 
+      icon: Icons.Generator.Material('add', 34, '#999'), 
+      onPress: () => this.props.navigation.navigate('FriendsCircle') 
+    })
+
+    await (new Promise(resolve => setTimeout(() => resolve(), 1500)))
+    this.indicator && this.indicator.stopAnimation()
+    this.setState({ carArgs: circle })
   }
 
   async activeAdrEdit(field) {
@@ -249,7 +277,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   }
 
   render() {
-    const { editAdr, drag, defaultData, data, field } = this.state
+    const { editAdr, drag, defaultData, data, field, carArgs } = this.state
     const { schedule, type } = this.props.data
 
     return (
@@ -274,14 +302,59 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
         <MapPin timing={this.pin} />
         <MapPinTip timing={this.board} />
 
-        <PickerAddress
-          timing={this.ui}
-          drag={drag}
-          to={this.props.data.to}
-          from={this.props.data.from}
-          onPressTo={() => this.activeAdrEdit('to')}
-          onPressFrom={() => this.activeAdrEdit('from')}
-        />
+        <View style={Platform.select({
+          ios: { position: 'absolute', bottom: Define.system.ios.x ? 40 : 30, left: 15, right: 15, borderRadius: 3 },
+          android: { position: 'absolute', bottom: 15, left: 15, right: 15, borderRadius: 3 }
+        })}>
+          {
+            this.props.data.type === 'circle' && (
+              <View style={[
+                { marginBottom: 6, backgroundColor: 'white' }, 
+                { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
+                Platform.select({
+                  ios: {},
+                  android: { borderColor: '#ccc', borderWidth: .8 },
+                })
+              ]}>
+                <View style={{ height: 116, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  {
+                    (carArgs.length === 0) ? (
+                      <View style={Platform.select({
+                        android: { position: 'absolute', height: 116, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' },
+                        ios: { position: 'absolute', height: 96, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' }
+                      })}>
+                        <Lottie progress={this.indicator} style={{ width: 66, height: 66 }} source={Resources.animation.simpleLoader} />
+                      </View>
+                    ) : (
+                      <ScrollView
+                        pagingEnabled={type !== 'circle'}
+                        horizontal={true} 
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ 
+                          height: 116, 
+                          justifyContent: 'center', 
+                          alignItems: 'center' 
+                        }}
+                        style={{ width: width - 30 }}
+                      >
+                        { carArgs.map((pipe, index) => (<SelectButton key={index} data={pipe} />)) }
+                      </ScrollView>
+                    )
+                  }
+                </View>
+              </View>
+            )
+          }
+
+          <PickerAddress
+            timing={this.ui}
+            drag={drag}
+            to={this.props.data.to}
+            from={this.props.data.from}
+            onPressTo={() => this.activeAdrEdit('to')}
+            onPressFrom={() => this.activeAdrEdit('from')}
+          />
+        </View>
 
         {/* Modal - Where u? */}
         <ModalSelectAddress
@@ -300,6 +373,38 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     )
   }
 })
+
+class SelectButton extends Component {
+  constructor(props) {
+    super(props) 
+  }
+
+  render() {
+    const { data = {} } = this.props
+    const { image, title, price, circle, label, key, icon, onPress = () => {} } = data
+    return (
+      <Button onPress={onPress} key={key} style={{ alignItems: 'center', justifyContent: 'center', marginHorizontal: 12, top: 3 }}>
+        <Animated.View style={[
+          { width: 58, height: 58, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#fff' }
+        ]}>
+          {
+            icon ? (
+              <View style={{ backgroundColor: '#f2f2f2', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center' }}>
+                { icon }
+              </View>
+            ) : (
+              <Animated.Image 
+                style={{ opacity: 0.7, width: 58, height: 58, borderRadius: 29, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }} 
+                source={image}
+              />
+            )
+          }
+        </Animated.View>
+        <Text style={{ color: '#666', fontSize: 14, fontWeight: '400', marginTop: 6 }}>{ title }</Text>
+      </Button>
+    )
+  }
+}
 
 class PickerAddress extends Component {
 
@@ -338,9 +443,12 @@ class PickerAddress extends Component {
 
     return (
       <Animated.View style={[
-        styles.PickAddressWrap,
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-        { opacity: timing.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
+        { backgroundColor: 'white' },
+        Platform.select({
+          ios: {},
+          android: { borderColor: '#ccc', borderWidth: .8 },
+        })
       ]}>
         {/* From */}
         <TouchableOpacity onPress={drag ? () => { } : onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>

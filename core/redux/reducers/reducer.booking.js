@@ -14,7 +14,8 @@ const initialState = {
   name: '优选',
   payment: '现金支付',
   book: false,
-  time: 'now'
+  time: 'now',
+  selected_friends: []
 }
 
 export default handleActions({

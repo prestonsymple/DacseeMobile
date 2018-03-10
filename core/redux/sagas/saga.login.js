@@ -145,12 +145,15 @@ function* logoutFlow() {
 
 function* registerDevice() {
   while(true) {
-    yield take(account.loginSuccess().type)
-    const { token, userId, user_id } = yield select(state => ({ 
+    yield take(application.updatePushToken().type)
+    const { token, userId, user_id, status } = yield select(state => ({ 
       token: state.config.push_service_token,
       userId: state.config.baidu_user_id,
-      user_id: state.account.user._id
+      user_id: state.account.user._id,
+      status: state.account.status
     }))
+
+    if (!status) return;
     try {
       const extendFields = System.Platform.Android ? { channelId: token, userId } : { token }
       const postData = Object.assign({}, {
@@ -170,6 +173,8 @@ function* registerDevice() {
         'uuid' : System.UUID,
         'user_id': user_id
       }, extendFields)
+
+      console.log(System.UUID)
     
       yield call(session.push.post, 'v1/register', postData) 
     } catch (e) {
@@ -183,6 +188,7 @@ function* loginSuccess(data: object) {
   yield delay(2000)
   yield put(application.hideProgress())
   yield put(account.loginSuccess())
+  yield put(application.setPushServiceToken())
 }
 
 export default function* watch() {

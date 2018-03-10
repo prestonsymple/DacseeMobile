@@ -18,6 +18,8 @@ export default {
   startUpdate: createAction('APPLICATION_START_UPDATE'),
   finshUpdate: createAction('APPLICATION_FINSH_UPDATE'),
 
+  updatePushToken: createAction('APPLICATION_UPDATE_PUSH_TOKEN'),
+
   onPressAndroidBackButton: createAction('APPLICATION_ON_PRESS_BACK_BUTTON'),
 
   setPushServiceToken: createAction('APPLICATION_SET_PUSH_SERVICE_TOKEN'),
