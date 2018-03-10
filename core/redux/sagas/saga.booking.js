@@ -52,8 +52,8 @@ function* bookingRun() {
   }
 
   if (payload.type === 'circle') {
-    body.assign_type = 'circle'
-    body.selected_user_ids = payload.selected_friends.map(pipe => pipe.friend_id)
+    body.assign_type = 'selected_circle'
+    body.selected_circle_ids = payload.selected_friends.map(pipe => pipe.friend_id)
   }
 
   console.log(body)

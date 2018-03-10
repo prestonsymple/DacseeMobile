@@ -9,6 +9,7 @@ import { application, account } from '../actions'
 import { System } from '../../utils'
 import loginSaga from './saga.login'
 import bookingSaga from './saga.booking'
+import jobsSaga from './saga.jobs'
 
 
 /******************************************************************************/
@@ -87,6 +88,7 @@ export default function* sagaService() {
     fork(watchAndroidBackButton),
     fork(watchShowMessage),
 
-    fork(loginSaga)
+    fork(loginSaga),
+    fork(jobsSaga)
   ])
 }

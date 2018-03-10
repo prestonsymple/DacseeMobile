@@ -10,7 +10,7 @@ import createSagaMiddleware from 'redux-saga'
 const persistConfig = {
   key: 'v0.0.1',
   storage: storage,
-  whitelist: ['account', 'config']
+  whitelist: ['account', 'config', 'jobs']
 }
 /* Redux Reducers */
 import reducers from './redux/reducers'

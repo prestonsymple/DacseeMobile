@@ -111,19 +111,20 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         JSONObject jsonObject;
         Bundle extras = null;
         try {
-            jsonObject = (new JSONObject(message)).optJSONObject(BaiduPushConstants.DATA);
+            JSONObject baseJson= new JSONObject(message);
+            JSONObject dataJson = baseJson.optJSONObject(BaiduPushConstants.DATA);
+            JSONObject customJson= baseJson.optJSONObject("custom_data");
             extras = new Bundle();
-            extras.putString(BaiduPushConstants.TITLE, jsonObject.optString(BaiduPushConstants.TITLE));
-            extras.putString(BaiduPushConstants.MESSAGE, jsonObject.optString(BaiduPushConstants.DESCRIPTION));
-            if (jsonObject.optJSONObject(BaiduPushConstants.ROUTE) != null) {
-                extras.putString(BaiduPushConstants.ROUTE, jsonObject.optJSONObject(BaiduPushConstants.ROUTE).toString());
+            extras.putString(BaiduPushConstants.TITLE, dataJson.optString(BaiduPushConstants.TITLE));
+            extras.putString(BaiduPushConstants.MESSAGE, dataJson.optString(BaiduPushConstants.DESCRIPTION));
+            if (dataJson.optJSONObject(BaiduPushConstants.ROUTE) != null) {
+                extras.putString(BaiduPushConstants.ROUTE, dataJson.optJSONObject(BaiduPushConstants.ROUTE).toString());
             }
-            if (jsonObject.optJSONObject(BaiduPushConstants.BADGE) != null) {
-                extras.putString(BaiduPushConstants.BADGE, jsonObject.optJSONObject(BaiduPushConstants.BADGE).toString());
+            if (dataJson.optJSONObject(BaiduPushConstants.BADGE) != null) {
+                extras.putString(BaiduPushConstants.BADGE, dataJson.optJSONObject(BaiduPushConstants.BADGE).toString());
             }
-            JSONObject customContent = jsonObject.optJSONObject(BaiduPushConstants.CUSTOM);
-            if (customContent != null) {
-                extras.putString(BaiduPushConstants.DATA, jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT).toString());
+            if (customJson != null) {
+                extras.putString("custom_data", customJson.toString());
             }
         } catch (JSONException e) {
             Log.e(RNPushNotification.LOG_TAG, e.getMessage());

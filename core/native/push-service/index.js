@@ -224,11 +224,22 @@ Notifications._onNotification = function(data, isFromBackground = null) {
         finish: (res) => data.finish(res)
       })
     } else {
-      var notificationData = {
+      let customObject = { data: { custom_data: {} } }
+      try {
+        customObject = {
+          data: {
+            custom_data: JSON.parse(data.custom_data)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      }
+
+      var notificationData = Object.assign({
         foreground: ! isFromBackground,
         finish: () => {},
         ...data
-      }
+      }, customObject)
 
       if ( typeof notificationData.data === 'string' ) {
         try {

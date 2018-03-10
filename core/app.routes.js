@@ -19,6 +19,10 @@ import {
   FriendsDetailScreen
 } from './route/main'
 
+import {
+  JobsListenerScreen
+} from './route/jobs'
+
 import { 
   WalletBalanceScreen,
   WalletWithdrawScreen,
@@ -107,6 +111,8 @@ const AppNavigator = DrawerNavigator({
     FriendsRequest: { screen: FriendsRequestScreen, path: 'invite/:referrer/:id', },
     FriendsDetail: { screen: FriendsDetailScreen },
     PickerAddress: { screen: PickerAddressScreen },
+
+    JobsListener: { screen: JobsListenerScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },
     WalletWithdraw: { screen: WalletWithdrawScreen },

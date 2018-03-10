@@ -66,7 +66,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
 
-    const resp = await Session.wallet.get('v1/wallets')
+    // const resp = await Session.wallet.get('v1/wallets')
     // [{
     //   _id: '0d8f4330-1dac-11e8-b67d-91aeb57f5e5b',
     //   amount: 101,
@@ -81,7 +81,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
 
   render() {
     const { detail } = this.state
-    const wrapWidth = width    
+    const wrapWidth = width
 
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>

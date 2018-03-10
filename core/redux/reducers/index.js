@@ -7,10 +7,12 @@ import application from './reducer.application'
 import account from './reducer.account'
 import booking from './reducer.booking'
 import config from './reducer.config'
+import jobs from './reducer.jobs'
 
 export default combineReducers({
   application,
   account,
   booking,
-  config
+  config,
+  jobs
 })

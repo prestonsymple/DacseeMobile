@@ -14,7 +14,7 @@ import InteractionManager from 'InteractionManager'
 
 import Store from './app.store'
 import Launch from './app.launch'
-import { network, application } from './redux/actions'
+import { network, application, jobs } from './redux/actions'
 import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
@@ -95,7 +95,7 @@ class Core extends PureComponent {
       },
   
       // (required) Called when a remote or local notification is opened or received
-      onNotification: function(notification) {
+      onNotification: async function(notification) {
         const { 
           foreground, // 正在前台
           id, // 推送ID
@@ -103,10 +103,18 @@ class Core extends PureComponent {
           title, // 推送标题
           userInteraction, // 用户触发 
           badge,
-          route
+          route,
+          data
         } = notification
-        console.log('[PN][RECEIVED]', notification)
 
+        const { custom_data } = data
+
+        if ('booking_id' in custom_data) {
+          const { booking_id } = custom_data
+          console.log(`[BOOKING][MESSAGE][${booking_id}]`)
+          if (!foreground) await new Promise(resolve => setTimeout(() => resolve(), 1000))
+          store.dispatch(jobs.newJobs(booking_id))
+        }
         // process the notification
         
         // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
@@ -208,7 +216,11 @@ class Core extends PureComponent {
   render() {
     return (
       <Provider store={this.state.store}>
-        <PersistGate loading={<ActivityIndicator size="small" color="#00ff00" />} persistor={store.persist}>
+        <PersistGate loading={
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="small" color="#333" />
+          </View>
+        } persistor={store.persist}>
           <Launch />
         </PersistGate>
       </Provider>

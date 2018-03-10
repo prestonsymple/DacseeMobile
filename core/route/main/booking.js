@@ -143,10 +143,11 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.subscription && this.subscription.remove()
   }
 
-  onLocationListener({ nativeEvent }) {
+  async onLocationListener({ nativeEvent }) {
     const { latitude, longitude } = nativeEvent
     if (latitude === 0 || longitude === 0) return
     if (!this.state.ready) {
+      await InteractionManager.runAfterInteractions()
       this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
       this.setState({ ready: true })
     }

@@ -23,7 +23,9 @@ const sessionBuilder = (baseUrl) => {
 
   // DEBUG && API请求响应中间件 - 记录组件
   instance.interceptors.response.use((response) => {
-    console.log('[DEBUG][SESSION][RESPONSE][+]', response, '[DEBUG][SESSION][RESPONSE][-]')
+    const { config } = response
+    const { url, method } = config
+    console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
     return response
   }, (err) => {
     console.log(err)

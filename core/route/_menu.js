@@ -21,29 +21,27 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('UpgradeDriver')
 }, {
   key: '1',
+  name: '开始接单',
+  icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
+  onPress: ({ navigation }) => navigation.navigate('JobsListener')
+}, {
+  key: '2',
   name: '检验清单',
   icon: Icons.Generator.Material('assignment', 24, ICONS_COLOR, { style: { left: .5 } }),
   onPress: () => {
   }
 }, {
-  key: '2',
-  name: '行程预约',
-  icon: Icons.Generator.Material('data-usage', 24, ICONS_COLOR, { style: { left: .5, top: 1 } }),
-  onPress: async ({ navigation }) => await ShareUtil.share(
-    '分享至微信', 
-    'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-    `http://47.98.40.59/?referrer=${store.getState().account.user._id}&id=${store.getState().account.user.userId}`, 
-    '邀请好友', 
-    2, 
-    (arg) => { console.log(arg) }
-  )
-}, {
   key: '3',
+  name: '我的行程',
+  icon: Icons.Generator.Material('data-usage', 24, ICONS_COLOR, { style: { left: .5, top: 1 } }),
+  onPress: () => {}
+}, {
+  key: '4',
   name: '钱包',
   icon: Icons.Generator.Material('account-balance-wallet', 24, ICONS_COLOR, { style: { left: .5 } }),
   onPress: ({ navigation }) => navigation.navigate('WalletBalance')
 }, {
-  key: '4',
+  key: '5',
   name: '收入',
   icon: Icons.Generator.Material('monetization-on', 24, ICONS_COLOR, { style: { left: 1 } }),
   onPress: ({ navigation }) => navigation.navigate('IncomeList')
