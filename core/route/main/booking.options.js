@@ -294,8 +294,8 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
             ]}
             reachTime={reachTime}
             onPressBooking={() => {
-              this.map.animateTo({ zoomLevel: 14, coordinate: { latitude: 31.04510555, longitude: 121.16909333 } }, 500)
-              // this.props.dispatch(booking.journeyUserStart())
+              // this.map.animateTo({ zoomLevel: 14, coordinate: { latitude: 31.04510555, longitude: 121.16909333 } }, 500)
+              this.props.dispatch(booking.journeyUserStart())
             }}
             data={this.props.data}
           />
@@ -574,7 +574,7 @@ class SelectBookingOption extends Component {
             { left: 0 }
           ]}>
             <Button onPress={onPressBooking} style={{ flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C' }}>
-              <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>开始 - 预计到达{reachTime}</Text>
+              <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>开始</Text>
             </Button>
           </View>
         </View>
@@ -583,44 +583,44 @@ class SelectBookingOption extends Component {
   }
 }
 
-class BookingInfo extends Component {
-  render() {
-    const { timing } = this.props
-    return (
-      <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0 },
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-        { top: -100 },
-        { opacity: 1 }
-      ]}>
-        <View style={{ height: 88, backgroundColor: 'white', flexDirection: 'row', paddingHorizontal: 14, alignItems: 'center' }}>
-          <View style={{ justifyContent: 'center', marginRight: 10 }}>
-            <Image style={{ width: 54, height: 54, borderRadius: 27 }} source={require('../../resources/images/test.jpg')} />
-          </View>
-          <View style={{ justifyContent: 'space-between', height: 54, top: 2, flex: 1 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#333' }}>陈师傅</Text>
-            <Text style={{ fontSize: 12, fontWeight: '400', color: '#666' }}>沪A23N78</Text>
-            <View style={{ flexDirection: 'row' }}>
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star', 13, '#FEA81C')}
-              {Icons.Generator.Material('star-half', 13, '#FEA81C')}
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: 120, paddingHorizontal: 10 }}>
-            <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
-              {Icons.Generator.Material('mail-outline', 24, 'white')}
-            </Button>
-            <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
-              {Icons.Generator.Material('phone', 24, 'white')}
-            </Button>
-          </View>
-        </View>
-      </Animated.View>
-    )
-  }
-}
+// class BookingInfo extends Component {
+//   render() {
+//     const { timing } = this.props
+//     return (
+//       <Animated.View style={[
+//         { position: 'absolute', left: 0, right: 0 },
+//         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
+//         { top: -100 },
+//         { opacity: 1 }
+//       ]}>
+//         <View style={{ height: 88, backgroundColor: 'white', flexDirection: 'row', paddingHorizontal: 14, alignItems: 'center' }}>
+//           <View style={{ justifyContent: 'center', marginRight: 10 }}>
+//             <Image style={{ width: 54, height: 54, borderRadius: 27 }} source={require('../../resources/images/test.jpg')} />
+//           </View>
+//           <View style={{ justifyContent: 'space-between', height: 54, top: 2, flex: 1 }}>
+//             <Text style={{ fontSize: 16, fontWeight: '600', color: '#333' }}>陈师傅</Text>
+//             <Text style={{ fontSize: 12, fontWeight: '400', color: '#666' }}>沪A23N78</Text>
+//             <View style={{ flexDirection: 'row' }}>
+//               {Icons.Generator.Material('star', 13, '#FEA81C')}
+//               {Icons.Generator.Material('star', 13, '#FEA81C')}
+//               {Icons.Generator.Material('star', 13, '#FEA81C')}
+//               {Icons.Generator.Material('star', 13, '#FEA81C')}
+//               {Icons.Generator.Material('star-half', 13, '#FEA81C')}
+//             </View>
+//           </View>
+//           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: 120, paddingHorizontal: 10 }}>
+//             <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
+//               {Icons.Generator.Material('mail-outline', 24, 'white')}
+//             </Button>
+//             <Button underlayColor={'#ddd'} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FEA81C' }}>
+//               {Icons.Generator.Material('phone', 24, 'white')}
+//             </Button>
+//           </View>
+//         </View>
+//       </Animated.View>
+//     )
+//   }
+// }
 
 const styles = StyleSheet.create({
   SelectBookingWrap: Platform.select({

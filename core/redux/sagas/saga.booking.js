@@ -1,20 +1,64 @@
 import { Keyboard } from 'react-native'
+import moment from 'moment'
 
-import { fork, all, take, call, put, takeEvery, takeLatest, race } from 'redux-saga/effects'
+import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { application, booking } from '../actions'
 import { NavigationActions } from 'react-navigation'
-import { System } from '../../utils'
+import { System, Session } from '../../utils'
+
+const Methods = {
+  payment: (val) => {
+    return 'Cash'
+  },
+  timeZone: (val) => {
+    if (typeof(val) === 'string' && val === 'now') {
+      return moment(new Date()).format()
+    }
+    return moment(val).format()
+  }
+}
 
 
 function* trackLocation() {
 
 }
 
-function* bookingRun(payload) {
-  
+function* bookingRun() {
   yield put(booking.journeyUserWaitDriverRespond())
-  yield delay(6000) // TODO: LOOP REQUEST API
+  const payload = yield select(state => ({ ...state.booking }))
+
+  console.log(payload)
+
+  const body = {
+    type: 'now',
+    from : {
+      address : payload.from.address, 
+      coords : { lat : payload.from.location.lat,  lng : payload.from.location.lng }, 
+      name : payload.from.name, 
+      placeId : payload.from.uid
+    },
+    notes : '', 
+    destination : {
+      address : payload.to.address, 
+      coords : { lat : payload.to.location.lat,  lng : payload.to.location.lng }, 
+      name : payload.to.name, 
+      placeId : payload.to.uid
+    },
+    // vehicle_type : 'Economy',
+    booking_at: Methods.timeZone(payload.time),
+    payment_method: Methods.payment(payload.payment),
+    fare: 30
+  }
+
+  if (payload.type === 'circle') {
+    body.assign_type = 'circle'
+    body.selected_user_ids = payload.selected_friends.map(pipe => pipe.friend_id)
+  }
+
+  console.log(body)
+  const response = yield call(Session.booking.post, 'v1', body)
+  console.log(response)
 
   // TODO: Fix Driver Logic
   if (false) {
@@ -35,20 +79,21 @@ function* bookingRun(payload) {
 
 export default function* watchBooking() {
   while(true) {
-    const payload = yield take(booking.journeyUserStart().type)
-    yield delay(500)
+    try {
+      yield take(booking.journeyUserStart().type)
 
-    const { complate, cancel } = yield race({
-      complate: call(bookingRun, payload),
-      cancel: take(booking.journeyUserCancel().type)
-    })
+      const { complate, cancel } = yield race({
+        complate: call(bookingRun),
+        cancel: take(booking.journeyUserCancel().type)
+      })
 
-    if (complate) {
-      yield put(booking.journeyUserComplate())
-    }
+      if (complate) {
+        yield put(booking.journeyUserComplate())
+      }
 
-    if (cancel) {
-
+      // if (cancel) {}
+    } catch (e) {
+      console.log(e)
     }
   }
 }

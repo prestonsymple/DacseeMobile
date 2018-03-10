@@ -27,7 +27,7 @@ const SHARE_MEDIA = {
   SINA_WEIBO: Platform.select({ ios: 0, android: 1 }),
   TENCENT_QQ: Platform.select({ ios: 4, android: 0 }),
   TENCENT_QQ_ZONE: Platform.select({ ios: 5, android: 4 }),
-  FACEBOOK: Platform.select({ ios: 16, android: 7 }),
+  FACEBOOK: Platform.select({ ios: 16, android: 14 }),
   TWITTER: Platform.select({ ios: 17, android: 8 })
 }
 
@@ -145,7 +145,7 @@ class Core extends PureComponent {
     ShareUtil.setPlatformConfig(SHARE_MEDIA.WECHAT_CIRCLE, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ, '1106730946', 'cpXqcASFJs2r6vH3', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ_ZONE, '1106730946', 'cpXqcASFJs2r6vH3', '')
-    ShareUtil.setPlatformConfig(SHARE_MEDIA.FACEBOOK, '189854555110129', '5242579ad95a1347a9a55be82156e810', '')
+    // ShareUtil.setPlatformConfig(SHARE_MEDIA.FACEBOOK, '189854555110129', '5242579ad95a1347a9a55be82156e810', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TWITTER, '75sUPCwmmjb7R4VP8F7mIly8B', 'gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX', '')
   }
 
