@@ -39,23 +39,21 @@ export default class WalletTransferSummaryScreen extends Component {
     return (      
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} >
         <View style={{ padding:20 }}>
-          <View style={{}}>
+          <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Wallet</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
               <Text style={{ fontSize: 14 }}>Agent Balance Credit</Text>              
             </View>
-            <View style={{ height: 1, backgroundColor: '#a5a5a5' }}></View>
           </View>
 
-          <View style={{ paddingTop: 20 }}>
+          <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Amount</Text>
             <View style={{ height: 40, justifyContent: 'center' }}>
               <Text style={{}}>RM 150.00</Text>
-            </View>
-            <View style={{ height: 1, backgroundColor: '#a5a5a5' }}></View>
+            </View>            
           </View>
 
-          <View style={{ paddingTop: 20 }}>
+          <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Recipient Account</Text>
             <View style={{ flexDirection: 'row' }}>
               <Image style={{ marginVertical: 15, marginRight: 15, width: 66, height: 66, borderRadius: 33, backgroundColor: '#4cb'}}/>
@@ -63,14 +61,12 @@ export default class WalletTransferSummaryScreen extends Component {
                 <Text style={{ fontSize: 11, opacity: 0.6 }}>MA-064123</Text>
                 <Text style={{ fontSize: 17 }}>Wai Seng</Text>
               </View>
-            </View>           
-            <View style={{ height: 1, backgroundColor: '#a5a5a5' }}></View>
+            </View>
           </View>
 
-          <View style={{ paddingTop: 20 }}>
+          <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Remarks</Text>
             <Text style={{ marginVertical: 10, fontSize: 14 }}>Transfer To Foo</Text>
-            <View style={{ height: 1, backgroundColor: '#a5a5a5' }}></View>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
