@@ -130,8 +130,18 @@ class Core extends PureComponent {
 
   initializationSocialConfig() {
     ShareUtil.enabledDebug()
+    // Weibo
+    ShareUtil.setPlatformConfig(0, '3853690678', '8c509b8ac029138d30e07e74d8a174b7', '')
+    // Wechat Session
     ShareUtil.setPlatformConfig(2, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
+    // Wechat Circle
     ShareUtil.setPlatformConfig(3, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
+    // QQ
+    ShareUtil.setPlatformConfig(4, '1106730946', 'cpXqcASFJs2r6vH3', '')
+    // Facebook
+    ShareUtil.setPlatformConfig(16, '189854555110129', '5242579ad95a1347a9a55be82156e810', '')
+    // Twitter
+    ShareUtil.setPlatformConfig(17, '75sUPCwmmjb7R4VP8F7mIly8B', 'gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX', '')
   }
 
   initializationBackHandler() {

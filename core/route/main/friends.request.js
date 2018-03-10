@@ -66,6 +66,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
                 <TouchableOpacity onPress={async () => {
                   try {
                     const response = await Session.circle.post('v1/requests', { addFriend_id: id })
+                    this.props.dispatch(application.showMessage('对方已收到你的好友请求，请等待对方确认'))
                   } catch (e) {
                     if (e.response && e.response.data && e.response.data.code === 'CIRCLE_REQUEST_EXIST') {
                       this.props.dispatch(application.showMessage('对方已收到你的好友请求，等待确认中')) 
@@ -73,7 +74,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
                       this.props.dispatch(application.showMessage('发生错误，请稍后再试')) 
                     }
                   }
-                }} activeOpacity={.7} style={{ backgroundColor: '#70c040', height: 38, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                }} activeOpacity={.7} style={{ backgroundColor: '#70c040', height: 44, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                   <Text style={{ color: 'white', fontSize: 15, fontWeight: '400' }}>发送好友请求</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity onPress={async () => {

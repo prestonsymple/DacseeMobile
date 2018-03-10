@@ -161,6 +161,7 @@ class HeaderSearchBar extends Component {
 
 class ItemPerson extends Component {
   render() {
+    console.log(this.props.data)
     const { _id, friend_id, friend_info } = this.props.data
     const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
 
