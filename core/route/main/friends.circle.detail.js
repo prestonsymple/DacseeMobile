@@ -11,7 +11,7 @@ const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default class FriendsCircleComponent extends Component {
+export default class FriendsCircleDetailComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -53,23 +53,6 @@ export default class FriendsCircleComponent extends Component {
     return (
       <View style={{ flex: 1 }}>
       </View>
-    )
-  }
-}
-
-class ItemPerson extends Component {
-  render() {
-    const { name, role, image, onPress = () => {} } = this.props.data
-    return (
-      <TouchableOpacity activeOpacity={.7} onPress={onPress} style={{ height: 60, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 15 }}>
-        <View style={{ justifyContent: 'center', width: 60 }}>
-          <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={image} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{name}</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>{role}</Text>
-        </View>
-      </TouchableOpacity>
     )
   }
 }

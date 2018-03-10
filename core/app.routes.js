@@ -15,7 +15,8 @@ import {
   PickerAddressScreen,
   FriendsCircleScreen,
   FriendsCircleAddScreen,
-  FriendsRequestScreen
+  FriendsRequestScreen,
+  FriendsDetailScreen
 } from './route/main'
 
 import { 
@@ -104,6 +105,7 @@ const AppNavigator = DrawerNavigator({
     FriendsCircle: { screen: FriendsCircleScreen },
     FriendsCircleAdd: { screen: FriendsCircleAddScreen },
     FriendsRequest: { screen: FriendsRequestScreen, path: 'invite/:referrer/:id', },
+    FriendsDetail: { screen: FriendsDetailScreen },
     PickerAddress: { screen: PickerAddressScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },

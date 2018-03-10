@@ -101,7 +101,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
               dataSource={dataSource}
               renderSectionHeader={(data, section) => {
                 return (data.length > 0) && (
-                  <View style={{ height: 24, justifyContent: 'flex-end', paddingBottom: 4, paddingLeft: 8, backgroundColor: '#F8F8F8' }}>
+                  <View style={{ paddingTop: 12, paddingBottom: 6, paddingLeft: 6, backgroundColor: '#F8F8F8' }}>
                     <Text style={{ fontSize: 11, color: '#999', fontWeight: '200' }}>{ section === '0' ? '好友请求' : '好友列表' }</Text>
                   </View>
                 )
@@ -161,15 +161,17 @@ class HeaderSearchBar extends Component {
 
 class ItemPerson extends Component {
   render() {
-    const { name, role, image, onPress = () => {} } = this.props.data
+    const { _id, friend_id, friend_info } = this.props.data
+    const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
+
     return (
-      <TouchableOpacity activeOpacity={.7} onPress={onPress} style={{ height: 60, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 15 }}>
+      <TouchableOpacity activeOpacity={.7} onPress={() => {}} style={{ height: 60, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 15 }}>
         <View style={{ justifyContent: 'center', width: 60 }}>
-          <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={image} />
+          <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{name}</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>{role}</Text>
+          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{fullName}</Text>
+          <Text style={{ fontSize: 13, color: '#999' }}>{userId}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -192,10 +194,10 @@ class RequestorPerson extends Component {
           <Text style={{ fontSize: 13, color: '#999' }}>{ userId }</Text>
         </View>
         <View style={{ marginRight: 0, width: 80, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <TouchableOpacity onPress={() => onPressAccept(requestor_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#70c040', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => onPressAccept(_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#70c040', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
             { Icons.Generator.Material('check', 18, '#70c040') }
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onPressReject(requestor_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#e43c39', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => onPressReject(_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#e43c39', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
             { Icons.Generator.Material('close', 18, '#e43c39') }
           </TouchableOpacity>
         </View>
