@@ -110,8 +110,8 @@ export default connect(state => ({
             { shadowOffset: { width: 0, height: 3 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
             { borderColor: '#f2f2f2', borderBottomWidth: .8 }
           ]}>
-            <View style={{ marginTop: Define.system.ios.x ? 44 : 0, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', height: 44 }}>
-              <Text style={{ fontWeight: '600', fontSize: 16, color: '#333' }}>订单详情</Text>
+            <View style={{ marginTop: Define.system.ios.x ? 44 : 20, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', height: 44 }}>
+              <Text style={{ fontWeight: '600', fontSize: 16, color: '#333' }}>行程详情</Text>
             </View>
           </View>
           {/* Main */}

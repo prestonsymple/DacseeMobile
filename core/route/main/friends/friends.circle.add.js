@@ -7,10 +7,10 @@ import {
 import ActionSheet from 'react-native-actionsheet'
 import { connect } from 'react-redux'
 
-import { } from '../../redux/actions'
-import { Icons, Screen } from '../../utils'
-import ShareUtil from '../../native/umeng/ShareUtil'
-import { application } from '../../redux/actions'
+import { } from '../../../redux/actions'
+import { Icons, Screen } from '../../../utils'
+import ShareUtil from '../../../native/umeng/ShareUtil'
+import { application } from '../../../redux/actions'
 
 const { width, height } = Screen.window
 
@@ -29,8 +29,12 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
     super(props)
     this.state = {
       dataSource: dataContrast.cloneWithRows([
-        { describer: '使用电话号码进行搜索', label: '电话号码', icon: Icons.Generator.Awesome('phone', 36, '#666', { style: { left: 5 } }) },
-        { describer: '使用邮箱/用户账号进行搜索', label: '邮箱/用户账号', icon: Icons.Generator.Awesome('envelope', 36, '#666', { style: { left: 2 } }) },
+        { describer: '使用电话号码进行搜索', onPress: () => {
+
+        }, label: '电话号码', icon: Icons.Generator.Awesome('phone', 36, '#666', { style: { left: 5 } }) },
+        { describer: '使用邮箱/用户账号进行搜索', onPress: () => {
+          
+        }, label: '邮箱/用户账号', icon: Icons.Generator.Awesome('envelope', 36, '#666', { style: { left: 2 } }) },
         { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#666', { style: { left: 0 } }) },
         { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#666', { style: { left: 1.5 } }) },
         // { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }

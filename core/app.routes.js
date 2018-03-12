@@ -16,7 +16,8 @@ import {
   FriendsCircleScreen,
   FriendsCircleAddScreen,
   FriendsRequestScreen,
-  FriendsDetailScreen
+  FriendsDetailScreen,
+  FriendsSearchScreen
 } from './route/main'
 
 import {
@@ -58,7 +59,8 @@ import UpgradeDriverScreen from './route/upgrade.driver'
 
 import {
   LoginScreen,
-  PickerCountryScreen
+  PickerCountryScreen,
+  LoginSelectAccountScreen
 } from './route/login'
 /*****************************************************************************************************/
 
@@ -108,7 +110,8 @@ const AppNavigator = DrawerNavigator({
     BookingOptions: { screen: BookingOptionsScreen },
     FriendsCircle: { screen: FriendsCircleScreen },
     FriendsCircleAdd: { screen: FriendsCircleAddScreen },
-    FriendsRequest: { screen: FriendsRequestScreen, path: 'invite/:referrer/:id', },
+    FriendsSearchBase: { screen: FriendsSearchScreen },
+    FriendsRequest: { screen: FriendsRequestScreen },
     FriendsDetail: { screen: FriendsDetailScreen },
     PickerAddress: { screen: PickerAddressScreen },
 
@@ -149,8 +152,9 @@ const AppNavigator = DrawerNavigator({
 const AuthNavigator = StackNavigator({
   Login: { screen: LoginScreen },
   SettingWetView: { screen: SettingWetViewScreen },
-  PickerCountry: { screen: PickerCountryScreen }
-})
+  PickerCountry: { screen: PickerCountryScreen },
+  LoginSelectAccount: { screen: LoginSelectAccountScreen }
+}, defaultStackOptions)
 
 export default SwitchNavigator(
   {

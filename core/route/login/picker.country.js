@@ -97,7 +97,8 @@ export default class PickerCountryComponent extends Component {
       ),
       ios: (
         <View style={{ flex: 1 }}>
-          <View style={{ height: 64, backgroundColor: '#f2f2f2', borderBottomWidth: .8, borderColor: '#ccc', justifyContent: 'flex-end' }}>
+          <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
+          <View style={{ height: Define.system.ios.x ? 88 : 64, backgroundColor: '#f2f2f2', borderBottomWidth: .8, borderColor: '#ccc', justifyContent: 'flex-end' }}>
             <View style={{ height: 44, flexDirection: 'row' }}>
               <TouchableOpacity 
                 activeOpacity={0.7} 

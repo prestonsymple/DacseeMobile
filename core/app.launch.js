@@ -5,6 +5,8 @@ import { View, StatusBar, Platform, Linking } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import SplashScreen from 'rn-splash-screen'
+import { addNavigationHelpers, NavigationActions } from 'react-navigation'
+import { createReduxBoundAddListener } from 'react-navigation-redux-helpers'
 
 import SwitchNavigation from './app.routes'
 import { System } from './utils'
@@ -15,12 +17,14 @@ import ModalBookingOrderDetail from './modal/modal.booking.order.detail'
 import ModalBookingAcceptJobs from './modal/modal.booking.accept.jobs'
 import { application } from './redux/actions'
 
+const addListener = createReduxBoundAddListener('AuthLoading');
 
 export default connect(state => {
   return {
     application: state.application,
     config: state.config,
-    account: state.account
+    account: state.account,
+    nav: state.nav
   }
 })(class AppLaunch extends Component {
 
@@ -58,8 +62,22 @@ export default connect(state => {
   handleOpenURL(url) {
     const _url = System.Platform.Android ? url.replace('dacsee://dacsee/', '') : url.replace('dacsee://', '')
     const _args = _url.split('/')
-    if (_args && _args.length > 0 && _args[0] === 'invite') {
-      if (!this.props.account.status) this.props.dispatch(application.setReferrerValue(_args[2])) 
+
+    if (!_args || _args.length === 0) return undefined;
+    switch (_args[0]) {
+    case 'invite': 
+      this.handleInvite(_args[1], _args[2])
+      break;
+    default:
+      break;
+    }
+  }
+
+  handleInvite(userId, id) {
+    if (!this.props.account.status) {
+      this.props.dispatch(application.setReferrerValue(userId)) 
+    } else {
+      this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsRequest', params: { referrer: userId, id } }))
     }
   }
 
@@ -70,7 +88,14 @@ export default connect(state => {
     // {/* TODO: 接到推送订单时，禁用自动升级 */}
     return (
       <View style={{ flex: 1 }}>
-        <SwitchNavigation uriPrefix={prefix} />
+        <SwitchNavigation 
+          // uriPrefix={prefix}
+          navigation={addNavigationHelpers({
+            dispatch: this.props.dispatch,
+            state: this.props.nav,
+            addListener,
+          })}
+        />
         <ModalBookingOrderDetail />
         <ModalBookingAcceptJobs />
         <ModalProgress />

@@ -19,5 +19,5 @@ export default handleActions({
   [jobs.setJobs]: (state, { payload }) => Object.assign({}, state, payload),
 
   [jobs.acceptJobs]: (state) => Object.assign({}, state, { working: true }),
-  [jobs.cancelJobs]: (state) => Object.assign({}, state, { working: false })
+  [jobs.cancelJobs]: (state) => Object.assign({}, state, { working: false, detail: {}, route: {} })
 }, initialState)

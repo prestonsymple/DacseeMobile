@@ -108,12 +108,11 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
     }
 
     private Bundle createBundleFromMessage(String message) {
-        JSONObject jsonObject;
         Bundle extras = null;
         try {
-            JSONObject baseJson= new JSONObject(message);
+            JSONObject baseJson = new JSONObject(message);
             JSONObject dataJson = baseJson.optJSONObject(BaiduPushConstants.DATA);
-            JSONObject customJson= baseJson.optJSONObject("custom_data");
+            JSONObject customJson= baseJson.optJSONObject("cd");
             extras = new Bundle();
             extras.putString(BaiduPushConstants.TITLE, dataJson.optString(BaiduPushConstants.TITLE));
             extras.putString(BaiduPushConstants.MESSAGE, dataJson.optString(BaiduPushConstants.DESCRIPTION));

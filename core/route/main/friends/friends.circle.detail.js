@@ -5,10 +5,11 @@ import {
 import { connect } from 'react-redux'
 
 import InteractionManager from 'InteractionManager'
-import { application } from '../../redux/actions'
 import ActionSheet from 'react-native-actionsheet'
-import { Icons, Screen } from '../../utils'
 import { join } from 'redux-saga/effects';
+
+import { application } from '../../../redux/actions'
+import { Icons, Screen } from '../../../utils'
 
 const { width, height } = Screen.window
 

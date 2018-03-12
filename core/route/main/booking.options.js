@@ -14,7 +14,7 @@ import moment from 'moment'
 
 import Resources from '../../resources'
 
-import HeaderSection from './com.header.section'
+import HeaderSection from './booking.header.section'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Define, System } from '../../utils'

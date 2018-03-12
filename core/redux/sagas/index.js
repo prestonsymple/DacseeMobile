@@ -84,10 +84,10 @@ export default function* sagaService() {
   yield all([
     // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
     // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
-    fork(bookingSaga),
     fork(watchAndroidBackButton),
     fork(watchShowMessage),
 
+    fork(bookingSaga),
     fork(loginSaga),
     fork(jobsSaga)
   ])

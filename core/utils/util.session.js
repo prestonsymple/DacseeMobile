@@ -24,11 +24,19 @@ const sessionBuilder = (baseUrl) => {
   // DEBUG && API请求响应中间件 - 记录组件
   instance.interceptors.response.use((response) => {
     const { config } = response
-    const { url, method } = config
+    const { url, method, baseURL } = config
+
+    if (baseURL === 'http://location-dev.dacsee.io/api/') return response
     console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
     return response
   }, (err) => {
-    console.log(err)
+    if ('config' in err) {
+      const { url, method, baseURL } = err.config
+      const { data, status } = err.response
+      console.log(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
+    } else {
+      console.log(err)
+    }
     return Promise.reject(err)
   })
 

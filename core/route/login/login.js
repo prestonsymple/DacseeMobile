@@ -38,7 +38,8 @@ export default connect(state => ({
       v1: '', v2: '', v3: '', v4: '',
       referralUserId: '',
       fullName: '',
-      countryCode: '+86'
+      countryCode: '+86',
+      selectAccount: []
     }
     this.codeInput = {}
     this.animated = {}
@@ -51,7 +52,6 @@ export default connect(state => ({
   componentWillUnmount() { }
 
   componentWillReceiveProps(props) {
-
     if (this.props.account.status !== props.account.status) {
       this.props.navigation.navigate(props.account.status && 'App')
     }
@@ -193,7 +193,7 @@ export default connect(state => ({
               { fontSize: 35, lineHeight: 40, fontWeight: '400', color: 'white' },
               { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [35, -200, -200], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, .6, 2], outputRange: [1, 0, 0], extrapolate: 'clamp' }) }
-            ]}>Welcome to</Animated.Text>
+            ]}>欢迎使用</Animated.Text>
             <Animated.Text style={[
               { fontSize: 35, top: 205, lineHeight: 40, fontWeight: '400', color: 'white', position: 'absolute' },
               { left: stage.interpolate({ inputRange: [0, .5, .9, 1.4, 2], outputRange: [35, 35, -150, width, (width / 2) - 62], extrapolate: 'clamp' }) },
@@ -228,7 +228,7 @@ export default connect(state => ({
                   {...Define.TextInputArgs}
                   clearTextOnFocus={false}
                   placeholderTextColor={'#eee'}
-                  placeholder={'Phone Number / Email'}
+                  placeholder={'电话号码 / 邮箱'}
                   returnKeyType={'done'}
                   onChangeText={text => {
                     this.setState({ value: text })
@@ -291,7 +291,7 @@ export default connect(state => ({
                     { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' },
                     { opacity: stage.interpolate({ inputRange: [0, 1.4, 1.8, 2], outputRange: [1, 1, 0, 0], extrapolate: 'clamp' }) },
                     { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
-                  ]}>LOGIN</Animated.Text>
+                  ]}>登录</Animated.Text>
                   <Animated.View style={[
                     { flex: 1, alignItems: 'center' },
                     { opacity: stage.interpolate({ inputRange: [0, 1.5, 1.9, 2, 2.4], outputRange: [0, 0, 1, 1, 0], extrapolate: 'clamp' }) },
@@ -316,7 +316,7 @@ export default connect(state => ({
               { left: stage.interpolate({ inputRange: [0, 1.2, 2], outputRange: [-width, 0, 0], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, 0.8, 2], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
             ]}>
-              <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>Or connect using a social account</Text>
+              <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>使用社交账号进行登录</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 150, marginTop: 25 }}>
                 <Button onPress={() => {
                   ShareUtile.auth(0,(code,result,message) =>{

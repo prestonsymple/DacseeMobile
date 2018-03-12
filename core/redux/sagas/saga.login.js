@@ -7,6 +7,7 @@ import Toast from 'react-native-root-toast'
 import { application, account } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { Session as session, System } from '../../utils'
+import PushService from '../../native/push-service'
 
 const STAGE_DEFINE = {
   INIT: 0,
@@ -50,25 +51,39 @@ function* loginFlow() {
             put(application.showProgress())
           ])
           
-          const { id, code, isMail, phoneCountryCode } = value
+          const { id, code, isMail, phoneCountryCode, _id = '' } = value
           const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
           const base = isMail ? 
             { email: id, emailVerificationCode: code, } : 
-            { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id1: '' }
+            { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id: _id }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
+          if (!body._id) {
+            delete body._id
+          }
           const { data }  = yield call(session.user.post, path, body)
           
           yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
-          console.log(e)
           if (e.response && e.response.data.code == 'INVALID_VERIFICATION_CODE') {
             yield all([
               put(account.loginPutValue(2)),
               put(application.hideProgress()), 
               put(application.showMessage(e.response.data.message)),
             ])
+          } else if (e.response && e.response.data.code === 'MULTIPLE_USER_ACCOUNT') {
+            const { id, code, isMail, phoneCountryCode } = value
+            const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
+            const base = isMail ? 
+              { email: id, emailVerificationCode: code, } : 
+              { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id1: id }
+            const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
+
+            yield delay(1000)
+            yield put(application.hideProgress())
+            yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value } }))
+            yield put(account.loginPutValue(2))
           } else if (e.response && e.response.data.code == 'INVALID_USER') { // 跳转注册
             yield all([
               put(account.loginPutValue(4)),
@@ -173,8 +188,6 @@ function* registerDevice() {
         'uuid' : System.UUID,
         'user_id': user_id
       }, extendFields)
-
-      console.log(System.UUID)
     
       yield call(session.push.post, 'v1/register', postData) 
     } catch (e) {
@@ -188,7 +201,7 @@ function* loginSuccess(data: object) {
   yield delay(2000)
   yield put(application.hideProgress())
   yield put(account.loginSuccess())
-  yield put(application.setPushServiceToken())
+  yield put(application.updatePushToken())
 }
 
 export default function* watch() {

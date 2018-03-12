@@ -14,7 +14,7 @@ import InteractionManager from 'InteractionManager'
 
 import Store from './app.store'
 import Launch from './app.launch'
-import { network, application, jobs } from './redux/actions'
+import { network, application, jobs, booking } from './redux/actions'
 import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
@@ -107,13 +107,28 @@ class Core extends PureComponent {
           data
         } = notification
 
-        const { custom_data } = data
+        console.log('[RECEVIED][MESSAGE]', notification)
+
+        const { custom_data = {} } = data
 
         if ('booking_id' in custom_data) {
-          const { booking_id } = custom_data
-          console.log(`[BOOKING][MESSAGE][${booking_id}]`)
+          const { booking_id, status } = custom_data
           if (!foreground) await new Promise(resolve => setTimeout(() => resolve(), 1000))
-          store.dispatch(jobs.newJobs(booking_id))
+
+          if (status === 'Pending_Acceptance') { // 等待接受的订单
+            store.dispatch(jobs.newJobs(booking_id))
+          } else if (status === 'CANCELLED_BY_PASSENGER') { // 由乘客取消
+            store.dispatch(jobs.cancelJobs())
+            store.dispatch(application.showMessage('订单已由乘客取消'))
+          } else if (status === 'CANCELLED_BY_DRIVER') {// 司机取消
+            store.dispatch(booking.journeyUserDriverRespondFail())
+          } else if (status === 'On_The_Way') { // 司机接单-已在路上
+            store.dispatch(booking.journeyUserDriverRespondSuccess())
+          } else if (status === 'No_Taker') { // 没有司机
+            store.dispatch(booking.journeyUserDriverRespondFail())
+            store.dispatch(application.showMessage('还没有司机接单哦，请稍后试试'))
+          } else if (status === 'COMPLETED') {// 司机取消
+          }
         }
         // process the notification
         

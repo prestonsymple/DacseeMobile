@@ -50,6 +50,7 @@ export default connect(state => ({
     this.timer = setInterval(() => {
       const { latitude, longitude } = this.state.current
       const { from } = this.props.jobs.detail
+      if (!this.map) return undefined
       this.map.animateTo({ zoomLevel: 17, coordinate: { latitude, longitude } }, 500)
       this.map.calculateDriveRouteWithStartPoints({ latitude, longitude }, {
         latitude: from.coords.lat,
@@ -81,7 +82,7 @@ export default connect(state => ({
 
     try {
       const reqUser_id = this.props.account.user.userId
-      await Session.location.put('v1', { latitude, longitude, reqUser_id })
+      await Session.location.put('v1', { latitude, longitude, reqUser_id, logged: false })
     } catch (e) {
       console.log(e)
     }
@@ -133,7 +134,7 @@ export default connect(state => ({
             { shadowOffset: { width: 0, height: 3 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
             { borderColor: '#f2f2f2', borderBottomWidth: .8 }
           ]}>
-            <View style={{ marginTop: Define.system.ios.x ? 44 : 0, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', height: 44 }}>
+            <View style={{ marginTop: Define.system.ios.x ? 44 : 20, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', height: 44 }}>
               <View style={{ flex: 1 }}>
 
               </View>

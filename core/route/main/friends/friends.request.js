@@ -6,8 +6,8 @@ import {
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 
-import { application } from '../../redux/actions'
-import { Icons, Screen, Session } from '../../utils'
+import { application } from '../../../redux/actions'
+import { Icons, Screen, Session } from '../../../utils'
 
 const { width, height } = Screen.window
 
@@ -29,7 +29,6 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     const { referrer, id } = this.state
-    await new Promise(resolve => setTimeout(() => resolve(), 800))
     const { data } = await Session.user.get(`v1/search?country=CN&userId=${referrer}`)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage('该邀请已失效'))
     console.log(data[0])

@@ -1,11 +1,15 @@
 
-// import { AsyncStorage } from 'react-native'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { applyMiddleware, createStore } from 'redux'
-// import { AsyncStorage } from 'react-native'
 import createSagaMiddleware from 'redux-saga'
+import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers'
 // import logger from 'redux-logger'
+
+const navigationMiddleware = createReactNavigationReduxMiddleware(
+  'AuthLoading',
+  state => state.nav,
+);
 
 const persistConfig = {
   key: 'v0.0.1',
@@ -24,6 +28,7 @@ export default () => {
   /* redux store create */
   const middleware = applyMiddleware(...[
     sagaMiddleware,
+    navigationMiddleware
     // logger
   ])
   const persistedReducer = persistReducer(persistConfig, reducers)

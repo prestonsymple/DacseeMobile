@@ -7,8 +7,8 @@ import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { application, booking } from '../../redux/actions'
-import { Icons, Screen, Define, Session } from '../../utils'
+import { application, booking } from '../../../redux/actions'
+import { Icons, Screen, Define, Session } from '../../../utils'
 
 const { width, height } = Screen.window
 

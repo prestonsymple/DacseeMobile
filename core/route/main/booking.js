@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 import Resources from '../../resources'
 import BaseScreenComponent from '../_base'
 
-import HeaderSection from './com.header.section'
+import HeaderSection from './booking.header.section'
 
 import { MapView, Search } from '../../native/AMap'
 import { Screen, Icons, Define } from '../../utils'

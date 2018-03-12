@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dacsee"
-          android:versionCode="18031001"
+          android:versionCode="18031201"
           android:versionName="0.25.0">
 
   <uses-sdk

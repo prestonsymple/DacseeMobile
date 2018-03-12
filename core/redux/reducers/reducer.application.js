@@ -44,7 +44,9 @@ export default handleActions({
   [application.setReferrerValue]: (state, { payload }) => Object.assign({}, state, { referrerValue: payload }),
 
   [jobs.showJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: true }),
-  [jobs.hideJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: false })
+  [jobs.hideJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: false }),
+
+  [jobs.cancelJobs]: (state) => Object.assign({}, state, { show_driver_order: false })
   // [application.throwErrorMessage]: (state, { payload }) => {
   //   const clone = state.throw_error
   //   clone.push(payload)

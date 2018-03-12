@@ -22,10 +22,12 @@ export default handleActions({
   [booking.journeyUserCancel]: (state, { payload }) => Object.assign({}, state, { schedule: 0 }),
   [booking.journeyUserComplate]: (state, { payload }) => Object.assign({}, state, { schedule: 0 }),
 
-  [booking.journeyUserStart]: (state, { payload }) => Object.assign({}, state, { schedule: 1 }),
+  [booking.journeyUserStart]: (state) => Object.assign({}, state, { schedule: 1 }),
 
-  [booking.journeyUserWaitDriverRespond]: (state, { payload }) => Object.assign({}, state, { schedule: 2 }),
-  [booking.journeyUserDriverRespondSuccess]: (state, { payload }) => Object.assign({}, state, { schedule: 3 }),
+  [booking.journeyUserWaitDriverRespond]: (state) => Object.assign({}, state, { schedule: 2 }),
+  [booking.journeyUserDriverRespondSuccess]: (state) => Object.assign({}, state, { schedule: 3 }),
+
+  [booking.journeyDriverHaveReached]: (state) => Object.assign({}, state, { schedule: 4 }),
   
   [booking.journeyUpdateData]: (state, { payload }) => Object.assign({}, state, payload)
 }, initialState)

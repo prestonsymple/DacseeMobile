@@ -213,11 +213,15 @@ Notifications._onNotification = function(data, isFromBackground = null) {
 
   if ( this.onNotification !== false ) {
     if ( Platform.OS === 'ios' ) {
+      let _data = data.getData()
+      _data.custom_data = Object.assign({}, _data.cd)
+      delete _data.cd
+
       this.onNotification({
         foreground: ! isFromBackground,
         userInteraction: isFromBackground,
         message: data.getMessage(),
-        data: data.getData(),
+        data: _data,
         badge: data.getBadgeCount(),
         alert: data.getAlert(),
         sound: data.getSound(),
