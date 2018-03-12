@@ -1,4 +1,4 @@
-import { createActions } from 'redux-actions'
+import { createActions, createAction } from 'redux-actions'
 
 // BOOKING ACTIONS
 const JOURNEY_ACTIONS = createActions({},
@@ -18,7 +18,7 @@ const JOURNEY_ACTIONS = createActions({},
   'JOURNEY_DRIVER_HAVE_REACHED', // 行程已到达终点 [-> 显示付款信息]
   'JOURNEY_WAITING_PAYMENT', // 等待付款消息
 
-  'JOURNEY_WAITING_FEEDBACK' // 等待用户评论
+  'JOURNEY_WAITING_FEEDBACK', // 等待用户评论
 )
 
 export default {
@@ -32,5 +32,10 @@ export default {
   journeyUserStart: JOURNEY_ACTIONS.journeyUserStart,
   journeyUserWaitDriverRespond: JOURNEY_ACTIONS.journeyUserWaitDriverRespond,
   journeyWaitingFeedback: JOURNEY_ACTIONS.journeyWaitingFeedback,
-  journeyWaitingPayment: JOURNEY_ACTIONS.journeyWaitingPayment
+  journeyWaitingPayment: JOURNEY_ACTIONS.journeyWaitingPayment,
+
+  passengerEventDriverArrived: createAction('PASSENGER_EVENT_DRIVER_ARRIVED'), // 乘客端_司机已到达
+  passengerEventDriverOnBoard: createAction('PASSENGER_EVENT_DRIVER_ON_BOARD'), // 乘客端_已搭载乘客
+  passengerEventDriverNoShow: createAction('PASSENGER_EVENT_DRIVER_NO_SHOW'), // 乘客端_无法联系乘客
+  passengerEventDriverComplete: createAction('PASSENGER_EVENT_DRIVER_COMPLETE'), // 乘客端_已完成
 }

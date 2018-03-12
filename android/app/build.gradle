@@ -109,8 +109,8 @@ android {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18031201
-        versionName "0.25.0"
+        versionCode 18031301
+        versionName "0.26.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"

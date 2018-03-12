@@ -11,12 +11,13 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { System, Icons, Screen } from '../utils'
-import { Button } from '../components'
+import { System, Icons, Screen, Session } from '../utils'
+import { Button } from '../components' 
+import { booking, application } from '../redux/actions'
 /*****************************************************************************************************/
 
 
-export default class DriverRespondView extends Component {
+export default connect(state => ({ booking_id: state.booking.booking_id }))(class DriverRespondView extends Component {
   render() {
     const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field } = this.props
     return (
@@ -33,7 +34,7 @@ export default class DriverRespondView extends Component {
             ]}>
               <Progress.Circle 
                 size={124}
-                color={'#999999EE'} 
+                color={'#ccccccEE'} 
                 indeterminate={true} 
                 // borderRadius={4}
                 // animationType={'decay'}
@@ -41,12 +42,22 @@ export default class DriverRespondView extends Component {
                 style={[ ]} />
             </View>
             <View style={{ height: 120, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-              <Image style={{ width: 120, height: 120, borderRadius: 60 }} source={require('../resources/images/test.jpg')} />
+              {
+                Icons.Generator.Material('settings-input-antenna', 88, '#eee')
+              }
+              {/* <Image style={{ width: 120, height: 120, borderRadius: 60 }} source={require('../resources/images/test.jpg')} /> */}
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
               <Text style={{ color: '#777', fontSize: 16, fontWeight: '200' }}>行程确认中，请稍等</Text>
             </View>
-            <Button style={{ backgroundColor: '#e54224', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
+            <Button onPress={async () => {
+              try {
+                await Session.booking.put(`v1/${this.props.booking.booking_id}`)
+                this.props.dispatch(booking.journeyUserCancel())
+              } catch(e) {
+                this.props.dispatch(application.showMessage('无法连接到服务器'))
+              }
+            }} style={{ backgroundColor: '#e54224', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
               <Text style={{ fontSize: 16, color: 'white' }}>取消</Text>
             </Button>
           </View>
@@ -54,4 +65,4 @@ export default class DriverRespondView extends Component {
       </Modal>
     )
   }
-}
+})

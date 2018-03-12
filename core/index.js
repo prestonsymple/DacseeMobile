@@ -114,20 +114,34 @@ class Core extends PureComponent {
         if ('booking_id' in custom_data) {
           const { booking_id, status } = custom_data
           if (!foreground) await new Promise(resolve => setTimeout(() => resolve(), 1000))
+          const _status = status.toUpperCase()
 
-          if (status === 'Pending_Acceptance') { // 等待接受的订单
+          /* DRIVER */
+          if (_status === 'PENDING_ACCEPTANCE') { // 等待接受的订单
             store.dispatch(jobs.newJobs(booking_id))
-          } else if (status === 'CANCELLED_BY_PASSENGER') { // 由乘客取消
+          } else if (_status === 'CANCELLED_BY_PASSENGER') { // 由乘客取消
             store.dispatch(jobs.cancelJobs())
             store.dispatch(application.showMessage('订单已由乘客取消'))
-          } else if (status === 'CANCELLED_BY_DRIVER') {// 司机取消
-            store.dispatch(booking.journeyUserDriverRespondFail())
-          } else if (status === 'On_The_Way') { // 司机接单-已在路上
-            store.dispatch(booking.journeyUserDriverRespondSuccess())
-          } else if (status === 'No_Taker') { // 没有司机
-            store.dispatch(booking.journeyUserDriverRespondFail())
-            store.dispatch(application.showMessage('还没有司机接单哦，请稍后试试'))
-          } else if (status === 'COMPLETED') {// 司机取消
+          } else if (_status === 'COMPLETED') { // 完成订单
+          }
+
+          /* PASSENGER */
+          if (_status === 'CANCELLED_BY_DRIVER') { // 司机取消
+            store.dispatch(booking.journeyUserDriverRespondFail(booking_id))
+            store.dispatch(application.showMessage('您的行程已被拒绝'))
+          } else if (_status === 'ON_THE_WAY') { // 司机接单-已在路上
+            store.dispatch(booking.journeyUserDriverRespondSuccess(booking_id))
+          } else if (_status === 'ARRIVED') { // 已到达
+            store.dispatch(booking.passengerEventDriverArrived(booking_id))
+          } else if (_status === 'NO_SHOW') { // 未找到乘客
+            store.dispatch(booking.passengerEventDriverNoShow(booking_id))
+          } else if (_status === 'ON_BOARD') { // 行驶中
+            store.dispatch(booking.passengerEventDriverOnBoard(booking_id))
+          } else if (_status === 'NO_TAKER') { // 没有司机
+            store.dispatch(booking.journeyUserDriverRespondFail(booking_id))
+            store.dispatch(application.showMessage('订单超时，请稍后再试'))
+          } else if (_status === 'COMPLETED') { // 完成订单
+            store.dispatch(booking.passengerEventDriverComplete(booking_id))
           }
         }
         // process the notification

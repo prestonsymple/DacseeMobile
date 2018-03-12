@@ -15,11 +15,13 @@ const initialState = {
   payment: '现金支付',
   book: false,
   time: 'now',
-  selected_friends: []
+  selected_friends: [],
+  booking_id: '',
+  status: ''
 }
 
 export default handleActions({
-  [booking.journeyUserCancel]: (state, { payload }) => Object.assign({}, state, { schedule: 0 }),
+  [booking.journeyUserCancel]: (state, { payload }) => Object.assign({}, state, { schedule: 0, booking_id: '' }),
   [booking.journeyUserComplate]: (state, { payload }) => Object.assign({}, state, { schedule: 0 }),
 
   [booking.journeyUserStart]: (state) => Object.assign({}, state, { schedule: 1 }),
@@ -28,6 +30,9 @@ export default handleActions({
   [booking.journeyUserDriverRespondSuccess]: (state) => Object.assign({}, state, { schedule: 3 }),
 
   [booking.journeyDriverHaveReached]: (state) => Object.assign({}, state, { schedule: 4 }),
+
+  [booking.passengerEventDriverArrived]: (state) => Object.assign({}, state, { status: 'ARRIVED' }),
+  [booking.passengerEventDriverOnBoard]: (state) => Object.assign({}, state, { status: 'ON_BOARD' }),
   
   [booking.journeyUpdateData]: (state, { payload }) => Object.assign({}, state, payload)
 }, initialState)

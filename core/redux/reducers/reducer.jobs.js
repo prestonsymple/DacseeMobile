@@ -10,7 +10,8 @@ const initialState = {
   booking_id: '',
   detail: {},
   route: {},
-  working: false
+  working: false,
+  status: ''
 }
 
 export default handleActions({
@@ -19,5 +20,5 @@ export default handleActions({
   [jobs.setJobs]: (state, { payload }) => Object.assign({}, state, payload),
 
   [jobs.acceptJobs]: (state) => Object.assign({}, state, { working: true }),
-  [jobs.cancelJobs]: (state) => Object.assign({}, state, { working: false, detail: {}, route: {} })
+  [jobs.cancelJobs]: (state) => Object.assign({}, state, { status: '', working: false, detail: {}, route: {} })
 }, initialState)

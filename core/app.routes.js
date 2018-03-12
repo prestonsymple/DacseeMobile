@@ -12,6 +12,8 @@ import AppAuthLoadingScreen from './app.auth.loading'
 import { 
   BookingScreen,
   BookingOptionsScreen,
+  BookingDriverDetailScreen,
+  BookingCompleteScreen,
   PickerAddressScreen,
   FriendsCircleScreen,
   FriendsCircleAddScreen,
@@ -108,6 +110,9 @@ const AppNavigator = DrawerNavigator({
   Drawer: { screen: StackNavigator({ 
     Main: { screen: BookingScreen },
     BookingOptions: { screen: BookingOptionsScreen },
+    BookingDriverDetail: { screen: BookingDriverDetailScreen },
+    BookingComplete: { screen: BookingCompleteScreen },
+
     FriendsCircle: { screen: FriendsCircleScreen },
     FriendsCircleAdd: { screen: FriendsCircleAddScreen },
     FriendsSearchBase: { screen: FriendsSearchScreen },
@@ -123,7 +128,6 @@ const AppNavigator = DrawerNavigator({
     WalletTransaction: { screen: WalletTransactionListScreen },
     WalletDetail: { screen: WalletDetailScreen },
     WalletTransfer: { screen: WalletTransferScreen },
-    WalletPickerCountry: { screen: PickerCountryScreen },
     WalletTransferSelection: { screen: WalletTransferSelectionScreen },
     WalletTransferSummary: { screen: WalletTransferSummaryScreen },
 
@@ -141,6 +145,7 @@ const AppNavigator = DrawerNavigator({
     UpgradeDriver: { screen: UpgradeDriverScreen },
 
     FormEditor: { screen: FormEditorScreen },
+    PublicPickerCountry: { screen: PickerCountryScreen }
   }, defaultStackOptions)}
 }, defaultDrawerOptions)
 

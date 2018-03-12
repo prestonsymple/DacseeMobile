@@ -52,10 +52,28 @@ function* newBooking() {
     }
 
     try {
-      const response = yield call(Session.booking.post, 'v1', body) 
+      const { data: { _id } } = yield call(Session.booking.post, 'v1', body) 
+      yield put(booking.journeyUpdateData({ booking_id: _id }))
     } catch (e) {
       yield put(booking.journeyUserCancel())
+      yield put(application.showMessage('无法连接到服务器，请检查您的网络'))
     }
+  }
+}
+
+function* bookingOnTheWay() {
+  while(true) {
+    const { payload } = yield take(booking.journeyUserDriverRespondSuccess().type)
+    yield put(NavigationActions.navigate({ routeName: 'BookingDriverDetail', params: { booking_id: payload } }))
+  }
+}
+
+function* bookingOnComplete() {
+  while (true) {
+    const { payload } = yield take(booking.passengerEventDriverComplete().type)
+    yield put(NavigationActions.navigate({ routeName: 'BookingComplete', params: { booking_id: payload } }))
+    // const { nav } = yield select(state => ({ nav: state.nav }))
+    // console.log(nav)
   }
 }
 
@@ -69,6 +87,8 @@ function* cancelBooking() {
 export default function* watch() {
   yield all([
     fork(newBooking),
-    fork(cancelBooking)
+    fork(cancelBooking),
+    fork(bookingOnTheWay),
+    fork(bookingOnComplete)
   ])
 }

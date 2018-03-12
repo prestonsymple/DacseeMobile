@@ -26,7 +26,7 @@ const sessionBuilder = (baseUrl) => {
     const { config } = response
     const { url, method, baseURL } = config
 
-    if (baseURL === 'http://location-dev.dacsee.io/api/') return response
+    if (baseURL === 'http://location-dev.dacsee.io/api/' && method.toUpperCase() === 'PUT') return response
     console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
     return response
   }, (err) => {

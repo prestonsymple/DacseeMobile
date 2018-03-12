@@ -71,7 +71,6 @@ export default connect(state => ({
   }
 
   onLocationListener({ nativeEvent }) {
-    console.log('[NATIVE][ON.LOCATION.LISTENER]')
     const { latitude, longitude } = nativeEvent
     if (latitude === 0 || longitude === 0) return
     if (!this.state.ready) {
@@ -132,23 +131,23 @@ export default connect(state => ({
             </MapView>
           </View>
           <View style={[
-            { height: Define.system.ios.x ? 330 + 24 : 260 },
+            { height: Define.system.ios.x ? 380 + 24 : 380 },
             { shadowOffset: { width: 0, height: 3 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 }
           ]}>
             <ScrollView contentContainerStyle={{ paddingVertical: 26, paddingHorizontal: 22 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>乘客位置</Text>
+              <View style={{ marginBottom: 12 }}>
+                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 6 }}>乘客位置</Text>
                 { from && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ from.address }</Text>) }
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>目的地</Text>
+              <View style={{ }}>
+                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 6 }}>目的地</Text>
                 { destination && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ destination.address } {destination.name}</Text>) }
               </View>
+              <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>行程费用</Text>
+                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 12 }}>行程费用</Text>
                 { from && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>￥{ parseInt(fare).toFixed(2) }</Text>) }
               </View>
-              <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
                 <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>预约车辆</Text>
                 { type && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ type === 'now' ? '否' : '是' }</Text>) }

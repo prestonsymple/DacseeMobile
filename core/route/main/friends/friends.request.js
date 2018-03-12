@@ -16,7 +16,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      title: '确认邀请'
+      title: '发送好友请求'
     }
   }
 
