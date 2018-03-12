@@ -23,7 +23,9 @@ import {
 } from './route/main'
 
 import {
-  JobsListenerScreen
+  JobsListenerScreen,
+  JobsListScreen,
+  JobsListDetailScreen
 } from './route/jobs'
 
 import { 
@@ -121,12 +123,15 @@ const AppNavigator = DrawerNavigator({
     PickerAddress: { screen: PickerAddressScreen },
 
     JobsListener: { screen: JobsListenerScreen },
+    JobsList: { screen: JobsListScreen },
+    JobsListDetail: { screen: JobsListDetailScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },
     WalletWithdraw: { screen: WalletWithdrawScreen },
     WalletBalanceList: { screen: WalletBalanceListScreen },
     WalletTransaction: { screen: WalletTransactionListScreen },
     WalletDetail: { screen: WalletDetailScreen },
+
     WalletTransfer: { screen: WalletTransferScreen },
     WalletTransferSelection: { screen: WalletTransferSelectionScreen },
     WalletTransferSummary: { screen: WalletTransferSummaryScreen },
@@ -145,7 +150,8 @@ const AppNavigator = DrawerNavigator({
     UpgradeDriver: { screen: UpgradeDriverScreen },
 
     FormEditor: { screen: FormEditorScreen },
-    PublicPickerCountry: { screen: PickerCountryScreen }
+
+    PublicPickerCountry: { screen: PickerCountryScreen },
   }, defaultStackOptions)}
 }, defaultDrawerOptions)
 

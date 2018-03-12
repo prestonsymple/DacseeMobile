@@ -82,7 +82,7 @@ class ScrollTabView extends Component {
     return (
       <View style={{ width: width, height: 50, flexDirection: 'row', backgroundColor: 'white'}} >
         {
-          ['OverView', 'Trasaction', 'Floating Comm'].map((item, index) => {          
+          ['概览', '转账记录', '浮动'].map((item, index) => {          
             return (
               <Button key={ index } 
                 style={ [{ flex: 1, justifyContent: 'center', alignItems:'center' }, index == this.state.currentPage ? { borderBottomWidth: 3, borderColor: '#FFB639' } : {}]}
@@ -142,7 +142,7 @@ class OverView extends Component {
     return (      
       <View key={obj.name} style={{ marginHorizontal: 20, height: 44, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
         <Text style={{ fontSize: 13, color: '#a5a5a5', }}>{obj.name}</Text>
-        <Text style={{ fontSize: 18 }}>RM {obj.value.toFixed(2)}</Text>
+        <Text style={{ fontSize: 18 }}>{obj.value.toFixed(2)}</Text>
       </View>      
     )
   }
@@ -152,11 +152,11 @@ class OverView extends Component {
     return (
       <View style={{ flex: 1, width: width, marginTop: 20 }}>
         {
-          this._renderItem({name: 'Available Balance', value: availableAmount})          
+          this._renderItem({name: '可用余额', value: availableAmount})          
         }
         <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
           <Button onPress={ this.props.onNavigate } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
-            <Text style={{ fontSize: 20, color: 'white' }}>TRANSFER</Text>
+            <Text style={{ fontSize: 20, color: 'white' }}>转账</Text>
           </Button>
         </View>        
       </View>    

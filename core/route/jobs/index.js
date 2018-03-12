@@ -1,5 +1,9 @@
 import JobsListenerScreen from './jobs.listener'
+import JobsListScreen from './jobs.list'
+import JobsListDetailScreen from './jobs.list.detail'
 
 export {
-  JobsListenerScreen
+  JobsListenerScreen,
+  JobsListScreen,
+  JobsListDetailScreen
 }

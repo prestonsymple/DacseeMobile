@@ -34,8 +34,10 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
   constructor(props) {
     super(props)
     this.state = {
+      countryCode: this.props.navigation.state.params.walletInfo.countryCode,
       phoneCountryCode: '+86',
-      searchType: 'Phone',
+      searchType: 0,
+      searchTitle: '手机号',
       searchContent: '',
       amount: 0,
       remark: ''
@@ -43,22 +45,22 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
   }
 
   async _fetchData() {
-    const { searchType, searchContent, phoneCountryCode, amount, remark }=this.state
+    const { countryCode, searchType, searchContent, phoneCountryCode, amount, remark }=this.state
     var body
-    if (searchType == 'Phone') {
+    if (searchType == 0) {
       body = {
-        country: 'CN',
+        country: countryCode,
         phoneCountryCode: phoneCountryCode,
         phoneNo: searchContent
       }
-    } else if (searchType == 'Email') {
+    } else if (searchType == 1) {
       body = {
-        country: 'CN',
+        country: countryCode,
         email: searchContent
       }
     } else {
       body = {
-        country: 'CN',
+        country: countryCode,
         userId: searchContent
       }
     }
@@ -80,68 +82,73 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
     }
     // console.log(transferInfo)
     // this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
-    resp.data.length == 1 ? this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) : this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
-    this.setState({
-      
-    })
+
+    if (resp.data.length == 0) {
+      this.props.dispatch(application.showMessage('账号信息错误，未找到对应的账号'))
+    } else {
+      resp.data.length == 1 ?
+        this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) : 
+        this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
+    }
   }
 
   render() {
     return (      
-      <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'onDrag' } >
+      <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'on-drag' } >
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Amount</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>转账金额</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
-              <Text style={{ fontSize: 14 }}>RM</Text>
-              <TextInput style={{ flex: 1, paddingLeft: 10, fontSize: 14}} placeholder={'0.00'} keyboardType={ 'number-pad' } onChangeText={ (value) => this.setState({ amount: value}) } />
+              {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
+              <TextInput style={{ flex: 1, fontSize: 14}} placeholder={'0.00'} keyboardType={ 'number-pad' } onChangeText={ (value) => this.setState({ amount: value}) } />
             </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Recipient Account</Text>            
-            <CheckBox titles={[ 'Phone', 'Email', 'User ID']} style={{ flex: 1, height: 44, backgroundColor: 'red' }} 
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>收款账户类型</Text>            
+            <CheckBox titles={[ '手机号', '邮箱', '大喜ID']} style={{ flex: 1, height: 44 }} 
               onPress={ (index, title) => {
                 this.setState({
-                  searchType: title
+                  searchType: index,
+                  searchTitle: title
                 })
               }}/>                   
           </View>
           
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Recipient Contact Number</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>收款账户</Text>
             <View style={{ flex: 1, flexDirection: 'row' }}>              
               {
-                this.state.searchType  == 'Phone' ?
+                this.state.searchType  == 0 ?
                   (
                     <Button style={{ marginRight: 10, height: 40, width: 60, justifyContent: 'center' }}
-                      onPress={() => this.props.navigation.navigate('WalletPickerCountry', {
+                      onPress={() => this.props.navigation.navigate('PublicPickerCountry', {
                         onPress: ({ name, code }) => this.setState({ phoneCountryCode: code })
                       })} >
                       <Text style={{}}>{ this.state.phoneCountryCode }</Text>
                     </Button>
                   ) : null
               }
-              <TextInput style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }} placeholder={ this.state.searchType } onChangeText={ (value) => this.setState({searchContent: value}) } />
+              <TextInput style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }} placeholder={ this.state.searchTitle } onChangeText={ (value) => this.setState({searchContent: value}) } />
             </View>                        
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Remarks</Text>
-            <TextInput style={{ marginVertical: 10, fontSize: 14, height: 70}} placeholder={'Please Enter'} multiline={true} onChangeText={ (value) => this.setState({ remark: value}) }/>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>备注</Text>
+            <TextInput style={{ marginVertical: 10, fontSize: 14, height: 70}} placeholder={'请输入备注'} multiline={true} onChangeText={ (value) => this.setState({ remark: value}) }/>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button onPress={ () => {
-              if (this.state.searchContent == '' | this.state.amount == 0 ) { 
-                this.props.dispatch(application.showMessage('请输入转账金额和接收人账号'))
+              if (this.state.searchContent == '' | this.state.amount == 0 | this.state.remark == '') { 
+                this.props.dispatch(application.showMessage('请输入 转账金额、收款账号 和 备注'))
               } else {
                 this._fetchData()                
               }                
             }       
               // this.props.navigation.navigate('WalletTransferSelection')
             } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
-              <Text style={{ fontSize: 20, color: 'white' }}>CONTINUE</Text>
+              <Text style={{ fontSize: 20, color: 'white' }}>下一步</Text>
             </Button>
           </View>
         </View>
