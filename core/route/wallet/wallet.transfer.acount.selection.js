@@ -24,28 +24,6 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-const DEMO_DATA =
-  [{
-    _id: '5a8ce6fc94643c733a2d07bc',
-    userId: 'MA-6430005',
-    fullName: 'CHANG WAI SENG',
-    avatars: [
-      {
-        url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-      }
-    ]
-  },
-  {
-    _id: '5a8ce6fc94643c733a2d07bc',
-    userId: 'MA-6430005',
-    fullName: 'CHANG WAI SENG',
-    avatars: [
-      {
-        url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-      }
-    ]
-  }]
-
 export default class WalletTransferSelectionScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -57,12 +35,13 @@ export default class WalletTransferSelectionScreen extends Component {
   constructor(props){
     super(props)
     this.state={
-      detail: dataContrast.cloneWithRows(DEMO_DATA)
+      transferInfo: this.props.navigation.state.params.transferInfo,
+      detail: dataContrast.cloneWithRows(this.props.navigation.state.params.transferInfo.userList)
     }
   }
 
   render() {
-    const { detail } = this.state
+    const { detail, transferInfo } = this.state
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <View style={{ marginTop: 20, alignItems: 'center' }}>
@@ -73,7 +52,16 @@ export default class WalletTransferSelectionScreen extends Component {
         <ListView 
           dataSource={detail}
           enableEmptySections={true}
-          renderRow={(row) => <TouchableOpacity onPress={ () => this.props.navigation.navigate('WalletTransferSummary') }><AccountItem data={row} /></TouchableOpacity> }
+          renderRow={(row) => <TouchableOpacity onPress={ () => { 
+            var temp = transferInfo
+            temp.userList = [row]
+            
+            this.setState({
+              transferInfo: temp
+            })
+            console.log(this.state.transferInfo)
+            this.props.navigation.navigate('WalletTransferSummary', { transferInfo: this.state.transferInfo }) }
+          }><AccountItem data={row} /></TouchableOpacity> }
           renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
           style={{ flex: 1, marginTop: 30 }}
         />
@@ -89,12 +77,13 @@ class AccountItem extends Component {
   }
 
   render() {
+    const { data } = this.props
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Image style={{ margin: 15, width: 66, height: 66, borderRadius: 33, backgroundColor: '#4cb'}}/>
+        <Image source={{ uri: data.avatars[0].url }} style={{ margin: 15, width: 66, height: 66, borderRadius: 33, backgroundColor: '#4cb'}}/>
         <View style={{ justifyContent: 'center'}}>
-          <Text style={{ fontSize: 11, opacity: 0.6 }}>{ this.props.data.userId }</Text>
-          <Text style={{ fontSize: 17 }}>{ this.props.data.fullName }</Text>
+          <Text style={{ fontSize: 11, opacity: 0.6 }}>{ data.userId }</Text>
+          <Text style={{ fontSize: 17 }}>{ data.fullName }</Text>
         </View>
       </View>
     )

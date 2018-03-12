@@ -123,6 +123,7 @@ const AppNavigator = DrawerNavigator({
     WalletTransaction: { screen: WalletTransactionListScreen },
     WalletDetail: { screen: WalletDetailScreen },
     WalletTransfer: { screen: WalletTransferScreen },
+    WalletPickerCountry: { screen: PickerCountryScreen },
     WalletTransferSelection: { screen: WalletTransferSelectionScreen },
     WalletTransferSummary: { screen: WalletTransferSummaryScreen },
 
