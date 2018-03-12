@@ -118,7 +118,7 @@ class DetailItem extends Component {
           <Text style={{ fontSize: 14, color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ _id }</Text>
           <View style={{ flexDirection: 'row' }}>
             {/* <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text> */}
-            <Text style={{ fontSize: 12, color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ timestamp.substr(0, 10) }</Text>
+            <Text style={{ fontSize: 12, color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ `${timestamp.substr(0, 10)} ${ timestamp.substr(11, 8) }` }</Text>
           </View>
           <Text style={{ marginTop: 10, fontSize: 13 }}>{ remarks }</Text>
         </View>

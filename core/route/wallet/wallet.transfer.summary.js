@@ -22,7 +22,10 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default class WalletTransferSummaryScreen extends Component {
+export default connect(state => {
+  console.log(state)
+  return { routeStack: state.nav }
+}) (class WalletTransferSummaryScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed', 
@@ -41,6 +44,8 @@ export default class WalletTransferSummaryScreen extends Component {
     const { amount, remark, userList, wallet } = this.state.transferInfo
     const user = userList[0]
 
+    console.log(this.props.routeStack)
+
     await InteractionManager.runAfterInteractions()
 
     const body = {
@@ -54,9 +59,14 @@ export default class WalletTransferSummaryScreen extends Component {
       amount: amount,
       remarks: remark
     }
-    const resp = await Session.wallet.post('v1/transferTransactions', body).then(() => {
-      this.props.navigation.goBack('WalletBalance')
-    })
+    try {
+      await Session.wallet.post('v1/transferTransactions', body)
+      // const _backKey = this.props.routeStack.routes[1].routes[0].routes[0].routes[0].key
+      // this.props.navigation.goBack(_backKey)
+      this.props.dispatch(application.showMessage('转账成功'))
+    } catch (e) {
+      console.log(e)
+    }
     
   }
 
@@ -68,21 +78,21 @@ export default class WalletTransferSummaryScreen extends Component {
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} >
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Wallet</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>转账钱包</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
               <Text style={{ fontSize: 14 }}>{ wallet.name }</Text>              
             </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Amount</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>转账金额</Text>
             <View style={{ height: 40, justifyContent: 'center' }}>
-              <Text style={{}}>RM { amount }</Text>
+              <Text style={{}}>{ amount }</Text>
             </View>            
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Recipient Account</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>收款账户</Text>
             <View style={{ flexDirection: 'row' }}>
               <Image source={{ uri: user.avatars[0].url}} style={{ marginVertical: 15, marginRight: 15, width: 66, height: 66, borderRadius: 33 }}/>
               <View style={{ justifyContent: 'center'}}>
@@ -93,17 +103,17 @@ export default class WalletTransferSummaryScreen extends Component {
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>Remarks</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>备注</Text>
             <Text style={{ marginVertical: 10, fontSize: 14 }}>{ remark }</Text>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button onPress={ () => this._submitTransfer()} style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
-              <Text style={{ fontSize: 20, color: 'white' }}>CONFIRM</Text>
+              <Text style={{ fontSize: 20, color: 'white' }}>确认转账</Text>
             </Button>
           </View>
         </View>
       </ScrollView>       
     )
   }
-}
+})

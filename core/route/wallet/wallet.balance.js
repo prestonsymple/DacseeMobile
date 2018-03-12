@@ -118,9 +118,9 @@ class ListItem extends Component {
               </View>
 
               <View style={{ flex: 1, marginRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 11, color: '#a5a5a5' }}>AVAILABLE BALANCE</Text>
+                <Text style={{ fontSize: 11, color: '#a5a5a5' }}>可用余额</Text>
                 <View style={{ flexDirection: 'row'}}>
-                  <Text style={{ fontSize: 15, marginTop: 12}}>RM</Text>
+                  {/* <Text style={{ fontSize: 15, marginTop: 12}}>RM</Text> */}
                   <Text style={{ fontSize: 27}}>{ availableAmount.toFixed(2) }</Text>
                 </View>
               </View>
@@ -155,7 +155,7 @@ class FloatingAmounView extends Component {
             null :
             <View style={{ flex: 1, paddingLeft:15, paddingTop: 10}}>
               <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Passenger)</Text>
-              <Text style={{ fontSize: 13 }}>RM { floatingPassengerAmount.toFixed(2) }</Text>
+              <Text style={{ fontSize: 13 }}>{ floatingPassengerAmount.toFixed(2) }</Text>
             </View>                  
         }
         {
@@ -163,7 +163,7 @@ class FloatingAmounView extends Component {
             null :
             <View style={{ flex: 1, paddingLeft:15, paddingTop: 5}}>
               <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Driver)</Text>
-              <Text style={{ fontSize: 13 }}>RM { floatingDriverAmount.toFixed(2) }</Text>
+              <Text style={{ fontSize: 13 }}>{ floatingDriverAmount.toFixed(2) }</Text>
             </View>
         }
       </View>

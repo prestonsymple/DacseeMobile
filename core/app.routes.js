@@ -122,8 +122,7 @@ const AppNavigator = DrawerNavigator({
     WalletBalanceList: { screen: WalletBalanceListScreen },
     WalletTransaction: { screen: WalletTransactionListScreen },
     WalletDetail: { screen: WalletDetailScreen },
-    WalletTransfer: { screen: WalletTransferScreen },
-    WalletPickerCountry: { screen: PickerCountryScreen },
+    WalletTransfer: { screen: WalletTransferScreen },    
     WalletTransferSelection: { screen: WalletTransferSelectionScreen },
     WalletTransferSummary: { screen: WalletTransferSummaryScreen },
 
@@ -141,6 +140,8 @@ const AppNavigator = DrawerNavigator({
     UpgradeDriver: { screen: UpgradeDriverScreen },
 
     FormEditor: { screen: FormEditorScreen },
+
+    PublicPickerCountry: { screen: PickerCountryScreen },
   }, defaultStackOptions)}
 }, defaultDrawerOptions)
 
