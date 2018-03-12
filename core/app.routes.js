@@ -21,7 +21,9 @@ import {
 } from './route/main'
 
 import {
-  JobsListenerScreen
+  JobsListenerScreen,
+  JobsListScreen,
+  JobsListDetailScreen
 } from './route/jobs'
 
 import { 
@@ -116,6 +118,8 @@ const AppNavigator = DrawerNavigator({
     PickerAddress: { screen: PickerAddressScreen },
 
     JobsListener: { screen: JobsListenerScreen },
+    JobsList: { screen: JobsListScreen },
+    JobsListDetail: { screen: JobsListDetailScreen },
 
     WalletBalance: { screen: WalletBalanceScreen },
     WalletWithdraw: { screen: WalletWithdrawScreen },

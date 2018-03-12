@@ -59,7 +59,7 @@ export default class WalletTransferSelectionScreen extends Component {
             this.setState({
               transferInfo: temp
             })
-            console.log(this.state.transferInfo)
+
             this.props.navigation.navigate('WalletTransferSummary', { transferInfo: this.state.transferInfo }) }
           }><AccountItem data={row} /></TouchableOpacity> }
           renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}

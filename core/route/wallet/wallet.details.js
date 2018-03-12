@@ -47,7 +47,7 @@ export default class WalletDetailScreen extends Component {
         <View style={{ width: width, height: 150, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
           <Image style={{ width: 66, height:66, borderRadius: 33, backgroundColor: '#4cb1f7'}}
             source={{ uri: countryFlag }}/>
-          <Text style={{ fontSize:13, paddingTop: 19 }}>{ country }</Text>
+          <Text style={{ fontSize:13, paddingTop: 10 }}>{ country }</Text>
           <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ name }</Text>
         </View>
         <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer', { walletInfo: this.state.walletInfo})} walletInfo={ this.state.walletInfo }/>
