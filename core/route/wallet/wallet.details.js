@@ -41,16 +41,16 @@ export default class WalletDetailScreen extends Component {
   }
 
   render() {
-    const { country, countryFlag } = this.state.walletInfo
+    const { name, country, countryFlag } = this.state.walletInfo
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1  }}>
         <View style={{ width: width, height: 150, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
           <Image style={{ width: 66, height:66, borderRadius: 33, backgroundColor: '#4cb1f7'}}
             source={{ uri: countryFlag }}/>
           <Text style={{ fontSize:13, paddingTop: 10 }}>{ country }</Text>
-          <Text style={{ fontSize:13, color: '#a5a5a5' }}>WALLET</Text>
+          <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ name }</Text>
         </View>
-        <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer')} walletInfo={ this.state.walletInfo }/>
+        <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer', { walletInfo: this.state.walletInfo})} walletInfo={ this.state.walletInfo }/>
       </View>
     )
   }
@@ -61,35 +61,38 @@ class ScrollTabView extends Component {
     super(props)
     // console.log(this.props.walletInfo)
     this.state = {
-      containerWidth: width,
+      // containerWidth: width,
       currentPage: 0
     }
   }
 
   // 获取页面
-  _onMomentumScrollBeginAndEnd = (e) => {
-    let offsetX = e.nativeEvent.contentOffset.x;
-    let page = Math.round(offsetX / width);
-    if (this.state.currentPage !== page) {
-      console.log('当前页面-->'+page);
-      this.setState({
-        currentPage: page,
-      });
-    }
-  }
+  // _onMomentumScrollBeginAndEnd = (e) => {
+  //   let offsetX = e.nativeEvent.contentOffset.x;
+  //   let page = Math.round(offsetX / width);
+  //   if (this.state.currentPage !== page) {
+  //     console.log('当前页面-->'+page);
+  //     this.setState({
+  //       currentPage: page,
+  //     });
+  //   }
+  // }
 
   _renderTabView() {
     return (
-      <View style={{ width:width, height:50, flexDirection: 'row', backgroundColor: 'white', alignItems: 'center'}} >
+      <View style={{ width: width, height: 50, flexDirection: 'row', backgroundColor: 'white'}} >
         {
-          ['OverView', 'Trasaction', 'Floating Comm'].map((item, index) => {
+          ['OverView', 'Trasaction', 'Floating Comm'].map((item, index) => {          
             return (
-              <TouchableOpacity key={ item+index } style={{flex: 1, justifyContent: 'center', alignItems:'center'}}
+              <Button key={ index } 
+                style={ [{ flex: 1, justifyContent: 'center', alignItems:'center' }, index == this.state.currentPage ? { borderBottomWidth: 3, borderColor: '#FFB639' } : {}]}
                 onPress={ () => {
-                  
+                  this.setState({
+                    currentPage: index
+                  })
                 }}>
-                <Text style={{ fontSize: 15}}>{ item }</Text>
-              </TouchableOpacity>
+                <Text style={ [{ fontSize: 15 },  index == this.state.currentPage ? {color: '#FFB639', borderBottomWidth: 3, borderColor: '#FFB639' } : {color: '#a5a5a5', opacity: 0.7}] }>{ item }</Text>
+              </Button>
             )
           })
         }
@@ -101,12 +104,13 @@ class ScrollTabView extends Component {
     return (
       <ScrollView 
         style={{}}
-        pagingEnabled={true}
+        scrollEnabled={false}
         horizontal={true}
-        onMomentumScrollBegin={this._onMomentumScrollBeginAndEnd}
-        onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd} >
+        contentOffset={{x:this.state.currentPage*width, y:0}}
+        // onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
+      >
         {
-          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>, <WalletTransactionListScreen key={2}/>, <IncomeList key={3} />].map((item, index) => {
+          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>, <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>, <IncomeList key={3} />].map((item, index) => {
             return (
               item
             )
@@ -148,13 +152,7 @@ class OverView extends Component {
     return (
       <View style={{ flex: 1, width: width, marginTop: 20 }}>
         {
-          [{name: 'Available Balance', value: availableAmount},
-            {name: 'Floating Balance(Passenger)', value: parseFloat(floatingPassengerAmount)},
-            {name: 'Floating Balance(Driver)', value: parseFloat(floatingDriverAmount)}].map((item, index) => {
-            return (
-              this._renderItem(item)
-            )            
-          })
+          this._renderItem({name: 'Available Balance', value: availableAmount})          
         }
         <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
           <Button onPress={ this.props.onNavigate } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>

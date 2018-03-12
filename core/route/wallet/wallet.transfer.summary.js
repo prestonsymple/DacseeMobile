@@ -7,7 +7,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
-import { Screen, Icons, Redux, Define, System } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
@@ -32,45 +32,73 @@ export default class WalletTransferSummaryScreen extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      transferInfo: this.props.navigation.state.params.transferInfo
+    }
+  }
+
+  async _submitTransfer() {
+    const { amount, remark, userList, wallet } = this.state.transferInfo
+    const user = userList[0]
+
+    await InteractionManager.runAfterInteractions()
+
+    const body = {
+      from: {
+        walletType: wallet.type
+      },
+      to: {
+        walletType: wallet.type,
+        user_id: user._id
+      },
+      amount: amount,
+      remarks: remark
+    }
+    const resp = await Session.wallet.post('v1/transferTransactions', body).then(() => {
+      this.props.navigation.goBack('WalletBalance')
+    })
+    
   }
 
   render() {
+    const { wallet, amount, userList, remark } = this.state.transferInfo
+    const user = userList[0]
+    // console.log(userList)
     return (      
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} >
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Wallet</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
-              <Text style={{ fontSize: 14 }}>Agent Balance Credit</Text>              
+              <Text style={{ fontSize: 14 }}>{ wallet.name }</Text>              
             </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Sending Amount</Text>
             <View style={{ height: 40, justifyContent: 'center' }}>
-              <Text style={{}}>RM 150.00</Text>
+              <Text style={{}}>RM { amount }</Text>
             </View>            
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Recipient Account</Text>
             <View style={{ flexDirection: 'row' }}>
-              <Image style={{ marginVertical: 15, marginRight: 15, width: 66, height: 66, borderRadius: 33, backgroundColor: '#4cb'}}/>
+              <Image source={{ uri: user.avatars[0].url}} style={{ marginVertical: 15, marginRight: 15, width: 66, height: 66, borderRadius: 33 }}/>
               <View style={{ justifyContent: 'center'}}>
-                <Text style={{ fontSize: 11, opacity: 0.6 }}>MA-064123</Text>
-                <Text style={{ fontSize: 17 }}>Wai Seng</Text>
+                <Text style={{ fontSize: 11, opacity: 0.6 }}>{ user.userId }</Text>
+                <Text style={{ fontSize: 17 }}>{ user.fullName }</Text>
               </View>
             </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>Remarks</Text>
-            <Text style={{ marginVertical: 10, fontSize: 14 }}>Transfer To Foo</Text>
+            <Text style={{ marginVertical: 10, fontSize: 14 }}>{ remark }</Text>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-            <Button onPress={ () => {}} style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
+            <Button onPress={ () => this._submitTransfer()} style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
               <Text style={{ fontSize: 20, color: 'white' }}>CONFIRM</Text>
             </Button>
           </View>

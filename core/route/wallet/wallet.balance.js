@@ -26,24 +26,29 @@ const styles = StyleSheet.create({
 // TODO: Optimize the callback
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-const DEMO_DATA = [
-  {
-    type: 'DS-MY',
-    name: 'DACSEED WALLET',
-    country: 'MALAYSIA',
-    countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-MY.jpg',
-    availableAmount: 95,
-    floatingDriverAmount: 20,
-    floatingPassengerAmount: 10
-  },
-  {
-    type: 'DSA-MY',
-    name: 'DACSEED AGENT WALLET',
-    country: 'MALAYSIA',
-    countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-MY.jpg',
-    availableAmount: 1000
-  }
-]
+// const DEMO_DATA = [
+//   {
+//     user_id: '5a8ce6fc94643c733a2d07bc',
+//     type: 'DS-US',
+//     name: 'DACSEED WALLET',
+//     countryCode: 'US',
+//     countryName: 'USD',
+//     countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-dacseed.jpg',
+//     availableAmount: 0
+//   },
+//   {
+//     user_id: '5a8ce6fc94643c733a2d07bc',
+//     type: 'CR-MY',
+//     name: 'CREDIT WALLET',
+//     countryCode: 'MY',
+//     countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-MY.jpg',
+//     countryName: 'MALAYSIA',
+//     availableAmount: 6,
+//     onHoldAmount: 0,
+//     floatingDriverAmount: 200,
+//     floatingPassengerAmount: 100
+//   }
+// ]
 
 // export default connect(state => ({ data: state.booking })) // TEST
 export default connect(state => ({ data: state.booking }))(class WalletBalanceScreen extends Component {
@@ -59,24 +64,17 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
     super(props)
     this.state = {
       loading: false,
-      detail: dataContrast.cloneWithRows(DEMO_DATA)
+      detail: dataContrast.cloneWithRows([])
     }
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     await InteractionManager.runAfterInteractions()
 
     const resp = await Session.wallet.get('v1/wallets')
-    // [{
-    //   _id: '0d8f4330-1dac-11e8-b67d-91aeb57f5e5b',
-    //   amount: 101,
-    //   status: 'active',
-    //   subType: 'standard',
-    // }]
-
-    console.log('[参数]', resp.data[0]._id)
-    const wallet = await Session.wallet.get(`v1/transactions?batch_id=${resp.data[0]._id}`)
-    // {{url_wallet}}/api/
+    this.setState({
+      detail: dataContrast.cloneWithRows(resp.data)
+    })
   }
 
   render() {
@@ -100,7 +98,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
 class ListItem extends Component {
   render() {
     const { data } = this.props
-    const { type, name, country, countryFlag, availableAmount, floatingDriverAmount, floatingPassengerAmount } = data
+    const { type, name, countryName, countryCode, countryFlag, availableAmount, floatingDriverAmount, floatingPassengerAmount } = data
     return (
       <View style={{ marginBottom: 15, width, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
         <View style={[
@@ -111,12 +109,14 @@ class ListItem extends Component {
 
           <View style={{ flex: 1, flexDirection: 'column', height: 106 }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <Image style={{ backgroundColor: '#4cb1f7', marginLeft: 15, width: 66, height: 66, borderRadius: 33}}
+              <Image style={{ marginLeft: 15, width: 66, height: 66, borderRadius: 33}}
                 source={{ uri: countryFlag }}/>
+              
               <View style={{ marginLeft: 10, justifyContent: 'center'}}>
-                <Text style={{ fontSize: 13 }}>{ country }</Text>
+                <Text style={{ fontSize: 13 }}>{ countryName }</Text>
                 <Text style={{ fontSize: 11, color: '#a5a5a5' }}>{ name }</Text>
               </View>
+
               <View style={{ flex: 1, marginRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}>
                 <Text style={{ fontSize: 11, color: '#a5a5a5' }}>AVAILABLE BALANCE</Text>
                 <View style={{ flexDirection: 'row'}}>
@@ -127,21 +127,45 @@ class ListItem extends Component {
             </View>
             <View style={{ backgroundColor: '#D8D8D8', opacity: 0.5, height: 1}}></View>
           </View>
+
           {
-            type.indexOf('DSA') >= 0 ? 
-              null : 
-              <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 1, borderRadius: 6, flexDirection: 'column', height: 100}}>            
-                <View style={{ flex: 1, paddingLeft:15, paddingTop: 10}}>
-                  <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Passenger)</Text>
-                  <Text style={{ fontSize: 13 }}>RM { floatingPassengerAmount.toFixed(2) }</Text>
-                </View>
-                <View style={{ flex: 1, paddingLeft:15, paddingTop: 5}}>
-                  <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Driver)</Text>
-                  <Text style={{ fontSize: 13 }}>RM { floatingDriverAmount.toFixed(2) }</Text>
-                </View>
-              </View>                        
-          }             
+            floatingDriverAmount === undefined & floatingPassengerAmount === undefined ? 
+              null :
+              <FloatingAmounView amount={{ floatingDriverAmount: floatingDriverAmount, floatingPassengerAmount: floatingPassengerAmount}} />
+          }
+          
         </View>
+      </View>
+    )
+  }
+}
+
+class FloatingAmounView extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    const { floatingPassengerAmount, floatingDriverAmount } = this.props.amount
+    const height = (floatingDriverAmount === undefined ? 0 : 50) + (floatingPassengerAmount === undefined ? 0 : 50)
+    return (
+      <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 1, borderRadius: 6, flexDirection: 'column', height: height}}>            
+        {
+          floatingPassengerAmount === undefined ?
+            null :
+            <View style={{ flex: 1, paddingLeft:15, paddingTop: 10}}>
+              <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Passenger)</Text>
+              <Text style={{ fontSize: 13 }}>RM { floatingPassengerAmount.toFixed(2) }</Text>
+            </View>                  
+        }
+        {
+          floatingDriverAmount === undefined ?
+            null :
+            <View style={{ flex: 1, paddingLeft:15, paddingTop: 5}}>
+              <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Driver)</Text>
+              <Text style={{ fontSize: 13 }}>RM { floatingDriverAmount.toFixed(2) }</Text>
+            </View>
+        }
       </View>
     )
   }
