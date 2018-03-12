@@ -140,8 +140,8 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button onPress={ () => {
-              if (this.state.searchContent == '' | this.state.amount == 0 ) { 
-                this.props.dispatch(application.showMessage('请输入 转账金额 和 收款账号'))
+              if (this.state.searchContent == '' | this.state.amount == 0 | this.state.remark == '') { 
+                this.props.dispatch(application.showMessage('请输入 转账金额、收款账号 和 备注'))
               } else {
                 this._fetchData()                
               }                
