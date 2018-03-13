@@ -44,6 +44,7 @@ const sessionBuilder = (baseUrl) => {
   instance.interceptors.response.use((response) => {
     return { data: response.data }
   }, (err) => {
+    console.log(err)
     return Promise.reject(err)
   })
 

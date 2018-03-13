@@ -13,6 +13,7 @@ import Resources from '../../resources'
 import BaseScreenComponent from '../_base'
 
 import HeaderSection from './booking.header.section'
+import BookingSelectCircle from './booking.select.circle'
 
 import { MapView, Search } from '../../native/AMap'
 import { Screen, Icons, Define } from '../../utils'
@@ -64,6 +65,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
       //   <View style={{ backgroundColor: '#333', flex: 1, height: 300, width: 400 }}></View>
       // ),
       headerStyle: {
+        backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
         shadowOpacity: 0,
         borderBottomWidth: 0,
@@ -76,7 +78,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
           style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN')}
         >
-          {Icons.Generator.Octicons('three-bars', 23, '#2f2f2f', { style: { left: 8 } })}
+          {Icons.Generator.Octicons('three-bars', 23, 'white', { style: { left: 8 } })}
         </TouchableOpacity>
       ),
       title: 'DACSEE'
@@ -127,7 +129,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.board = new Animated.Value(0)
     this.ui = new Animated.Value(0)
     this.form = new Animated.Value(0)
-    this.indicator = new Animated.Value(0)
 
     this.count = 0
   }
@@ -135,7 +136,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
-    this.makeMyCircle(this.props.data)
   }
 
   componentWillUnmount() {
@@ -229,32 +229,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     if (('location' in to) && (to.address !== this.props.data.to.address) && (to.location.lat !== 0) && (to.location.lng !== 0)) {
       this.props.navigation.navigate('BookingOptions')
     }
-
-    if (props.data.selected_friends !== this.props.data.selected_friends) {
-      this.setState({ carArgs: [] })
-      Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
-      this.makeMyCircle(props.data)
-    }
-  }
-
-  async makeMyCircle(data) {
-    const circle = data.selected_friends.map(pipe => Object.assign({}, {
-      title: pipe.friend_info.fullName,
-      key: pipe._id,
-      circle: true,
-      image: { uri: pipe.friend_info.avatars[0].url }
-    }))
-    circle.push({ 
-      title: '选择朋友', 
-      key: 'circle-select-button', 
-      circle: true, 
-      icon: Icons.Generator.Material('add', 34, '#999'), 
-      onPress: () => this.props.navigation.navigate('FriendsCircle') 
-    })
-
-    await (new Promise(resolve => setTimeout(() => resolve(), 1500)))
-    this.indicator && this.indicator.stopAnimation()
-    this.setState({ carArgs: circle })
   }
 
   async activeAdrEdit(field) {
@@ -283,7 +257,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
 
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
+        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <MapView
           {...MAP_DEFINE}
           style={{ flex: 1 }}
@@ -303,59 +277,13 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
         <MapPin timing={this.pin} />
         <MapPinTip timing={this.board} />
 
-        <View style={Platform.select({
-          ios: { position: 'absolute', bottom: Define.system.ios.x ? 40 : 30, left: 15, right: 15, borderRadius: 3 },
-          android: { position: 'absolute', bottom: 15, left: 15, right: 15, borderRadius: 3 }
-        })}>
-          {
-            this.props.data.type === 'circle' && (
-              <View style={[
-                { marginBottom: 6, backgroundColor: 'white' }, 
-                { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-                Platform.select({
-                  ios: {},
-                  android: { borderColor: '#ccc', borderWidth: .8 },
-                })
-              ]}>
-                <View style={{ height: 116, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  {
-                    (carArgs.length === 0) ? (
-                      <View style={Platform.select({
-                        android: { position: 'absolute', height: 116, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' },
-                        ios: { position: 'absolute', height: 96, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' }
-                      })}>
-                        <Lottie progress={this.indicator} style={{ width: 66, height: 66 }} source={Resources.animation.simpleLoader} />
-                      </View>
-                    ) : (
-                      <ScrollView
-                        pagingEnabled={type !== 'circle'}
-                        horizontal={true} 
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ 
-                          height: 116, 
-                          justifyContent: 'center', 
-                          alignItems: 'center' 
-                        }}
-                        style={{ width: width - 30 }}
-                      >
-                        { carArgs.map((pipe, index) => (<SelectButton key={index} data={pipe} />)) }
-                      </ScrollView>
-                    )
-                  }
-                </View>
-              </View>
-            )
-          }
+        <BookingSelectCircle />
 
-          <PickerAddress
-            timing={this.ui}
-            drag={drag}
-            to={this.props.data.to}
-            from={this.props.data.from}
-            onPressTo={() => this.activeAdrEdit('to')}
-            onPressFrom={() => this.activeAdrEdit('from')}
-          />
-        </View>
+        <PickerAddress
+          timing={this.ui} drag={drag} to={this.props.data.to} from={this.props.data.from}
+          onPressTo={() => this.activeAdrEdit('to')}
+          onPressFrom={() => this.activeAdrEdit('from')}
+        />
 
         {/* Modal - Where u? */}
         <ModalSelectAddress
@@ -444,29 +372,29 @@ class PickerAddress extends Component {
 
     return (
       <Animated.View style={[
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-        { backgroundColor: 'white' },
-        Platform.select({
-          ios: {},
-          android: { borderColor: '#ccc', borderWidth: .8 },
-        })
+        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? 142 : 120, justifyContent: 'center' },
+        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
+        { backgroundColor: 'white', paddingBottom: Define.system.ios.x ? 22 : 0, paddingHorizontal: 23 },
+        { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
       ]}>
-        {/* From */}
-        <TouchableOpacity onPress={drag ? () => { } : onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
-          <View style={{ backgroundColor: '#52a732', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
-          <View style={{ position: 'absolute', top: 0, bottom: 0, left: (Screen.window.width - 30 - 44) / 2, alignItems: 'center', justifyContent: 'center' }}>
-            {
-              (!from.name || drag) && (<Lottie progress={this.animated} style={{ width: 44, height: 44 }} source={Resources.animation.simpleLoader} />)
-            }
-          </View>
-        </TouchableOpacity>
-        <View style={{ backgroundColor: '#ccc', height: .5, marginHorizontal: 18 }} />
-        {/* To */}
-        <TouchableOpacity onPress={onPressTo} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
-          <View style={{ backgroundColor: '#e54224', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-          <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{to.name || '请输入目的地'}</Text>
-        </TouchableOpacity>
+        <View style={{ height: 79 }}>
+          {/* From */}
+          <TouchableOpacity onPress={drag ? () => { } : onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+            <View style={{ backgroundColor: '#FEA81C', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
+            <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
+            <View style={{ position: 'absolute', top: 0, bottom: 0, left: (Screen.window.width - 46 - 44) / 2, alignItems: 'center', justifyContent: 'center' }}>
+              {
+                (!from.name || drag) && (<Lottie progress={this.animated} style={{ width: 44, height: 44 }} source={Resources.animation.simpleLoader} />)
+              }
+            </View>
+          </TouchableOpacity>
+          <View style={{ backgroundColor: '#e8e8e8', height: .5, marginHorizontal: 18 }} />
+          {/* To */}
+          <TouchableOpacity onPress={onPressTo} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+            <View style={{ backgroundColor: '#7ED321', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
+            <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{to.name || '请输入目的地'}</Text>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
     )
   }

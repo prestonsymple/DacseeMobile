@@ -72,14 +72,14 @@ const defaultStackOptions = {
   navigationOptions: ({ navigation }) => {
     let options = {
       headerStyle: {
-        backgroundColor: 'white',
+        backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
         shadowOpacity: 0,
         borderBottomWidth: Platform.select({ ios: .6, android: .5 }),
         borderBottomColor: '#eee',
         elevation: 0,
       },
-      headerTintColor: '#333',
+      headerTintColor: 'white',
       headerBackTitle: null,
     }
     if (!('index' in navigation.state)) options = Object.assign(options, {
@@ -89,7 +89,7 @@ const defaultStackOptions = {
           style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
           onPress={() => navigation.goBack()}
         >
-          { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
+          { Icons.Generator.Material('keyboard-arrow-left', 30, 'white') }
         </TouchableOpacity>
       )
     })

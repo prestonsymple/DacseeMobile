@@ -12,8 +12,8 @@ export default class HeaderSection extends PureComponent {
       <View style={[
         { position: 'absolute', top: 0, left: 0, right: 0, height: 34 },
         Platform.select({
-          ios: { backgroundColor: '#f7f7f7' },
-          android: { backgroundColor: '#fff' }
+          ios: { backgroundColor: '#1AB2FD' },
+          android: { backgroundColor: '#1AB2FD' }
         }),
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 }
       ]}>
@@ -31,7 +31,7 @@ export default class HeaderSection extends PureComponent {
               title: '专车', key: 'lux'
             }].map((pipe, index) => (
               <TouchableOpacity activeOpacity={1} onPress={() => this.props.dispatch(booking.journeyUpdateData({ type: pipe.key }))} key={index} style={{ paddingHorizontal: 10, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={this.props.type === pipe.key ? { color: '#FEA81C', fontSize: 13, fontWeight: '600' } : { color: '#666', fontSize: 13, fontWeight: '600' }}>{ pipe.title }</Text>
+                <Text style={this.props.type === pipe.key ? { color: 'white', fontSize: 13, fontWeight: '600' } : { color: 'white', fontSize: 13, fontWeight: '600', opacity: .7  }}>{ pipe.title }</Text>
               </TouchableOpacity>
             ))
           }

@@ -319,10 +319,10 @@ export default connect(state => ({
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>使用社交账号进行登录</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 150, marginTop: 25 }}>
                 <Button onPress={() => {
-                  ShareUtile.auth(0,(code,result,message) =>{
-                    this.setState({result:message})
+                  ShareUtile.auth(0, (code, result, message) =>{
+                    this.setState({ result: message })
                     if (code == 0){
-                      this.setState({result:result.uid})
+                      this.setState({ result: result.uid })
                     } else {
                       console.log('第三方登录' + code)
                     }
@@ -359,6 +359,20 @@ export default connect(state => ({
                 editable={false}
                 defaultValue={this.state.value}
                 style={[styles.stdInput, styles.registerTextInput]} />
+              <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                  {...Define.TextInputArgs}
+                  clearTextOnFocus={false}
+                  editable={false}
+                  defaultValue={this.state.value}
+                  style={[styles.stdInput, styles.registerTextInput]} />
+                <TextInput
+                  {...Define.TextInputArgs}
+                  clearTextOnFocus={false}
+                  editable={false}
+                  defaultValue={this.state.value}
+                  style={[styles.stdInput, styles.registerTextInput]} />
+              </View>
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}

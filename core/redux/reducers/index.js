@@ -7,6 +7,7 @@ import account from './reducer.account'
 import booking from './reducer.booking'
 import config from './reducer.config'
 import jobs from './reducer.jobs'
+import circle from './reducer.circle'
 
 import AppNavigator from '../../app.routes'
 const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('AuthLoading'))
@@ -21,5 +22,9 @@ export default combineReducers({
   booking,
   config,
   jobs,
+  circle,
+
+
+
   nav: navReducer
 })

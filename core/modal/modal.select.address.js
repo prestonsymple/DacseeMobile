@@ -1,6 +1,9 @@
 /* eslint-disable */
 import React, { Component, PureComponent } from 'react'
-import { View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView, Platform } from 'react-native'
+import { 
+  View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView, Platform,
+  StatusBar
+} from 'react-native'
 import InteractionManager from 'InteractionManager'
 import * as Progress from 'react-native-progress'
 import CodePush from 'react-native-code-push'
@@ -18,6 +21,7 @@ export default class SelectAddressView extends Component {
     const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field } = this.props
     return (
       <Modal onRequestClose={onPressCancel} {...this.props} style={{ backgroundColor: 'white' }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
         {
           Platform.select({
             ios: (

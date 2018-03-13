@@ -2,19 +2,17 @@
 
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Alert
+  Text, View, TouchableOpacity, DeviceEventEmitter, ScrollView, TextInput, Image, RefreshControl, Alert, TouchableNativeFeedback
 } from 'react-native'
 import ActionSheet from 'react-native-actionsheet'
 import { connect } from 'react-redux'
 
 import { } from '../../../redux/actions'
-import { Icons, Screen } from '../../../utils'
+import { Icons, Screen, Define } from '../../../utils'
 import ShareUtil from '../../../native/umeng/ShareUtil'
 import { application } from '../../../redux/actions'
 
 const { width, height } = Screen.window
-
-const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
 export default connect(state => ({ account: state.account }))(class FriendsCircleAddComponent extends Component {
 
@@ -28,13 +26,13 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: dataContrast.cloneWithRows([
-        { describer: '使用电话号码进行搜索', onPress: () => this.props.navigation.navigate('FriendsSearchBase', { search: 'Phone' }), label: '电话号码', icon: Icons.Generator.Awesome('phone', 36, '#666', { style: { left: 5 } }) },
-        { describer: '使用邮箱/用户账号进行搜索', onPress: () => this.props.navigation.navigate('FriendsSearchBase', { search: 'Mail' }), label: '邮箱/用户账号', icon: Icons.Generator.Awesome('envelope', 36, '#666', { style: { left: 2 } }) },
-        { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#666', { style: { left: 0 } }) },
-        { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#666', { style: { left: 1.5 } }) },
-        // { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }
-      ])
+      // dataSource: dataContrast.cloneWithRows([
+      //   { describer: '使用电话号码进行搜索', label: '电话号码', icon: Icons.Generator.Awesome('phone', 36, '#666', { style: { left: 5 } }) },
+      //   { describer: '使用邮箱/用户账号进行搜索', label: '邮箱/用户账号', icon: Icons.Generator.Awesome('envelope', 36, '#666', { style: { left: 2 } }) },
+      //   { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#666', { style: { left: 0 } }) },
+      //   { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#666', { style: { left: 1.5 } }) },
+      //   // { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }
+      // ])
     }
   }
 
@@ -42,53 +40,156 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
     
   }
 
-  async _pressActionSheet(index) {
-    if (index === 0) {
-      await ShareUtil.share(
-        '分享至微信', 
-        'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-        `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
-        '加入DACSEE', 
-        3, 
-        (arg) => { console.log(arg) }
-      )
-    } else if (index === 1) {
-      await ShareUtil.share(
-        '分享至微信', 
-        'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-        `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
-        '加入DACSEE', 
-        2, 
-        (arg) => { console.log(arg) }
-      )
-    }
-  }
-
   render() {
     const { dataSource } = this.state
 
     return (
       <View style={{ flex: 1 }}>
-        <ListView
-          enableEmptySections={true}
-          dataSource={dataSource}
-          renderRow={(data) => <ItemPerson data={data} />}
-          renderSeparator={() => (
-            <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
-          )}
-        />
-        <ActionSheet
-          ref={e => this.ActionSheet = e}
-          title={'分享到微信'}
-          options={['朋友圈', '好友', '取消']}
-          cancelButtonIndex={2}
-          // destructiveButtonIndex={0}
-          onPress={this._pressActionSheet.bind(this)}
-        />
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 22, paddingVertical: 22 }} style={{ flex: 1 }}>
+          {/* PHONE NO. */}
+          <BlockWrap 
+            iconBackgroundColor={'#4fb2f9'} 
+            icon={Icons.Generator.Awesome('phone', 36, 'white')} 
+            title={'电话号码'}
+            describer={'通过电话号码搜索'}
+            isPhoneNo={true}
+            placeholder={'13x xxxx xxxx'}
+            canInput={true}
+            navigation={this.props.navigation}
+            onPress={(value, countryCode) => this.props.navigation.navigate('FriendsSearchBase', { value, countryCode })}
+          />
+
+          {/* EMAIL ADDRESS */}
+          <BlockWrap 
+            iconBackgroundColor={'#4f9029'} 
+            icon={Icons.Generator.Awesome('envelope', 28, 'white')} 
+            title={'邮箱'}
+            describer={'通过注册邮箱搜索'}
+            placeholder={'example@mail.com'}
+            canInput={true}
+            onPress={(value) => this.props.navigation.navigate('FriendsSearchBase', { value })}
+          />
+
+          {/* WECHAT SESSION */}
+          <BlockWrap 
+            iconBackgroundColor={'#f4a951'} 
+            icon={Icons.Generator.Awesome('wechat', 28, 'white')} 
+            title={'微信好友'}
+            describer={'将邀请链接分享给好友'}
+            onPress={async () => {
+              await ShareUtil.share(
+                '分享至微信', 
+                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
+                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
+                '加入DACSEE', 
+                2, 
+                (arg) => { console.log(arg) }
+              )
+            }}
+          />
+
+          {/* WECHAT CIRCLE */}
+          <BlockWrap 
+            iconBackgroundColor={'#f4a951'} 
+            icon={<Image source={require('../../../resources/images/wechat_moments.png')} />} 
+            title={'微信朋友圈'}
+            describer={'将邀请链接分享至朋友圈'}
+            onPress={async () => {
+              await ShareUtil.share(
+                '分享至微信', 
+                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
+                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
+                '加入DACSEE', 
+                3, 
+                (arg) => { console.log(arg) }
+              )
+            }}
+          />
+
+          {/* WECHAT CIRCLE */}
+          <BlockWrap 
+            iconBackgroundColor={'#f4a951'} 
+            icon={Icons.Generator.Awesome('weibo', 32, 'white')} 
+            title={'新浪微博'}
+            describer={'将邀请链接分享至新浪微博'}
+          />
+        </ScrollView>
       </View>
     )
   }
 })
+
+class BlockWrap extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      value: '',
+      countryCode: '+86'
+    }
+  }
+
+  render() {
+    const { canInput, title, describer, iconBackgroundColor, icon, isPhoneNo, placeholder, onPress = () => {} } = this.props
+    const { countryCode, value } = this.state
+    const WrapComponent = canInput ? View : TouchableOpacity
+
+    return (
+      <WrapComponent activeOpacity={.7} onPress={() => onPress()} style={[
+        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .3, shadowRadius: 3 },
+        { marginBottom: 15, height: 105, borderRadius: 17, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 13 }
+      ]}>
+        <IconWrap backgroundColor={iconBackgroundColor}>{ icon }</IconWrap>
+        <View style={{ justifyContent: 'center', marginLeft: 12, flex: 1 }}>
+          <Text style={{ fontSize: 16, color: 'black', marginBottom: canInput ? 2 : 6 }}>{ title }</Text>
+          <Text style={{ fontSize: 11, color: '#969696' }}>{ describer }</Text>
+          { 
+            canInput && (
+              <View style={{ marginTop: 6 }}>
+                <View style={{ flexDirection: 'row', height: 36, borderRadius: 6, backgroundColor: '#e8e8e8', paddingHorizontal: 6, alignItems: 'center' }}>
+                  {
+                    isPhoneNo && (
+                      <TouchableOpacity onPress={() => this.props.navigation.navigate('PublicPickerCountry', {
+                        onPress: ({ name, code }) => this.setState({ countryCode: code })
+                      })} activeOpacity={.7} style={[
+                        { shadowOffset: { width: 0, height: 1 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
+                        { marginRight: 5, flexDirection: 'row', height: 26, borderRadius: 15, backgroundColor: '#3b90f7', width: 58, justifyContent: 'center', alignItems: 'center' }
+                      ]}>
+                        <Text style={{ color: 'white', fontSize: 13, fontWeight: '400' }}>{countryCode}</Text>
+                        { Icons.Generator.Material('arrow-drop-down', 14, 'white') }
+                      </TouchableOpacity>
+                    )
+                  }
+                  <TextInput {...Define.TextInputArgs} onChangeText={ value => this.setState({ value }) } keyboardType={isPhoneNo ? 'number-pad' : 'default'} placeholder={placeholder} style={{ flex: 1, fontSize: 13 }} />
+                  <TouchableOpacity onPress={() => onPress(value, countryCode)} activeOpacity={.7} style={[
+                    { shadowOffset: { width: 0, height: 1 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
+                    { backgroundColor: '#F5A623', width: 26, height: 26, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }
+                  ]}>
+                    { Icons.Generator.Material('search', 18, 'black') }
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )
+          }
+        </View>
+      </WrapComponent>
+    )
+  }
+}
+
+class IconWrap extends Component {
+  render() {
+    return (
+      <View style={[
+        { width: 76, height: 76, borderRadius: 38, justifyContent: 'center', alignItems: 'center' },
+        { borderColor: '#EAEAEA', borderWidth: 6 },
+        { backgroundColor: this.props.backgroundColor }
+      ]}>
+        { this.props.children }
+      </View>
+    )
+  }
+}
 
 class ItemPerson extends Component {
   render() {
