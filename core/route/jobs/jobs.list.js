@@ -24,53 +24,6 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-// const DEMO_DATA = 
-//   {
-//     _id: '5a9796b18360f70379ad48c2',
-//     type : 'now',
-//     assign_type: 'any',
-//     from: {
-//         address: 'SetiaWalk Mall Taman Wawasan Puchong Selangor Malaysia',
-//         coords: {
-//             lat: 3.0319002,
-//             lng: 101.61730339999997
-//         },
-//         name: 'SetiaWalk Mall',
-//         placeId: 'ChIJyWmMG1VLzDER651sEIJsamI'
-//     },
-//     notes: 'Klcc',
-//     destination: {
-//         address: 'KLCC Carpark Persiaran KLCC Kuala Lumpur Federal Territory of Kuala Lumpur Malaysia',
-//         coords: {
-//             lat: 3.1536431,
-//             lng: 101.71568809999997
-//         },
-//         name: 'KLCC Carpark',
-//         placeId: 'ChIJD8xI_9I3zDERoM1zhIlBXG8'
-//     },
-//     vehicle_type: 'Economy',
-//     booking_at: '2018-03-03T13:16:00.212Z',
-//     payment_method: 'Cash',
-//     fare: 30,
-//     passenger_id: '5a697a7333f82544619072dd',
-//     drivers_queue: [],
-//     status: 'No_Taker',
-//     payment_status: 'unpaid',
-//     _createdOn: '2018-03-01T05:59:13.191Z',
-//     _createdBy: '5a697a7333f82544619072dd',
-//     _updatedOn: '2018-03-01T05:59:43.212Z',
-//     _updatedBy: '5a547dff2dd97f23dc6a06c6',
-//     processing: false,
-//     excludedDrivers_id: [
-//         '5a4a36d9812d94d4dadf6f43',
-//         '5a4dfb482dd97f23dc6a06c4',
-//         '5a697a7333f82544619072dd',
-//         '5a697af033f82544619072de',
-//         '5a697b4733f82544619072df',
-//         '5a697d2733f82544619072e0'
-//     ]
-// }
-
 // const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 // LocaleConfig.locales['CN'] = {
@@ -119,37 +72,37 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
       loading: true
     })
     // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
-    const resp = await Session.booking.get('v1/bookings')
+
+    try {
+      const resp = await Session.booking.get('v1/bookings')
     
-    var dateDic = new Object()
-    resp.data.map( (item, index) => {
-      // console.log(item)
-      // console.log(moment(Date.parse(item.booking_at)).format('YYYY-MM-D'))
-      const dateStr = moment(Date.parse(item.booking_at)).format('YYYY-MM-D')
-      
-      // console.log(dateDic[dateStr])
-      if (dateDic[dateStr] === undefined) {
+      var dateDic = new Object()
+      resp.data.map( (item, index) => {
         // console.log(item)
-        dateDic[dateStr] = Array(item)
-      } else {
-        dateDic[dateStr].concat(Array(item))
-      }
-      // dateDic[moment(Date.parse(item.booking_at)).format('YYYY-MM-D')] = [item]
-    })
- 
-    // console.log(dateDic)
-    // const test = {
-    //   '2018-03-11': [DEMO_DATA],
-    //   '2018-03-12': [DEMO_DATA, DEMO_DATA],
-    //   '2018-03-13': [],
-    //   '2018-03-14': [DEMO_DATA],
-    // }
-    // console.log(test)
-    this.setState({
-      dateDic: dateDic,
-      loading: false
-      // detail: dataContrast.cloneWithRows(resp.data)
-    })
+        // console.log(moment(Date.parse(item.booking_at)).format('YYYY-MM-D'))
+        const dateStr = moment(Date.parse(item.booking_at)).format('YYYY-MM-D')
+        
+        // console.log(dateDic[dateStr])
+        if (dateDic[dateStr] === undefined) {
+          // console.log(item)
+          dateDic[dateStr] = Array(item)
+        } else {
+          dateDic[dateStr].concat(Array(item))
+        }
+        // dateDic[moment(Date.parse(item.booking_at)).format('YYYY-MM-D')] = [item]
+      })
+      this.setState({
+        dateDic: dateDic,
+        loading: false
+        // detail: dataContrast.cloneWithRows(resp.data)
+      })
+    } catch (e) {
+      this.props.dispatch(application.showMessage('网络情况差，请重试'))
+      this.setState({
+        loading: false
+        // detail: dataContrast.cloneWithRows(resp.data)
+      })
+    }    
   }
 
   render() {
