@@ -10,6 +10,7 @@ import { System } from '../../utils'
 import loginSaga from './saga.login'
 import bookingSaga from './saga.booking'
 import jobsSaga from './saga.jobs'
+import circleSaga from './saga.circle'
 
 
 /******************************************************************************/
@@ -89,6 +90,7 @@ export default function* sagaService() {
 
     fork(bookingSaga),
     fork(loginSaga),
-    fork(jobsSaga)
+    fork(jobsSaga),
+    fork(circleSaga)
   ])
 }

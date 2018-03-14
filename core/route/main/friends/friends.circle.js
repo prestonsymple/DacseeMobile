@@ -7,14 +7,18 @@ import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { application, booking } from '../../../redux/actions'
+import { application, booking, circle } from '../../../redux/actions'
 import { Icons, Screen, Define, Session } from '../../../utils'
 
 const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ account: state.account, booking: state.booking }))(class FriendsCircleComponent extends Component {
+export default connect(state => ({ 
+  account: state.account, 
+  booking: state.booking,
+  ...state.circle
+}))(class FriendsCircleComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -25,58 +29,55 @@ export default connect(state => ({ account: state.account, booking: state.bookin
           style={{ top: -0.5, width: 54, paddingRight: 20, justifyContent: 'center', alignItems: 'flex-end' }}
           onPress={() => DeviceEventEmitter.emit('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS')}
         >
-          {Icons.Generator.Material('add', 28, '#2f2f2f', { style: { left: 8 } })}
+          {Icons.Generator.Material('add', 28, 'white', { style: { left: 8 } })}
         </TouchableOpacity>
       ),
+      headerStyle: {
+        backgroundColor: '#1AB2FD',
+        shadowColor: 'transparent',
+        shadowOpacity: 0,
+        borderBottomWidth: 0,
+        borderBottomColor: 'transparent',
+        elevation: 0,
+      },
       title: '朋友圈'
     }
   }
 
   constructor(props) {
     super(props)
+
+    const { selected_friends } = props.booking
+    const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
+      checked: selected_friends.find(sub => sub._id === pipe._id) !== undefined
+    }))
+    const _dataSource = dataContrast.cloneWithRowsAndSections([
+      props.requestor,
+      _friend
+    ])
+
     this.state = {
-      dataSource: dataContrast.cloneWithRowsAndSections([[], []]),
-      source: [[], []],
-      loading: false
+      dataSource: _dataSource,
+      selected: selected_friends
     }
   }
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd'))
-    this.fetchData()
   }
 
   componentWillReceiveProps(props) {
-    const { selected_friends } = props.booking
-
-    if (selected_friends && selected_friends !== this.props.booking.selected_friends) {
-      const clone = _.cloneDeep(this.state.source)
-      clone[1] = clone[1].map(pipe => Object.assign({}, pipe, {
-        checked: selected_friends.find(sub => sub._id === pipe._id) !== undefined
+    if (this.props.friend !== props.friend || this.props.requestor !== props.requestor) {
+      const { selected_friends } = props.booking
+      const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
+        checked: (this.state.selected.find(sub => sub._id === pipe._id) !== undefined)
       }))
-      this.setState({ dataSource: dataContrast.cloneWithRowsAndSections(clone) })
-    }
-  }
-
-  async fetchData(index = 0) {
-    const { selected_friends } = this.props.booking
-
-    this.setState({ loading: true })
-    try {
-      const circleResp = await Promise.all([
-        Session.circle.get('v1/requests?skip=0&limit=30'),
-        Session.circle.get(`v1/circle?skip=${index}&limit=30`)
+      const _dataSource = dataContrast.cloneWithRowsAndSections([
+        props.requestor,
+        _friend
       ])
-      const circleData = circleResp.map(pipe => pipe.data)
-      circleData[1] = circleData[1].map(pipe => Object.assign({}, pipe, {
-        checked: selected_friends.find(sub => sub._id === pipe._id) !== undefined
-      }))
-      this.setState({ dataSource: dataContrast.cloneWithRowsAndSections(circleData), source: circleData })
-    } catch (e) {
-      console.log(e)
-    } finally {
-      this.setState({ loading: false })
+      this.setState({ dataSource: _dataSource })
     }
   }
 
@@ -84,44 +85,81 @@ export default connect(state => ({ account: state.account, booking: state.bookin
     this.subscription && this.subscription.remove()
   }
 
+  onPressCheck(data) {
+    const { selected } = this.state
+
+    let clone = _.cloneDeep(selected)
+    if (clone.find(pipe => pipe._id === data._id)) {
+      clone = clone.filter(pipe => pipe._id !== data._id)
+    } else {
+      clone.push(data)
+    }
+
+    const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
+      checked: clone.find(sub => sub._id === pipe._id) !== undefined
+    }))
+    const _dataSource = dataContrast.cloneWithRowsAndSections([
+      this.props.requestor,
+      _friend
+    ])
+    this.setState({ dataSource: _dataSource, selected: clone })
+  }
+
+  onPressCheckAll() {
+    const _selected = this.props.friend
+    const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
+      checked: true
+    }))
+    const _dataSource = dataContrast.cloneWithRowsAndSections([
+      this.props.requestor,
+      _friend
+    ])
+    this.setState({ dataSource: _dataSource, selected: _selected })
+  }
+
   render() {
-    const { dataSource, loading, source } = this.state
-    const { selected_friends } = this.props.booking
+    const { dataSource, selected } = this.state
+    const { loading } = this.props
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <HeaderSearchBar />
         {
           (dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0) ? (
             <ScrollView refreshControl={
               <RefreshControl
-                refreshing={this.state.loading}
-                onRefresh={this.fetchData.bind(this)}
+                refreshing={loading}
+                onRefresh={() => this.props.dispatch(circle.asyncFetchFriends({ init: true }))}
                 title={'下拉进行刷新'}
                 colors={['#ffffff']}
                 progressBackgroundColor={'#1c99fb'}
               />
-            } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', height: Screen.safaContent.height - 48 }} style={{ flex: 1 }}>
-              <Text style={{ top: -64, color: '#777', fontSize: 15, fontWeight: '400' }}>暂无好友，点击右侧按钮进行添加</Text>
+            } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
+              <View style={{ marginTop: 108 }}>
+                <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
+                <Text style={{ color: '#666', fontSize: 22, fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>暂无好友</Text>
+                <Text style={{ color: '#999', fontSize: 15, fontWeight: '400', textAlign: 'center' }}>{'点击"+"进行添加'}</Text>
+              </View>
             </ScrollView>
           ) : (
             <View style={{ flex: 1 }}>
               <ListView
                 refreshControl={
                   <RefreshControl
-                    refreshing={this.state.loading}
-                    onRefresh={this.fetchData.bind(this)}
+                    refreshing={loading}
+                    onRefresh={() => this.props.dispatch(circle.asyncFetchFriends({ init: true }))}
                     title={'下拉进行刷新'}
                     colors={['#ffffff']}
                     progressBackgroundColor={'#1c99fb'}
                   />
                 }
+                style={{ marginHorizontal: 25 }}
                 enableEmptySections={true}
                 dataSource={dataSource}
                 renderSectionHeader={(data, section) => {
                   return (data.length > 0) && (
-                    <View style={{ paddingTop: 12, paddingBottom: 6, paddingLeft: 6, backgroundColor: '#F8F8F8' }}>
-                      <Text style={{ fontSize: 11, color: '#999', fontWeight: '200' }}>{ section === '0' ? '好友请求' : '好友列表' }</Text>
+                    <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
+                      <Text style={{ fontSize: 12, color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? '等待接受' : '我的好友' }</Text>
                     </View>
                   )
                 }}
@@ -134,7 +172,7 @@ export default connect(state => ({ account: state.account, booking: state.bookin
                         } catch (e) {
                           this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
                         } finally {
-                          this.fetchData()
+                          this.props.dispatch(circle.asyncFetchFriends({ init: true }))
                         }
                       }} 
                       onPressReject={async (requestor_id) => {
@@ -143,38 +181,45 @@ export default connect(state => ({ account: state.account, booking: state.bookin
                         } catch (e) {
                           this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
                         } finally {
-                          this.fetchData()
+                          this.props.dispatch(circle.asyncFetchFriends({ init: true }))
                         }
                       }} 
                       data={data} />) : 
                     (<ItemPerson 
                       data={data}
-                      onPressCheck={() => {
-                        let clone = _.cloneDeep(selected_friends)
-                        if (clone.find(pipe => pipe._id === data._id)) {
-                          clone = clone.filter(pipe => pipe._id !== data._id)
-                        } else {
-                          clone.push(data)
-                        }
-                        console.log(clone)
-                        this.props.dispatch(booking.journeyUpdateData({ selected_friends: clone }))
-                      }}
+                      onPressCheck={() => this.onPressCheck(data)}
                       onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { ...data })}
                     />)
                 }
                 renderSeparator={() => (
-                  <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
+                  <View style={{ height: .8, backgroundColor: '#e8e8e8' }} />
                 )}
               />
-              <TouchableOpacity onPress={() => {
-                if (selected_friends.length === 0) return this.props.dispatch(application.showMessage('请选择至少一个朋友'))
-                this.props.navigation.goBack()
-              }} activeOpacity={.7} style={[
-                { height: Define.system.ios.x ? 68 : 44, paddingBottom: Define.system.ios.x ? 22 : 0 },
-                { backgroundColor: selected_friends.length === 0 ? '#ccc' : '#70c040', justifyContent: 'center', alignItems: 'center' }
-              ]}>
-                <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>确认选择</Text>
-              </TouchableOpacity>
+              {
+                (selected.length === 0) && (
+                  <TouchableOpacity onPress={() => this.onPressCheckAll()} activeOpacity={.7} style={[
+                    { height: 56, bottom: Define.system.ios.x ? 27 + 22 : 27 },
+                    { width: width - 90, left: 45, borderRadius: 33 },
+                    { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
+                  ]}>
+                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>全选</Text>
+                  </TouchableOpacity>
+                ) 
+              }
+              {
+                (selected.length !== 0) && (
+                  <TouchableOpacity onPress={() => {
+                    this.props.dispatch(booking.journeyUpdateData({ selected_friends: selected }))
+                    this.props.navigation.goBack()    
+                  }} activeOpacity={.7} style={[
+                    { height: 56, bottom: Define.system.ios.x ? 27 + 22 : 27 },
+                    { width: width - 90, left: 45, borderRadius: 33 },
+                    { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
+                  ]}>
+                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>确认</Text>
+                  </TouchableOpacity>
+                ) 
+              }
             </View>
           )
         }
@@ -186,12 +231,12 @@ export default connect(state => ({ account: state.account, booking: state.bookin
 class HeaderSearchBar extends Component {
   render() {
     return (
-      <View style={{ height: 48, width, backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ marginHorizontal: 15, paddingHorizontal: 15, backgroundColor: 'white', borderRadius: 17, alignItems: 'center' }}>
-          <TextInput {...Define.TextInputArgs} placeholder={'请输入姓名快速查询'} style={
+      <View style={{ height: 62, width, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
+          <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={'姓名/手机/邮箱搜索'} style={
             Platform.select({
-              android: { height: 38, width: width - 45 },
-              ios: { height: 34, width: width - 45 }
+              android: { height: 42, width: width - 56 },
+              ios: { height: 42, width: width - 56 }
             })} />
         </View>
       </View>
@@ -206,17 +251,28 @@ class ItemPerson extends Component {
     const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
 
     return (
-      <TouchableOpacity activeOpacity={.7} onPress={() => onPressDetail()} style={{ height: 60, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 15 }}>
-        <View style={{ justifyContent: 'center', width: 60 }}>
-          <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
+      <TouchableOpacity activeOpacity={1} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+        <View style={{ justifyContent: 'center', marginRight: 10 }}>
+          <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[0].url }} />
+          <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }}></View>
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{fullName}</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>{userId}</Text>
+          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
+          <Text style={{ fontSize: 13, color: '#999' }}>0次行程</Text>
         </View>
-        <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.8} style={{ height: 48, justifyContent: 'center', width: 48, alignItems: 'flex-end', paddingRight: 5 }}>
-          { checked ? Icons.Generator.Material('check-circle', 24, '#70c040') : Icons.Generator.Material('check-circle', 24, '#999') }
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.8} style={{ height: 48, justifyContent: 'center', width: 48, alignItems: 'flex-end', paddingRight: 5 }}>
+          { checked ? Icons.Generator.Material('check-circle', 30, '#70c040') : Icons.Generator.Material('check-circle', 30, '#999') }
+        </TouchableOpacity> */}
+        {
+          checked ? (
+            <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.7} style={{ width: 30, height: 30, borderRadius: 18, backgroundColor: '#7ed321', justifyContent: 'center', alignItems: 'center' }}>
+              { Icons.Generator.Material('check', 18, 'white') }
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.7} style={{ width: 30, height: 30, borderRadius: 18, backgroundColor: '#e7e7e7', justifyContent: 'center', alignItems: 'center' }}>
+            </TouchableOpacity>
+          )
+        }
       </TouchableOpacity>
     )
   }
@@ -229,20 +285,20 @@ class RequestorPerson extends Component {
     const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = requestor_info
 
     return (
-      <View activeOpacity={.7} style={{ height: 60, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 15 }}>
-        <View style={{ justifyContent: 'center', width: 60 }}>
-          <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
+      <View activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+        <View style={{ justifyContent: 'center', marginRight: 10 }}>
+          <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[0].url }} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{ fullName }</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>{ userId }</Text>
+          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 5 }}>{ fullName }</Text>
+          <Text style={{ fontSize: 13, color: '#999' }}>0次行程</Text>
         </View>
-        <View style={{ marginRight: 0, width: 80, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <TouchableOpacity onPress={() => onPressAccept(_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#70c040', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
-            { Icons.Generator.Material('check', 18, '#70c040') }
+        <View style={{ marginRight: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <TouchableOpacity onPress={() => onPressReject(_id)} activeOpacity={.7} style={{ marginRight: 15, width: 30, height: 30, borderRadius: 18, backgroundColor: '#eb8d97', justifyContent: 'center', alignItems: 'center' }}>
+            { Icons.Generator.Material('close', 18, 'white') }
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onPressReject(_id)} activeOpacity={.7} style={{ width: 32, height: 32, borderRadius: 18, borderColor: '#e43c39', borderWidth: 2, justifyContent: 'center', alignItems: 'center' }}>
-            { Icons.Generator.Material('close', 18, '#e43c39') }
+          <TouchableOpacity onPress={() => onPressAccept(_id)} activeOpacity={.7} style={{ width: 30, height: 30, borderRadius: 18, backgroundColor: '#ace36f', justifyContent: 'center', alignItems: 'center' }}>
+            { Icons.Generator.Material('check', 18, 'white') }
           </TouchableOpacity>
         </View>
       </View>

@@ -67,8 +67,11 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
                     const response = await Session.circle.post('v1/requests', { addFriend_id: id })
                     this.props.dispatch(application.showMessage('对方已收到你的好友请求，请等待对方确认'))
                   } catch (e) {
+                    console.log(e)
                     if (e.response && e.response.data && e.response.data.code === 'CIRCLE_REQUEST_EXIST') {
                       this.props.dispatch(application.showMessage('对方已收到你的好友请求，等待确认中')) 
+                    } else if (e.response && e.response.data && e.response.data.code === 'ALREADY_IN_CIRCLE') {
+                      this.props.dispatch(application.showMessage('您已经是对方的好友了')) 
                     } else {
                       this.props.dispatch(application.showMessage('发生错误，请稍后再试')) 
                     }
