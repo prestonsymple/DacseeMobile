@@ -40,7 +40,8 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
       searchTitle: '手机号',
       searchContent: '',
       amount: 0,
-      remark: ''
+      remark: '',
+      searching: false
     }
   }
 
@@ -72,27 +73,45 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
 
     await InteractionManager.runAfterInteractions()
     
-    const resp = await Session.user.get('v1/search?' + url)
-    // console.log('[账户]' + resp)
-    const transferInfo = {
-      wallet: this.props.navigation.state.params.walletInfo,
-      userList: resp.data,
-      amount:  amount,
-      remark: remark
-    }
-    // console.log(transferInfo)
-    // this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
+    try {
+      this.setState({
+        searching: true
+      })
+      const resp = await Session.user.get('v1/search?' + url)
+      // console.log('[账户]' + resp)
+      const transferInfo = {
+        wallet: this.props.navigation.state.params.walletInfo,
+        userList: resp.data,
+        amount:  amount,
+        remark: remark
+      }
+      // console.log(transferInfo)
+      // this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
 
-    if (resp.data.length == 0) {
-      this.props.dispatch(application.showMessage('账号信息错误，未找到对应的账号'))
-    } else {
-      resp.data.length == 1 ?
-        this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) : 
-        this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
-    }
+      if (resp.data.length == 0) {
+        this.props.dispatch(application.showMessage('账号信息错误，未找到对应的账号'))
+        this.setState({
+          searching: false
+        })
+      } else {
+        resp.data.length == 1 ?
+          this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) : 
+          this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
+
+        this.setState({
+          searching: false
+        })
+      }
+    } catch (e) {
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.setState({
+        searching: false
+      })
+    } 
   }
 
   render() {
+    const { searching } = this.state
     return (      
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'on-drag' } >
         <View style={{ padding:20 }}>
@@ -106,7 +125,7 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>收款账户类型</Text>            
-            <CheckBox titles={[ '手机号', '邮箱', '大喜ID']} style={{ flex: 1, height: 44 }} 
+            <CheckBox titles={[ '手机号', '邮箱', '用户账号']} style={{ flex: 1, height: 44 }} 
               onPress={ (index, title) => {
                 this.setState({
                   searchType: index,
@@ -139,7 +158,7 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-            <Button onPress={ () => {
+            <Button disabled={ searching } onPress={ () => {
               if (this.state.searchContent == '' | this.state.amount == 0 | this.state.remark == '') { 
                 this.props.dispatch(application.showMessage('请输入 转账金额、收款账号 和 备注'))
               } else {
@@ -147,8 +166,12 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
               }                
             }       
               // this.props.navigation.navigate('WalletTransferSelection')
-            } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
-              <Text style={{ fontSize: 20, color: 'white' }}>下一步</Text>
+            } style={[{ width:240, height: 44, borderRadius: 4 }, searching ? {backgroundColor: '#a5a5a5'} : {backgroundColor: '#4cb1f7'}]}>
+              {
+                searching ? 
+                  <Text style={{ fontSize: 20, color: 'white' }}>查找中...</Text> :
+                  <Text style={{ fontSize: 20, color: 'white' }}>下一步</Text>
+              }
             </Button>
           </View>
         </View>

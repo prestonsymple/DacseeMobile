@@ -2,7 +2,7 @@
 import React, { Component, PureComponent } from 'react'
 import { 
   Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
+  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
@@ -71,10 +71,25 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
   async componentWillMount() {
     await InteractionManager.runAfterInteractions()
 
-    const resp = await Session.wallet.get('v1/wallets')
+    this._fetchData()
+  }
+
+  async _fetchData(index=0) {
     this.setState({
-      detail: dataContrast.cloneWithRows(resp.data)
+      loading: true
     })
+    try {
+      const resp = await Session.wallet.get('v1/wallets')
+      this.setState({
+        detail: dataContrast.cloneWithRows(resp.data),
+        loading: false
+      })
+    } catch (e) {
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.setState({
+        loading: false
+      })
+    }
   }
 
   render() {
@@ -84,9 +99,18 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
         <ListView 
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this._fetchData.bind(this)}
+              title={'下拉进行刷新'}
+              colors={['#ffffff']}
+              progressBackgroundColor={'#1c99fb'}
+            />
+          }
           dataSource={detail}
           enableEmptySections={true}
-          renderRow={(row) => <TouchableOpacity onPress={() => this.props.navigation.navigate('WalletDetail', { walletInfo: row })}><ListItem data={row} /></TouchableOpacity>}
+          renderRow={(row) => <TouchableOpacity onPress={() => this.props.navigation.navigate('WalletDetail', { walletInfo: row })} activeOpacity={.7}><ListItem data={row} /></TouchableOpacity>}
           // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
           style={{ flex: 1, height: 30, marginTop: 15 }}
         />

@@ -45,8 +45,8 @@ export default class WalletTransferSelectionScreen extends Component {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <View style={{ marginTop: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 11, opacity: 0.5 }}>Multiple account detected with the info you have entered.</Text>
-          <Text style={{ fontSize: 11, opacity: 0.5 }}>Please select the user accoutn to transfer</Text>
+          <Text style={{ fontSize: 13, opacity: 0.5 }}>查找到多个相关账户</Text>
+          <Text style={{ marginTop: 10, fontSize: 13, opacity: 0.5 }}>请选择您要转账的账户</Text>
         </View>
 
         <ListView 
@@ -61,7 +61,7 @@ export default class WalletTransferSelectionScreen extends Component {
             })
 
             this.props.navigation.navigate('WalletTransferSummary', { transferInfo: this.state.transferInfo }) }
-          }><AccountItem data={row} /></TouchableOpacity> }
+          } activeOpacity={.7}><AccountItem data={row} /></TouchableOpacity> }
           renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
           style={{ flex: 1, marginTop: 30 }}
         />
