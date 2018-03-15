@@ -17,6 +17,17 @@ export default connect(state => ({
   selected: state.booking.type === 'circle',
 }))(class BookingSelectMyCircle extends Component {
 
+  constructor(props) {
+    super(props)
+  }
+
+  async componentDidMount() {
+    await InteractionManager.runAfterInteractions()
+    if (this.props.selected && this.props.init) {
+      this.props.dispatch(circle.asyncFetchFriends({ init: true, delay: 2000 }))
+    }
+  }
+
   componentWillReceiveProps(props) {
     if (this.props.selected !== props.selected && props.selected) {
       this.props.dispatch(circle.asyncFetchFriends({ init: true }))
@@ -44,7 +55,7 @@ export default connect(state => ({
           {
             (!loading && friend.length === 0) && (
               <TouchableOpacity onPress={() => {
-                this.props.dispatch(NavigationActions.navigate('FriendsCircleAdd'))
+                this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsCircle' }))
               }} activeOpacity={.7} style={{ borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 }}>
                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                   { Icons.Generator.Awesome('plus', 14, '#959595', { style: { top: .5 } }) }
@@ -57,9 +68,9 @@ export default connect(state => ({
             (!loading && friend.length !== 0 && (selected_friends.length === friend.length || selected_friends.length === 0)) && (
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity 
-                  onPress={() => this.props.dispatch(booking.journeyUpdateData({ selected_friends: friend }))} 
+                  onPress={() => this.props.dispatch(booking.passengerSetValue({ selected_friends: friend }))} 
                   activeOpacity={.7} style={[
-                    { marginRight: 2, justifyContent: 'center', alignItems: 'center', height: 46, borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 },
+                    { marginRight: 3, justifyContent: 'center', alignItems: 'center', height: 46, borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 },
                     selected_friends.length === friend.length ? { backgroundColor: '#FFB639' } : {  }
                   ]}
                 >
@@ -69,9 +80,12 @@ export default connect(state => ({
                   ]}>全部朋友</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
-                  onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsCircle' }))} 
+                  onPress={() => {
+                    this.props.dispatch(booking.passengerSetValue({ selected_friends: [] }))
+                    this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsCircle' }))
+                  }} 
                   activeOpacity={.7} 
-                  style={{ marginLeft: 2, justifyContent: 'center', alignItems: 'center', height: 46, borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 }}
+                  style={{ marginLeft: 3, justifyContent: 'center', alignItems: 'center', height: 46, borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 }}
                 >
                   <Text style={{ color: '#5d5d5d', marginLeft: 6, fontWeight: '600' }}>指定朋友</Text>
                 </TouchableOpacity>
@@ -88,7 +102,7 @@ export default connect(state => ({
                 >
                   { selected_friends.map((pipe, index) => (<SelectButton key={index} data={pipe} />)) }
                 </ScrollView>
-                <View style={{ marginLeft: 7 }}>
+                <View style={{ marginLeft: 5 }}>
                   <TouchableOpacity onPress={() => {
                     this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsCircle' }))
                   }} activeOpacity={.7} style={{ backgroundColor: '#7ed321', width: 46, height: 46, borderRadius: 23, justifyContent: 'center', alignItems: 'center' }}>

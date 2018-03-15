@@ -14,7 +14,6 @@ import {
   BookingOptionsScreen,
   BookingDriverDetailScreen,
   BookingCompleteScreen,
-  PickerAddressScreen,
   FriendsCircleScreen,
   FriendsCircleAddScreen,
   FriendsRequestScreen,
@@ -47,7 +46,9 @@ import {
   SettingLanguageRegionScreen,
   SettingFeedbackScreen,
   SettingHelpCenterScreen,
-  SettingWetViewScreen
+  SettingWetViewScreen,
+
+  ProfileChangeAvatarScreen
 } from './route/setting'
 
 import {
@@ -120,7 +121,6 @@ const AppNavigator = DrawerNavigator({
     FriendsSearchBase: { screen: FriendsSearchScreen },
     FriendsRequest: { screen: FriendsRequestScreen },
     FriendsDetail: { screen: FriendsDetailScreen },
-    PickerAddress: { screen: PickerAddressScreen },
 
     JobsListener: { screen: JobsListenerScreen },
     JobsList: { screen: JobsListScreen },
@@ -146,6 +146,8 @@ const AppNavigator = DrawerNavigator({
     SettingFeedback: { screen: SettingFeedbackScreen },
     SettingHelpCenter: { screen: SettingHelpCenterScreen },
     SettingWetView: { screen: SettingWetViewScreen },
+
+    ProfileChangeAvatar: { screen: ProfileChangeAvatarScreen },
 
     UpgradeDriver: { screen: UpgradeDriverScreen },
 

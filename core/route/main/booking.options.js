@@ -15,6 +15,7 @@ import moment from 'moment'
 import Resources from '../../resources'
 
 import HeaderSection from './booking.header.section'
+import BookingSelectCircle from './booking.select.circle'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Define, System } from '../../utils'
@@ -51,10 +52,11 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
           style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
           onPress={() => DeviceEventEmitter.emit('NAVIGATION.EVENT.ON.PRESS.BACK.BOOKING')}
         >
-          { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
+          { Icons.Generator.Material('keyboard-arrow-left', 30, 'white') }
         </TouchableOpacity>
       ),
       headerStyle: {
+        backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
         shadowOpacity: 0,
         borderBottomWidth: 0,
@@ -215,53 +217,12 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
         </MapView>
         <HeaderSection type={this.props.data.type} dispatch={this.props.dispatch} />
 
+
+        <BookingSelectCircle />
+
         <View style={[
           styles.SelectBookingWrap
         ]}>
-          <View style={[
-            { marginBottom: 6, backgroundColor: 'white' }, 
-            Platform.select({
-              ios: {},
-              android: { borderColor: '#ccc', borderWidth: .8 },
-            }),
-            { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-          ]}>
-            <View style={{ height: 116, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              {
-                (carArgs.length === 0) ? (
-                  <View style={Platform.select({
-                    android: { position: 'absolute', height: 116, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' },
-                    ios: { position: 'absolute', height: 96, top: 0, bottom: 0, left: (Screen.window.width - 30 - 66) / 2, alignItems: 'center', justifyContent: 'center' }
-                  })}>
-                    <Lottie progress={this.indicator} style={{ width: 66, height: 66 }} source={Resources.animation.simpleLoader} />
-                  </View>
-                ) : (
-                  <ScrollView
-                    pagingEnabled={type !== 'circle'}
-                    horizontal={true} 
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ 
-                      height: 116, 
-                      justifyContent: 'center', 
-                      alignItems: 'center' 
-                    }}
-                    style={{ width: width - 30 }}
-                  >
-                    { (type === 'circle') ? 
-                      carArgs.map((pipe, index) => (
-                        <SelectButton key={index} data={pipe} />
-                      )) : 
-                      carArgs.map((pipe, index) => (
-                        <View key={index} style={{ width: width - 30 }}>
-                          <SelectButton key={index} data={pipe} />
-                        </View>
-                      ))
-                    }
-                  </ScrollView>
-                )
-              }
-            </View>
-          </View>
           <SelectBookingOption
             onPressSubscribe={() => this.setState({ selectTimeShow: true })}
             onPressSelectPay={() => {
@@ -292,9 +253,9 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
               }),
               { backgroundColor: 'white' }
             ]}
+            schedule={schedule === 2}
             reachTime={reachTime}
             onPressBooking={() => {
-              // this.map.animateTo({ zoomLevel: 14, coordinate: { latitude: 31.04510555, longitude: 121.16909333 } }, 500)
               this.props.dispatch(booking.journeyUserStart())
             }}
             data={this.props.data}
@@ -444,7 +405,7 @@ export default connect(state => ({ data: state.booking }))(class BookingSchedule
             })
           }
         </Modal>
-        <ModalDriverRespond visible={schedule === 2} />
+        <ModalDriverRespond />
       </View>
     )
   }
@@ -542,7 +503,7 @@ class MapPin extends Component {
 
 class SelectBookingOption extends Component {
   render() {
-    const { reachTime, onPressBooking, onPressSubscribe, onPressSelectPay, data } = this.props
+    const { reachTime, onPressBooking, onPressSubscribe, onPressSelectPay, data, schedule } = this.props
     const { time, payment } = data
     return (
       <Animated.View style={this.props.style}>
@@ -573,9 +534,15 @@ class SelectBookingOption extends Component {
             { height: 44, width: (width - 30), flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
             { left: 0 }
           ]}>
-            <Button onPress={onPressBooking} style={{ flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C' }}>
+            <TouchableOpacity 
+              onPress={!schedule ? onPressBooking : () => {}} 
+              activeOpacity={schedule ? 1 : .7} 
+              style={[
+                { flex: 1, left: 0, height: 44, backgroundColor: '#FEA81C', justifyContent: 'center', alignItems: 'center' },
+                schedule ? { backgroundColor: '#ededed' } : { }
+              ]}>
               <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>开始</Text>
-            </Button>
+            </TouchableOpacity>
           </View>
         </View>
       </Animated.View>

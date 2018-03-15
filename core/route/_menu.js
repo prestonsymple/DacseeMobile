@@ -69,7 +69,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
   }
 
   render() {
-    const { fullName } = this.props.user
+    const { fullName, avatars } = this.props.user
 
     return (
       <View style={{ flex: 1 }}>
@@ -82,7 +82,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
               { backgroundColor: '#eee', overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
               { borderRadius: 50, width: 100, height: 100, justifyContent: 'center', alignItems: 'center' }
             ]}>
-              <Image style={{ width: 100, height: 100 }} source={require('../resources/images/test.jpg')} />
+              <Image style={{ width: 100, height: 100 }} source={{ uri: avatars[avatars.length - 1].url }} />
               {/* { Icons.Generator.Material('account-circle', 100, '#fad723') } */}
             </View>
             <Text style={[

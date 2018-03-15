@@ -126,22 +126,15 @@ class Core extends PureComponent {
           }
 
           /* PASSENGER */
-          if (_status === 'CANCELLED_BY_DRIVER') { // 司机取消
-            store.dispatch(booking.journeyUserDriverRespondFail(booking_id))
-            store.dispatch(application.showMessage('您的行程已被拒绝'))
-          } else if (_status === 'ON_THE_WAY') { // 司机接单-已在路上
-            store.dispatch(booking.journeyUserDriverRespondSuccess(booking_id))
-          } else if (_status === 'ARRIVED') { // 已到达
-            store.dispatch(booking.passengerEventDriverArrived(booking_id))
-          } else if (_status === 'NO_SHOW') { // 未找到乘客
-            store.dispatch(booking.passengerEventDriverNoShow(booking_id))
-          } else if (_status === 'ON_BOARD') { // 行驶中
-            store.dispatch(booking.passengerEventDriverOnBoard(booking_id))
-          } else if (_status === 'NO_TAKER') { // 没有司机
-            store.dispatch(booking.journeyUserDriverRespondFail(booking_id))
-            store.dispatch(application.showMessage('订单超时，请稍后再试'))
-          } else if (_status === 'COMPLETED') { // 完成订单
-            store.dispatch(booking.passengerEventDriverComplete(booking_id))
+          if (_status === 'CANCELLED_BY_DRIVER' ||
+              _status === 'ON_THE_WAY' ||
+              _status === 'ARRIVED' ||
+              _status === 'NO_SHOW' || 
+              _status === 'ON_BOARD' ||
+              _status === 'NO_TAKER' ||
+              _status === 'COMPLETED'
+          ) { 
+            store.dispatch(booking.passengerBoardCastListener({ action: _status, booking_id: booking_id }))
           }
         }
         // process the notification

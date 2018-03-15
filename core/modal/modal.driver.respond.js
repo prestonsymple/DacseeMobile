@@ -19,9 +19,9 @@ import { booking, application } from '../redux/actions'
 
 export default connect(state => ({ booking_id: state.booking.booking_id }))(class DriverRespondView extends Component {
   render() {
-    const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field } = this.props
+    const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field, booking_id = '' } = this.props
     return (
-      <Modal onRequestClose={() => {}} {...this.props} transparent={true} style={{ }}>
+      <Modal onRequestClose={() => {}} visible={booking_id.length !== 0} transparent={true} style={{ }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#66666699', flex: 1 }}>
           <View style={[
             { width: Screen.window.width - 90, height: 296, backgroundColor: 'white', borderRadius: 4 },
@@ -52,8 +52,8 @@ export default connect(state => ({ booking_id: state.booking.booking_id }))(clas
             </View>
             <Button onPress={async () => {
               try {
-                await Session.booking.put(`v1/${this.props.booking.booking_id}`)
-                this.props.dispatch(booking.journeyUserCancel())
+                await Session.booking.put(`v1/${this.props.booking_id}`, { action: 'cancel' })
+                this.props.dispatch(booking.journeyUserCancel())  
               } catch(e) {
                 this.props.dispatch(application.showMessage('无法连接到服务器'))
               }

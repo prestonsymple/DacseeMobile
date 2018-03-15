@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, Component } from 'react'
-import { StyleSheet, View, ListView, TouchableOpacity, Text, Switch, InteractionManager } from 'react-native'
+import { StyleSheet, View, ListView, TouchableOpacity, Text, Switch, InteractionManager, Image } from 'react-native'
 import { connect } from 'react-redux'
 // import InteractionManager from 'InteractionManager'
 import PropTypes from 'prop-types'
@@ -36,11 +36,11 @@ export default connect(state => ({
   }
 
   componentWillReceiveProps(props) {
+    console.log(props)
     const data = dataContrast.cloneWithRowsAndSections(props.producer(props))
     this.setState({ source: data })
     this.struct = {
       section: data.getSectionLengths(),
-      // length: data.getSectionLengths().reduce((prev, next) => prev + next)
     }
   }
 
@@ -88,11 +88,12 @@ class ListViewItem extends Component {
   static propTypes = {
     data: PropTypes.shape({
       title: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['button', 'switch', 'text']),
+      type: PropTypes.oneOf(['button', 'switch', 'text', 'image']),
       value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
-        PropTypes.bool
+        PropTypes.bool,
+        PropTypes.object
       ]),
       onPress: PropTypes.func,
       editable: PropTypes.bool
@@ -132,6 +133,16 @@ class ListViewItem extends Component {
       </View>
     )
 
+    if (type === 'image') return (
+      <TouchableOpacity onPress={editable ? onPress : () => { }} activeOpacity={0.7} style={styles.itemImageTouchable}>
+        <Text style={styles.itemTitle}>{title}</Text>
+        <View style={styles.itemRight}>
+          <Image style={{ width: 68, height: 68, borderRadius: 34 }} source={value} />
+          {editable ? Icons.Generator.Material('chevron-right', 24, '#bbb') : null}
+        </View>
+      </TouchableOpacity>
+    )
+
     return (
       <TouchableOpacity onPress={editable ? onPress : () => { }} activeOpacity={0.7} style={styles.itemTouchable}>
         <Text style={styles.itemTitle}>{title}</Text>
@@ -149,6 +160,7 @@ const styles = StyleSheet.create({
   sectionButtonBorder: { height: 24, borderTopWidth: Define.FixPlusPixel, borderBottomWidth: Define.FixPlusPixel, borderColor: '#eaeaea' },
   sectionBorder: { height: 12, borderTopWidth: Define.FixPlusPixel, borderBottomWidth: Define.FixPlusPixel, borderColor: '#eaeaea' },
   itemTouchable: { paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' },
+  itemImageTouchable: { paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 92, backgroundColor: 'white' },
   itemValue: { color: '#666', fontSize: 15 },
   itemRight: { justifyContent: 'center', flexDirection: 'row', alignItems: 'center' },
   itemTitle: { color: '#333', fontSize: 15, fontWeight: '400' },

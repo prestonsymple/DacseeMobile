@@ -4284,6 +4284,13 @@ react-native-animatable@^1.2.3:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-camera@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-1.0.2.tgz#490e75b14196af0ec972a759bb6027693ad4aad6"
+  dependencies:
+    lodash "^4.17.4"
+    prop-types "^15.5.10"
+
 react-native-code-push@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/react-native-code-push/-/react-native-code-push-5.2.1.tgz#b96cabf4be74e0caac8d55d1126aa48dba695490"
@@ -4327,6 +4334,10 @@ react-native-fs@^2.9.7:
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
+
+react-native-image-picker@^0.26.7:
+  version "0.26.7"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.7.tgz#ad2ee957f7f6cc01396893ea03d84cb2adb2e376"
 
 react-native-maps@^0.19.0:
   version "0.19.0"

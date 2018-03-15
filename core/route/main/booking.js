@@ -14,14 +14,16 @@ import BaseScreenComponent from '../_base'
 
 import HeaderSection from './booking.header.section'
 import BookingSelectCircle from './booking.select.circle'
+import BookingNavigationBarSwipe from './booking.navigation.bar.swipe'
 
-import { MapView, Search } from '../../native/AMap'
+import { MapView, Search, Marker } from '../../native/AMap'
 import { Screen, Icons, Define } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
 
 import ModalSelectAddress from '../../modal/modal.select.address'
-import ModalDriverRespond from '../../modal/modal.driver.respond'
+
+import { TabViewAnimated, TabBar } from 'react-native-tab-view'
 
 // Get Navigator Status
 import { HomeNavigator } from '../../app.routes'
@@ -37,7 +39,7 @@ const MAP_DEFINE = {
   showsZoomControls: false, /* android fix */
 }
 
-const PIN_HEIGHT = ((height - 20) / 2)
+const PIN_HEIGHT = ((height - 22) / 2)
 const BOTTOM_MARGIN = Platform.select({
   ios: Define.system.ios.x ? 35 : 5,
   android: 25
@@ -56,7 +58,7 @@ const DEMO_DATA = [
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({ data: state.booking }))(class MainScreen extends BaseScreenComponent {
+export default connect(state => ({ }))(class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -85,10 +87,85 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     }
   }
 
+  async componentDidMount() {
+    await InteractionManager.runAfterInteractions()
+    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
+  }
+
+  componentWillUnmount() {
+    this.subscription && this.subscription.remove()
+  }
+
+  async componentWillReceiveProps(props) {
+    // const { schedule, to } = props.data
+
+    // if (schedule === 1) {
+    //   await new Promise((resolve) => Animated.timing(this.ui, { toValue: 1, duration: 200 }).start(() => resolve()))
+    // }
+
+    // if (schedule === 3) {
+    //   await new Promise((resolve) => Animated.timing(this.ui, { toValue: 2, duration: 200 }).start(() => resolve()))
+    // }
+
+    // if (('location' in to) && (to.address !== this.props.data.to.address) && (to.location.lat !== 0) && (to.location.lng !== 0)) {
+    //   this.props.navigation.navigate('BookingOptions')
+    // }
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
+        <BookingNavigationBarSwipe />
+        <BookingContainerSwipe />
+      </View>
+    )
+  }
+})
+
+const BookingContainerSwipe = connect(state => ({ core_mode: state.application.core_mode }))(class BookingContainerSwipe extends Component {
+
+  constructor(props) { 
+    super(props)
+  }
+
+  componentDidMount() { this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) }
+
+  componentWillReceiveProps(props) {
+    if (props.core_mode !== this.props.core_mode) {
+      this.scrollView.scrollTo({ x: props.core_mode === 'driver' ? 0 : width, animated: false })
+    }
+  }
+
+  render() {
+    const VIEW_SETTER = {
+      scrollEnabled: false,
+      horizontal: true,
+      ref: (e) => this.scrollView = e
+    }
+    return (
+      <ScrollView {...VIEW_SETTER}>
+        <DriverComponent />
+        <PassengerComponent />
+      </ScrollView>
+    )
+  }
+})
+
+class DriverComponent extends Component {
+  render() {
+    return (
+      <View style={{ width }}>
+
+      </View>
+    )
+  }
+}
+
+const PassengerComponent = connect(state => ({ data: state.booking }))(class PassengerComponent extends Component {
+
   constructor(props) {
     super(props)
-
-    // TODO: MOVE TO REDUX
     this.state = {
       ready: false,
       editAdr: false,
@@ -133,16 +210,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.count = 0
   }
 
-  async componentDidMount() {
-    await InteractionManager.runAfterInteractions()
-    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
-  }
-
-  componentWillUnmount() {
-    this.timer && clearTimeout(this.timer)
-    this.subscription && this.subscription.remove()
-  }
-
   async onLocationListener({ nativeEvent }) {
     const { latitude, longitude } = nativeEvent
     if (latitude === 0 || longitude === 0) return
@@ -176,7 +243,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
     if (!this.state.drag) {
       this.setState({ drag: true })
-      this.props.dispatch(booking.journeyUpdateData({ from: {} }))
+      this.props.dispatch(booking.passengerSetValue({ from: {} }))
       Animated.spring(this.pin, { toValue: 1, friction: 1.5 }).start()
       Animated.timing(this.board, { toValue: 1, duration: 100 }).start()
     }
@@ -203,31 +270,20 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
         if (pipe.address.endsWith('弄')) return pipe
         return false
       })
-      this.props.dispatch(booking.journeyUpdateData({ from: address || {} }))
+      this.props.dispatch(booking.passengerSetValue({ from: address || {} }))
       this.setState({ drag: false })
     } catch (e) {
       return
     }
   }
 
+
   onEnterKeywords(keywords) {
-    this.timer && clearTimeout(this.timer)
-    this.timer = setTimeout(this.onKeywordsSearch(keywords), 400)
-  }
-
-  async componentWillReceiveProps(props) {
-    const { schedule, to } = props.data
-
-    if (schedule === 1) {
-      await new Promise((resolve) => Animated.timing(this.ui, { toValue: 1, duration: 200 }).start(() => resolve()))
-    }
-
-    if (schedule === 3) {
-      await new Promise((resolve) => Animated.timing(this.ui, { toValue: 2, duration: 200 }).start(() => resolve()))
-    }
-
-    if (('location' in to) && (to.address !== this.props.data.to.address) && (to.location.lat !== 0) && (to.location.lng !== 0)) {
-      this.props.navigation.navigate('BookingOptions')
+    try {
+      this.timer && clearTimeout(this.timer)
+      this.timer = setTimeout(this.onKeywordsSearch(keywords), 400)
+    } catch (e) {
+      // nothing
     }
   }
 
@@ -242,7 +298,7 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
   }
 
   async onSelectAddress(address, field) {
-    this.props.dispatch(booking.journeyUpdateData({ [field]: address }))
+    this.props.dispatch(booking.passengerSetValue({ [field]: address }))
     this.setState({ editAdr: false, data: undefined })
     await new Promise((resolve) => Animated.timing(this.ui, { toValue: 0, duration: 200 }).start(() => resolve()))
   }
@@ -253,51 +309,49 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
 
   render() {
     const { editAdr, drag, defaultData, data, field, carArgs } = this.state
-    const { schedule, type } = this.props.data
+    const { schedule, type, from } = this.props.data
+
+    const MAP_SETTER = {
+      style: { flex: 1 },
+      locationEnabled: true,
+      mapType: 'standard',
+      locationInterval: 1000,
+      onStatusChange: this.onStatusChangeListener.bind(this),
+      onLocation: this.onLocationListener.bind(this),
+      ref: (e) => this.map = e
+    }
+
+    const PICKER_ADDRESS_SETTER = {
+      defaultData, data, field,
+      onPressCancel: () => this.cancelAdrEdit(),
+      onSelectAddress: (props, field) => this.onSelectAddress(props, field),
+      onRequestClose: () => { },
+      onChangeKeywords: this.onEnterKeywords.bind(this),
+      animationType: 'slide',
+      transparent: false,
+      visible: editAdr
+    }
 
     return (
-      <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
-        <MapView
-          {...MAP_DEFINE}
-          style={{ flex: 1 }}
-          locationEnabled={true}
-          mapType={'standard'}
-          locationInterval={1000}
-          locationStyle={{
-
-          }}
-          onStatusChange={this.onStatusChangeListener.bind(this)}
-          onLocation={this.onLocationListener.bind(this)}
-          ref={e => this.map = e}>
+      <View style={{ flex: 1, width }}>
+        <MapView {...MAP_DEFINE} {...MAP_SETTER}>
+          {/* TODO */}
         </MapView>
 
-        <HeaderSection type={this.props.data.type} dispatch={this.props.dispatch} />
+        <HeaderSection />
 
         <MapPin timing={this.pin} />
         <MapPinTip timing={this.board} />
 
-        <BookingSelectCircle />
+        <BookingSelectCircle init={true} />
 
         <PickerAddress
           timing={this.ui} drag={drag} to={this.props.data.to} from={this.props.data.from}
-          onPressTo={() => this.activeAdrEdit('to')}
-          onPressFrom={() => this.activeAdrEdit('from')}
+          onPressTo={() => this.activeAdrEdit('to')} onPressFrom={() => this.activeAdrEdit('from')}
         />
 
         {/* Modal - Where u? */}
-        <ModalSelectAddress
-          onPressCancel={() => this.cancelAdrEdit()}
-          onSelectAddress={(props, field) => this.onSelectAddress(props, field)}
-          onRequestClose={() => { }}
-          onChangeKeywords={this.onEnterKeywords.bind(this)}
-          field={field}
-          animationType={'slide'}
-          transparent={false}
-          visible={editAdr}
-          defaultData={defaultData}
-          data={data}
-        />
+        <ModalSelectAddress {...PICKER_ADDRESS_SETTER} />
       </View>
     )
   }
@@ -430,7 +484,7 @@ class MapPin extends Component {
       <View style={{ position: 'absolute', left: (Screen.window.width - 18) / 2 }}>
         <Animated.Image style={[
           { width: 18, height: 28 },
-          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 48, PIN_HEIGHT - 52] }) }
+          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 56, PIN_HEIGHT - 60] }) }
         ]} source={Resources.image.pin} />
       </View>
     )

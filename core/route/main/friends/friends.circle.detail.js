@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, ScrollView
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, ScrollView, Alert
 } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -8,8 +8,8 @@ import InteractionManager from 'InteractionManager'
 import ActionSheet from 'react-native-actionsheet'
 import { join } from 'redux-saga/effects';
 
-import { application } from '../../../redux/actions'
-import { Icons, Screen } from '../../../utils'
+import { application, circle } from '../../../redux/actions'
+import { Icons, Screen, Session } from '../../../utils'
 
 const { width, height } = Screen.window
 
@@ -29,10 +29,18 @@ export default connect(state => ({ booking: state.booking }))(class FriendsCircl
           style={{ top: -0.5, width: 54, paddingRight: 20, justifyContent: 'center', alignItems: 'flex-end' }}
           onPress={() => DeviceEventEmitter.emit('NAVIGATION.EVENT.ON.PRESS.MORE.FREIENDS')}
         >
-          {Icons.Generator.Material('more-horiz', 28, '#2f2f2f', { style: { left: 8 } })}
+          {Icons.Generator.Material('more-horiz', 28, 'white', { style: { left: 8 } })}
         </TouchableOpacity>
       ),
-      title: `${fullName}`
+      title: '朋友详情',
+      headerStyle: {
+        backgroundColor: '#1ab2fd',
+        shadowColor: 'transparent',
+        shadowOpacity: 0,
+        borderBottomWidth: 0,
+        borderBottomColor: 'transparent',
+        elevation: 0,
+      }
     }
   }
 
@@ -58,18 +66,57 @@ export default connect(state => ({ booking: state.booking }))(class FriendsCircl
       this.props.dispatch(application.showMessage('已将您的反馈提交至服务器，我们将会严格审查'))
     }
     if (index === 1) {
-      this.props.dispatch(application.showMessage('Error'))
+      Alert.alert('解除朋友关系', '确认解除朋友关系吗？该操作不可恢复', [{
+        text: '确认',
+        onPress: async () => {
+          try {
+            const { _id } = this.props.navigation.state.params
+            await Session.circle.delete(`v1/circle/${_id}`)
+            this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+            Alert.alert('完成', '朋友身份已解除', [{ text: '确定', onPress: () => this.props.navigation.goBack() }])
+          } catch (e) {
+            console.log(e)
+            this.props.dispatch(application.showMessage('请求超时，请稍后再试')) 
+          }
+        }
+      }, { text: '取消' }])
     }
   }
 
   render() {
     const { dataSource } = this.state
+    const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
+    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
 
     return (
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{}} style={{ backgroundColor: 'white' }}>
-          <View style={{  }}>
-            
+          <View style={{ height: 161, backgroundColor: '#1ab2fd', justifyContent: 'center' }}>
+            <View style={{ alignItems: 'center' }}>
+              <View style={{ borderColor: '#106e9d', borderWidth: 4, borderRadius: 60, marginBottom: 10 }}>
+                <Image style={{ width: 88, height: 88, borderRadius: 44 }} source={{ uri: avatars[0].url }} />
+                <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 2, right: 2, borderRadius: 9 }} />
+              </View>
+              <Text style={{ color: 'white', fontSize: 18, fontWeight: '600' }}>{ fullName }</Text>
+            </View>
+          </View>
+          <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
+            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>用户编号</Text>
+              { userId && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ userId }</Text>) }
+            </View>
+            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>联系电话</Text>
+              { phoneNo && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }
+            </View>
+            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>电子邮箱</Text>
+              <Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ email || '尚未填写' }</Text>
+            </View>
+            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>国家</Text>
+              <Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ '尚未填写' }</Text>
+            </View>
           </View>
         </ScrollView>
         <ActionSheet

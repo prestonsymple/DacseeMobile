@@ -93,6 +93,7 @@
 		F5DBEBE52028A73300F4A9DF /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DBEBE42028A6E600F4A9DF /* libRCTSplashScreen.a */; };
 		F5DBEBEF2028A8BC00F4A9DF /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DBEBEC2028A8B100F4A9DF /* libRCTPushNotification.a */; };
 		F5DF448C20451530002D0E64 /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DF44612045150F002D0E64 /* libRCTBEEPickerManager.a */; };
+		F5FE17C22059524100646D3B /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5FE17C12059521D00646D3B /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -502,6 +503,13 @@
 			remoteGlobalIDString = 17D41E551D7EE0CA0031415E;
 			remoteInfo = RCTBEEPickerManager;
 		};
+		F5FE17C02059521D00646D3B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5FE17BC2059521D00646D3B /* RNImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
+			remoteInfo = RNImagePicker;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -633,6 +641,7 @@
 		F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F5DBEBF02028AAE100F4A9DF /* dacsee.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = dacsee.entitlements; path = dacsee/dacsee.entitlements; sourceTree = "<group>"; };
 		F5DF44512045150F002D0E64 /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
+		F5FE17BC2059521D00646D3B /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		F83003D7435241979684458E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FBBA790CE36040B99ED31E6E /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -650,6 +659,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5FE17C22059524100646D3B /* libRNImagePicker.a in Frameworks */,
 				F5DF448C20451530002D0E64 /* libRCTBEEPickerManager.a in Frameworks */,
 				F5DBEBEF2028A8BC00F4A9DF /* libRCTPushNotification.a in Frameworks */,
 				F5DBEBE52028A73300F4A9DF /* libRCTSplashScreen.a in Frameworks */,
@@ -904,6 +914,7 @@
 			children = (
 				F5DF44512045150F002D0E64 /* RCTBEEPickerManager.xcodeproj */,
 				F5DBEBE62028A8B100F4A9DF /* RCTPushNotification.xcodeproj */,
+				F5FE17BC2059521D00646D3B /* RNImagePicker.xcodeproj */,
 				F5DBEBDF2028A6E500F4A9DF /* RCTSplashScreen.xcodeproj */,
 				F5D3FAF4201FE7AF00EAB3F6 /* Lottie.xcodeproj */,
 				F5D3FAA9201FE77400EAB3F6 /* RNFS.xcodeproj */,
@@ -1151,6 +1162,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F5FE17BD2059521D00646D3B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5FE17C12059521D00646D3B /* libRNImagePicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1362,6 +1381,10 @@
 				{
 					ProductGroup = F5D3FAAA201FE77400EAB3F6 /* Products */;
 					ProjectRef = F5D3FAA9201FE77400EAB3F6 /* RNFS.xcodeproj */;
+				},
+				{
+					ProductGroup = F5FE17BD2059521D00646D3B /* Products */;
+					ProjectRef = F5FE17BC2059521D00646D3B /* RNImagePicker.xcodeproj */;
 				},
 				{
 					ProductGroup = F59CD4E820057FE500F2824A /* Products */;
@@ -1762,6 +1785,13 @@
 			fileType = archive.ar;
 			path = libRCTBEEPickerManager.a;
 			remoteRef = F5DF44602045150F002D0E64 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5FE17C12059521D00646D3B /* libRNImagePicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNImagePicker.a;
+			remoteRef = F5FE17C02059521D00646D3B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
