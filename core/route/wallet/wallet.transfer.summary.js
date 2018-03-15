@@ -36,15 +36,14 @@ export default connect(state => {
   constructor(props) {
     super(props)
     this.state = {
-      transferInfo: this.props.navigation.state.params.transferInfo
+      transferInfo: this.props.navigation.state.params.transferInfo,
+      transfering: false
     }
   }
 
   async _submitTransfer() {
     const { amount, remark, userList, wallet } = this.state.transferInfo
     const user = userList[0]
-
-    console.log(this.props.routeStack)
 
     await InteractionManager.runAfterInteractions()
 
@@ -60,17 +59,28 @@ export default connect(state => {
       remarks: remark
     }
     try {
+      this.setState({
+        transfering: true
+      })
       await Session.wallet.post('v1/transferTransactions', body)
       // const _backKey = this.props.routeStack.routes[1].routes[0].routes[0].routes[0].key
       // this.props.navigation.goBack(_backKey)
       this.props.dispatch(application.showMessage('转账成功'))
+      this.props.navigation.dispatch(NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Main' })]
+      }))
     } catch (e) {
-      console.log(e)
+      this.props.dispatch(application.showMessage('网络情况差，请稍后重试'))
+      this.setState({
+        transfering: false
+      })
     }
     
   }
 
   render() {
+    const { transfering } = this.state
     const { wallet, amount, userList, remark } = this.state.transferInfo
     const user = userList[0]
     // console.log(userList)
@@ -108,8 +118,13 @@ export default connect(state => {
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-            <Button onPress={ () => this._submitTransfer()} style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
-              <Text style={{ fontSize: 20, color: 'white' }}>确认转账</Text>
+            <Button disabled={ transfering } onPress={ () => this._submitTransfer()} style={[{ width:240, height: 44, borderRadius: 4 }, transfering ? {backgroundColor: '#a5a5a5'} : { backgroundColor: '#4cb1f7'}]}>
+              {
+                transfering ? 
+                  <Text style={{ fontSize: 20, color: 'white' }}>转账中...</Text> :
+                  <Text style={{ fontSize: 20, color: 'white' }}>确认转账</Text>
+                  
+              }              
             </Button>
           </View>
         </View>

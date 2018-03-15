@@ -66,18 +66,22 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
 
-    const resp = await Session.wallet.get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
+    try {
+      const resp = await Session.wallet.get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
+      this.setState({
+        detail: dataContrast.cloneWithRows(resp.data)
+      })
+    } catch (e) {
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))    
+    }
+    
     //   {
     //     "_id": "28172224-2430-11e8-b67d-91aeb57f5e5b",
     //     "amount": -2,
     //     "remarks": "hold for booking",
     //     "yourRef": "booking_id here",
     //     "timestamp": "2018-03-10T06:56:28.000Z"
-    // }
-
-    this.setState({
-      detail: dataContrast.cloneWithRows(resp.data)
-    })
+    // }    
   }
 
   render() {

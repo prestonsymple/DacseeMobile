@@ -8,6 +8,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
+import moment from 'moment'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
@@ -145,32 +146,32 @@ export default class JobsListDetailScreen extends Component {
             }),
             { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
           ]}>
-            <View style={{ margin: 15, height: 146, flex: 1 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ margin: 15, height: 166, flex: 1, justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Text style={{ width:60, fontSize: 14, color:'#a5a5a5' }}>出发地</Text>
-                <Text style={{ marginLeft: 10, fontSize: 14 }}>{ from.name }</Text>
+                <Text style={{ marginRight: 5, fontSize: 14 }}>{ from.name }({ from.address })</Text>
               </View>
-              <View style={{ marginTop:10, flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>目的地</Text>
-                <Text style={{ marginLeft: 10, fontSize: 14 }}>{ destination.name }</Text>
+                <Text style={{ marginRight: 5, fontSize: 14 }}>{ destination.name }({ destination.address })</Text>
               </View>
-
-              <View style={{ marginTop:10, flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>支付方式</Text>
-                <Text style={{  marginLeft: 10, fontSize: 14  }}>{ payment_method }</Text>
-              </View>
-              <View style={{ marginTop:10, flexDirection: 'row', alignItems: 'center' }}>
+              
+              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>支付金额</Text>
-                <Text style={{  marginLeft: 10, fontSize: 14  }}>{ fare }</Text>
+                <Text style={{  marginRight: 5, fontSize: 14  }}>{ parseInt(fare).toFixed(2) }</Text>
               </View>
-              <View style={{ marginTop:10, flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>时间</Text>
-                <Text style={{  marginLeft: 10, fontSize: 14  }}>{ booking_at }</Text>
+              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>支付方式</Text>
+                <Text style={{  marginRight: 5, fontSize: 14  }}>{ payment_method }</Text>
               </View>
-              <View style={{ marginTop:10, flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>预订时间</Text>
+                <Text style={{  marginRight: 5, fontSize: 14  }}>{ moment(Date.parse(booking_at)).format('YYYY-MM-D HH:mm') }</Text>
+              </View>
+              {/* <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>订单状态</Text>
                 <Text style={{  marginLeft: 10, fontSize: 14  }}>{ status }</Text>
-              </View>
+              </View> */}
             </View>
             {/* <View style={{ height: 116, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               {

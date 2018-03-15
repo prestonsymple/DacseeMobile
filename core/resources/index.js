@@ -7,7 +7,9 @@ export default {
     pin: require('./images/pin.png'),
     security: require('./images/security.png'),
     taxi: require('./images/taxi.png'),
-    upgrade: require('./images/upgrade.png')
+    upgrade: require('./images/upgrade.png'),
+    floating_driver: require('./images/driver.png'),
+    floating_passenger: require('./images/passenger.png')
   },
   
   animation: {

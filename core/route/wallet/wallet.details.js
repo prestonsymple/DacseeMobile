@@ -45,7 +45,7 @@ export default class WalletDetailScreen extends Component {
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1  }}>
         <View style={{ width: width, height: 150, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
-          <Image style={{ width: 66, height:66, borderRadius: 33, backgroundColor: '#4cb1f7'}}
+          <Image style={{ width: 66, height:66, borderRadius: 33}}
             source={{ uri: countryFlag }}/>
           <Text style={{ fontSize:13, paddingTop: 10 }}>{ country }</Text>
           <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ name }</Text>
@@ -110,7 +110,7 @@ class ScrollTabView extends Component {
         // onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
       >
         {
-          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>, <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>, <IncomeList key={3} />].map((item, index) => {
+          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>, <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>, <IncomeList key={3} walletInfo={ this.props.walletInfo }/>].map((item, index) => {
             return (
               item
             )
