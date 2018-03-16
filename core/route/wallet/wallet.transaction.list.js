@@ -24,28 +24,6 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-// const DEMO_DATA = [{
-//   type: 'in',
-//   cost: .8,
-//   title: '分成',
-//   time: '13:28'
-// }, {
-//   type: 'out',
-//   cost: 30.4,
-//   title: '行程订单消费',
-//   time: '09:11'
-// }, {
-//   type: 'out',
-//   cost: 58.2,
-//   title: '行程订单消费',
-//   time: '07:47'
-// }, {
-//   type: 'in',
-//   cost: 3200.00,
-//   title: '支付宝充值',
-//   time: '05:44'
-// }]
-
 export default connect(state=> ({ data: state.booking }))(class WalletTransactionListScreen extends Component {
   
   static navigationOptions = ({ navigation }) => {
@@ -77,6 +55,7 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
     
     //   {
     //     "_id": "28172224-2430-11e8-b67d-91aeb57f5e5b",
+    //     "type": "Adjustment In"
     //     "amount": -2,
     //     "remarks": "hold for booking",
     //     "yourRef": "booking_id here",
@@ -106,7 +85,7 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
 class DetailItem extends Component {
   render() {
     const { data } = this.props
-    const { _id, amount, remarks, timestamp } = data
+    const { type, amount, remarks, timestamp, yourRef } = data
 
     return (
       <View style={{ paddingHorizontal: 26, flex: 1, height: 104, backgroundColor: 'white', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -119,12 +98,12 @@ class DetailItem extends Component {
           }
         </View>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 14, color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ _id }</Text>
+          <Text style={{ fontSize: 14, color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ type }</Text>
           <View style={{ flexDirection: 'row' }}>
             {/* <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text> */}
             <Text style={{ fontSize: 12, color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ `${timestamp.substr(0, 10)} ${ timestamp.substr(11, 8) }` }</Text>
           </View>
-          <Text style={{ marginTop: 10, fontSize: 13 }}>{ remarks }</Text>
+          <Text style={{ marginTop: 10, fontSize: 13 }}>{ yourRef }</Text>
         </View>
         <View style={{ width: 80, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
           {/* {

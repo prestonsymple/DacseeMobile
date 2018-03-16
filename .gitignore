@@ -15,7 +15,7 @@ android/build/
 # iOS
 Pods/
 ios/build/
-Podfile.lock
+ios/Podfile.lock
 
 # ReactNative
 index.bundle
