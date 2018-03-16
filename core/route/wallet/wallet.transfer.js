@@ -113,7 +113,7 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
   render() {
     const { searching } = this.state
     return (      
-      <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'on-drag' } >
+      <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'interactive' } >
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>转账金额</Text>
@@ -154,13 +154,13 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>备注</Text>
-            <TextInput style={{ marginVertical: 10, fontSize: 14, height: 70}} placeholder={'请输入备注'} multiline={true} onChangeText={ (value) => this.setState({ remark: value}) }/>
+            <TextInput style={{ marginVertical: 10, fontSize: 14, height: 70}} placeholder={'请输入备注'} returnKeyType={'done'} onChangeText={ (value) => this.setState({ remark: value}) }/>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button disabled={ searching } onPress={ () => {
-              if (this.state.searchContent == '' | this.state.amount == 0 | this.state.remark == '') { 
-                this.props.dispatch(application.showMessage('请输入 转账金额、收款账号 和 备注'))
+              if (this.state.searchContent == '' | this.state.amount == 0 ) { 
+                this.props.dispatch(application.showMessage('请输入 转账金额、收款账号'))
               } else {
                 this._fetchData()                
               }                

@@ -42,7 +42,7 @@ export default class JobsListDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed', 
-      title: '行程详情'
+      title: '订单详情'
     }
   }
 

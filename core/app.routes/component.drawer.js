@@ -10,43 +10,34 @@ import { Button } from '../components'
 const ICONS_COLOR = '#888'
 
 const MENUS_OPTIONS = [{
-  key: '0',
-  name: '加入DACSEE',
-  icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
-  onPress: ({ navigation }) => navigation.navigate('UpgradeDriver')
-}, {
   key: '1',
-  name: '开始接单',
-  icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
-  onPress: ({ navigation }) => navigation.navigate('JobsListener')
-}, {
-  key: '2',
-  name: '检验清单',
-  icon: Icons.Generator.Material('assignment', 24, ICONS_COLOR, { style: { left: .5 } }),
-  onPress: () => {
-  }
-}, {
-  key: '3',
   name: '我的行程',
   icon: Icons.Generator.Material('data-usage', 24, ICONS_COLOR, { style: { left: .5, top: 1 } }),
   onPress: ({ navigation }) => navigation.navigate('JobsList')
 }, {
-  key: '4',
+  key: '2',
   name: '钱包',
   icon: Icons.Generator.Material('account-balance-wallet', 24, ICONS_COLOR, { style: { left: .5 } }),
   onPress: ({ navigation }) => navigation.navigate('WalletBalance')
 }, {
-  key: '5',
-  name: '收入',
-  icon: Icons.Generator.Material('monetization-on', 24, ICONS_COLOR, { style: { left: 1 } }),
-  onPress: ({ navigation }) => navigation.navigate('IncomeList')
-}, 
-{
-  key: '7',
+  key: '3',
   name: '设置',
   icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
-}]
+}
+// {
+//   key: '1',
+//   name: '开始接单',
+//   icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
+//   onPress: ({ navigation }) => navigation.navigate('JobsListener')
+// },
+// {
+//   key: '0',
+//   name: '加入DACSEE',
+//   icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
+//   onPress: ({ navigation }) => navigation.navigate('UpgradeDriver')
+// }, 
+]
 
 export default connect(state => ({ user: state.account.user }))(class DrawerContentComponent extends Component {
 

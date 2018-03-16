@@ -75,6 +75,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
     // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
 
     try {
+      // console.log(this.state.selectedDate)
       const dateFrom = this._getFormatterDate(this.state.selectedDate).dateFrom
       const dateTo = this._getFormatterDate(this.state.selectedDate).dateTo
       const resp = await Session.booking.get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
@@ -116,7 +117,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
     const dateStr = moment(date).format('YYYY-MM-D')
     const dateFrom = moment(dateStr + ' 00:00:00').toISOString()
     const dateTo = moment(dateStr + ' 23:59:59').toISOString()
-    console.log(dateFrom, dateTo)
+    // console.log(dateFrom, dateTo)
     return { dateFrom: dateFrom, dateTo: dateTo}
   }
 
@@ -135,10 +136,8 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             //   }}
             loadItemsForMonth={(month) => {}}
             onCalendarToggled={(calendarOpened) => {}}
-            onDayPress={(day)=>{
-              // console.log(day)
-              // console.log(Date(day.timestamp))
-              const dateStr = Date(day.timestamp).toISOString
+            onDayPress={(day)=>{              
+              const dateStr = moment(day.timestamp).toISOString()
               this.setState({
                 selectedDate: dateStr
               })
@@ -148,12 +147,23 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             selected={selectedDate}                  
             pastScrollRange={3}
             futureScrollRange={1}
-            renderItem={(item, firstItemInDay) => {
-              return (
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('JobsListDetail', { jobDetail: item })} activeOpacity={.7}><ListItem itemData={item} itemDay={firstItemInDay} /></TouchableOpacity>
-              )
-            }
-            }
+            // renderItem={(item, firstItemInDay) => {
+            //   return (
+            //     // <TouchableOpacity onPress={() => this.props.navigation.navigate('JobsListDetail', { jobDetail: item })} activeOpacity={.7}><ListItem itemData={item} itemDay={firstItemInDay} /></TouchableOpacity>
+            //     <TouchableOpacity 
+            //       onPress={() => {
+            //         this.props.dispatch(NavigationActions.navigate({
+            //           routeName: 'JobsListDetail', 
+            //           params: { jobDetail: item } 
+            //         }))
+            //       }}
+            //       activeOpacity={.7}
+            //     >
+            //       <ListItem itemData={item} itemDay={firstItemInDay} />
+            //     </TouchableOpacity>
+            //   )
+            // }
+            // }
             // renderDay={(day, item) => {
             //   return (
             //     <View style={{ width: 40, justifyContent: 'center', alignItems: 'center' }}>
@@ -205,7 +215,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                     />
                   } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                      <Image source={Resources.image.joblist_empty} style={{ width: 100, height: 100 }} />
+                      <Image source={Resources.image.joblist_empty} style={{ marginTop: 70, width: 100, height: 100 }} />
                       <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>暂无行程</Text>
                     </View>                    
                   </ScrollView>
@@ -222,7 +232,20 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                   }
                   dataSource={detail}
                   enableEmptySections={true}
-                  renderRow={(row) => <TouchableOpacity onPress={() => this.props.navigation.navigate('JobsListDetail', { jobDetail: row })} activeOpacity={.7}><ListItem itemData={row} /></TouchableOpacity>}
+                  renderRow={(row) => {
+                    return (
+                      <TouchableOpacity 
+                      onPress={() => {
+                        this.props.dispatch(NavigationActions.navigate({
+                          routeName: 'JobsListDetail', 
+                          params: { jobDetail: row } 
+                        }))
+                      }}
+                      activeOpacity={.7}
+                    >
+                      <ListItem itemData={row} />
+                    </TouchableOpacity>
+                    )}}
                   // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
                   style={{ flex: 1, marginTop: 15 }}
                 />)
