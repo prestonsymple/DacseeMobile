@@ -197,7 +197,7 @@ class ListItem extends Component {
               <View>{ Icons.Generator.Material('access-time', 14, '#bbb') }</View>
               <Text style={{ marginLeft: 5, fontSize: 15, color: '#777' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
               <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', 14, '#bbb') }</View>
-              <Text style={{ marginLeft: 5,  fontSize: 15, color: '#777' }}>{ payment_method }</Text>              
+              <Text style={{ marginLeft: 5,  fontSize: 15, color: '#777' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>              
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>                
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 14, '#bbb') }</View> */}
                 <Text style={{ marginLeft: 10, fontWeight: 'bold', color: '#333' }}>{ fare }</Text>

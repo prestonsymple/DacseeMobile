@@ -214,7 +214,7 @@ export default class JobsListDetailScreen extends Component {
                 </View>
                 <View style={{ flex: 1, alignItems:'center'}}>
                   <Image source={ Resources.image.joblist_payment} resizeMethod={'scale'} style={{ height: 40}} />
-                  <Text style={{ marginTop: 10, fontSize: 15, color: '#333' }}>{ payment_method }</Text>
+                  <Text style={{ marginTop: 10, fontSize: 15, color: '#333' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
                 </View>
               </View>
               <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>              

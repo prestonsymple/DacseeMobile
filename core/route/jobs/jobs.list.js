@@ -332,38 +332,7 @@ class ListItem extends Component {
     // console.log(this.props.itemData)
     this.state = {
     }
-  }
-
-  _statusInChinese(str) {
-    switch(str) {
-    // case 'Pending_Passenger':
-    //   return '等待乘客'
-    // case 'Pending_Assignment':
-    //   return ''
-    case 'Pending_Acceptance':
-      return '等待接单'
-    // case 'Confirmed':
-    //   return ''
-    case 'On_The_Way':
-      return '司机即将到达'
-    case 'Arrived':
-      return '司机已到达'
-    case 'No_Show':
-      return '乘客未抵达'
-    case 'On_Board':
-      return '乘客已上车'
-    case 'Completed':
-      return '订单完成'
-    case 'Cancelled_by_Passenger':
-      return '乘客已取消'
-    case 'Cancelled_by_Driver':
-      return '司机已取消'
-    case 'Rejected_by_Driver':
-      return '司机已拒绝'
-    case 'No_Taker':
-      return '订单无人应答'
-    }
-  }
+  }  
 
   render() {
     const { itemData, itemDay } = this.props
@@ -388,7 +357,7 @@ class ListItem extends Component {
               <View>{ Icons.Generator.Material('access-time', 14, '#bbb') }</View>
               <Text style={{ marginLeft: 5, fontSize: 15, color: '#777' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
               <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', 14, '#bbb') }</View>
-              <Text style={{ marginLeft: 5,  fontSize: 15, color: '#777' }}>{ payment_method }</Text>              
+              <Text style={{ marginLeft: 5,  fontSize: 15, color: '#777' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>              
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>                
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 14, '#bbb') }</View> */}
                 <Text style={{ marginLeft: 10, fontWeight: 'bold', color: '#333' }}>{ fare }</Text>

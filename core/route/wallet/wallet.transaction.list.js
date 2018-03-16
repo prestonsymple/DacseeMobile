@@ -56,8 +56,7 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
     // }    
   }
 
-  async _fetchData(index=0) { 
-    console.log(lalala )
+  async _fetchData(index=0) {
     this.setState({
       loading: true
     })

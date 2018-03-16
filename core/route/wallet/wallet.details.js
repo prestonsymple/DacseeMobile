@@ -119,7 +119,7 @@ class ScrollTabView extends Component {
         scrollEnabled={false}
         pagingEnabled={true}
         horizontal={true}
-        contentOffset={{x:this.state.currentPage*width, y:0}}
+        // contentOffset={{x:this.state.currentPage*width, y:0}}
         // onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
         
       >

@@ -106,7 +106,7 @@ export default connect(state => ({ booking: state.booking }))(class BookingCompl
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>支付方式</Text>
-          { payment_method && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ payment_method }</Text>) }
+          { payment_method && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>) }
         </View>
         <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
       </ScrollView>
