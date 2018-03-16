@@ -23,7 +23,9 @@ const initialState = {
   // throw_error: [],
   referrerValue: undefined,
 
-  login_stage: 0
+  login_stage: 0,
+
+  core_mode: 'passenger'
 }
 
 export default handleActions({
@@ -46,7 +48,9 @@ export default handleActions({
   [jobs.showJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: true }),
   [jobs.hideJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: false }),
 
-  [jobs.cancelJobs]: (state) => Object.assign({}, state, { show_driver_order: false })
+  [jobs.cancelJobs]: (state) => Object.assign({}, state, { show_driver_order: false }),
+
+  [application.setCoreMode]: (state, { payload }) => Object.assign({}, state, { core_mode: payload }),
   // [application.throwErrorMessage]: (state, { payload }) => {
   //   const clone = state.throw_error
   //   clone.push(payload)

@@ -39,17 +39,25 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
       searchStr = `&phoneCountryCode=${countryCode}&phoneNo=${value}`
     } else if (!countryCode && System.Rules.isMail(value)) {
       searchStr = `&email=${value}`
-    } else if (value.length === 10) {
-      searchStr = `&userId=${value}`
     } else {
-      return undefined
+      searchStr = `&fullNameOrUserId=${value}`
     }
 
-    const location = await System.Location.Current()
-    const { latitude, longitude } = location
-    const placeId = await Session.lookup.get(`v1/lookup/nearbyPlaces?latitude=${latitude}&longitude=${longitude}&resultType=countryOnly`)
-    const searchRet = await Session.user.get(`v1/search?country=${placeId.data}${searchStr}`)
-    this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
+    try {
+      const location = await System.Location.Current()
+      const { latitude, longitude } = location
+      const placeId = await Session.lookup.get(`v1/lookup/nearbyPlaces?latitude=${latitude}&longitude=${longitude}&resultType=countryOnly`)
+      const searchRet = await Session.user.get(`v1/search?country=${placeId.data}${searchStr}`)
+      this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
+    } catch (e) {
+      try {
+        const searchRet = await Session.user.get(`v1/search?country=CN&${searchStr}`)
+        this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
+      } catch (err) {
+        this.props.dispatch(application.showMessage('请确认输入是否正确，并再次尝试'))
+        this.props.navigation.goBack()
+      }
+    }
   }
 
   render() {

@@ -1,17 +1,18 @@
 import React, { Component, PureComponent } from 'react'
 import {
   Text, View, Animated, StyleSheet, Image,
-  TouchableOpacity, TextInput, Easing, Platform, Keyboard, StatusBar
+  TouchableOpacity, TextInput, Easing, Platform, Keyboard, StatusBar,
+  ScrollView
 } from 'react-native'
 // import InteractionManager from 'InteractionManager'
 // import { NavigationActions, SafeAreaView } from 'react-navigation'
 import marked from 'marked'
 
-import { Screen, Icons, Define } from '../../utils'
+import { Screen, Icons, Define, Session } from '../../utils'
 import resources from '../../resources'
 import { Button } from '../../components'
 import ShareUtile from '../../native/umeng/ShareUtil'
-import { application as app, account } from '../../redux/actions'
+import actionApplication, { application as app, account } from '../../redux/actions'
 import { connect } from 'react-redux'
 
 const codeInputWidth = ((Screen.window.width - 40 * 2) - 35 * 3) / 4
@@ -26,6 +27,7 @@ const codeInputProps = {
 
 export default connect(state => ({
   account: state.account,
+  referrer_id: state.application.referrerValue,
   stage: state.application.login_stage
 }))(class LoginScreen extends Component {
 
@@ -34,9 +36,11 @@ export default connect(state => ({
   constructor(props) {
     super(props)
     this.state = {
-      value: '',
+      value: '', // mail or phone no.
+      value_extend: '',
       v1: '', v2: '', v3: '', v4: '',
-      referralUserId: '',
+      verify_code_extend: '',
+      referralUserId: props.referrer_id || '',
       fullName: '',
       countryCode: '+86',
       selectAccount: []
@@ -92,6 +96,8 @@ export default connect(state => ({
     const { stage } = this.props
     const { value, countryCode } = this.state
 
+    console.log(stage)
+
     if
     (stage === 0) {
       this.props.dispatch(account.loginNext({ stage: 1 }))
@@ -109,15 +115,23 @@ export default connect(state => ({
   }
 
   onPressComplate() {
-    const { value, countryCode, fullName, referralUserId, v1, v2 ,v3, v4 } = this.state
+    const { value, countryCode, fullName, referralUserId, v1, v2 ,v3, v4, value_extend, verify_code_extend } = this.state
+    if (fullName.length < 2) {
+      return this.props.dispatch(app.showMessage('全名最小为2个字符'))
+    }
     const vCode = `${v1}${v2}${v3}${v4}`
     const data = {
       fullName: fullName,
       phoneCountryCode: countryCode,
       phoneNo: value,
       phoneVerificationCode: vCode,
-      // _id1: '5a4dfb482dd97f23dc6a06c4',
-      referralUserId: referralUserId
+      referralUserId: referralUserId,
+    }
+
+    if (value_extend && verify_code_extend) {
+      data.phoneNo = value_extend
+      data.phoneVerificationCode = verify_code_extend
+      data.email = value
     }
 
     this.props.dispatch(account.loginNext({ stage: 5, value: data }))
@@ -346,8 +360,8 @@ export default connect(state => ({
           { right: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [-width, -width, 0], extrapolate: 'clamp' }) },
           { opacity: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
         ]}>
-          <View style={{
-            flex: 1, paddingHorizontal: 45, justifyContent: 'center', top: -35
+          <ScrollView contentContainerStyle={{ justifyContent: 'center' }} style={{
+            flex: 1, paddingHorizontal: 45, marginTop: 110
           }}>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
               <Text style={{ fontSize: 26, color: '#f2f2f2', fontWeight: '400' }}>激活您的账号</Text>
@@ -359,20 +373,75 @@ export default connect(state => ({
                 editable={false}
                 defaultValue={this.state.value}
                 style={[styles.stdInput, styles.registerTextInput]} />
-              <View style={{ flexDirection: 'row' }}>
-                <TextInput
-                  {...Define.TextInputArgs}
-                  clearTextOnFocus={false}
-                  editable={false}
-                  defaultValue={this.state.value}
-                  style={[styles.stdInput, styles.registerTextInput]} />
-                <TextInput
-                  {...Define.TextInputArgs}
-                  clearTextOnFocus={false}
-                  editable={false}
-                  defaultValue={this.state.value}
-                  style={[styles.stdInput, styles.registerTextInput]} />
-              </View>
+              {
+                this.isEmail(this.state.value) && (
+                  <View style={{ flexDirection: 'row', marginBottom: 15 }}>
+                    <Button 
+                      onPress={() => this.props.navigation.navigate('PickerCountry', {
+                        onPress: ({ name, code }) => this.setState({ countryCode: code })
+                      })} 
+                      activeOpacity={0.9} 
+                      style={[{ borderColor: '#f2f2f2', marginRight: 15, borderBottomWidth: 1, width: 70, height: 44, justifyContent: 'center' }]}
+                    >
+                      <Text style={styles.stdInput}>{this.state.countryCode}</Text>
+                    </Button>
+                    <TextInput
+                      {...Define.TextInputArgs}
+                      clearTextOnFocus={false}
+                      placeholderTextColor={'#999'}
+                      placeholder={'请输入手机号'}
+                      onChangeText={value_extend => this.setState({ value_extend })}
+                      style={[styles.stdInput, {
+                        flex: 1,
+                        height: 44,
+                        borderBottomWidth: 1,
+                        borderColor: 'white',
+                        textAlign: 'center',
+                        color: 'white'
+                      }]} />
+                  </View>
+                )
+              }
+              {
+                this.isEmail(this.state.value) && (
+                  <View style={{ flexDirection: 'row', marginBottom: 15 }}>
+                    <TextInput
+                      {...Define.TextInputArgs}
+                      clearTextOnFocus={false}
+                      keyboardType={'number-pad'}
+                      placeholderTextColor={'#999'}
+                      placeholder={'输入验证码'}
+                      onChangeText={verify_code_extend => this.setState({ verify_code_extend })}
+                      style={[styles.stdInput, {
+                        flex: 1,
+                        height: 44,
+                        borderBottomWidth: 1,
+                        borderColor: 'white',
+                        textAlign: 'center',
+                        color: 'white'
+                      }]} 
+                    />
+                    <Button 
+                      onPress={async () => {
+                        try {
+                          const { verify_code_extend, value_extend } = this.state
+                          await Session.user.post('v1/sendVerificationCode/phone', {
+                            phoneCountryCode: this.state.countryCode,
+                            phoneNo: value_extend
+                          })
+                          this.props.dispatch(app.showMessage('已将验证码发送至您的手机'))
+                        } catch (e) {
+                          this.props.dispatch(app.showMessage('发生错误'))
+                        }
+                      }} 
+                      activeOpacity={0.9} 
+                      style={[{ marginLeft: 15, backgroundColor: '#ffa81d', borderRadius: 22, width: 120, height: 44, justifyContent: 'center' }]}
+                    >
+                      <Text style={styles.stdInput}>发送验证码</Text>
+                    </Button>
+                  </View>
+                )
+              }
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
@@ -389,6 +458,10 @@ export default connect(state => ({
                 placeholder={'请输入您的推荐人ID'}
                 returnKeyType={'done'}
                 value={this.state.referralUserId}
+                { ...Object.assign({}, this.props.referrer_id !== undefined ? {
+                  defaultValue: this.props.referrer_id,
+                  editable: false
+                } : {}) }
                 onChangeText={text => this.setState({ referralUserId: text })}
                 style={[styles.stdInput, styles.registerTextInput]} />
             </View>
@@ -408,7 +481,7 @@ export default connect(state => ({
                 </View>
               </TouchableOpacity>
             </View>
-          </View>
+          </ScrollView>
           <View style={{ position: 'absolute', left: 15, top: 42, width: 120, height: 120 }}>
             <TouchableOpacity 
               activeOpacity={0.7} 

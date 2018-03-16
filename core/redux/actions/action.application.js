@@ -24,5 +24,7 @@ export default {
 
   setPushServiceToken: createAction('APPLICATION_SET_PUSH_SERVICE_TOKEN'),
   
-  showMessage: createAction('APPLICATION_SHOW_MESSAGE')
+  showMessage: createAction('APPLICATION_SHOW_MESSAGE'),
+
+  setCoreMode: createAction('APPLICATION_SET_CORE_MODE')
 }

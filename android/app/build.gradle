@@ -109,8 +109,8 @@ android {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18031301
-        versionName "0.26.0"
+        versionCode 18031501
+        versionName "0.28.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -154,6 +154,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-camera')
+    compile project(':react-native-image-picker')
     compile project(':react-native-picker')
     compile project(':rn-splash-screen')
     //    compile project(':react-native-push-notification')

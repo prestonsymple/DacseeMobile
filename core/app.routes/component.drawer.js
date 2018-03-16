@@ -1,16 +1,11 @@
 /* global store */
 import React, { Component } from 'react'
-import { 
-  ScrollView, StyleSheet, View, Text, Image
-} from 'react-native'
+import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
 import { connect } from 'react-redux'
-import { DrawerItems, SafeAreaView } from 'react-navigation'
+import { SafeAreaView } from 'react-navigation'
 
-import resources from '../resources'
-import { Screen, Icons, System } from '../utils'
+import { Icons, System } from '../utils'
 import { Button } from '../components'
-import { application, account } from '../redux/actions'
-import ShareUtil from '../native/umeng/ShareUtil'
 
 const ICONS_COLOR = '#888'
 
@@ -46,15 +41,6 @@ const MENUS_OPTIONS = [{
   icon: Icons.Generator.Material('monetization-on', 24, ICONS_COLOR, { style: { left: 1 } }),
   onPress: ({ navigation }) => navigation.navigate('IncomeList')
 }, 
-// {
-//   key: '5',
-//   name: '司',
-//   icon: Icons.Generator.Material('store-mall-directory', 24, ICONS_COLOR, { style: { left: 1 } })
-// }, {
-//   key: '6',
-//   name: 'New Job (Driver)',
-//   icon: Icons.Generator.Material('perm-contact-calendar', 24, ICONS_COLOR, { style: { left: 1.5 } })
-// }, 
 {
   key: '7',
   name: '设置',
@@ -69,7 +55,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
   }
 
   render() {
-    const { fullName } = this.props.user
+    const { fullName, avatars } = this.props.user
 
     return (
       <View style={{ flex: 1 }}>
@@ -82,7 +68,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
               { backgroundColor: '#eee', overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
               { borderRadius: 50, width: 100, height: 100, justifyContent: 'center', alignItems: 'center' }
             ]}>
-              <Image style={{ width: 100, height: 100 }} source={require('../resources/images/test.jpg')} />
+              <Image style={{ width: 100, height: 100 }} source={{ uri: avatars[avatars.length - 1].url }} />
               {/* { Icons.Generator.Material('account-circle', 100, '#fad723') } */}
             </View>
             <Text style={[

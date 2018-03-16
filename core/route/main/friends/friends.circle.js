@@ -87,6 +87,7 @@ export default connect(state => ({
 
   onPressCheck(data) {
     const { selected } = this.state
+    if (selected.length >= 20) return this.props.dispatch(application.showMessage('最多只能选择20个朋友'))
 
     let clone = _.cloneDeep(selected)
     if (clone.find(pipe => pipe._id === data._id)) {
@@ -153,7 +154,9 @@ export default connect(state => ({
                     progressBackgroundColor={'#1c99fb'}
                   />
                 }
-                style={{ marginHorizontal: 25 }}
+                contentContainerStyle={{
+                  paddingHorizontal: 25 
+                }}
                 enableEmptySections={true}
                 dataSource={dataSource}
                 renderSectionHeader={(data, section) => {
@@ -209,7 +212,7 @@ export default connect(state => ({
               {
                 (selected.length !== 0) && (
                   <TouchableOpacity onPress={() => {
-                    this.props.dispatch(booking.journeyUpdateData({ selected_friends: selected }))
+                    this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
                     this.props.navigation.goBack()    
                   }} activeOpacity={.7} style={[
                     { height: 56, bottom: Define.system.ios.x ? 27 + 22 : 27 },
@@ -251,18 +254,15 @@ class ItemPerson extends Component {
     const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
 
     return (
-      <TouchableOpacity activeOpacity={1} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+      <TouchableOpacity onPress={() => onPressDetail()} activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
         <View style={{ justifyContent: 'center', marginRight: 10 }}>
-          <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[0].url }} />
+          <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[avatars.length - 1].url }} />
           <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }}></View>
         </View>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
           <Text style={{ fontSize: 13, color: '#999' }}>0次行程</Text>
         </View>
-        {/* <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.8} style={{ height: 48, justifyContent: 'center', width: 48, alignItems: 'flex-end', paddingRight: 5 }}>
-          { checked ? Icons.Generator.Material('check-circle', 30, '#70c040') : Icons.Generator.Material('check-circle', 30, '#999') }
-        </TouchableOpacity> */}
         {
           checked ? (
             <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.7} style={{ width: 30, height: 30, borderRadius: 18, backgroundColor: '#7ed321', justifyContent: 'center', alignItems: 'center' }}>
@@ -287,7 +287,7 @@ class RequestorPerson extends Component {
     return (
       <View activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
         <View style={{ justifyContent: 'center', marginRight: 10 }}>
-          <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[0].url }} />
+          <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[avatars.length - 1].url }} />
         </View>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 5 }}>{ fullName }</Text>

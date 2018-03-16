@@ -14,7 +14,7 @@ const navigationMiddleware = createReactNavigationReduxMiddleware(
 const persistConfig = {
   key: 'v0.0.1',
   storage: storage,
-  whitelist: ['account', 'config', 'jobs']
+  whitelist: ['account', 'storage', 'jobs']
 }
 /* Redux Reducers */
 import reducers from './redux/reducers'

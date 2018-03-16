@@ -60,8 +60,9 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
 class RowItem extends Component {
   render() {
     const { onPress = () => {} } = this.props
-    const { _id, avatars, fullName, phoneCountryCode, phoneNo, rights, roles, type, userId } = this.props.data
-    const role = rights.reduce((prev, next) => prev + `, ${next}`)
+    const { _id, avatars, fullName } = this.props.data
+    // console.log(rights)
+    // const role = rights.reduce((prev, next) => prev + `, ${next}`)
 
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={.7} style={{ height: 68, backgroundColor: 'white', justifyContent: 'center' }}>
@@ -71,7 +72,7 @@ class RowItem extends Component {
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
-            <Text style={{ fontSize: 12, color: '#666', fontWeight: '400' }}>{ role }</Text>
+            {/* <Text style={{ fontSize: 12, color: '#666', fontWeight: '400' }}>{ role }</Text> */}
           </View>
           <View style={{ width: 45, alignItems: 'flex-end' }}>
             { Icons.Generator.Material('keyboard-arrow-right', 26, '#999') }

@@ -54,7 +54,7 @@ function* loginFlow() {
           const { id, code, isMail, phoneCountryCode, _id = '' } = value
           const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
           const base = isMail ? 
-            { email: id, emailVerificationCode: code, } : 
+            { email: id, emailVerificationCode: code } : 
             { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id: _id }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
@@ -84,7 +84,10 @@ function* loginFlow() {
             yield put(application.hideProgress())
             yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value } }))
             yield put(account.loginPutValue(2))
-          } else if (e.response && e.response.data.code == 'INVALID_USER') { // 跳转注册
+          } else if (e.response && (
+            e.response.data.code == 'INVALID_USER' || 
+            e.response.data.code == 'INCOMPLETE_REGISTRATION'
+          )) { // 跳转注册
             yield all([
               put(account.loginPutValue(4)),
               put(application.hideProgress())
@@ -112,14 +115,34 @@ function* loginFlow() {
             { latitude: 3.321, longitude: 1.23 }
           ))
 
+
+          let response_data = {}
+          // TODO...
+          // if (value.email && value.phoneNo) {
+          //   const { data } = yield call(session.user.post, 'v1/auth/email', { 
+          //     phoneCountryCode: value.phoneCountryCode, 
+          //     phoneNo: value.phoneNo, 
+          //     phoneVerificationCode: value.phoneVerificationCode, 
+          //     // emailVerificationCode: value.m
+          //     // "phoneVerificationCode": "2453",
+          //     // "email": "changwaiseng@gmail.com",
+          //     // "emailVerificationCode": "7470",
+          //     // "phoneVerificationCode": "2453",
+          //     _id1: ''
+          //   })
+          //   response_data = data
+          // } else {
           const { data } = yield call(session.user.post, 'v1/auth/phone', { 
             phoneCountryCode: value.phoneCountryCode, 
             phoneNo: value.phoneNo, 
             phoneVerificationCode: value.phoneVerificationCode, 
             _id1: ''
           })
+          response_data = data
+          // }
+          
 
-          yield call(loginSuccess, data) // 登录成功
+          yield call(loginSuccess, response_data) // 登录成功
 
         } catch (e) {
           console.log(e)
@@ -153,8 +176,8 @@ function* loginFlow() {
 function* logoutFlow() {
   while(true) {
     const payload = yield take(account.logoutSuccess().type)
-    // yield delay(500)
-    // TODO: CLEAN STATE && CACHE
+    yield put(account.loginPutValue(0))
+    yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
   }
 }
 
@@ -162,8 +185,8 @@ function* registerDevice() {
   while(true) {
     yield take(application.updatePushToken().type)
     const { token, userId, user_id, status } = yield select(state => ({ 
-      token: state.config.push_service_token,
-      userId: state.config.baidu_user_id,
+      token: state.storage.push_service_token,
+      userId: state.storage.baidu_user_id,
       user_id: state.account.user._id,
       status: state.account.status
     }))

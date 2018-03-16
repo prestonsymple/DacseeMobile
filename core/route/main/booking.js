@@ -4,27 +4,23 @@ import {
   DeviceEventEmitter, ListView, Platform, ScrollView, StatusBar
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
-// import { NavigationActions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
-import PropTypes from 'prop-types'
 
 import Resources from '../../resources'
 import BaseScreenComponent from '../_base'
 
 import HeaderSection from './booking.header.section'
 import BookingSelectCircle from './booking.select.circle'
+import BookingNavigationBarSwipe from './booking.navigation.bar.swipe'
 
-import { MapView, Search } from '../../native/AMap'
+import { MapView, Search, Marker } from '../../native/AMap'
 import { Screen, Icons, Define } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
-
-import ModalSelectAddress from '../../modal/modal.select.address'
-import ModalDriverRespond from '../../modal/modal.driver.respond'
-
-// Get Navigator Status
-import { HomeNavigator } from '../../app.routes'
+import { JobsListScreen } from '../jobs'
+import { BOOKING_STATUS } from '.';
 
 const { height, width } = Screen.window
 
@@ -37,33 +33,21 @@ const MAP_DEFINE = {
   showsZoomControls: false, /* android fix */
 }
 
-const PIN_HEIGHT = ((height - 20) / 2)
+const PIN_HEIGHT = ((height - 22) / 2)
 const BOTTOM_MARGIN = Platform.select({
   ios: Define.system.ios.x ? 35 : 5,
   android: 25
 }) 
 
-const DEMO_DATA = [
-  { value: '朋友圈', title: '朋友圈', key: 'uid-3', image: 'http://img.hb.aicdn.com/c2728cdc04a2b36f76538141de1332d2bc84672372692-Fvgu5H_fw658' },
-  { value: 'SUV', title: 'SUV', key: 'suv', image: 'http://img.hb.aicdn.com/9087d7c3ee8a8d6e01e07a12d6ee3d0bb2fbda8656f6b-gdzrdR_fw658' },
-  { value: '7座商务', title: '7座商务', key: 'business', image: 'http://img.hb.aicdn.com/9087d7c3ee8a8d6e01e07a12d6ee3d0bb2fbda8656f6b-gdzrdR_fw658' },
-  { value: '出租车', title: '出租车', key: 'taxi', image: 'http://img.hb.aicdn.com/1c215f103cbad1fe3ed429776d7fa8b739028df013249-yhmYe2_fw658' },
-  { value: '优选', title: '优选', key: 'nearbest', image: 'http://img.hb.aicdn.com/1c215f103cbad1fe3ed429776d7fa8b739028df013249-yhmYe2_fw658' },
-  { value: '豪华', title: '豪华', key: 'nearpremium', image: 'http://img.hb.aicdn.com/1c215f103cbad1fe3ed429776d7fa8b739028df013249-yhmYe2_fw658' }
-]
-
 // TODO: Optimize the callback
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({ data: state.booking }))(class MainScreen extends BaseScreenComponent {
+export default connect(state => ({}))(class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      // contentComponent: () => (
-      //   <View style={{ backgroundColor: '#333', flex: 1, height: 300, width: 400 }}></View>
-      // ),
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
@@ -85,41 +69,75 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     }
   }
 
+  async componentDidMount() {
+    await InteractionManager.runAfterInteractions()
+    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
+  }
+
+  componentWillUnmount() {
+    this.subscription && this.subscription.remove()
+  }
+
+  async componentWillReceiveProps(props) { }
+
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
+        <BookingNavigationBarSwipe />
+        <BookingContainerSwipe />
+      </View>
+    )
+  }
+})
+
+const BookingContainerSwipe = connect(state => ({ core_mode: state.application.core_mode }))(class BookingContainerSwipe extends Component {
+
+  constructor(props) { 
+    super(props)
+  }
+
+  componentDidMount() { this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) }
+
+  componentWillReceiveProps(props) {
+    if (props.core_mode !== this.props.core_mode) {
+      this.scrollView.scrollTo({ x: props.core_mode === 'driver' ? 0 : width, animated: false })
+    }
+  }
+
+  render() {
+    const VIEW_SETTER = {
+      scrollEnabled: false,
+      horizontal: true,
+      ref: (e) => this.scrollView = e
+    }
+    return (
+      <ScrollView {...VIEW_SETTER}>
+        <DriverComponent />
+        <PassengerComponent />
+      </ScrollView>
+    )
+  }
+})
+
+class DriverComponent extends Component {
+  render() {
+    return (
+      <View style={{ width }}>
+        <JobsListScreen />
+      </View>
+    )
+  }
+}
+
+const PassengerComponent = connect(state => ({ data: state.booking }))(class PassengerComponent extends Component {
+
   constructor(props) {
     super(props)
-
-    // TODO: MOVE TO REDUX
     this.state = {
       ready: false,
       editAdr: false,
-      field: 'to',
-      city: '',
       drag: false,
-      defaultData: dataContrast.cloneWithRows([{
-        type: 'favorite',
-        address: '浦东新区xxx',
-        name: '浦东国际机场 T2航站楼'
-      }, {
-        type: 'favorite',
-        address: 'xxx',
-        name: '丰盛创建大厦'
-      }, {
-        type: 'favorite',
-        address: 'xxx',
-        name: '虹桥机场 T1航站楼'
-      }, {
-        type: 'history',
-        address: 'xxx',
-        name: 'PFCC'
-      }, {
-        type: 'history',
-        address: 'xxx',
-        name: 'Limrrkokwin,Cyberjaya'
-      }, {
-        type: 'history',
-        address: 'xxx',
-        name: 'Raub,Pahang'
-      }]),
       data: undefined,
       carArgs: []
     }
@@ -133,16 +151,6 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.count = 0
   }
 
-  async componentDidMount() {
-    await InteractionManager.runAfterInteractions()
-    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
-  }
-
-  componentWillUnmount() {
-    this.timer && clearTimeout(this.timer)
-    this.subscription && this.subscription.remove()
-  }
-
   async onLocationListener({ nativeEvent }) {
     const { latitude, longitude } = nativeEvent
     if (latitude === 0 || longitude === 0) return
@@ -154,29 +162,11 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
     this.currentLoc = { latitude, longitude }
   }
 
-  onKeywordsSearch(keywords) {
-    return async () => {
-      try {
-        const { count, type, pois } = await Search.searchKeywords(keywords, this.state.city)
-        const args = pois.map(pipe => ({
-          address: pipe.address,
-          location: pipe.location,
-          name: pipe.name,
-          type: 'keywords'
-        }))
-        this.setState({ data: dataContrast.cloneWithRows(args) })
-      } catch (e) {
-        // Reject
-        return
-      }
-    }
-  }
-
   onStatusChangeListener({ nativeEvent }) {
     const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
     if (!this.state.drag) {
       this.setState({ drag: true })
-      this.props.dispatch(booking.journeyUpdateData({ from: {} }))
+      this.props.dispatch(booking.passengerSetValue({ from: {} }))
       Animated.spring(this.pin, { toValue: 1, friction: 1.5 }).start()
       Animated.timing(this.board, { toValue: 1, duration: 100 }).start()
     }
@@ -203,101 +193,40 @@ export default connect(state => ({ data: state.booking }))(class MainScreen exte
         if (pipe.address.endsWith('弄')) return pipe
         return false
       })
-      this.props.dispatch(booking.journeyUpdateData({ from: address || {} }))
+      this.props.dispatch(booking.passengerSetValue({ from: address || {} }))
       this.setState({ drag: false })
     } catch (e) {
       return
     }
   }
 
-  onEnterKeywords(keywords) {
-    this.timer && clearTimeout(this.timer)
-    this.timer = setTimeout(this.onKeywordsSearch(keywords), 400)
-  }
-
-  async componentWillReceiveProps(props) {
-    const { schedule, to } = props.data
-
-    if (schedule === 1) {
-      await new Promise((resolve) => Animated.timing(this.ui, { toValue: 1, duration: 200 }).start(() => resolve()))
-    }
-
-    if (schedule === 3) {
-      await new Promise((resolve) => Animated.timing(this.ui, { toValue: 2, duration: 200 }).start(() => resolve()))
-    }
-
-    if (('location' in to) && (to.address !== this.props.data.to.address) && (to.location.lat !== 0) && (to.location.lng !== 0)) {
-      this.props.navigation.navigate('BookingOptions')
-    }
-  }
-
-  async activeAdrEdit(field) {
-    await new Promise((resolve) => Animated.timing(this.ui, { toValue: 1, duration: 200 }).start(() => resolve()))
-    this.setState({ editAdr: true, field })
-  }
-
-  async cancelAdrEdit() {
-    this.setState({ editAdr: false, data: undefined })
-    await new Promise((resolve) => Animated.timing(this.ui, { toValue: 0, duration: 200 }).start(() => resolve()))
-  }
-
-  async onSelectAddress(address, field) {
-    this.props.dispatch(booking.journeyUpdateData({ [field]: address }))
-    this.setState({ editAdr: false, data: undefined })
-    await new Promise((resolve) => Animated.timing(this.ui, { toValue: 0, duration: 200 }).start(() => resolve()))
-  }
-
-  changeFormAnimated(value, duration = 200) {
-    return new Promise((resolve) => Animated.timing(this.form, { toValue: value, duration }).start(() => resolve()))
-  }
-
   render() {
-    const { editAdr, drag, defaultData, data, field, carArgs } = this.state
-    const { schedule, type } = this.props.data
+    const { editAdr, drag, defaultData } = this.state
+
+    const MAP_SETTER = {
+      style: { flex: 1 },
+      locationEnabled: true,
+      mapType: 'standard',
+      locationInterval: 1000,
+      onStatusChange: this.onStatusChangeListener.bind(this),
+      onLocation: this.onLocationListener.bind(this),
+      ref: (e) => this.map = e
+    }
 
     return (
-      <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
-        <MapView
-          {...MAP_DEFINE}
-          style={{ flex: 1 }}
-          locationEnabled={true}
-          mapType={'standard'}
-          locationInterval={1000}
-          locationStyle={{
-
-          }}
-          onStatusChange={this.onStatusChangeListener.bind(this)}
-          onLocation={this.onLocationListener.bind(this)}
-          ref={e => this.map = e}>
+      <View style={{ flex: 1, width }}>
+        <MapView {...MAP_DEFINE} {...MAP_SETTER}>
+          {/* TODO */}
         </MapView>
 
-        <HeaderSection type={this.props.data.type} dispatch={this.props.dispatch} />
+        <HeaderSection />
 
         <MapPin timing={this.pin} />
         <MapPinTip timing={this.board} />
 
-        <BookingSelectCircle />
+        <BookingSelectCircle init={true} />
 
-        <PickerAddress
-          timing={this.ui} drag={drag} to={this.props.data.to} from={this.props.data.from}
-          onPressTo={() => this.activeAdrEdit('to')}
-          onPressFrom={() => this.activeAdrEdit('from')}
-        />
-
-        {/* Modal - Where u? */}
-        <ModalSelectAddress
-          onPressCancel={() => this.cancelAdrEdit()}
-          onSelectAddress={(props, field) => this.onSelectAddress(props, field)}
-          onRequestClose={() => { }}
-          onChangeKeywords={this.onEnterKeywords.bind(this)}
-          field={field}
-          animationType={'slide'}
-          transparent={false}
-          visible={editAdr}
-          defaultData={defaultData}
-          data={data}
-        />
+        <PickerAddress timing={this.ui} drag={drag} />
       </View>
     )
   }
@@ -335,16 +264,7 @@ class SelectButton extends Component {
   }
 }
 
-class PickerAddress extends Component {
-
-  static propTypes = {
-    timing: PropTypes.any,
-    onPressTo: PropTypes.func,
-    onPressFrom: PropTypes.func,
-    drag: PropTypes.bool,
-    from: PropTypes.object,
-    to: PropTypes.object
-  }
+const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends Component {
 
   constructor(props) {
     super(props)
@@ -352,23 +272,12 @@ class PickerAddress extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.drag) {
-      Animated.loop(Animated.timing(this.animated, { toValue: 1, duration: 800, useNativeDriver: true })).start()
-    }
-    if (props.from.name) {
-      this.animated.stopAnimation()
-    }
+    if (props.drag) { Animated.loop(Animated.timing(this.animated, { toValue: 1, duration: 800, useNativeDriver: true })).start() }
+    if (props.from.name) { this.animated.stopAnimation() }
   }
 
   render() {
-    const {
-      timing,
-      onPressTo,
-      onPressFrom,
-      drag,
-      from,
-      to
-    } = this.props
+    const { drag, from, destination } = this.props
 
     return (
       <Animated.View style={[
@@ -379,7 +288,9 @@ class PickerAddress extends Component {
       ]}>
         <View style={{ height: 79 }}>
           {/* From */}
-          <TouchableOpacity onPress={drag ? () => { } : onPressFrom} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+          <TouchableOpacity onPress={() => {
+            !drag && this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'from' } }))
+          }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#FEA81C', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
             <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
             <View style={{ position: 'absolute', top: 0, bottom: 0, left: (Screen.window.width - 46 - 44) / 2, alignItems: 'center', justifyContent: 'center' }}>
@@ -390,15 +301,17 @@ class PickerAddress extends Component {
           </TouchableOpacity>
           <View style={{ backgroundColor: '#e8e8e8', height: .5, marginHorizontal: 18 }} />
           {/* To */}
-          <TouchableOpacity onPress={onPressTo} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
+          <TouchableOpacity onPress={() => {
+            this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'destination' } }))
+          }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#7ED321', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: to.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{to.name || '请输入目的地'}</Text>
+            <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
     )
   }
-}
+})
 
 class MapPinTip extends Component {
   render() {
@@ -430,37 +343,9 @@ class MapPin extends Component {
       <View style={{ position: 'absolute', left: (Screen.window.width - 18) / 2 }}>
         <Animated.Image style={[
           { width: 18, height: 28 },
-          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 48, PIN_HEIGHT - 52] }) }
+          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 56, PIN_HEIGHT - 60] }) }
         ]} source={Resources.image.pin} />
       </View>
     )
   }
 }
-
-class MoveToCurrentLocation extends Component {
-  render() {
-    // const { } = this.props
-    return (
-      <Animated.View style={[
-        { width: 36, height: 36, backgroundColor: 'white', position: 'absolute', right: 15, borderRadius: 3, borderColor: '#ccc', borderWidth: Screen.window.width <= 375 ? .5 : 1 },
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 },
-        { justifyContent: 'center', alignItems: 'center' },
-        { top: this.form.interpolate({ inputRange: [0, 1], outputRange: [Screen.window.height - 155 - 64 - 15 - 19 - BOTTOM_MARGIN, Screen.window.height - 135 - 64 - 15 - 89 - BOTTOM_MARGIN] }) },
-        { opacity: this.ui.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
-      ]}>
-        {Icons.Generator.Material('my-location', 22, '#666')}
-      </Animated.View>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-  SelectBookingWrap: Platform.select({
-    ios: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3 },
-    android: { position: 'absolute', left: 15, right: 15, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .8 }
-  }),
-  PickAddressWrap: Platform.select({
-    ios: { position: 'absolute', bottom: Define.system.ios.x ? 45 : 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
-    android: { position: 'absolute', bottom: 15, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
-  })
-})

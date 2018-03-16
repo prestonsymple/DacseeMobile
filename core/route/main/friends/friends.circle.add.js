@@ -8,7 +8,7 @@ import ActionSheet from 'react-native-actionsheet'
 import { connect } from 'react-redux'
 
 import { } from '../../../redux/actions'
-import { Icons, Screen, Define } from '../../../utils'
+import { Icons, Screen, Define, System } from '../../../utils'
 import ShareUtil from '../../../native/umeng/ShareUtil'
 import { application } from '../../../redux/actions'
 
@@ -56,7 +56,10 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
             placeholder={'13x xxxx xxxx'}
             canInput={true}
             navigation={this.props.navigation}
-            onPress={(value, countryCode) => this.props.navigation.navigate('FriendsSearchBase', { value, countryCode })}
+            onPress={(value, countryCode) => {
+              if (value.length === 0) return this.props.dispatch(application.showMessage('请输入正确的手机号码'))
+              this.props.navigation.navigate('FriendsSearchBase', { value, countryCode })
+            }}
           />
 
           {/* EMAIL ADDRESS */}
@@ -67,7 +70,25 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
             describer={'通过注册邮箱搜索'}
             placeholder={'example@mail.com'}
             canInput={true}
-            onPress={(value) => this.props.navigation.navigate('FriendsSearchBase', { value })}
+            onPress={(value) => {
+              if (value.length === 0 || !System.Rules.isMail(value)) return this.props.dispatch(application.showMessage('请输入正确的邮箱地址'))
+              this.props.navigation.navigate('FriendsSearchBase', { value })
+            }}
+          />
+
+          {/* PHONE NO. */}
+          <BlockWrap 
+            iconBackgroundColor={'#f4a951'} 
+            icon={Icons.Generator.Awesome('address-card', 28, 'white')} 
+            title={'姓名或用户账号'}
+            describer={'通过姓名或用户账号进行搜索'}
+            placeholder={''}
+            canInput={true}
+            navigation={this.props.navigation}
+            onPress={(value) => {
+              if (value.length < 2) return this.props.dispatch(application.showMessage('请输入至少2个字符'))
+              this.props.navigation.navigate('FriendsSearchBase', { value })
+            }}
           />
 
           {/* WECHAT SESSION */}
@@ -160,7 +181,7 @@ class BlockWrap extends Component {
                       </TouchableOpacity>
                     )
                   }
-                  <TextInput {...Define.TextInputArgs} onChangeText={ value => this.setState({ value }) } keyboardType={isPhoneNo ? 'number-pad' : 'default'} placeholder={placeholder} style={{ flex: 1, fontSize: 13 }} />
+                  <TextInput {...Define.TextInputArgs} onChangeText={ value => this.setState({ value: (value || '').trim() }) } keyboardType={isPhoneNo ? 'number-pad' : 'default'} placeholder={placeholder} style={{ flex: 1, fontSize: 13 }} />
                   <TouchableOpacity onPress={() => onPress(value, countryCode)} activeOpacity={.7} style={[
                     { shadowOffset: { width: 0, height: 1 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
                     { backgroundColor: '#F5A623', width: 26, height: 26, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }

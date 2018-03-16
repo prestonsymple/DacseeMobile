@@ -95,7 +95,7 @@ export default connect(state => ({
   }
 
   componentWillUnmount() {
-    this.timer && this.timer.remove()
+    this.timer && clearTimeout(this.timer)
   }
 
   async onLocationListener({ nativeEvent }) {

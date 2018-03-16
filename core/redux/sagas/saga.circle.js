@@ -23,12 +23,10 @@ function* fetchFriends() {
         page = circleReducer.page + 1
       }
 
-      let { requestor = { data: [] }, friend = { data: [] } } = yield all({
-        requestor: call(Session.circle.get, 'v1/requests?skip=0&limit=50'),
-        friend: call(Session.circle.get, `v1/circle?skip=${page * limit}&limit=${limit}`)
+      let { requestor, friend } = yield all({
+        requestor: call(Session.Circle.Get, 'v1/requests?skip=0&limit=50'),
+        friend: call(Session.Circle.Get, `v1/circle?skip=${page * limit}&limit=${limit}`)
       })
-      requestor = requestor.data
-      friend = friend.data
       
       if (!init) {
         const clone = circleReducer.friend.splice(0)

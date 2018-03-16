@@ -9,6 +9,8 @@ import SettingFeedbackScreen from './setting.feedback'
 import SettingHelpCenterScreen from './setting.help.center'
 import SettingWetViewScreen from './setting.web.view'
 
+import ProfileChangeAvatarScreen from './profile.change.avatars'
+
 import { Session as session } from '../../utils'
 import PushService from '../../native/push-service'
 
@@ -17,12 +19,29 @@ import {
 } from '../../redux/actions'
 
 
+// class TemplateFactory extends Component {
+//   return 
+
+//   render() {
+
+//     <Settings />
+//   }
+// }
+
 const createTemplate = (title: string, producer, navigationOptions?: Object) => {
   const clone = React.createFactory(Settings)
   clone.defaultProps = { producer }
   clone.navigationOptions = () => {
     return Object.assign({}, {
-      drawerLockMode: 'locked-closed', title
+      drawerLockMode: 'locked-closed', title,
+      headerStyle: {
+        backgroundColor: '#1AB2FD',
+        shadowColor: 'transparent',
+        shadowOpacity: 0,
+        borderBottomWidth: 0,
+        borderBottomColor: 'transparent',
+        elevation: 0,
+      }
     }, navigationOptions)
   }
   return clone
@@ -76,7 +95,6 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
   [{
     title: '切换账号', type: 'button', onPress: () => {
       dispatch(account.logoutSuccess())
-      navigation.navigate('Auth')
     }
   }]
 ])
@@ -84,9 +102,13 @@ const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) =>
 // 账号与安全
 const SettingAccountScreen = createTemplate('账号与安全', ({ navigation, dispatch, user }) => ([
   [{
+    title: '我的头像', type: 'image', value: { uri: user.avatars[user.avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar')
+  }],[{
+    title: '手机号', type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, editable: false
+  }, {
     title: '账号', type: 'text', value: user.userId, editable: false
-  },{
-    title: '手机号', type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, onPress: () => dispatch(application.showMessage('暂不支持手机号修改'))
+  }, {
+    title: '全名', type: 'text', value: `${user.fullName}`, editable: false
   }, {
     title: '邮箱账号', type: 'text', value: user.email || '尚未绑定', onPress: () => dispatch(application.showMessage('暂不支持邮箱修改'))
   }], [{
@@ -122,5 +144,6 @@ export {
   SettingLanguageRegionScreen,
   SettingFeedbackScreen,
   SettingHelpCenterScreen,
-  SettingWetViewScreen
+  SettingWetViewScreen,
+  ProfileChangeAvatarScreen
 }
