@@ -22,6 +22,8 @@ const initialState = {
   
   // throw_error: [],
   referrerValue: undefined,
+  fullValue: undefined,
+  mail_login_mode_id: undefined,
 
   login_stage: 0,
 
@@ -44,6 +46,8 @@ export default handleActions({
   [application.hideProgress]: (state) => Object.assign({}, state, { progress_modal_visible: false }),
 
   [application.setReferrerValue]: (state, { payload }) => Object.assign({}, state, { referrerValue: payload }),
+  [application.setFullValue]: (state, { payload }) => Object.assign({}, state, { fullValue: payload }),
+  [application.setMailModeValue]: (state, { payload }) => Object.assign({}, state, { mail_login_mode_id: payload }),
 
   [jobs.showJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: true }),
   [jobs.hideJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: false }),

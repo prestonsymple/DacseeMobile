@@ -10,11 +10,13 @@ import { NavigationActions } from 'react-navigation'
 import Resources from '../../resources'
 import { circle, booking } from '../../redux/actions'
 import { Screen, Icons, Define, System, Session } from '../../utils'
+import { BOOKING_STATUS } from '.'
 
 export default connect(state => ({ 
   ...state.circle,
   selected_friends: state.booking.selected_friends,
   selected: state.booking.type === 'circle',
+  status: state.booking.status
 }))(class BookingSelectMyCircle extends Component {
 
   constructor(props) {
@@ -35,10 +37,14 @@ export default connect(state => ({
   }
 
   render() {
-    const { selected_friends, selected, loading, friend } = this.props
+    const { selected_friends, selected, loading, friend, status } = this.props
+    let bottom = Define.system.ios.x ? 128 + 22 : 128
+    if (status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
+      bottom = Define.system.ios.x ? 168 + 22 : 168
+    }
 
     return selected ? (
-      <View style={{ position: 'absolute', bottom: Define.system.ios.x ? 128 + 22 : 128, left: 6, right: 6 }}>
+      <View style={{ position: 'absolute', bottom, left: 6, right: 6 }}>
         <View style={[
           { backgroundColor: 'white', borderRadius: 28 }, 
           { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
@@ -68,10 +74,10 @@ export default connect(state => ({
             (!loading && friend.length !== 0 && (selected_friends.length === friend.length || selected_friends.length === 0)) && (
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity 
-                  onPress={() => this.props.dispatch(booking.passengerSetValue({ selected_friends: friend }))} 
+                  onPress={() => this.props.dispatch(booking.passengerSetValue({ selected_friends: 'all' }))} 
                   activeOpacity={.7} style={[
                     { marginRight: 3, justifyContent: 'center', alignItems: 'center', height: 46, borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 },
-                    selected_friends.length === friend.length ? { backgroundColor: '#FFB639' } : {  }
+                    typeof(selected_friends) === 'string' ? { backgroundColor: '#FFB639' } : {  }
                   ]}
                 >
                   <Text style={[
@@ -93,7 +99,7 @@ export default connect(state => ({
             )
           }
           {
-            (!loading && friend.length !== 0 && (selected_friends.length !== friend.length && selected_friends.length > 0)) && (
+            (!loading && friend.length !== 0 && typeof(selected_friends) !== 'string' && (selected_friends.length !== friend.length && selected_friends.length > 0)) && (
               <View style={{ flexDirection: 'row', flex: 1, borderRadius: 50, overflow: 'hidden' }}>
                 <ScrollView
                   horizontal={true} 

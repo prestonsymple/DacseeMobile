@@ -1,5 +1,5 @@
 import BookingScreen from './booking'
-import BookingOptionsScreen from './booking.options'
+// import BookingOptionsScreen from './booking.options'
 import BookingDriverDetailScreen from './booking.driver.detail'
 import BookingCompleteScreen from './booking.complete'
 
@@ -13,7 +13,6 @@ import BOOKING_STATUS from './booking.status.define'
 
 export {
   BookingScreen,
-  BookingOptionsScreen,
   BookingDriverDetailScreen,
   BookingCompleteScreen,
   FriendsCircleScreen,
