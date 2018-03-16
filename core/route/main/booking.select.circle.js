@@ -71,7 +71,7 @@ export default connect(state => ({
             )
           }
           {
-            (!loading && friend.length !== 0 && (selected_friends.length === friend.length || selected_friends.length === 0)) && (
+            (!loading && friend.length !== 0 && typeof(selected_friends) === 'string') && (
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity 
                   onPress={() => this.props.dispatch(booking.passengerSetValue({ selected_friends: 'all' }))} 

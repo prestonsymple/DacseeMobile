@@ -9,7 +9,10 @@ export default {
     taxi: require('./images/taxi.png'),
     upgrade: require('./images/upgrade.png'),
     floating_driver: require('./images/driver.png'),
-    floating_passenger: require('./images/passenger.png')
+    floating_passenger: require('./images/passenger.png'),
+    joblist_car: require('./images/joblist_car.png'),
+    joblist_payment: require('./images/joblist_payment.png'),
+    joblist_empty: require('./images/joblist_empty.png')
   },
   
   animation: {
