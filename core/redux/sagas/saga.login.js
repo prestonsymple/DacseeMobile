@@ -4,7 +4,7 @@ import { select, fork, all, take, call, put, takeEvery, takeLatest, race, cancel
 import { delay } from 'redux-saga'
 import Toast from 'react-native-root-toast'
 
-import { application, account } from '../actions'
+import { application, account, booking, jobs } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { Session as session, System } from '../../utils'
 import PushService from '../../native/push-service'
@@ -30,16 +30,18 @@ function* loginFlow() {
     }
 
     if (next) {
-      const { stage, value } = next.payload
-
+      let { stage, value } = next.payload
       if (stage === STAGE_DEFINE.ENTER_MOBILE_COMPLATE) { // 输入手机号&&邮箱
         try {
-          const is = ('email' in value)
-          const path = is ? 'v1/sendVerificationCode/email' : 'v1/sendVerificationCode/phone'
-          yield call(session.user.post, path, value)
-          yield put(application.showMessage(`已将验证码发送至您的${is ? '邮箱' : '手机'}`))
+          const url = 'v1/sendVerificationCode/phone'
+          yield call(session.user.post, url, value)
+          yield put(application.showMessage('已将验证码发送至您的手机'))
         } catch (e) {
-          yield put(application.showMessage('无法连接到服务器，请稍后再试'))
+          if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
+            yield put(application.showMessage(`验证码发送过于频繁，请[${e.response.data.data}]秒后再试`))
+          } else {
+            yield put(application.showMessage('无法连接到服务器，请稍后再试'))
+          }
           continue
         }
       }
@@ -51,11 +53,18 @@ function* loginFlow() {
             put(application.showProgress())
           ])
           
-          const { id, code, isMail, phoneCountryCode, _id = '' } = value
+          let { id, code, isMail, phoneCountryCode, _id = '' } = value
+          // 邮箱登录模式 - 二次验证码
+          if (!_id) {
+            _id = yield select(state => state.application.mail_login_mode_id)
+            yield put(application.setMailModeValue(undefined))
+          }
+          //
+
           const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
           const base = isMail ? 
-            { email: id, emailVerificationCode: code } : 
-            { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id: _id }
+            { email: id, phoneVerificationCode: code, emailVerificationCode: code, _id } : 
+            { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
           if (!body._id) {
@@ -66,6 +75,7 @@ function* loginFlow() {
           yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
+          let { isMail, id } = value
           if (e.response && e.response.data.code == 'INVALID_VERIFICATION_CODE') {
             yield all([
               put(account.loginPutValue(2)),
@@ -73,14 +83,14 @@ function* loginFlow() {
               put(application.showMessage(e.response.data.message)),
             ])
           } else if (e.response && e.response.data.code === 'MULTIPLE_USER_ACCOUNT') {
-            const { id, code, isMail, phoneCountryCode } = value
+            const { id, code, phoneCountryCode } = value
             const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
             const base = isMail ? 
               { email: id, emailVerificationCode: code, } : 
               { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id1: id }
             const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
 
-            yield delay(1000)
+            yield delay(400)
             yield put(application.hideProgress())
             yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value } }))
             yield put(account.loginPutValue(2))
@@ -88,16 +98,32 @@ function* loginFlow() {
             e.response.data.code == 'INVALID_USER' || 
             e.response.data.code == 'INCOMPLETE_REGISTRATION'
           )) { // 跳转注册
-            yield all([
+            const actions = [
               put(account.loginPutValue(4)),
               put(application.hideProgress())
+            ]
+            if (e.response.data.data && e.response.data.data.fullName) actions.push(put(application.setFullValue(e.response.data.data.fullName)))
+            if (e.response.data.data && e.response.data.data.referralUserId) actions.push(put(application.setReferrerValue(e.response.data.data.referralUserId)))
+            yield all(actions)
+          } else if (e.response && e.response.data.code == 'MISSING_PHONE_VERIFICATION_CODE' && isMail) {
+            const url = 'v1/sendVerificationCode/email'
+            yield call(session.user.post, url, { email: id })
+            yield all([
+              put(application.hideProgress()), 
+              put(application.showMessage('已将验证码发送至您的手机')),
+              put(account.loginPutValue(2))
             ])
           } else {
-            yield all([
-              put(account.loginPutValue(2)),
+            const flow = [
               put(application.hideProgress()), 
               put(application.showMessage('无法连接到服务器，请稍后再试')),
-            ])
+            ]
+            if (isMail) {
+              flow.push(put(account.loginPutValue(1)))
+            } else {
+              flow.push(put(account.loginPutValue(2)))
+            }
+            yield all(flow)
           }
           continue
         }
@@ -110,42 +136,14 @@ function* loginFlow() {
             put(application.showProgress())
           ])
 
-          const register = yield call(session.user.post, 'v1/register', Object.assign({}, 
+          const register = yield call(session.User.Post, 'v1/register', Object.assign({}, 
             value, 
             { latitude: 3.321, longitude: 1.23 }
           ))
 
-
-          let response_data = {}
-          // TODO...
-          // if (value.email && value.phoneNo) {
-          //   const { data } = yield call(session.user.post, 'v1/auth/email', { 
-          //     phoneCountryCode: value.phoneCountryCode, 
-          //     phoneNo: value.phoneNo, 
-          //     phoneVerificationCode: value.phoneVerificationCode, 
-          //     // emailVerificationCode: value.m
-          //     // "phoneVerificationCode": "2453",
-          //     // "email": "changwaiseng@gmail.com",
-          //     // "emailVerificationCode": "7470",
-          //     // "phoneVerificationCode": "2453",
-          //     _id1: ''
-          //   })
-          //   response_data = data
-          // } else {
-          const { data } = yield call(session.user.post, 'v1/auth/phone', { 
-            phoneCountryCode: value.phoneCountryCode, 
-            phoneNo: value.phoneNo, 
-            phoneVerificationCode: value.phoneVerificationCode, 
-            _id1: ''
-          })
-          response_data = data
-          // }
-          
-
-          yield call(loginSuccess, response_data) // 登录成功
+          yield call(loginSuccess, register) // 登录成功
 
         } catch (e) {
-          console.log(e)
           if (e.response && e.response.data.message === 'INVALID_REFERRAL') {
             yield all([
               put(application.hideProgress()), 
@@ -176,6 +174,7 @@ function* loginFlow() {
 function* logoutFlow() {
   while(true) {
     const payload = yield take(account.logoutSuccess().type)
+    yield put(booking.passengerSetValue({ type: 'circle', name: '优选', payment: '现金支付', book: false, time: 'now', selected_friends: [] }))
     yield put(account.loginPutValue(0))
     yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
   }

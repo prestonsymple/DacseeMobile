@@ -4,7 +4,9 @@ export default {
   changeApplicationStatus: createAction('CHANGE_APPLICATION_STATUS'),
   changeNetworkStatus: createAction('CHANGE_NETWORK_STATUS'),
 
-  setReferrerValue: createAction('SET_REFERRER_VALUE'),
+  setReferrerValue: createAction('APPLICATION_SET_REFERRER_VALUE'),
+  setFullValue: createAction('APPLICATION_SET_FULL_VALUE'),
+  setMailModeValue: createAction('APPLICATION_SET_MAIL_MODE_VALUE'),
 
   darkStatusBar: createAction('DARK_STATUS_BAR'),
   lightStatusBar: createAction('LIGHT_STATUS_BAR'),

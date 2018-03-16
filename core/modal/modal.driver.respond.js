@@ -14,14 +14,15 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 import { System, Icons, Screen, Session } from '../utils'
 import { Button } from '../components' 
 import { booking, application } from '../redux/actions'
+import { BOOKING_STATUS } from '../route/main'
 /*****************************************************************************************************/
 
 
-export default connect(state => ({ booking_id: state.booking.booking_id }))(class DriverRespondView extends Component {
+export default connect(state => ({ status: state.booking.status }))(class DriverRespondView extends Component {
   render() {
     const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field, booking_id = '' } = this.props
     return (
-      <Modal onRequestClose={() => {}} visible={booking_id.length !== 0} transparent={true} style={{ }}>
+      <Modal onRequestClose={() => {}} visible={status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT} transparent={true} style={{ }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#66666699', flex: 1 }}>
           <View style={[
             { width: Screen.window.width - 90, height: 296, backgroundColor: 'white', borderRadius: 4 },

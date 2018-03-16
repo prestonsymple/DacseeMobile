@@ -49,7 +49,7 @@ export default connect(state => ({
 
     const { selected_friends } = props.booking
     const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
-      checked: selected_friends.find(sub => sub._id === pipe._id) !== undefined
+      checked: typeof(selected_friends) === 'string' ? false : selected_friends.find(sub => sub._id === pipe._id) !== undefined
     }))
     const _dataSource = dataContrast.cloneWithRowsAndSections([
       props.requestor,
@@ -87,7 +87,6 @@ export default connect(state => ({
 
   onPressCheck(data) {
     const { selected } = this.state
-    if (selected.length >= 20) return this.props.dispatch(application.showMessage('最多只能选择20个朋友'))
 
     let clone = _.cloneDeep(selected)
     if (clone.find(pipe => pipe._id === data._id)) {
@@ -99,6 +98,7 @@ export default connect(state => ({
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
       checked: clone.find(sub => sub._id === pipe._id) !== undefined
     }))
+    if (_friend.length >= 20) return this.props.dispatch(application.showMessage('最多只能选择20个朋友'))
     const _dataSource = dataContrast.cloneWithRowsAndSections([
       this.props.requestor,
       _friend

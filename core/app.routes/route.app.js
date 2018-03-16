@@ -8,7 +8,6 @@ import {
 
 import { 
   BookingScreen,
-  BookingOptionsScreen,
   BookingDriverDetailScreen,
   BookingCompleteScreen,
   FriendsCircleScreen,
@@ -69,7 +68,6 @@ const AuthScreen = {
 // 首页流程
 const HomeScreen = {
   Main: { screen: BookingScreen },
-  BookingOptions: { screen: BookingOptionsScreen },
   BookingDriverDetail: { screen: BookingDriverDetailScreen },
   BookingComplete: { screen: BookingCompleteScreen },
 

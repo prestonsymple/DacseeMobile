@@ -158,27 +158,27 @@ const sessionBuilder2 = (baseUrl) => {
 
 export default {
   user: sessionBuilder(
-    'http://user-dev.dacsee.io/api/'
+    'https://user-dev.dacsee.io/api/'
   ),
 
   circle: sessionBuilder(
-    'http://circle-dev.dacsee.io/api/'
+    'https://circle-dev.dacsee.io/api/'
   ),
 
   booking: sessionBuilder(
-    'http://booking-dev.dacsee.io/api/'
+    'https://booking-dev.dacsee.io/api/'
   ),
 
   location: sessionBuilder(
-    'http://location-dev.dacsee.io/api/'
+    'https://location-dev.dacsee.io/api/'
   ),
 
   driver: sessionBuilder(
-    'http://driver-verification-dev.dacsee.io/api/'
+    'https://driver-verification-dev.dacsee.io/api/'
   ),
 
   push: sessionBuilder(
-    'http://push-dev.dacsee.io/api/'
+    'https://push-dev.dacsee.io/api/'
   ),
 
   lookup: sessionBuilder(
@@ -194,27 +194,27 @@ export default {
   // V2
 
   User: sessionBuilder2(
-    'http://user-dev.dacsee.io/api/'
+    'https://user-dev.dacsee.io/api/'
   ),
 
   Circle: sessionBuilder2(
-    'http://circle-dev.dacsee.io/api/'
+    'https://circle-dev.dacsee.io/api/'
   ),
 
   Booking: sessionBuilder2(
-    'http://booking-dev.dacsee.io/api/'
+    'https://booking-dev.dacsee.io/api/'
   ),
 
   Location: sessionBuilder2(
-    'http://location-dev.dacsee.io/api/'
+    'https://location-dev.dacsee.io/api/'
   ),
 
   Driver: sessionBuilder2(
-    'http://driver-verification-dev.dacsee.io/api/'
+    'https://driver-verification-dev.dacsee.io/api/'
   ),
 
   Push: sessionBuilder2(
-    'http://push-dev.dacsee.io/api/'
+    'https://push-dev.dacsee.io/api/'
   ),
 
   Lookup: sessionBuilder2(

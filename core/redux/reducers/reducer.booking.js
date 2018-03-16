@@ -21,5 +21,5 @@ const initialState = {
 
 export default handleActions({
   [booking.passengerSetValue]: (state, { payload }) => Object.assign({}, state, payload),
-  [booking.passengerSetStatus]: (state, { payload }) => Object.assign({}, state, { status: payload }),
+  [booking.passengerSaveStatus]: (state, { payload }) => Object.assign({}, state, { status: payload }),
 }, initialState)

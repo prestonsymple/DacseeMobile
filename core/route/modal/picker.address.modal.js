@@ -20,7 +20,7 @@ import { BOOKING_STATUS } from '../main'
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(state => ({}))(class SelectAddressModal extends Component {
+export default connect(state => ({ }))(class SelectAddressModal extends Component {
 
   constructor(props) {
     super(props)

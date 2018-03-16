@@ -28,6 +28,7 @@ const codeInputProps = {
 export default connect(state => ({
   account: state.account,
   referrer_id: state.application.referrerValue,
+  full_name: state.application.full_name,
   stage: state.application.login_stage
 }))(class LoginScreen extends Component {
 
@@ -73,7 +74,10 @@ export default connect(state => ({
     this.animated.stage.stopAnimation()
     Animated.timing(this.animated.stage, { toValue: STAGE_VALUE_MAP[stage], duration, easing: Easing.linear }).start()
 
-    if (stage === 2) { this.codeInput.v1.focus() }
+    if (stage === 2) { 
+      this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
+      this.codeInput.v1.focus() 
+    }
   }
 
   async validAccount(v4) {
@@ -96,7 +100,7 @@ export default connect(state => ({
     const { stage } = this.props
     const { value, countryCode } = this.state
 
-    console.log(stage)
+    this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
 
     if
     (stage === 0) {
@@ -104,12 +108,12 @@ export default connect(state => ({
     } else if
     (stage === 1) {
       if (!value.length) return this.props.dispatch(app.showMessage('请输入正确的邮箱或手机号'))
-      const body = this.isEmail(value) ? { email: value } : { phoneCountryCode: countryCode, phoneNo: value }
-      this.props.dispatch(account.loginNext({ stage: 2, value: body }))
+      const isMail = this.isEmail(value)
+      const body = isMail ? { id: value, isMail: true } : { phoneCountryCode: countryCode, phoneNo: value }
+      this.props.dispatch(account.loginNext({ stage: isMail ? 3 : 2, value: body }))
     } else if
     (stage === 2) {
       this.props.dispatch(account.loginBack(1))
-      this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
       Keyboard.dismiss()
     }
   }
@@ -361,7 +365,7 @@ export default connect(state => ({
           { opacity: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
         ]}>
           <ScrollView contentContainerStyle={{ justifyContent: 'center' }} style={{
-            flex: 1, paddingHorizontal: 45, marginTop: 110
+            flex: 1, paddingHorizontal: 45, marginTop: this.isEmail(this.state.value) ? 110 : 200
           }}>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
               <Text style={{ fontSize: 26, color: '#f2f2f2', fontWeight: '400' }}>激活您的账号</Text>
@@ -449,6 +453,7 @@ export default connect(state => ({
                 placeholder={'请输入您的姓名'}
                 returnKeyType={'done'}
                 value={this.state.fullName}
+                { ...Object.assign({}, this.props.full_name !== undefined ? { defaultValue: this.props.full_name } : {}) }
                 onChangeText={text => this.setState({ fullName: text })}
                 style={[styles.stdInput, styles.registerTextInput]} />
               <TextInput
@@ -486,7 +491,13 @@ export default connect(state => ({
             <TouchableOpacity 
               activeOpacity={0.7} 
               style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
-              onPress={() => this.props.dispatch(account.loginBack(2))}
+              onPress={() => {
+                if (isMail) {
+                  this.props.dispatch(account.loginBack(1))
+                } else {
+                  this.props.dispatch(account.loginBack(2))
+                }
+              }}
             >
               { Icons.Generator.Material('keyboard-arrow-left', 38, 'white') }
             </TouchableOpacity>

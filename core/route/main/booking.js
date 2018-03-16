@@ -3,6 +3,8 @@ import {
   Text, View, Animated, StyleSheet, Image, TouchableOpacity,
   DeviceEventEmitter, ListView, Platform, ScrollView, StatusBar
 } from 'react-native'
+import moment from 'moment'
+import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
@@ -15,12 +17,12 @@ import HeaderSection from './booking.header.section'
 import BookingSelectCircle from './booking.select.circle'
 import BookingNavigationBarSwipe from './booking.navigation.bar.swipe'
 
-import { MapView, Search, Marker } from '../../native/AMap'
+import { MapView, Search, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Define } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
 import { JobsListScreen } from '../jobs'
-import { BOOKING_STATUS } from '.';
+import { BOOKING_STATUS } from '.'
 
 const { height, width } = Screen.window
 
@@ -43,10 +45,28 @@ const BOTTOM_MARGIN = Platform.select({
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({}))(class MainScreen extends Component {
+export default connect(state => ({
+  booking_status: state.booking.status,
+  jobs_status: state.jobs.status
+}))(class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
-    return {
+    const { params = {} } = navigation.state
+    const { status = BOOKING_STATUS.PASSGENER_BOOKING_INIT } = params
+
+    const SETTER = {
+      activeOpacity: .7,
+      style: { top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' },
+      onPress: () => {
+        if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
+          DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN') 
+        } else {
+          navigation.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
+        }
+      }
+    } 
+
+    const maps = {
       drawerLockMode: 'locked-closed',
       headerStyle: {
         backgroundColor: '#1AB2FD',
@@ -56,17 +76,20 @@ export default connect(state => ({}))(class MainScreen extends Component {
         borderBottomColor: 'transparent',
         elevation: 0,
       },
+      title: (status >= BOOKING_STATUS.PASSGENER_BOOKING_INIT) ? 'DACSEE' : '确认行程',
       headerLeft: (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
-          onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN')}
-        >
-          {Icons.Generator.Octicons('three-bars', 23, 'white', { style: { left: 8 } })}
+        <TouchableOpacity {...SETTER}>
+          {
+            (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (Icons.Generator.Octicons('three-bars', 23, 'white', { style: { left: 8 } }))
+          }
+          {
+            (status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) && (Icons.Generator.Material('keyboard-arrow-left', 30, 'white'))
+          }
         </TouchableOpacity>
-      ),
-      title: 'DACSEE'
+      )
     }
+
+    return maps
   }
 
   async componentDidMount() {
@@ -78,7 +101,12 @@ export default connect(state => ({}))(class MainScreen extends Component {
     this.subscription && this.subscription.remove()
   }
 
-  async componentWillReceiveProps(props) { }
+  async componentWillReceiveProps(props) {
+    const { booking_status, jobs_status } = props
+    if (this.props.booking_status !== booking_status) {
+      this.props.navigation.setParams({ status: booking_status })
+    }
+  }
 
   render() {
     return (
@@ -130,16 +158,15 @@ class DriverComponent extends Component {
   }
 }
 
-const PassengerComponent = connect(state => ({ data: state.booking }))(class PassengerComponent extends Component {
+const PassengerComponent = connect(state => ({
+  ...state.booking
+}))(class PassengerComponent extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      ready: false,
-      editAdr: false,
       drag: false,
-      data: undefined,
-      carArgs: []
+      routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
     }
     this.currentLoc = {}
     this.timer = null
@@ -149,17 +176,77 @@ const PassengerComponent = connect(state => ({ data: state.booking }))(class Pas
     this.form = new Animated.Value(0)
 
     this.count = 0
+
+    this.ready = false
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT)  {
+      this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
+      this.setState({ ready: true })
+    }
+
+    if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
+      const { destination, from } = props
+      this.map.calculateDriveRouteWithStartPoints(
+        { latitude: from.location.lat, longitude: from.location.lng }, 
+        { latitude: destination.location.lat, longitude: destination.location.lng }
+      )
+    }
+  }
+
+  async componentDidMount() {
+    await InteractionManager.runAfterInteractions()
+    this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', (args) => this.aMapMathRouteSuccess(args))
+  }
+
+  componentWillUnmount() {
+    this.eventListener && this.eventListener.remove()
+  }
+
+  async aMapMathRouteSuccess(args) {
+    const route = Array.isArray(args) ? args[0] : args
+    const { routeCenterPoint } = route
+    let zoom = 15
+
+    if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
+      const { destination, from } = this.props
+      const distance = await Utils.distance(
+        from.location.lat, from.location.lng, 
+        destination.location.lat, destination.location.lng
+      )
+      zoom = this.mathDistanceZoom(distance)
+      this.setState({ ...route })
+    }
+    this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500) 
+  }
+
+  mathDistanceZoom(distance) {
+    const km = distance / 1000
+
+    let zoom = 16
+    if (km >= 160) { zoom = 8 }
+    else if (km >= 80) { zoom = 9 }
+    else if (km >= 40) { zoom = 10 }
+    else if (km >= 20) { zoom = 11 } 
+    else if (km >= 10) { zoom = 12 }
+    else if (km >= 5) { zoom = 13 }
+    else if (km >= 2.5) { zoom = 14 }
+    else { zoom = 15 }
+
+    zoom -= 1
+    return zoom
   }
 
   async onLocationListener({ nativeEvent }) {
     const { latitude, longitude } = nativeEvent
     if (latitude === 0 || longitude === 0) return
-    if (!this.state.ready) {
+    if (!this.ready) {
       await InteractionManager.runAfterInteractions()
       this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
-      this.setState({ ready: true })
+      this.ready = true
     }
-    this.currentLoc = { latitude, longitude }
+    this.setState({ current: { latitude, longitude } })
   }
 
   onStatusChangeListener({ nativeEvent }) {
@@ -201,33 +288,84 @@ const PassengerComponent = connect(state => ({ data: state.booking }))(class Pas
   }
 
   render() {
-    const { editAdr, drag, defaultData } = this.state
+    const { drag } = this.state
+    const { status, from, destination } = this.props
 
     const MAP_SETTER = {
       style: { flex: 1 },
       locationEnabled: true,
       mapType: 'standard',
       locationInterval: 1000,
-      onStatusChange: this.onStatusChangeListener.bind(this),
       onLocation: this.onLocationListener.bind(this),
       ref: (e) => this.map = e
     }
 
+    if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
+      MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
+    }
+    
     return (
       <View style={{ flex: 1, width }}>
         <MapView {...MAP_DEFINE} {...MAP_SETTER}>
           {/* TODO */}
+          { 
+            (
+              status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS &&
+              from.location
+            ) && (<Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.location.lat, longitude: from.location.lng }} />)
+          }
+          { 
+            (
+              status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS &&
+              destination.location
+            ) && (<Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.location.lat, longitude: destination.location.lng }} />) 
+          }
         </MapView>
 
-        <HeaderSection />
+        { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />) }
 
-        <MapPin timing={this.pin} />
-        <MapPinTip timing={this.board} />
+        { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<MapPin timing={this.pin} />) }
+        { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<MapPinTip timing={this.board} />) }
 
-        <BookingSelectCircle init={true} />
+        { 
+          (
+            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT ||
+            status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS
+          ) && (<BookingSelectCircle init={true} />) 
+        }
 
-        <PickerAddress timing={this.ui} drag={drag} />
+        { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />) }
+        { status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (<PickerOptions />) }
       </View>
+    )
+  }
+})
+
+const PickerOptions = connect(state => ({ status: state.booking.status }))(class PickerOptions extends Component {
+  render() {
+    return (
+      <Animated.View style={[
+        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? 160 + 22 : 160, justifyContent: 'center' },
+        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
+        { backgroundColor: 'white', paddingHorizontal: 23 },
+        { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
+      ]}>
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+            <TouchableOpacity activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现在</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={() => {
+            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
+          }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>开始</Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
     )
   }
 })

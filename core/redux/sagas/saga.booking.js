@@ -110,18 +110,62 @@ function* bookingFlow() {
       destination: state.booking.destination,
       from: state.booking.from,
     }))
-    
+
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
-      //
+      yield put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
-      //
-      if (destination.location && from.location) {
-        // 
-      }
+      if (!destination.location || !from.location) continue
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) {
-      //
+      const bookingReducer = yield select(state => ({ ...state.booking }))
+      const { from, destination } = bookingReducer
+
+      const fares = yield call(
+        Session.Booking.Get, 
+        `v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${destination.location.lat}&destination_lng=${destination.location.lng}`
+      )
+
+      const body = {
+        type: 'now',
+        from : {
+          address : bookingReducer.from.address, 
+          coords : { lat : bookingReducer.from.location.lat,  lng : bookingReducer.from.location.lng }, 
+          name : bookingReducer.from.name, 
+          placeId : bookingReducer.from.uid
+        },
+        notes : '', 
+        destination : {
+          address : bookingReducer.to.address, 
+          coords : { lat : bookingReducer.to.location.lat,  lng : bookingReducer.to.location.lng }, 
+          name : bookingReducer.to.name, 
+          placeId : bookingReducer.to.uid
+        },
+        // vehicle_type : 'Economy',
+        booking_at: Methods.timeZone(bookingReducer.time),
+        payment_method: Methods.payment(bookingReducer.payment),
+        fare: fares.fare.Circle // 仅限朋友圈
+      }
+
+      if (bookingReducer.type === 'circle') {
+        const { selected_friends } = bookingReducer
+        body.assign_type = typeof(selected_friends) === 'string' ? 'circle' : 'selected_circle'
+        body.selected_circle_ids = bookingReducer.selected_friends.map(pipe => pipe.friend_id)
+      }
+
+      try {
+        const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
+        if (!isSuccess) {
+          yield put(booking.journeyUserCancel())
+        } else {
+          yield put(booking.journeyUpdateData({ booking_id: doc._id }))
+        }
+      } catch (e) {
+        yield put(booking.journeyUserCancel())
+        yield put(application.showMessage('无法连接到服务器，请检查您的网络'))
+      }
+      console.log()
+      if (!destination.location || !from.location) continue
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
@@ -133,6 +177,8 @@ function* bookingFlow() {
     } else if (status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE) {
       //
     }
+
+    yield put(booking.passengerSaveStatus(status))
   }
 }
 
