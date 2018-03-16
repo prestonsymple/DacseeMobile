@@ -13,7 +13,7 @@ const MENUS_OPTIONS = [{
   key: '1',
   name: '我的行程',
   icon: Icons.Generator.Material('data-usage', 24, ICONS_COLOR, { style: { left: .5, top: 1 } }),
-  onPress: ({ navigation }) => navigation.navigate('JobsList')
+  onPress: ({ navigation }) => navigation.navigate('TripList')
 }, {
   key: '2',
   name: '钱包',

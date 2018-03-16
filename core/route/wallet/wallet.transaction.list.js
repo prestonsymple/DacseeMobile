@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from 'react'
 import { 
   Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
+  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
@@ -44,14 +44,7 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
 
-    try {
-      const resp = await Session.wallet.get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
-      this.setState({
-        detail: dataContrast.cloneWithRows(resp.data)
-      })
-    } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))    
-    }
+    this._fetchData()
     
     //   {
     //     "_id": "28172224-2430-11e8-b67d-91aeb57f5e5b",
@@ -63,6 +56,25 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
     // }    
   }
 
+  async _fetchData(index=0) { 
+    console.log(lalala )
+    this.setState({
+      loading: true
+    })
+    try {
+      const resp = await Session.wallet.get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
+      this.setState({
+        loading: false,
+        detail: dataContrast.cloneWithRows(resp.data)
+      })
+    } catch (e) {
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.setState({
+        loading: false
+      })
+    }
+  }
+
   render() {
     const { detail } = this.state
     const wrapWidth = width
@@ -71,6 +83,15 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
       <View style={{ backgroundColor: '#f8f8f8', flex: 1, width: width}}>
         {/* DETAIL */}
         <ListView 
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this._fetchData.bind(this)}
+              title={'下拉进行刷新'}
+              colors={['#ffffff']}
+              progressBackgroundColor={'#1c99fb'}
+            />
+          }
           dataSource={detail}
           enableEmptySections={true}
           renderRow={(row) => <DetailItem data={row} />}

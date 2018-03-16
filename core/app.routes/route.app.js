@@ -23,6 +23,11 @@ import {
   JobsListDetailScreen
 } from '../route/jobs'
 
+import {
+  TripListScreen,
+  TripListDetailScreen
+} from '../route/trip'
+
 import { 
   WalletBalanceScreen,
   WalletWithdrawScreen,
@@ -80,6 +85,9 @@ const HomeScreen = {
   JobsListener: { screen: JobsListenerScreen },
   JobsList: { screen: JobsListScreen },
   JobsListDetail: { screen: JobsListDetailScreen },
+
+  TripList: { screen: TripListScreen },
+  TripListDetail: { screen: TripListDetailScreen },
 
   WalletBalance: { screen: WalletBalanceScreen },
   WalletWithdraw: { screen: WalletWithdrawScreen },

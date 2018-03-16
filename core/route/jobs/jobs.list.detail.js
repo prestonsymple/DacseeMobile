@@ -135,6 +135,37 @@ export default class JobsListDetailScreen extends Component {
     return false
   }
 
+  _statusInChinese(str) {
+    switch(str) {
+    // case 'Pending_Passenger':
+    //   return '等待乘客'
+    // case 'Pending_Assignment':
+    //   return ''
+    case 'Pending_Acceptance':
+      return '等待接单'
+    // case 'Confirmed':
+    //   return ''
+    case 'On_The_Way':
+      return '司机即将到达'
+    case 'Arrived':
+      return '司机已到达'
+    case 'No_Show':
+      return '乘客未抵达'
+    case 'On_Board':
+      return '乘客已上车'
+    case 'Completed':
+      return '订单完成'
+    case 'Cancelled_by_Passenger':
+      return '乘客已取消'
+    case 'Cancelled_by_Driver':
+      return '司机已取消'
+    case 'Rejected_by_Driver':
+      return '司机已拒绝'
+    case 'No_Taker':
+      return '订单无人应答'
+    }
+  }
+
   render() {
     // const { destination = { coords: { lat: 0, lng: 0 } }, from = { coords: { lat: 0, lng: 0 } }} = this.state.jobDetail
     const { destination, from, payment_method, fare, booking_at, status, passenger_info } = this.state.jobDetail
@@ -155,34 +186,8 @@ export default class JobsListDetailScreen extends Component {
         </MapView>
 
         <View style={{ position: 'absolute', top: 160, bottom:0, left: 0, right: 0, opacity: 1}}>
-          <View style={{ marginTop: 40, flex: 1, backgroundColor: 'white', borderTopRightRadius: 20, borderTopLeftRadius: 20, shadowOffset: {width: 0, height: 5}, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 20 }}>
-            <View style={{ position: 'absolute', top: -40, left:30, right: 30, height: 80, flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-                <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 70, height: 70 , borderRadius: 35 }} />
-              </View>
-
-              <View style={{ position: 'absolute', top:25, left: 75, right: 116, height: 50, backgroundColor: 'white' }}>
-                <Text style={{ marginLeft: 10, marginTop: 5, fontSize: 17, color: '#333', fontWeight: 'bold' }}>{ fullName }</Text>
-              </View>
-              
-              <View style={{ flexDirection: 'row', position: 'absolute', right: 0}}>
-                <View style={{ marginRight: 10, width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-                  <TouchableOpacity onPress={() => {
-                    Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)
-                  }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center'}}>
-                    { Icons.Generator.Material('textsms', 24, '#555') }
-                  </TouchableOpacity>
-                </View>
-                <View style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-                  <TouchableOpacity onPress={() => {
-                    Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)
-                  }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center' }}>
-                    { Icons.Generator.Material('phone', 24, '#555') }
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            
+      
+          <View style={{ marginTop: 40, flex: 1, backgroundColor: 'white', borderTopRightRadius: 20, borderTopLeftRadius: 20, shadowOffset: {width: 0, height: 5}, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 20 }}> 
             <ScrollView style={{ marginTop: 50, marginBottom: 70 }} >
               <View style={{ paddingHorizontal: 20 }}>
                 <View style={{ flexDirection: 'row', width: width - 40, justifyContent: 'space-between' }}>
@@ -202,7 +207,6 @@ export default class JobsListDetailScreen extends Component {
 
                 <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
               </View>
-
               <View style={{ marginHorizontal: 20, marginVertical: 12, flexDirection: 'row', justifyContent: 'center' }}>
                 <View style={{flex: 1, alignItems:'center', }}>
                   <Image source={ Resources.image.joblist_car} resizeMethod={'scale'} style={{ width:40, height: 40}} />
@@ -213,19 +217,16 @@ export default class JobsListDetailScreen extends Component {
                   <Text style={{ marginTop: 10, fontSize: 15, color: '#333' }}>{ payment_method }</Text>
                 </View>
               </View>
-              <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>
-              
+              <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>              
               <View style={{ marginHorizontal: 20, marginVertical: 12 }}>
                 <Text style={{ fontSize: 17, fontWeight: 'bold', color: '#333' }}>提示信息</Text>
                 <Text style={{ marginTop: 10, fontSize: 17, color: '#999' }}>无</Text>
               </View>
             </ScrollView>
-            
 
-            
             <View style={[styles.JobDetailWrap, { height: 70 }]}>
               <View style={{ height: 1, backgroundColor: '#d5d5d5' }}></View>
-              <View style={{marginHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 70 }}>
+              <View style={{marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 70 }}>
                 <Text style={{ fontWeight: 'bold', color: '#333', fontSize: 27 }}>{ fare.toFixed(2) }</Text>
                 {
                   this._getOptionable(status) ?               
@@ -237,11 +238,38 @@ export default class JobsListDetailScreen extends Component {
                         <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ this._getStatus(status).right }</Text>
                       </Button>
                     </View> :
-                    <Text>{status}</Text>
+                    <Text style={{ fontSize: 17 }}>{ this._statusInChinese(status) }</Text>
                 }                        
               </View>
             </View>              
           </View>
+
+          <View style={{ position: 'absolute', top: 10, left:30, right: 30, height: 80, flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+              <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 70, height: 70 , borderRadius: 35 }} />
+            </View>
+            <View style={{ position: 'absolute', top:25, left: 75, right: 116, height: 50, backgroundColor: 'white' }}>
+              <Text style={{ marginLeft: 10, marginTop: 5, fontSize: 17, color: '#333', fontWeight: 'bold' }}>{ fullName }</Text>
+            </View>            
+            <View style={{ flexDirection: 'row', position: 'absolute', right: 0}}>
+              <View style={{ marginRight: 10, width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => {
+                  Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)
+                }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center'}}>
+                  { Icons.Generator.Material('textsms', 24, '#555') }
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => {
+                  Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)
+                }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center' }}>
+                  { Icons.Generator.Material('phone', 24, '#555') }
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          
         </View>
         {/* <View style={{ marginTop: -30 }}>
           <View style={{ backgroundColor: 'white', borderTopRightRadius: 20, borderTopLeftRadius: 20, shadowOffset: {width: 0, height: 5}, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 20 }}>

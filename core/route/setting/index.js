@@ -65,6 +65,16 @@ const testPushService = async () => {
   }
 }
 
+const changeMail = async () => {    
+  try {
+    const resp = await session.user.put('v1/profile', { email: '222@test.com' })
+    // this.props.dispatch(application.showMessage('邮箱修改成功'))
+  } catch (e) {
+    // this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+  }    
+  
+}
+
 // 主菜单
 const SettingMenuScreen = createTemplate('设置', ({ navigation, dispatch }) => [
   [{
