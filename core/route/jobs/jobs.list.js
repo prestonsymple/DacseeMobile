@@ -68,17 +68,17 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
     
   }
 
-  async _fetchData(index=0) {
+  async _fetchData(dateDic) {
+    console.log(dateDic)
     this.setState({
       loading: true
     })
     // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
 
     try {
-      // console.log(this.state.selectedDate)
-      const dateFrom = this._getFormatterDate(this.state.selectedDate).dateFrom
-      const dateTo = this._getFormatterDate(this.state.selectedDate).dateTo
-      const resp = await Session.booking.get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
+      
+      
+      const resp = await Session.booking.get(`v1/bookings?role=driver&date_from=${dateDic.dateFrom}&date_to=${dateDic.dateTo}`)
     
       // var dateDic = new Object()
       // resp.data.map( (item, index) => {        
@@ -122,7 +122,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
   }
 
   render() {
-    const { dateDic, selectedDate, detail, switchValue } = this.state    
+    const { dateDic, selectedDate, detail, switchValue, loading } = this.state    
     return (                        
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
         <View style={{ flex: 1 }}>
@@ -138,10 +138,13 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             onCalendarToggled={(calendarOpened) => {}}
             onDayPress={(day)=>{              
               const dateStr = moment(day.timestamp).toISOString()
-              this.setState({
-                selectedDate: dateStr
-              })
-              this._fetchData()
+              // console.log('clicked', dateStr)
+              // this.setState({
+              //   selectedDate: dateStr
+              // })
+              const dateFrom = this._getFormatterDate(dateStr).dateFrom
+              const dateTo = this._getFormatterDate(dateStr).dateTo
+              this._fetchData({dateFrom: dateFrom, dateTo: dateTo})
             }}
             onDayChange={(day)=>{}}
             selected={selectedDate}                  
@@ -207,7 +210,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                 (
                   <ScrollView refreshControl={
                     <RefreshControl
-                      refreshing={this.state.loading}
+                      refreshing={loading}
                       onRefresh={this._fetchData.bind(this)}
                       title={'下拉进行刷新'}
                       colors={['#ffffff']}
@@ -235,16 +238,16 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                   renderRow={(row) => {
                     return (
                       <TouchableOpacity 
-                      onPress={() => {
-                        this.props.dispatch(NavigationActions.navigate({
-                          routeName: 'JobsListDetail', 
-                          params: { jobDetail: row } 
-                        }))
-                      }}
-                      activeOpacity={.7}
-                    >
-                      <ListItem itemData={row} />
-                    </TouchableOpacity>
+                        onPress={() => {
+                          this.props.dispatch(NavigationActions.navigate({
+                            routeName: 'JobsListDetail', 
+                            params: { jobDetail: row } 
+                          }))
+                        }}
+                        activeOpacity={.7}
+                      >
+                        <ListItem itemData={row} />
+                      </TouchableOpacity>
                     )}}
                   // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
                   style={{ flex: 1, marginTop: 15 }}
@@ -403,21 +406,21 @@ class ListItem extends Component {
   }
 }
 
-class CalendarItem extends Component {
-  constructor(props) {
-    super(props)
-    this.state={
-      day: this.props.day
-    }
-  }
+// class CalendarItem extends Component {
+//   constructor(props) {
+//     super(props)
+//     this.state={
+//       day: this.props.day
+//     }
+//   }
 
-  render () {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text style={{}}>三月</Text>
-        <Text style={{}}>16</Text>
-        <Text style={{}}>周一</Text>
-      </View>
-    )
-  }
-}
+//   render () {
+//     return (
+//       <View style={{ flex: 1 }}>
+//         <Text style={{}}>三月</Text>
+//         <Text style={{}}>16</Text>
+//         <Text style={{}}>周一</Text>
+//       </View>
+//     )
+//   }
+// }

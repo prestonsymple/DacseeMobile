@@ -78,6 +78,14 @@ class ScrollTabView extends Component {
   //   }
   // }
 
+  _goToPage(pageNum, scrollAnimation = true) { 
+    if (this._scrollView && this._scrollView.scrollTo) {
+      this._scrollView.scrollTo({x: pageNum * width, scrollAnimation});
+      this.setState({
+        currentPage: pageNum,
+      });
+    }
+  }
   _renderTabView() {
     return (
       <View style={{ width: width, height: 50, flexDirection: 'row', backgroundColor: 'white'}} >
@@ -86,10 +94,11 @@ class ScrollTabView extends Component {
             return (
               <Button key={ index } 
                 style={ [{ flex: 1, justifyContent: 'center', alignItems:'center' }, index == this.state.currentPage ? { borderBottomWidth: 3, borderColor: '#FFB639' } : {}]}
-                onPress={ () => {
+                onPress={ () => {                  
                   this.setState({
                     currentPage: index
                   })
+                  this._goToPage(index)
                 }}>
                 <Text style={ [{ fontSize: 15 },  index == this.state.currentPage ? {color: '#FFB639', borderBottomWidth: 3, borderColor: '#FFB639' } : {color: '#a5a5a5', opacity: 0.7}] }>{ item }</Text>
               </Button>
@@ -103,14 +112,21 @@ class ScrollTabView extends Component {
   _renderScrollContent() {
     return (
       <ScrollView 
-        style={{}}
+        ref={ (ref) => {
+          this._scrollView = ref
+        }}
+        style={{ flex: 1}}
         scrollEnabled={false}
+        pagingEnabled={true}
         horizontal={true}
         contentOffset={{x:this.state.currentPage*width, y:0}}
         // onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
+        
       >
         {
-          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>, <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>, <IncomeList key={3} walletInfo={ this.props.walletInfo }/>].map((item, index) => {
+          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>, 
+            <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>, 
+            <IncomeList key={3} walletInfo={ this.props.walletInfo }/>].map((item, index) => {
             return (
               item
             )

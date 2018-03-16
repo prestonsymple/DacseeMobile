@@ -94,7 +94,7 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
                 />
               } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  <Image source={Resources.image.joblist_empty} style={{ marginTop: 70, width: 100, height: 100 }} />
+                  <Image source={Resources.image.joblist_empty} style={{ marginTop: 200, width: 100, height: 100 }} />
                   <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>暂无行程</Text>
                 </View>                    
               </ScrollView>
@@ -114,16 +114,16 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
               renderRow={(row) => {
                 return (
                   <TouchableOpacity 
-                  onPress={() => {
-                    this.props.dispatch(NavigationActions.navigate({
-                      routeName: 'TripListDetail', 
-                      params: { jobDetail: row } 
-                    }))
-                  }}
-                  activeOpacity={.7}
-                >
-                  <ListItem itemData={row} />
-                </TouchableOpacity>
+                    onPress={() => {
+                      this.props.dispatch(NavigationActions.navigate({
+                        routeName: 'TripListDetail', 
+                        params: { tripDetail: row } 
+                      }))
+                    }}
+                    activeOpacity={.7}
+                  >
+                    <ListItem itemData={row} />
+                  </TouchableOpacity>
                 )}}
               // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
               style={{ flex: 1, marginTop: 15 }}
