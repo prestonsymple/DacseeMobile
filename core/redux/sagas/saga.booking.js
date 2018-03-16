@@ -105,12 +105,19 @@ function* bookingFlow() {
   while(true) {
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
-    const booking_id = yield select(state => state.storage.booking_id)
+    const { booking_id, destination, from } = yield select(state => ({
+      booking_id: state.storage.booking_id, 
+      destination: state.booking.destination,
+      from: state.booking.from,
+    }))
     
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
       //
+      if (destination.location && from.location) {
+        // 
+      }
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) {

@@ -17,12 +17,6 @@ import { Screen, Icons, Define } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
 
-import ModalSelectAddress from '../../modal/modal.select.address'
-import ModalDriverRespond from '../../modal/modal.driver.respond'
-
-// Get Navigator Status
-import { HomeNavigator } from '../../app.routes'
-
 const { height, width } = Screen.window
 
 const MAP_DEFINE = {

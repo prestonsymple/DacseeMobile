@@ -7,7 +7,7 @@ import {
 import { handleActions } from 'redux-actions'
 
 const initialState = {
-  to: {},
+  destination: {},
   from: {},
   type: 'circle',
   name: '优选',

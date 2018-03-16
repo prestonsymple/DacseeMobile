@@ -123,7 +123,6 @@ const sessionBuilder2 = (baseUrl) => {
     const _response = response || { data: null }
     return _response.data || {}
   }, (err) => {
-    console.log('[捕获错误]', err)
     return Promise.reject(err)
   })
 

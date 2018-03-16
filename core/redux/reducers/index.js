@@ -9,10 +9,10 @@ import storage_reducer from './reducer.storage'
 import jobs from './reducer.jobs'
 import circle from './reducer.circle'
 
-import AppNavigator from '../../app.routes'
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('AuthLoading'))
+import SwitchNavigator from '../../app.routes'
+const initialState = SwitchNavigator.router.getStateForAction(SwitchNavigator.router.getActionForPathAndParams('AuthLoading'))
 const navReducer = (state = initialState, action) => {
-  const nextState = AppNavigator.router.getStateForAction(action, state);
+  const nextState = SwitchNavigator.router.getStateForAction(action, state);
   // console.log(`[NAVIGATION][ACTION][${action}]`, state, nextState)
   return nextState || state;
 }
