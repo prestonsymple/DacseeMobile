@@ -31,7 +31,7 @@ const PICKER_OPTIONS = {
   maxWidth: 1000,
   maxHeight: 1000,
   permissionDenied: {
-    title: '无法访问', text: '请前往 设置 - 小苍兰 中开启相机及相册权限',
+    title: '无法访问', text: '请前往 设置 - Dacsee 中开启相机及相册权限',
     reTryTitle: '重试', okTitle: '好的'
   }
 }

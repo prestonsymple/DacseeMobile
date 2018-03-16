@@ -39,7 +39,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed', 
-      title: '行程列表'
+      title: '订单列表'
     }
   }
 

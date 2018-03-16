@@ -148,7 +148,7 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
                     </Button>
                   ) : null
               }
-              <TextInput style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }} placeholder={ this.state.searchTitle } onChangeText={ (value) => this.setState({searchContent: value}) } />
+              <TextInput style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }} placeholder={ this.state.searchTitle } returnKeyType={'done'} onChangeText={ (value) => this.setState({searchContent: value}) } />
             </View>                        
           </View>
 
