@@ -71,7 +71,7 @@ export default connect(state => ({
             )
           }
           {
-            (!loading && friend.length !== 0 && typeof(selected_friends) === 'string') && (
+            (!loading && friend.length !== 0 && (!Array.isArray(selected_friends) || selected_friends.length === 0)) && (
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity 
                   onPress={() => this.props.dispatch(booking.passengerSetValue({ selected_friends: 'all' }))} 
@@ -99,7 +99,7 @@ export default connect(state => ({
             )
           }
           {
-            (!loading && friend.length !== 0 && typeof(selected_friends) !== 'string' && (selected_friends.length !== friend.length && selected_friends.length > 0)) && (
+            (!loading && friend.length !== 0 && typeof(selected_friends) !== 'string' && selected_friends.length > 0) && (
               <View style={{ flexDirection: 'row', flex: 1, borderRadius: 50, overflow: 'hidden' }}>
                 <ScrollView
                   horizontal={true} 

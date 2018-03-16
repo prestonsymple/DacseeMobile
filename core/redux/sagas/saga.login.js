@@ -76,7 +76,11 @@ function* loginFlow() {
 
         } catch (e) {
           let { isMail, id } = value
-          if (e.response && e.response.data.code == 'INVALID_VERIFICATION_CODE') {
+          if (e.response && (
+            e.response.data.code == 'INVALID_VERIFICATION_CODE' ||
+            e.response.data.code == 'INVALID_PHONE_VERIFICATION_CODE' ||
+            e.response.data.code == 'INVALID_MAIL_VERIFICATION_CODE'
+          )) {
             yield all([
               put(account.loginPutValue(2)),
               put(application.hideProgress()), 

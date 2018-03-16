@@ -93,17 +93,12 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
         
       //   // dateDic[moment(Date.parse(item.booking_at)).format('YYYY-MM-D')] = [item]
       // })
-      this.setState({
-        // dateDic: dateDic,
-        loading: false,
-        detail: dataContrast.cloneWithRows(resp.data)
-      })
+      this.setState({ detail: dataContrast.cloneWithRows(resp.data) })
     } catch (e) {
       this.props.dispatch(application.showMessage('网络情况差，请重试'))
-      this.setState({
-        loading: false        
-      })
-    }    
+    } finally {
+      this.setState({ loading: false })
+    }
   }
 
   _onSwitchValueChange(value) {

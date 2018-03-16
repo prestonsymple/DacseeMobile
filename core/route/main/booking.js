@@ -11,14 +11,14 @@ import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
 
 import Resources from '../../resources'
-import BaseScreenComponent from '../_base'
+import ModalDriverRespond from '../../modal/modal.driver.respond'
 
 import HeaderSection from './booking.header.section'
 import BookingSelectCircle from './booking.select.circle'
 import BookingNavigationBarSwipe from './booking.navigation.bar.swipe'
 
 import { MapView, Search, Marker, Utils } from '../../native/AMap'
-import { Screen, Icons, Define } from '../../utils'
+import { Screen, Icons, Define, Session } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
 import { JobsListScreen } from '../jobs'
@@ -198,6 +198,7 @@ const PassengerComponent = connect(state => ({
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', (args) => this.aMapMathRouteSuccess(args))
+    this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
   }
 
   componentWillUnmount() {
@@ -240,6 +241,7 @@ const PassengerComponent = connect(state => ({
 
   async onLocationListener({ nativeEvent }) {
     const { latitude, longitude } = nativeEvent
+
     if (latitude === 0 || longitude === 0) return
     if (!this.ready) {
       await InteractionManager.runAfterInteractions()
@@ -247,6 +249,9 @@ const PassengerComponent = connect(state => ({
       this.ready = true
     }
     this.setState({ current: { latitude, longitude } })
+    // try {
+    //   await Session.Location.Put('v1', { latitude, longitude })
+    // } catch (e) { /**/ }
   }
 
   onStatusChangeListener({ nativeEvent }) {
@@ -336,6 +341,8 @@ const PassengerComponent = connect(state => ({
 
         { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />) }
         { status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (<PickerOptions />) }
+
+        <ModalDriverRespond />
       </View>
     )
   }
@@ -360,7 +367,7 @@ const PickerOptions = connect(state => ({ status: state.booking.status }))(class
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => {
-            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
+            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
           }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>开始</Text>
           </TouchableOpacity>

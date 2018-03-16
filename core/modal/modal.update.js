@@ -84,12 +84,8 @@ class CodePushComponent extends Component {
       await delay(1000)
       this.setState({ indeterminate: false, progress: 100 })
 
-      Alert.alert('更新完成', '已将应用升级为最新版', [
-        { text: '确定', onPress: async () => {
-          await CodePush.notifyAppReady()
-          await CodePush.restartApp()
-        }}
-      ])
+      await CodePush.notifyAppReady()
+      await CodePush.restartApp()
     }
   }
 

@@ -328,7 +328,7 @@ export default connect(state => ({
               </TouchableOpacity>
             </Animated.View>
 
-            <Animated.View style={[
+            {/* <Animated.View style={[
               { position: 'absolute', right: 0, top: (height / 2) + 120 },
               { justifyContent: 'center', alignItems: 'center' },
               { left: stage.interpolate({ inputRange: [0, 1.2, 2], outputRange: [-width, 0, 0], extrapolate: 'clamp' }) },
@@ -355,7 +355,7 @@ export default connect(state => ({
                   {Icons.Generator.Awesome('twitter', 24, '#333')}
                 </Button>
               </View>
-            </Animated.View>
+            </Animated.View> */}
           </TouchableOpacity>
         </Animated.View>
         <Animated.View style={[

@@ -1,7 +1,7 @@
 /* global store */
 import axios from 'axios'
 
-const SESSION_TIMEOUT = 10000
+const SESSION_TIMEOUT = 5000
 
 const sessionBuilder = (baseUrl) => {
   const instance = axios.create({
@@ -18,7 +18,6 @@ const sessionBuilder = (baseUrl) => {
     }
     return config
   }, err => {
-    console.log(err)
     return Promise.reject(err)
   })
 
@@ -46,7 +45,6 @@ const sessionBuilder = (baseUrl) => {
     const _response = response || { data: null }
     return { data: _response.data }
   }, (err) => {
-    console.log(err)
     return Promise.reject(err)
   })
 
@@ -95,7 +93,6 @@ const sessionBuilder2 = (baseUrl) => {
     }
     return config
   }, err => {
-    console.log(err)
     return Promise.reject(err)
   })
 

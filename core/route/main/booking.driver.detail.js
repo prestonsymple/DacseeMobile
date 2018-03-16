@@ -11,6 +11,7 @@ import { MapView, Marker, Utils, Polyline } from '../../native/AMap'
 import { Screen, Icons, Define, System, Session } from '../../utils'
 import { booking, application } from '../../redux/actions'
 import { Button } from '../../components'
+import { BOOKING_STATUS } from '.'
 
 const { height, width } = Screen.window
 
@@ -59,7 +60,6 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
   }
 
   async componentDidMount() {
-    console.log(this.props.nav)
     await InteractionManager.runAfterInteractions()
 
     this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', async (args) => {
@@ -109,9 +109,11 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
   }
 
   componentWillReceiveProps(props) {
-    if (this.props.status !== props.status && props.status === 'ARRIVED') {
+    if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
+      this.props.navigation.setParams({ title: '等待接驾中' })
+    } else if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED) {
       this.props.navigation.setParams({ title: '司机已到达' })
-    } else if (this.props.status !== props.status && props.status === 'ON_BOARD') {
+    } else if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD) {
       this.props.navigation.setParams({ title: '行驶中' })
     }
   }
@@ -138,7 +140,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
     const { driver_id, from } = this.state
     if (!this.trackTimer) {
       this.trackTimer = setTimeout(async () => {
-        if (this.props.status === '') {
+        if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) {
           try {
             const { data } = await Session.location.get(`/v1?reqUser_id=${driver_id}&userRole=passenger`)
             const { latitude, longitude } = data
@@ -156,9 +158,9 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
             this.trackTimer = undefined
             this.activeLocationTrack()
           } 
-        } else if (this.props.status === 'ARRIVED') {
+        } else if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
           return undefined
-        } else if (this.props.status === 'ON_BOARD') {
+        } else if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_ON_BOARD) {
           try {
             const { destination, current } = this.state
             const { latitude, longitude } = current
@@ -216,7 +218,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
             )
           }
           {
-            (status === '' && from && from.coords) && (
+            (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED && from && from.coords) && (
               <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} />
             )
           }
@@ -231,17 +233,8 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
           }
         </MapView>
 
-        { (status !== 'ARRIVED') && (<DriverOnTheWayLabel />) }
+        { (status  === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) && (<DriverOnTheWayLabel />) }
         <DriverStatusPanel {...this.state.driver_info} />
-        
-        {/* <ActionSheet
-          ref={e => this.ActionSheet = e}
-          title={'更多'}
-          options={['举报违规', '解除朋友关系', '取消']}
-          cancelButtonIndex={2}
-          destructiveButtonIndex={0}
-          onPress={this._pressActionSheet.bind(this)}
-        /> */}
       </View>
     )
   }

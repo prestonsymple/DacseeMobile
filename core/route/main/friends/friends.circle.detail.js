@@ -94,7 +94,7 @@ export default connect(state => ({ booking: state.booking }))(class FriendsCircl
           <View style={{ height: 161, backgroundColor: '#1ab2fd', justifyContent: 'center' }}>
             <View style={{ alignItems: 'center' }}>
               <View style={{ borderColor: '#106e9d', borderWidth: 4, borderRadius: 60, marginBottom: 10 }}>
-                <Image style={{ width: 88, height: 88, borderRadius: 44 }} source={{ uri: avatars[0].url }} />
+                <Image style={{ width: 88, height: 88, borderRadius: 44 }} source={{ uri: avatars[avatars.length - 1].url }} />
                 <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 2, right: 2, borderRadius: 9 }} />
               </View>
               <Text style={{ color: 'white', fontSize: 18, fontWeight: '600' }}>{ fullName }</Text>

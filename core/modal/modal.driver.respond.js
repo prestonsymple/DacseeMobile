@@ -18,11 +18,31 @@ import { BOOKING_STATUS } from '../route/main'
 /*****************************************************************************************************/
 
 
-export default connect(state => ({ status: state.booking.status }))(class DriverRespondView extends Component {
+export default connect(state => ({ status: state.booking.status, booking_id: state.booking.booking_id }))(class DriverRespondView extends Component {
+
+  constructor(props) {
+    super(props)
+    this.timer
+  }
+
+  componentWillReceiveProps(props) {
+    console.log(props.status, this.props.status)
+    if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) {
+      console.log('[CALL][RECALL]')
+      props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
+    }
+  }
+
   render() {
-    const { onPressCancel, onSelectAddress, defaultData, data, onChangeKeywords, field, booking_id = '' } = this.props
+    const { status } = this.props
+    const show = (
+      status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT || 
+      status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE
+    )
+    const active = status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT
+
     return (
-      <Modal onRequestClose={() => {}} visible={status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT} transparent={true} style={{ }}>
+      <Modal onRequestClose={() => {}} visible={show} transparent={true} style={{ }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#66666699', flex: 1 }}>
           <View style={[
             { width: Screen.window.width - 90, height: 296, backgroundColor: 'white', borderRadius: 4 },
@@ -49,16 +69,18 @@ export default connect(state => ({ status: state.booking.status }))(class Driver
               {/* <Image style={{ width: 120, height: 120, borderRadius: 60 }} source={require('../resources/images/test.jpg')} /> */}
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              <Text style={{ color: '#777', fontSize: 16, fontWeight: '200' }}>行程确认中，请稍等</Text>
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777', fontSize: 16, fontWeight: '200' }}>行程确认中，请稍等</Text>) }
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777', fontSize: 16, fontWeight: '200' }}>行程确认完毕，等待司机接单</Text>) }
             </View>
             <Button onPress={async () => {
+              if (!active) return
               try {
                 await Session.booking.put(`v1/${this.props.booking_id}`, { action: 'cancel' })
-                this.props.dispatch(booking.journeyUserCancel())  
+                this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               } catch(e) {
                 this.props.dispatch(application.showMessage('无法连接到服务器'))
               }
-            }} style={{ backgroundColor: '#e54224', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
+            }} style={{ backgroundColor: active ? '#e54224' : '#ccc', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
               <Text style={{ fontSize: 16, color: 'white' }}>取消</Text>
             </Button>
           </View>

@@ -113,18 +113,18 @@ export default connect(state => ({
   }
 
   async componentWillReceiveProps(props) {
-    // if (props.jobs && props.jobs.working !== this.props.jobs.working) {
-    //   const { latitude, longitude } = this.state.current
-    //   if (latitude && latitude !== 0 && longitude && longitude !== 0) {
-    //     await InteractionManager.runAfterInteractions()
-    //     this.map.animateTo({ zoomLevel: 18, coordinate: { latitude, longitude } }, 500)
-    //     const { from } = props.jobs.detail
-    //     this.map.calculateDriveRouteWithStartPoints({ latitude, longitude }, {
-    //       latitude: from.coords.lat,
-    //       longitude: from.coords.lng
-    //     })
-    //   }
-    // }
+    if (props.jobs && props.jobs.working !== this.props.jobs.working) {
+      const { latitude, longitude } = this.state.current
+      if (latitude && latitude !== 0 && longitude && longitude !== 0) {
+        await InteractionManager.runAfterInteractions()
+        this.map.animateTo({ zoomLevel: 18, coordinate: { latitude, longitude } }, 500)
+        const { from } = props.jobs.detail
+        this.map.calculateDriveRouteWithStartPoints({ latitude, longitude }, {
+          latitude: from.coords.lat,
+          longitude: from.coords.lng
+        })
+      }
+    }
   }
 
   _pressActionSheet(index) {

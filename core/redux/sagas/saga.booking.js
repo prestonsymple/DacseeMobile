@@ -1,4 +1,5 @@
 import { Keyboard } from 'react-native'
+import moment from 'moment'
 
 import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
@@ -19,58 +20,8 @@ const Methods = {
   }
 }
 
-function* newBooking() {
-  while (true) {
-    yield take(booking.journeyUserStart().type)
-    yield put(booking.journeyUserWaitDriverRespond())
-    const payload = yield select(state => ({ ...state.booking }))
+var MAIN_TIMER_QUEUE = []
 
-    const { from, to } = payload
-
-    const fares = yield call(
-      Session.Booking.Get, 
-      `v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${to.location.lat}&destination_lng=${to.location.lng}`
-    )
-
-    const body = {
-      type: 'now',
-      from : {
-        address : payload.from.address, 
-        coords : { lat : payload.from.location.lat,  lng : payload.from.location.lng }, 
-        name : payload.from.name, 
-        placeId : payload.from.uid
-      },
-      notes : '', 
-      destination : {
-        address : payload.to.address, 
-        coords : { lat : payload.to.location.lat,  lng : payload.to.location.lng }, 
-        name : payload.to.name, 
-        placeId : payload.to.uid
-      },
-      // vehicle_type : 'Economy',
-      booking_at: Methods.timeZone(payload.time),
-      payment_method: Methods.payment(payload.payment),
-      fare: fares.fare.Circle // 仅限朋友圈
-    }
-
-    if (payload.type === 'circle') {
-      body.assign_type = 'selected_circle'
-      body.selected_circle_ids = payload.selected_friends.map(pipe => pipe.friend_id)
-    }
-
-    try {
-      const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
-      if (!isSuccess) {
-        yield put(booking.journeyUserCancel())
-      } else {
-        yield put(booking.journeyUpdateData({ booking_id: doc._id }))
-      }
-    } catch (e) {
-      yield put(booking.journeyUserCancel())
-      yield put(application.showMessage('无法连接到服务器，请检查您的网络'))
-    }
-  }
-}
 
 function* bookingOnTheWay() {
   while(true) {
@@ -88,28 +39,18 @@ function* bookingOnComplete() {
   }
 }
 
-function* cancelBooking() {
-  while (true) {
-    yield take(booking.journeyUserDriverRespondFail().type)
-    yield put(booking.journeyUserCancel())
-  }
+function* bookingDetailWatch() {
+  
 }
-
-// function* bookingFlow() {
-//   while(true) {
-//     yield take(booking.passengerSetStatus)
-//   }
-// }
 
 function* bookingFlow() {
   while(true) {
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
-    const { booking_id, destination, from } = yield select(state => ({
-      booking_id: state.storage.booking_id, 
-      destination: state.booking.destination,
-      from: state.booking.from,
+    const { booking_id, destination, from, time, payment, type, selected_friends } = yield select(state => ({
+      ...state.booking
     }))
+
 
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
       yield put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
@@ -118,59 +59,87 @@ function* bookingFlow() {
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) {
-      const bookingReducer = yield select(state => ({ ...state.booking }))
-      const { from, destination } = bookingReducer
-
-      const fares = yield call(
-        Session.Booking.Get, 
-        `v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${destination.location.lat}&destination_lng=${destination.location.lng}`
-      )
+      if (
+        (Array.isArray(selected_friends) && selected_friends.length === 0) ||
+        (!Array.isArray(selected_friends) && selected_friends !== 'all')
+      ) {
+        yield put(application.showMessage('请选择至少一个朋友'))
+        yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+        continue
+      }
 
       const body = {
         type: 'now',
         from : {
-          address : bookingReducer.from.address, 
-          coords : { lat : bookingReducer.from.location.lat,  lng : bookingReducer.from.location.lng }, 
-          name : bookingReducer.from.name, 
-          placeId : bookingReducer.from.uid
+          address : from.address, 
+          coords : { lat : from.location.lat,  lng : from.location.lng }, 
+          name : from.name, 
+          placeId : from.uid
         },
         notes : '', 
         destination : {
-          address : bookingReducer.to.address, 
-          coords : { lat : bookingReducer.to.location.lat,  lng : bookingReducer.to.location.lng }, 
-          name : bookingReducer.to.name, 
-          placeId : bookingReducer.to.uid
+          address : destination.address, 
+          coords : { lat : destination.location.lat,  lng : destination.location.lng }, 
+          name : destination.name, 
+          placeId : destination.uid
         },
         // vehicle_type : 'Economy',
-        booking_at: Methods.timeZone(bookingReducer.time),
-        payment_method: Methods.payment(bookingReducer.payment),
-        fare: fares.fare.Circle // 仅限朋友圈
+        booking_at: Methods.timeZone(time),
+        payment_method: Methods.payment(payment),
       }
 
-      if (bookingReducer.type === 'circle') {
-        const { selected_friends } = bookingReducer
+      if (type === 'circle') {
         body.assign_type = typeof(selected_friends) === 'string' ? 'circle' : 'selected_circle'
-        body.selected_circle_ids = bookingReducer.selected_friends.map(pipe => pipe.friend_id)
       }
 
-      try {
-        const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
-        if (!isSuccess) {
-          yield put(booking.journeyUserCancel())
-        } else {
-          yield put(booking.journeyUpdateData({ booking_id: doc._id }))
-        }
-      } catch (e) {
-        yield put(booking.journeyUserCancel())
-        yield put(application.showMessage('无法连接到服务器，请检查您的网络'))
+      if (type === 'circle' && Array.isArray(selected_friends)) {
+        body.selected_circle_ids = selected_friends.map(pipe => pipe.friend_id)
       }
-      console.log()
-      if (!destination.location || !from.location) continue
+
+      // 请求价格 && 创建订单
+      try {
+        yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
+        const { fare } = yield call(
+          Session.Booking.Get, 
+          `v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${destination.location.lat}&destination_lng=${destination.location.lng}`
+        )
+        body.fare = fare.Circle
+
+        const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
+        if (isSuccess) {
+          yield put(booking.passengerSetValue({ booking_id: doc._id }))
+          yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
+        } else {
+          yield put(application.showMessage('订单创建失败'))
+          yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+        }
+        continue
+      } catch (e) {
+        const { response = {} } = e
+        const { data = {} } = response
+        const { code = '', message = '' } = data
+        if (code === 'BOOKING_HAS_ACTIVE') {
+          yield put(application.showMessage('当前还有未结束的行程'))
+        } else if (code === 'NO_AVAILABLE_DRIVER') {
+          yield put(application.showMessage('当前没有可接单的司机'))
+        } else {
+          yield put(application.showMessage('无法连接到服务器，请检查网络'))
+        }
+        yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+        continue
+      }
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) {
+      // MAIN_TIMER_QUEUE[0] && clearTimeout(MAIN_TIMER_QUEUE[0])
+      // MAIN_TIMER_QUEUE[0] = setTimeout(function () {
+      //   yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
+      // }, 2000)
+      continue
+    } else if (status === STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
+      // MAIN_TIMER_QUEUE[0] && clearTimeout(MAIN_TIMER_QUEUE[0])
+      yield put(NavigationActions.navigate({ routeName: 'BookingDriverDetail', params: { booking_id } }))
+    } else if (status === STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED) {
       //
-    } else if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
-      //
-    } else if (status === STATUS.PASSGENER_BOOKING_WAIT_ON_THE_WAY) {
+    } else if (status === STATUS.PASSGENER_BOOKING_ON_BOARD) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_ON_RATING) {
       //
@@ -184,45 +153,47 @@ function* bookingFlow() {
 
 function* bookingBoardCastListener() {
   while(true) {
-    const { action, booking_id } = yield take(booking.passengerBoardCastListener.type())
+    const { payload: { action, booking_id } } = yield take(booking.passengerBoardCastListener().type)
     const status = yield select(state => state.booking.status)
 
     /* PASSENGER */
     if (action === 'CANCELLED_BY_DRIVER') { // 司机取消
       if (status >= STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
-        // 
+        ///
       }
     } else if (action === 'ON_THE_WAY') { // 司机接单-已在路上
-      if (status < STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) {
-        //
+      if (status < STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY))
       }
-    } else if (action === 'ARRIVED') { // 已到达
+    } else if (action === 'ARRIVED') { // 司机已到达指定位置
       if (status < STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
-        //
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED))
       }
     } else if (action === 'NO_SHOW') { // 未找到乘客
       if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
-        //
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
       }
     } else if (action === 'ON_BOARD') { // 行驶中
-      if (status < STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) {
-        //
+      if (status < STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED) {
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_ON_BOARD))
       }
     } else if (action === 'NO_TAKER') { // 没有司机
       if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) {
-        //
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+        yield put(application.showMessage('暂无司机接单，订单超时，已被取消'))
       }
     } else if (action === 'COMPLETED') { // 完成订单
       if (status === STATUS.PASSGENER_BOOKING_ON_RATING) {
-        //
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_ON_RATING))
       }
+    } else if (action === 'CANCELLED_BY_PASSENGER') { // 乘客取消订单
     }
   }
 }
 
 function* bookingTriggerEventListener() {
   while(true) {
-    const action = yield take(booking.passengerTriggerEventListener.type())
+    const action = yield take(booking.passengerTriggerEventListener().type)
     const event = action.payload
 
   }
@@ -232,8 +203,8 @@ export default function* bookingHandle() {
   try {
     yield all([
       fork(bookingFlow),
-      // fork(bookingBoardCastListener),
-      // fork(bookingTriggerEventListener)
+      fork(bookingBoardCastListener),
+      fork(bookingTriggerEventListener)
     ])
   } catch(e) {
     console.log(e)

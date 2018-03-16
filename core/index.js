@@ -15,6 +15,7 @@ import InteractionManager from 'InteractionManager'
 import Store from './app.store'
 import Launch from './app.launch'
 import { network, application, jobs, booking } from './redux/actions'
+import { BOOKING_STATUS } from './route/main'
 import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
@@ -135,7 +136,30 @@ class Core extends PureComponent {
               _status === 'COMPLETED'
           ) { 
             store.dispatch(booking.passengerBoardCastListener({ action: _status, booking_id: booking_id }))
+          } else {
+            console.log('[未处理的]', _status)
           }
+
+          // if (_status === 'CANCELLED_BY_DRIVER') { // 司机取消
+          //   store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS()))
+          //   store.dispatch(application.showMessage('您的行程已被拒绝'))
+          // } else if (_status === 'ON_THE_WAY') { // 司机接单-已在路上
+          //   store.dispatch(booking.passengerSetValue(booking_id))
+          //   store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY()))
+          // } else if (_status === 'ARRIVED') { // 已到达
+          //   store.dispatch(booking.passengerSetValue(booking_id))
+          //   store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED()))
+          // } else if (_status === 'NO_SHOW') { // 未找到乘客
+          //   // store.dispatch(booking.passengerSetValue(booking_id))
+          //   // store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED()))
+          // } else if (_status === 'ON_BOARD') { // 行驶中
+          //   store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_ON_BOARD()))
+          // } else if (_status === 'NO_TAKER') { // 没有司机
+          //   store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS()))
+          //   store.dispatch(application.showMessage('没有司机接单，请稍后再试试'))
+          // } else if (_status === 'COMPLETED') { // 完成订单
+          //   store.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_ON_RATING()))
+          // }
         }
         // process the notification
         
