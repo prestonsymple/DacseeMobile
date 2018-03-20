@@ -178,6 +178,21 @@ export default connect(state => ({
   //   })
   // }
 
+  async _facebookAuth(user) {
+    const body = {
+      oAuth: {
+        provider: 'facebook',
+        id: user.uid
+      }}
+
+    try {
+      const data = await Session.user.post('v1/auth/oauth', body)
+      console.log('facebook登录', data)
+    } catch(e) {
+      console.log(e)
+    }
+  }
+
   // TODO: Optimize Style
   render() {
     const { width, height } = Screen.window
@@ -328,34 +343,46 @@ export default connect(state => ({
               </TouchableOpacity>
             </Animated.View>
 
-            {/* <Animated.View style={[
+            <Animated.View style={[
               { position: 'absolute', right: 0, top: (height / 2) + 120 },
               { justifyContent: 'center', alignItems: 'center' },
               { left: stage.interpolate({ inputRange: [0, 1.2, 2], outputRange: [-width, 0, 0], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, 0.8, 2], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
             ]}>
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>使用社交账号进行登录</Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 150, marginTop: 25 }}>
-                <Button onPress={() => {
+              <View style={{ flexDirection: 'row', justifyContent: 'center', width: 150, marginTop: 25 }}>
+                {/* <Button onPress={() => {
                   ShareUtile.auth(0, (code, result, message) =>{
                     this.setState({ result: message })
                     if (code == 0){
                       this.setState({ result: result.uid })
+                      console.log('facebook登录', result)
                     } else {
                       console.log('第三方登录' + code)
                     }
                   })
                 }} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('google-plus', 24, '#333')}
-                </Button>
-                <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
+                </Button> */}
+                <Button onPress={() => {
+                  ShareUtile.auth(7, (code, result, message) =>{
+                    this.setState({ result: message })                    
+                    if (code == 200){
+                      this.setState({ result: result.uid })
+                      console.log('facebook用户', result)
+                      this._facebookAuth(result)
+                    } else {                      
+                      console.log('第三方登录' + code)
+                    }
+                  })
+                }} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('facebook', 24, '#333')}
                 </Button>
-                <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
+                {/* <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('twitter', 24, '#333')}
-                </Button>
+                </Button> */}
               </View>
-            </Animated.View> */}
+            </Animated.View>
           </TouchableOpacity>
         </Animated.View>
         <Animated.View style={[
