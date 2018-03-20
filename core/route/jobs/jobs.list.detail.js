@@ -246,7 +246,7 @@ export default class JobsListDetailScreen extends Component {
 
           <View style={{ position: 'absolute', top: 10, left:30, right: 30, height: 80, flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-              <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 70, height: 70 , borderRadius: 35 }} />
+              <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }} style={{ width: 70, height: 70 , borderRadius: 35 }} />
             </View>
             <View style={{ position: 'absolute', top:25, left: 75, right: 116, height: 50, backgroundColor: 'white' }}>
               <Text style={{ marginLeft: 10, marginTop: 5, fontSize: 17, color: '#333', fontWeight: 'bold' }}>{ fullName }</Text>

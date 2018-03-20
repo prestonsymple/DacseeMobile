@@ -104,7 +104,7 @@ export default connect(() => ({ }))(class TripListDetailScreen extends Component
                   ) :
                   (
                     <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center'}}>
-                      <Image source={{ uri: driver_info.avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 60, height: 60 , borderRadius: 30 }} />
+                      <Image source={{ uri: driver_info.avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : driver_info.avatars[driver_info.avatars.length - 1].url }} style={{ width: 60, height: 60 , borderRadius: 30 }} />
                       <Text style={{ marginLeft: 20, fontSize: 21, color: '#333'}}>{ driver_info.fullName }</Text>
                       <Text style={{ fontSize: 15, color: '#666'}}></Text>
                     </View>)
