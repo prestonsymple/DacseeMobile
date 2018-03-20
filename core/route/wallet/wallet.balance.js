@@ -51,7 +51,7 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 // ]
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({ data: state.booking }))(class WalletBalanceScreen extends Component {
+export default connect(state => ({ }))(class WalletBalanceScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {

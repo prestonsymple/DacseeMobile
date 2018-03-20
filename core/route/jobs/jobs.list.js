@@ -58,44 +58,24 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
 
   async componentWillMount() {
     await InteractionManager.runAfterInteractions()
-    
-    // const obj = { dateFrom: new Date().toISOString(), dateTo: new Date().toISOString() }
-    // for (var item in obj) {
-    //   console.log(item)
-    // }
-
-    this._fetchData()
-    
+    this._fetchData()   
   }
 
-  async _fetchData(dateDic) {
-    console.log(dateDic)
+  async _fetchData(dateStr) {
+    // console.log(dateStr)
+    const resultDate = dateStr == null ? this.state.selectedDate : dateStr
+    const dateFrom = this._getFormatterDate(resultDate).dateFrom
+    const dateTo = this._getFormatterDate(resultDate).dateTo
     this.setState({
       loading: true
     })
     // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
 
-    try {
-      
-      
-      const resp = await Session.booking.get(`v1/bookings?role=driver&date_from=${dateDic.dateFrom}&date_to=${dateDic.dateTo}`)
-    
-      // var dateDic = new Object()
-      // resp.data.map( (item, index) => {        
-      //   const dateStr = moment(Date.parse(item.booking_at)).format('YYYY-MM-D')
-        
-      //   if (dateDic[dateStr] === undefined) {
-      //     // console.log(item)
-      //     dateDic[dateStr] = Array(item)          
-      //   } else {
-      //     dateDic[dateStr].push(item)
-      //   }
-        
-      //   // dateDic[moment(Date.parse(item.booking_at)).format('YYYY-MM-D')] = [item]
-      // })
+    try {            
+      const resp = await Session.booking.get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)          
       this.setState({ detail: dataContrast.cloneWithRows(resp.data) })
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络情况差，请重试'))
+      // this.props.dispatch(application.showMessage('网络情况差，请重试'))
     } finally {
       this.setState({ loading: false })
     }
@@ -112,7 +92,6 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
     const dateStr = moment(date).format('YYYY-MM-D')
     const dateFrom = moment(dateStr + ' 00:00:00').toISOString()
     const dateTo = moment(dateStr + ' 23:59:59').toISOString()
-    // console.log(dateFrom, dateTo)
     return { dateFrom: dateFrom, dateTo: dateTo}
   }
 
@@ -134,46 +113,15 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             onDayPress={(day)=>{              
               const dateStr = moment(day.timestamp).toISOString()
               // console.log('clicked', dateStr)
-              // this.setState({
-              //   selectedDate: dateStr
-              // })
-              const dateFrom = this._getFormatterDate(dateStr).dateFrom
-              const dateTo = this._getFormatterDate(dateStr).dateTo
-              this._fetchData({dateFrom: dateFrom, dateTo: dateTo})
+              this.setState({
+                selectedDate: dateStr
+              })
+              this._fetchData(dateStr)              
             }}
             onDayChange={(day)=>{}}
             selected={selectedDate}                  
-            pastScrollRange={3}
-            futureScrollRange={1}
-            // renderItem={(item, firstItemInDay) => {
-            //   return (
-            //     // <TouchableOpacity onPress={() => this.props.navigation.navigate('JobsListDetail', { jobDetail: item })} activeOpacity={.7}><ListItem itemData={item} itemDay={firstItemInDay} /></TouchableOpacity>
-            //     <TouchableOpacity 
-            //       onPress={() => {
-            //         this.props.dispatch(NavigationActions.navigate({
-            //           routeName: 'JobsListDetail', 
-            //           params: { jobDetail: item } 
-            //         }))
-            //       }}
-            //       activeOpacity={.7}
-            //     >
-            //       <ListItem itemData={item} itemDay={firstItemInDay} />
-            //     </TouchableOpacity>
-            //   )
-            // }
-            // }
-            // renderDay={(day, item) => {
-            //   return (
-            //     <View style={{ width: 40, justifyContent: 'center', alignItems: 'center' }}>
-            //       {
-            //         day !== undefined ?
-            //           <Text style={{ fontSize: 30, color: '#b3b3b3'}}>{ day.day }</Text> : 
-            //           null
-            //       }                      
-            //     </View>
-            //   );
-            // }}
-            // renderEmptyData={() => {return (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text style={{ fontSize: 15, color: '#a5a5a5' }}>今日暂无行程</Text></View>);}}
+            pastScrollRange={50}
+            futureScrollRange={50}            
             renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>);}}
             renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>);}}
             rowHasChanged={(r1, r2) => {return r1._id !== r2._id}}
@@ -186,12 +134,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             }}
             // agenda container style
             style={{  }}
-          />
-          {/* <ScrollView contentContainerStyle={{ width: width, height: 90, backgroundColor: '#1ab2fd' }} 
-            horizontal={true}
-            pagingEnabled={true}>
-            <CalendarItem day={'16'}/>
-          </ScrollView> */}
+          />          
         </View>
         
         <View style={{ flex: 4 }}>
@@ -222,7 +165,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                   refreshControl={
                     <RefreshControl
                       refreshing={this.state.loading}
-                      onRefresh={() => {this._fetchData.bind(this)}}
+                      onRefresh={this._fetchData.bind(this)}                   
                       title={'下拉进行刷新'}
                       colors={['#ffffff']}
                       progressBackgroundColor={'#1c99fb'}
@@ -251,76 +194,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
           </View>
         </View>
         
-      </View>
-
-      // <View style={{flex: 1}}>
-      //   {
-      //     dateDic === null ?
-      //       (
-      //         <ScrollView refreshControl={
-      //           <RefreshControl
-      //             refreshing={this.state.loading}
-      //             onRefresh={this._fetchData.bind(this)}
-      //             title={'下拉进行刷新'}
-      //             colors={['#ffffff']}
-      //             progressBackgroundColor={'#1c99fb'}
-      //           />
-      //         } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', height: Screen.safaContent.height - 48 }} style={{ flex: 1 }}>
-      //           <Text style={{ top: -64, color: '#777', fontSize: 15, fontWeight: '400' }}>暂无行程</Text>
-      //         </ScrollView>
-      //       ) :
-      //       (
-      //         <View style={{ flex: 1 }}>
-      //           <Agenda
-      //             items = { dateDic }
-      //             // items={
-      //             //   {'2018-03-11': [DEMO_DATA],
-      //             //     '2018-03-12': [DEMO_DATA, DEMO_DATA],
-      //             //     '2018-03-13': [],
-      //             //     '2018-03-14': [DEMO_DATA],
-      //             //   }}
-      //             loadItemsForMonth={(month) => {}}
-      //             onCalendarToggled={(calendarOpened) => {}}
-      //             onDayPress={(day)=>{}}
-      //             onDayChange={(day)=>{}}
-      //             selected={selectedDate}                  
-      //             pastScrollRange={3}
-      //             futureScrollRange={1}
-      //             renderItem={(item, firstItemInDay) => {
-      //               return (
-      //                 <TouchableOpacity onPress={() => this.props.navigation.navigate('JobsListDetail', { jobDetail: item })} activeOpacity={.7}><ListItem itemData={item} itemDay={firstItemInDay} /></TouchableOpacity>
-      //               )
-      //             }
-      //             }
-      //             renderDay={(day, item) => {
-      //               return (
-      //                 <View style={{ width: 40, justifyContent: 'center', alignItems: 'center' }}>
-      //                   {
-      //                     day !== undefined ?
-      //                       <Text style={{ fontSize: 30, color: '#b3b3b3'}}>{ day.day }</Text> : 
-      //                       null
-      //                   }                      
-      //                 </View>
-      //               );
-      //             }}
-      //             renderEmptyData={() => {return (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text style={{ fontSize: 15, color: '#a5a5a5' }}>今日暂无行程</Text></View>);}}
-      //             renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>);}}
-      //             renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>);}}
-      //             rowHasChanged={(r1, r2) => {return r1._id !== r2._id}}
-      //             theme={{
-      //               // ...calendarTheme,
-      //               agendaDayTextColor: 'yellow',
-      //               agendaDayNumColor: 'green',
-      //               agendaTodayColor: 'red',
-      //               agendaKnobColor: 'blue'
-      //             }}
-      //             // agenda container style
-      //             style={{ flex: 1 }}
-      //           />
-      //         </View> 
-      //       )
-      //   }
-      // </View>  
+      </View>      
     )
   }
 })
@@ -369,22 +243,3 @@ class ListItem extends Component {
     )
   }
 }
-
-// class CalendarItem extends Component {
-//   constructor(props) {
-//     super(props)
-//     this.state={
-//       day: this.props.day
-//     }
-//   }
-
-//   render () {
-//     return (
-//       <View style={{ flex: 1 }}>
-//         <Text style={{}}>三月</Text>
-//         <Text style={{}}>16</Text>
-//         <Text style={{}}>周一</Text>
-//       </View>
-//     )
-//   }
-// }
