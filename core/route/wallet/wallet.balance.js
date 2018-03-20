@@ -26,30 +26,6 @@ const styles = StyleSheet.create({
 // TODO: Optimize the callback
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-// const DEMO_DATA = [
-//   {
-//     user_id: '5a8ce6fc94643c733a2d07bc',
-//     type: 'DS-US',
-//     name: 'DACSEED WALLET',
-//     countryCode: 'US',
-//     countryName: 'USD',
-//     countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-dacseed.jpg',
-//     availableAmount: 0
-//   },
-//   {
-//     user_id: '5a8ce6fc94643c733a2d07bc',
-//     type: 'CR-MY',
-//     name: 'CREDIT WALLET',
-//     countryCode: 'MY',
-//     countryFlag: 'https://storage.googleapis.com/dacsee-service-wallet/_shared/flag-MY.jpg',
-//     countryName: 'MALAYSIA',
-//     availableAmount: 6,
-//     onHoldAmount: 0,
-//     floatingDriverAmount: 200,
-//     floatingPassengerAmount: 100
-//   }
-// ]
-
 // export default connect(state => ({ data: state.booking })) // TEST
 export default connect(state => ({ }))(class WalletBalanceScreen extends Component {
 
@@ -68,13 +44,13 @@ export default connect(state => ({ }))(class WalletBalanceScreen extends Compone
     }
   }
 
-  async componentWillMount() {
-    await InteractionManager.runAfterInteractions()
+  async componentDidMount() {
+    // await InteractionManager.runAfterInteractions()
 
     this._fetchData()
   }
 
-  async _fetchData(index=0) {
+  async _fetchData() {
     this.setState({
       loading: true
     })
@@ -85,7 +61,7 @@ export default connect(state => ({ }))(class WalletBalanceScreen extends Compone
         loading: false
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      // this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
       this.setState({
         loading: false
       })

@@ -86,19 +86,29 @@ export default connect(() => ({ }))(class TripListDetailScreen extends Component
 
   render () {
     const { destination, from, payment_method, fare, booking_at, status, driver_info } = this.state.tripDetail
-    const { avatars, fullName, phoneCountryCode, phoneNo } = driver_info
+    // const { fullName } = driver_info
     return (
       <View style={{ flex: 1, backgroundColor: '#1ab2fd', alignItems:'center' }}>
         <Image source={Resources.image.logo} style={{ marginTop:10, height: 80, width: 80, resizeMode: 'contain'}} />
         <View style={{ position: 'absolute', top:100, left: 20, right: 20, bottom: 20, borderRadius: 10, backgroundColor: 'white' }}>
           <ScrollView style={{}}>
             <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
-              <Text style={{ fontSize: 13, color: '#999' }}>司机信息</Text>
-              <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 60, height: 60 , borderRadius: 30 }} />
-                <Text style={{ marginLeft: 20, fontSize: 21, color: '#333'}}>{ fullName }</Text>
-                <Text style={{ fontSize: 15, color: '#666'}}></Text>
-              </View>              
+              <Text style={{ fontSize: 13, color: '#999' }}>司机信息</Text>              
+              
+              {
+                driver_info == undefined ? 
+                  (
+                    <View style={{ marginVertical: 10 }}>
+                      <Text style={{}}>暂无司机信息</Text>  
+                    </View>
+                  ) :
+                  (
+                    <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center'}}>
+                      <Image source={{ uri: driver_info.avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 60, height: 60 , borderRadius: 30 }} />
+                      <Text style={{ marginLeft: 20, fontSize: 21, color: '#333'}}>{ driver_info.fullName }</Text>
+                      <Text style={{ fontSize: 15, color: '#666'}}></Text>
+                    </View>)
+              }                                            
             </View>
             <View style={{ height: 1, backgroundColor: '#e5e5e5' }}></View>              
 

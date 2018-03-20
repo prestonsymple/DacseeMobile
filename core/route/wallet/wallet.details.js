@@ -100,7 +100,7 @@ class ScrollTabView extends Component {
                   })
                   this._goToPage(index)
                 }}>
-                <Text style={ [{ fontSize: 15 },  index == this.state.currentPage ? {color: '#FFB639', borderBottomWidth: 3, borderColor: '#FFB639' } : {color: '#a5a5a5', opacity: 0.7}] }>{ item }</Text>
+                <Text style={ [{ fontSize: 15 },  index == this.state.currentPage ? {color: '#FFB639' } : {color: '#a5a5a5', opacity: 0.7}] }>{ item }</Text>
               </Button>
             )
           })

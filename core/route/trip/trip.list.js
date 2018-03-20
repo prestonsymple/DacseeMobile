@@ -48,7 +48,7 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
   }
 
   async componentWillMount() {
-    await InteractionManager.runAfterInteractions()
+    // await InteractionManager.runAfterInteractions()
     this._fetchData()    
   }
 

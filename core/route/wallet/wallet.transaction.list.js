@@ -42,7 +42,7 @@ export default connect(state=> ({ data: state.booking }))(class WalletTransactio
   }
 
   async componentDidMount() {
-    await InteractionManager.runAfterInteractions()
+    // await InteractionManager.runAfterInteractions()
 
     this._fetchData()
     
