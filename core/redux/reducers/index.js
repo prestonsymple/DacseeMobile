@@ -21,11 +21,10 @@ export default combineReducers({
   application,
   account,
   booking,
-  storage: storage_reducer,
   jobs,
   circle,
 
-
+  storage: storage_reducer,
 
   nav: navReducer
 })

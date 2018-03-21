@@ -72,9 +72,10 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
     // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
 
     try {            
-      const resp = await Session.booking.get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)          
-      this.setState({ detail: dataContrast.cloneWithRows(resp.data) })
+      const resp = await Session.Booking.Get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
+      this.setState({ detail: dataContrast.cloneWithRows(resp) })
     } catch (e) {
+      console.log(e)
       this.props.dispatch(application.showMessage('无法请求到服务器'))
     } finally {
       this.setState({ loading: false })

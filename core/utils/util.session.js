@@ -1,5 +1,6 @@
 /* global store */
 import axios from 'axios'
+import { account } from '../redux/actions'
 
 const SESSION_TIMEOUT = 10000
 
@@ -27,16 +28,20 @@ const sessionBuilder = (baseUrl) => {
     const { url, method, baseURL } = config
 
     if (baseURL === 'http://location-dev.dacsee.io/api/' && method.toUpperCase() === 'PUT') return response
-    console.warn(`[SESSION][${method.toUpperCase()}][${url}]`, response)
+    console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
     return response
 
   }, (err) => {
-    if ('config' in err) {
+    if (err.config) {
       const { url, method, baseURL } = err.config
       const { data, status } = err.response
       console.warn(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
+
+      if (status === 400 && data.code === 'INVALID_AUTHORIZATION_TOKEN') {
+        store.dispatch(account.logoutSuccess())
+      }
     } else {
-      console.warn(err)
+      console.warn(err) 
     }
     return Promise.reject(err)
   })
@@ -103,16 +108,21 @@ const sessionBuilder2 = (baseUrl) => {
     const { url, method, baseURL } = config
 
     if (baseURL === 'http://location-dev.dacsee.io/api/' && method.toUpperCase() === 'PUT') return response
-    console.info(`[SESSION][${method.toUpperCase()}][${url}]`, response)
+    console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
     const _response = response || { data: null }
     return _response.data || {}
   }, (err) => {
-    if ('config' in err) {
+    if (err.config) {
       const { url, method, baseURL } = err.config
       const { data, status } = err.response
       console.warn(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
+
+      if (status === 400 && data.code === 'INVALID_AUTHORIZATION_TOKEN') {
+        store.dispatch(account.logoutSuccess())
+      }
+    } else {
+      console.warn(err) 
     }
-    console.warn(err)
     return Promise.reject(err)
   })
 

@@ -194,6 +194,7 @@
     <orderEntry type="library" exported="" name="org.jetbrains:annotations:13.0@jar" level="project" />
     <orderEntry type="library" exported="" name="com.android.support:animated-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tasks-license-12.0.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-maps-10.2.4" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-vision-license-12.0.0" level="project" />
     <orderEntry type="library" exported="" name="com.facebook.fbui.textlayoutbuilder:textlayoutbuilder-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-gcm-12.0.0" level="project" />
@@ -203,6 +204,7 @@
     <orderEntry type="module" module-name="react-native-fs" exported="" />
     <orderEntry type="module" module-name="rn-splash-screen" exported="" />
     <orderEntry type="module" module-name="react-native-camera" exported="" />
+    <orderEntry type="module" module-name="react-native-maps" exported="" />
     <orderEntry type="module" module-name="react-native-device-info" exported="" />
     <orderEntry type="module" module-name="react-native-vector-icons" exported="" />
     <orderEntry type="module" module-name="react-native-image-picker" exported="" />
