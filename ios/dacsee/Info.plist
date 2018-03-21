@@ -69,7 +69,7 @@
 			<string>facebook</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb189854555110129</string>
+				<string>fb1785949501709358</string>
 			</array>
 		</dict>
 		<dict>
@@ -114,9 +114,9 @@
 	<key>CodePushDeploymentKey</key>
 	<string>xnBqrpY4wmN1izwRxCb1dlX5dn6_Sy2xqVDVM</string>
 	<key>FacebookAppID</key>
-	<string>189854555110129</string>
+	<string>1785949501709358</string>
 	<key>FacebookDisplayName</key>
-	<string>dacsee</string>
+	<string>DACSEE</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>mqqapi</string>

@@ -69,7 +69,7 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
         detail: dataContrast.cloneWithRows(resp.data)
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络情况差，请重试'))
+      this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
         loading: false        
       })

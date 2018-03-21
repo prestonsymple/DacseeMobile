@@ -111,7 +111,7 @@
       android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <provider
       android:name="com.umeng.facebook.FacebookContentProvider"
-      android:authorities="com.facebook.app.FacebookContentProvider189854555110129"
+      android:authorities="com.facebook.app.FacebookContentProvider1785949501709358"
       android:exported="true" />
     <meta-data
       android:name="com.facebook.sdk.ApplicationId"

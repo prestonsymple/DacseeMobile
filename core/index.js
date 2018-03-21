@@ -199,7 +199,7 @@ class Core extends PureComponent {
     ShareUtil.setPlatformConfig(SHARE_MEDIA.WECHAT_CIRCLE, 'wx9e68b689aeabeee8', '65f8dc079438edcdcddca5b938823084', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ, '1106730946', 'cpXqcASFJs2r6vH3', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ_ZONE, '1106730946', 'cpXqcASFJs2r6vH3', '')
-    ShareUtil.setPlatformConfig(SHARE_MEDIA.FACEBOOK, '189854555110129', '5242579ad95a1347a9a55be82156e810', '')
+    ShareUtil.setPlatformConfig(SHARE_MEDIA.FACEBOOK, '1785949501709358', 'f88ac00b039b83565537335fdc350a3b', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TWITTER, '75sUPCwmmjb7R4VP8F7mIly8B', 'gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX', '')
   }
 
