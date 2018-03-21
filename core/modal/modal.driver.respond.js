@@ -18,7 +18,7 @@ import { BOOKING_STATUS } from '../route/main'
 /*****************************************************************************************************/
 
 
-export default connect(state => ({ status: state.booking.status, booking_id: state.booking.booking_id }))(class DriverRespondView extends Component {
+export default connect(state => ({ status: state.booking.status, booking_id: state.booking.booking_id }))(class DriverRespondView extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -26,7 +26,6 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
   }
 
   componentWillReceiveProps(props) {
-    console.log(props.status, this.props.status)
     if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) {
       console.log('[CALL][RECALL]')
       props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))

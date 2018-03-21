@@ -107,10 +107,14 @@ public class ShareModule extends ReactContextBaseJavaModule {
     public void setPlatformConfig(int Channel, String id, String key, String redirectUrl) {
         SHARE_MEDIA media = this.getShareMedia(Channel);
 
-        PlatformConfig.APPIDPlatform platform = (PlatformConfig.APPIDPlatform)PlatformConfig.getPlatform(media);
-        platform.appId = id;
-        platform.appkey = key;
-        platform.redirectUrl = redirectUrl == "" ? null : redirectUrl;
+        try {
+            PlatformConfig.APPIDPlatform platform = (PlatformConfig.APPIDPlatform)PlatformConfig.getPlatform(media);
+            platform.appId = id;
+            platform.appkey = key;
+            platform.redirectUrl = redirectUrl == "" ? null : redirectUrl;
+        } catch(Exception e) {
+
+        }
     }
 
     private UMShareListener getUMShareListener(final Callback successCallback){

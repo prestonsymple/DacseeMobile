@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   Text, View, TouchableOpacity, Platform, DeviceEventEmitter, Image, Linking, ScrollView, Animated, ActivityIndicator
 } from 'react-native'
@@ -17,7 +17,7 @@ export default connect(state => ({
   selected_friends: state.booking.selected_friends,
   selected: state.booking.type === 'circle',
   status: state.booking.status
-}))(class BookingSelectMyCircle extends Component {
+}))(class BookingSelectMyCircle extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -124,7 +124,7 @@ export default connect(state => ({
   }
 })
 
-class SelectButton extends Component {
+class SelectButton extends PureComponent {
   render() {
     const { data } = this.props
     const { _id, friend_id, friend_info } = data

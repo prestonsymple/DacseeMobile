@@ -347,12 +347,22 @@ const PassengerComponent = connect(state => ({
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
     }
+
+    /** FIX ANDROID LOCATION SERVICE CRASH */
+    let { from_loc, destination_loc } = { from_loc: { lat: 0, lng: 0 }, destination_loc: { lat: 0, lng: 0 } }
+    if (from.location && destination.location) {
+      from_loc = from.location
+      destination_loc = destination.location
+    }
+    from_loc = { latitude: from_loc.lat, longitude: from_loc.lng }
+    destination_loc = { latitude: destination_loc.lat, longitude: destination_loc.lng }
+    /** FIX ANDROID LOCATION SERVICE CRASH */
     
     return (
       <View style={{ flex: 1, width }}>
         <MapView {...MAP_DEFINE} {...MAP_SETTER}>
-          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.location ? from.location.lat : 0, longitude: from.location ? from.location.lng : 0 }} />
-          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.location ? destination.location.lat : 0, longitude: destination.location ? destination.location.lng : 0 }} />
+          <Marker image={'rn_amap_startpoint'} coordinate={from_loc} />
+          <Marker image={'rn_amap_endpoint'} coordinate={destination_loc} />
         </MapView>
 
         { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />) }
@@ -376,7 +386,7 @@ const PassengerComponent = connect(state => ({
   }
 })
 
-const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare }))(class PickerOptions extends Component {
+const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare }))(class PickerOptions extends PureComponent {
   render() {
     return (
       <Animated.View style={[
@@ -437,7 +447,7 @@ class SelectButton extends Component {
   }
 }
 
-const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends Component {
+const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -486,7 +496,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
   }
 })
 
-class MapPinTip extends Component {
+class MapPinTip extends PureComponent {
   render() {
     const { timing } = this.props
     return (
@@ -509,7 +519,7 @@ class MapPinTip extends Component {
   }
 }
 
-class MapPin extends Component {
+class MapPin extends PureComponent {
   render() {
     const { timing } = this.props
     return (

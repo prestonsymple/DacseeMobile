@@ -216,9 +216,9 @@ function* registerDevice() {
         'user_id': user_id
       }, extendFields)
     
-      yield call(session.push.post, 'v1/register', postData) 
+      yield call(session.Push.Post, 'v1/register', postData) 
     } catch (e) {
-      console.log('[注册设备]', '[失败]', e)
+      // console.info('[推送][注册设备][失败]')
     }
   }
 }

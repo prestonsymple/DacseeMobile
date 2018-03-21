@@ -10,7 +10,6 @@ import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calen
 import moment from 'moment'
 
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
-import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 

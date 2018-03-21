@@ -2,4 +2,5 @@
   <string name="reactNativeCodePush_androidDeploymentKey" moduleConfig="true">5Tk5dUDPQF9qA1AN_EzpcSvKmw3oB14AF4w4M</string>
   <string name="app_name">大喜搭车</string>
   <string name="title_activity_splash">SplashActivity</string>
+  <string name="facebook_app_id">189854555110129</string>
 </resources>

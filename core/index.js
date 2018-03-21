@@ -28,7 +28,7 @@ const SHARE_MEDIA = {
   SINA_WEIBO: Platform.select({ ios: 0, android: 1 }),
   TENCENT_QQ: Platform.select({ ios: 4, android: 0 }),
   TENCENT_QQ_ZONE: Platform.select({ ios: 5, android: 4 }),
-  FACEBOOK: Platform.select({ ios: 16, android: 14 }),
+  FACEBOOK: Platform.select({ ios: 16, android: 13 }),
   TWITTER: Platform.select({ ios: 17, android: 8 })
 }
 

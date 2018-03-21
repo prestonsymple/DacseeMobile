@@ -35,7 +35,7 @@ function* fetchFriends() {
 
       yield put(circle.setValues({ loading: false, requestor, friend, page }))
     } catch (e) {
-      console.log(e)
+      // console.warn('[获取朋友圈数据][失败]')
       // TODO
     }
   }

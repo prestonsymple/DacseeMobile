@@ -32,6 +32,16 @@ module.exports = {
             "error",
             "single"
         ],
+        "no-console": [
+            "error", 
+            { 
+                "allow": [
+                    "warn", 
+                    "error",
+                    "info"
+                ] 
+            }
+        ],
         // "semi": [
         //     "error",
         //     "never"
