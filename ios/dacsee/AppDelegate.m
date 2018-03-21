@@ -79,6 +79,7 @@
   BOOL result = [[UMSocialManager defaultManager]  handleOpenURL:url options:options];
   if (!result) {
     
+    
   }
   return result;
 }

@@ -186,10 +186,17 @@ export default connect(state => ({
       }}
 
     try {
-      const data = await Session.user.post('v1/auth/oauth', body)
-      console.log('facebook登录', data)
+      const data = await Session.User.Post('v1/auth/oauth', body)
+      
+      this.props.dispatch(account.setAccountValue(data))
+      this.props.dispatch(account.loginSuccess())
+      this.props.dispatch(application.updatePushToken())
+      // console.log('facebook登录', data)
     } catch(e) {
-      console.log(e)
+      // console.log('facebook登录失败', e)
+      if (e.response.data.code == 'INVALID_USER') {
+        this.props.navigation.navigate('SocialRegister', { userInfo: user})
+      }
     }
   }
 

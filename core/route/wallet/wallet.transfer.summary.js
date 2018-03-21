@@ -71,7 +71,7 @@ export default connect(state => {
         actions: [NavigationActions.navigate({ routeName: 'Main' })]
       }))
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络情况差，请稍后重试'))
+      this.props.dispatch(application.showMessage('无法请求到服务器'))
       this.setState({
         transfering: false
       })

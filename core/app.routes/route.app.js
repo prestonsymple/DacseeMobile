@@ -3,7 +3,8 @@
 import {
   LoginScreen,
   PickerCountryScreen,
-  LoginSelectAccountScreen
+  LoginSelectAccountScreen,
+  SocialRegisterScreen
 } from '../route/login'
 
 import { 
@@ -67,7 +68,8 @@ const AuthScreen = {
   Login: { screen: LoginScreen },
   SettingWetView: { screen: SettingWetViewScreen },
   PickerCountry: { screen: PickerCountryScreen },
-  LoginSelectAccount: { screen: LoginSelectAccountScreen }
+  LoginSelectAccount: { screen: LoginSelectAccountScreen },
+  SocialRegister: { screen: SocialRegisterScreen }
 }
 
 // 首页流程
