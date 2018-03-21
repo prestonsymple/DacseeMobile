@@ -27,7 +27,11 @@ target 'dacsee' do
     pod 'UMCShare/Social/WhatsApp'
     # 集成Google+
     pod 'UMCShare/Social/GooglePlus'
-    # pod 'react-native-maps', :path => '../node_modules/react-native-maps'
-    # pod 'rn-splash-screen', :path => '../node_modules/rn-splash-screen'
+    # REACT-NATIVE-MAPS
+#    pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
+    #GOOGLE MAPS
+#    pod 'GoogleMaps'  # Remove this line if you don't want to support Google Maps on iOS
+#    pod 'react-native-google-maps', path: '../node_modules/react-native-maps'
 
 end

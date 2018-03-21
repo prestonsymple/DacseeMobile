@@ -1,3 +1,5 @@
+/* global navigator */
+
 import React, { Component, PureComponent } from 'react'
 import {
   Text, View, Animated, StyleSheet, Image, TouchableOpacity,
@@ -18,7 +20,7 @@ import BookingSelectCircle from './booking.select.circle'
 import BookingNavigationBarSwipe from './booking.navigation.bar.swipe'
 
 import { MapView, Search, Marker, Utils } from '../../native/AMap'
-import { Screen, Icons, Define, Session } from '../../utils'
+import { Screen, Icons, Define, Session, System } from '../../utils'
 import { application, booking } from '../../redux/actions'
 import { Button, SelectCarType } from '../../components'
 import { JobsListScreen } from '../jobs'
@@ -47,7 +49,8 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 // export default connect(state => ({ data: state.booking })) // TEST
 export default connect(state => ({
   booking_status: state.booking.status,
-  jobs_status: state.jobs.status
+  jobs_status: state.jobs.status,
+  app_status: state.application.application_status
 }))(class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -92,9 +95,17 @@ export default connect(state => ({
     return maps
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      deniedAccessLocation: false
+    }
+  }
+
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
+    this.checkLocationPermission()
   }
 
   componentWillUnmount() {
@@ -106,10 +117,26 @@ export default connect(state => ({
     if (this.props.booking_status !== booking_status) {
       this.props.navigation.setParams({ status: booking_status })
     }
+
+    if (this.props.app_status !== props.app_status && props.app_status === 'active') {
+      this.checkLocationPermission()
+    }
+  }
+
+  checkLocationPermission() {
+    navigator.geolocation.getCurrentPosition(() => this.setState({ deniedAccessLocation: false }), (e) => {
+      if (e.code === 1 || e.code === 2) this.setState({ deniedAccessLocation: true })
+    }, { timeout: 1000 })
   }
 
   render() {
-    return (
+    const { deniedAccessLocation } = this.state
+    return deniedAccessLocation ? (
+      <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
+        <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
+        <Text style={{ color: '#666', fontSize: 14 }}>请确认您的位置权限是否打开</Text>
+      </View>
+    ) : (
       <View style={{ flex: 1, alignItems: 'center' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <BookingNavigationBarSwipe />
@@ -125,7 +152,16 @@ const BookingContainerSwipe = connect(state => ({ core_mode: state.application.c
     super(props)
   }
 
-  componentDidMount() { this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) }
+  async componentDidMount() { 
+    await InteractionManager.runAfterInteractions()
+    this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) 
+
+    // 修复Android初始化加载延迟问题, Tab页切换不对
+    if (System.Platform.Android) {
+      await new Promise((resolve, reject) => setTimeout(() => resolve(), 250))
+      this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) 
+    }
+  }
 
   componentWillReceiveProps(props) {
     if (props.core_mode !== this.props.core_mode) {
@@ -166,7 +202,7 @@ const PassengerComponent = connect(state => ({
     super(props)
     this.state = {
       drag: false,
-      routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
+      routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0
     }
     this.currentLoc = {}
     this.timer = null
@@ -180,7 +216,7 @@ const PassengerComponent = connect(state => ({
     this.ready = false
   }
 
-  componentWillReceiveProps(props) {
+  async componentWillReceiveProps(props) {
     if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT)  {
       this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
       this.setState({ ready: true })
@@ -192,6 +228,9 @@ const PassengerComponent = connect(state => ({
         { latitude: from.location.lat, longitude: from.location.lng }, 
         { latitude: destination.location.lat, longitude: destination.location.lng }
       )
+
+      const { fare } = await Session.Booking.Get(`v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${destination.location.lat}&destination_lng=${destination.location.lng}`)
+      this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
     }
   }
 
@@ -270,7 +309,7 @@ const PassengerComponent = connect(state => ({
     try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
-      const { count, type, pois } = await Search.searchLocation(longitude, latitude)
+      const { pois } = await Search.searchLocation(longitude, latitude)
 
       if (!this.state.city) {
         let city = pois[0].city
@@ -312,19 +351,8 @@ const PassengerComponent = connect(state => ({
     return (
       <View style={{ flex: 1, width }}>
         <MapView {...MAP_DEFINE} {...MAP_SETTER}>
-          {/* TODO */}
-          { 
-            (
-              status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS &&
-              from.location
-            ) && (<Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.location.lat, longitude: from.location.lng }} />)
-          }
-          { 
-            (
-              status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS &&
-              destination.location
-            ) && (<Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.location.lat, longitude: destination.location.lng }} />) 
-          }
+          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.location ? from.location.lat : 0, longitude: from.location ? from.location.lng : 0 }} />
+          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.location ? destination.location.lat : 0, longitude: destination.location ? destination.location.lng : 0 }} />
         </MapView>
 
         { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />) }
@@ -348,7 +376,7 @@ const PassengerComponent = connect(state => ({
   }
 })
 
-const PickerOptions = connect(state => ({ status: state.booking.status }))(class PickerOptions extends Component {
+const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare }))(class PickerOptions extends Component {
   render() {
     return (
       <Animated.View style={[
@@ -369,7 +397,7 @@ const PickerOptions = connect(state => ({ status: state.booking.status }))(class
           <TouchableOpacity onPress={() => {
             this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
           }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>开始</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{ (this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>

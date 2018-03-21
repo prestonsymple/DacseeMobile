@@ -145,6 +145,7 @@ function* loginFlow() {
             { latitude: 3.321, longitude: 1.23 }
           ))
 
+          yield put(application.showMessage('您的账号已激活，请前往设置中上传您的头像，以便朋友能够找到您'))
           yield call(loginSuccess, register) // 登录成功
 
         } catch (e) {

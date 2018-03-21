@@ -14,6 +14,7 @@ const initialState = {
   payment: '现金支付',
   book: false,
   time: 'now',
+  fare: 0,
   selected_friends: [],
 
   status: 0

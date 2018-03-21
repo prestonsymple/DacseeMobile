@@ -47,7 +47,7 @@ function* bookingFlow() {
   while(true) {
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
-    const { booking_id, destination, from, time, payment, type, selected_friends } = yield select(state => ({
+    const { booking_id, destination, from, time, payment, type, selected_friends, fare } = yield select(state => ({
       ...state.booking
     }))
 
@@ -83,7 +83,7 @@ function* bookingFlow() {
           name : destination.name, 
           placeId : destination.uid
         },
-        // vehicle_type : 'Economy',
+        fare: fare,
         booking_at: Methods.timeZone(time),
         payment_method: Methods.payment(payment),
       }
@@ -99,11 +99,10 @@ function* bookingFlow() {
       // 请求价格 && 创建订单
       try {
         yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
-        const { fare } = yield call(
-          Session.Booking.Get, 
-          `v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${destination.location.lat}&destination_lng=${destination.location.lng}`
-        )
-        body.fare = fare.Circle
+        // const {  } = yield call(
+          
+        // )
+        // body.fare = fare.Circle
 
         const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
         if (isSuccess) {
