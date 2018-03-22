@@ -8,6 +8,7 @@ import booking from './reducer.booking'
 import storage_reducer from './reducer.storage'
 import jobs from './reducer.jobs'
 import circle from './reducer.circle'
+import wallet from './reducer.wallet'
 
 import SwitchNavigator from '../../app.routes'
 const initialState = SwitchNavigator.router.getStateForAction(SwitchNavigator.router.getActionForPathAndParams('AuthLoading'))
@@ -23,6 +24,7 @@ export default combineReducers({
   booking,
   jobs,
   circle,
+  wallet,
 
   storage: storage_reducer,
 

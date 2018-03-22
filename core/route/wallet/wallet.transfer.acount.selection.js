@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { Screen, Icons, Redux, Define, System } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
-import { application, booking } from '../../redux/actions'
+import { application, wallet } from '../../redux/actions'
 
 const {height, width} = Screen.window
 
@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default class WalletTransferSelectionScreen extends Component {
+export default connect( state=>({
+  // ...state.wallet
+}))(class WalletTransferSelectionScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed', 
@@ -35,6 +37,7 @@ export default class WalletTransferSelectionScreen extends Component {
   constructor(props){
     super(props)
     this.state={
+      // walletInfo: this.props.selected_wallet,
       transferInfo: this.props.navigation.state.params.transferInfo,
       detail: dataContrast.cloneWithRows(this.props.navigation.state.params.transferInfo.userList)
     }
@@ -68,7 +71,7 @@ export default class WalletTransferSelectionScreen extends Component {
       </View>
     )
   }
-}
+})
 
 class AccountItem extends Component {
   constructor(props) {

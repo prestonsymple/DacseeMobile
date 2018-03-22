@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
-import { application, booking } from '../../redux/actions'
+import { application, wallet as Wallet } from '../../redux/actions'
 
 const {height, width} = Screen.window
 
@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(state=> ({ data: state.booking }))(class WalletTransactionListScreen extends Component {
+export default connect(state => ({ 
+  ...state.wallet
+}))(class WalletTransactionListScreen extends Component {
   
   static navigationOptions = ({ navigation }) => {
     return {

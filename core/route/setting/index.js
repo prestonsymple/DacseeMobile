@@ -68,6 +68,21 @@ const SettingMenuScreen = connect(state => ({}))(class SettingScreen extends Pur
 const SettingAccountScreen = connect(state => ({ user: state.account.user }))(class SettingProfileScreen extends PureComponent {
   static navigationOptions = { title: '账号与安全' }
 
+  async _changeFullName(value) {
+    console.log(value)
+    try {
+      const resp = await Session.user.put('v1/profile', { fullName: value })
+      console.log('返回数据', resp)
+      this.props.dispatch(account.setAccountValue({
+        user: Object.assign({}, this.props.user, { fullName: resp.data.fullName })
+      }))
+      this.props.dispatch(application.showMessage('全名修改成功'))
+    } catch (e) {
+      console.log(e)
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+    } 
+  }
+
   render() {
     const { navigation, dispatch, user } = this.props
 
@@ -80,7 +95,18 @@ const SettingAccountScreen = connect(state => ({ user: state.account.user }))(cl
         }, {
           title: '账号', type: 'text', value: user.userId, editable: false
         }, {
-          title: '全名', type: 'text', value: `${user.fullName}`, editable: false
+          title: '全名', 
+          type: 'text', 
+          value: `${user.fullName}`, 
+          onPress: () => navigation.navigate('FormEditor', { 
+            title: '修改全名',
+            editorName: 'String', 
+            option: { 
+              placeholder: '请输入您的全名',
+              value: user.fullName,
+              onChangeValue:  (val) => this._changeFullName(val)
+            } 
+          })
         }, {
           title: '邮箱账号', 
           type: 'text', 
@@ -91,9 +117,7 @@ const SettingAccountScreen = connect(state => ({ user: state.account.user }))(cl
             option: { 
               placeholder: '请输入您的邮箱',
               value: user.email,
-              onChangeValue: (val) => {
-                console.log(val)
-              }
+              onChangeValue:  (val) => this._changeEmail(val)
             } 
           })
         }], [{

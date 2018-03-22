@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
-import { application, booking } from '../../redux/actions'
+import { application, wallet as Wallet } from '../../redux/actions'
 
 const { height, width } = Screen.window
 
@@ -27,7 +27,9 @@ const styles = StyleSheet.create({
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 // export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({ }))(class WalletBalanceScreen extends Component {
+export default connect(state => ({
+  ...state.wallet
+}))(class WalletBalanceScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -40,7 +42,7 @@ export default connect(state => ({ }))(class WalletBalanceScreen extends Compone
     super(props)
     this.state = {
       loading: false,
-      detail: dataContrast.cloneWithRows([])
+      detail: dataContrast.cloneWithRows(this.props.walletList)
     }
   }
 
@@ -56,12 +58,13 @@ export default connect(state => ({ }))(class WalletBalanceScreen extends Compone
     })
     try {
       const resp = await Session.wallet.get('v1/wallets')
+      this.props.dispatch(Wallet.setValues({ walletList: resp.data }))
       this.setState({
         detail: dataContrast.cloneWithRows(resp.data),
         loading: false
       })
     } catch (e) {
-      // this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
         loading: false
       })
@@ -86,7 +89,11 @@ export default connect(state => ({ }))(class WalletBalanceScreen extends Compone
           }
           dataSource={detail}
           enableEmptySections={true}
-          renderRow={(row) => <TouchableOpacity onPress={() => this.props.navigation.navigate('WalletDetail', { walletInfo: row })} activeOpacity={.7}><ListItem data={row} /></TouchableOpacity>}
+          renderRow={(row) => <TouchableOpacity onPress={() => { 
+            
+            this.props.dispatch(Wallet.setValues({ selected_wallet: row}))           
+            this.props.navigation.navigate('WalletDetail')
+          }} activeOpacity={.7}><ListItem data={row} /></TouchableOpacity>}
           // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
           style={{ flex: 1, height: 30, marginTop: 15 }}
         />

@@ -22,10 +22,9 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default connect(state => {
-  console.log(state)
-  return { routeStack: state.nav }
-}) (class WalletTransferSummaryScreen extends Component {
+export default connect(state => ({  
+  ...state.wallet
+})) (class WalletTransferSummaryScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed', 
@@ -36,13 +35,15 @@ export default connect(state => {
   constructor(props) {
     super(props)
     this.state = {
+      wallet: this.props.selected_wallet,
       transferInfo: this.props.navigation.state.params.transferInfo,
       transfering: false
     }
   }
 
   async _submitTransfer() {
-    const { amount, remark, userList, wallet } = this.state.transferInfo
+    const { wallet } = this.state
+    const { amount, remark, userList } = this.state.transferInfo
     const user = userList[0]
 
     await InteractionManager.runAfterInteractions()
@@ -63,8 +64,7 @@ export default connect(state => {
         transfering: true
       })
       await Session.wallet.post('v1/transferTransactions', body)
-      // const _backKey = this.props.routeStack.routes[1].routes[0].routes[0].routes[0].key
-      // this.props.navigation.goBack(_backKey)
+      
       this.props.dispatch(application.showMessage('转账成功'))
       this.props.navigation.dispatch(NavigationActions.reset({
         index: 0,
@@ -80,8 +80,8 @@ export default connect(state => {
   }
 
   render() {
-    const { transfering } = this.state
-    const { wallet, amount, userList, remark } = this.state.transferInfo
+    const { wallet, transfering } = this.state
+    const { amount, userList, remark } = this.state.transferInfo
     const user = userList[0]
     // console.log(userList)
     return (      

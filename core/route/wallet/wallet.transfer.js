@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
-import { application, booking } from '../../redux/actions'
+import { application, wallet } from '../../redux/actions'
 
 const {height, width} = Screen.window
 
@@ -22,7 +22,9 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default connect(state => ({ data: state.booking }))(class WalletTransferScreen extends Component {
+export default connect(state => ({ 
+  ...state.wallet
+}))(class WalletTransferScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -34,7 +36,7 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
   constructor(props) {
     super(props)
     this.state = {
-      countryCode: this.props.navigation.state.params.walletInfo.countryCode,
+      countryCode: this.props.selected_wallet.countryCode,
       phoneCountryCode: '+86',
       searchType: 0,
       searchTitle: '手机号',
@@ -80,7 +82,7 @@ export default connect(state => ({ data: state.booking }))(class WalletTransferS
       const resp = await Session.user.get('v1/search?' + url)
       // console.log('[账户]' + resp)
       const transferInfo = {
-        wallet: this.props.navigation.state.params.walletInfo,
+        // wallet: this.props.navigation.state.params.walletInfo,
         userList: resp.data,
         amount:  amount,
         remark: remark

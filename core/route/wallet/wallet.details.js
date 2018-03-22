@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
-import { application, booking } from '../../redux/actions'
+import { application, wallet as Wallet } from '../../redux/actions'
 import WalletTransactionListScreen from '../wallet/wallet.transaction.list'
 import IncomeList from '../income/income.list'
 
@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default class WalletDetailScreen extends Component {
+export default connect(state => ({ 
+  ...state.wallet
+}))(class WalletDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -35,8 +37,9 @@ export default class WalletDetailScreen extends Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
-      walletInfo: this.props.navigation.state.params.walletInfo,
+      walletInfo: this.props.selected_wallet
     }
   }
 
@@ -50,11 +53,12 @@ export default class WalletDetailScreen extends Component {
           <Text style={{ fontSize:13, paddingTop: 10 }}>{ country }</Text>
           <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ name }</Text>
         </View>
-        <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer', { walletInfo: this.state.walletInfo})} walletInfo={ this.state.walletInfo }/>
+        <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer')} walletInfo={ this.state.walletInfo }/>
+        {/* <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer', { walletInfo: this.state.walletInfo})} walletInfo={ this.state.walletInfo }/> */}
       </View>
     )
   }
-}
+})
 
 class ScrollTabView extends Component {
   constructor(props) {
