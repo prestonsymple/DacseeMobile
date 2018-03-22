@@ -15,6 +15,7 @@ import ModalUpdate from './modal/modal.update'
 import ModalProgress from './modal/modal.progress'
 import ModalBookingOrderDetail from './modal/modal.booking.order.detail'
 import ModalBookingAcceptJobs from './modal/modal.booking.accept.jobs'
+import Hud from './modal/modal.hud'
 import { application } from './redux/actions'
 
 const addListener = createReduxBoundAddListener('AuthLoading');
@@ -100,6 +101,7 @@ export default connect(state => {
         <ModalBookingAcceptJobs />
         <ModalProgress />
         <ModalUpdate />
+        <Hud />
       </View>
     )
   }

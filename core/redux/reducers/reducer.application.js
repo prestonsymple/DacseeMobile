@@ -27,7 +27,9 @@ const initialState = {
 
   login_stage: 0,
 
-  core_mode: 'passenger'
+  core_mode: 'passenger',
+
+  hud_modal_visible: false
 }
 
 export default handleActions({
@@ -61,5 +63,8 @@ export default handleActions({
   //   // Object.assign({}, state, { })
   //   // throw_error: _.cloneDeep(state.throw_error)
   // },
-  
+
+  [application.showHUD]: (state) => Object.assign({}, state, { hud_modal_visible: true }),
+  [application.hideHUD]: (state) => Object.assign({}, state, { hud_modal_visible: false }),
+
 }, initialState)

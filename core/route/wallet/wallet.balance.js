@@ -48,7 +48,6 @@ export default connect(state => ({
 
   async componentDidMount() {
     // await InteractionManager.runAfterInteractions()
-
     this._fetchData()
   }
 
@@ -56,6 +55,7 @@ export default connect(state => ({
     this.setState({
       loading: true
     })
+    this.props.dispatch(application.showHUD())
     try {
       const resp = await Session.wallet.get('v1/wallets')
       this.props.dispatch(Wallet.setValues({ walletList: resp.data }))
@@ -68,6 +68,8 @@ export default connect(state => ({
       this.setState({
         loading: false
       })
+    } finally {
+      this.props.dispatch(application.hideHUD())
     }
   }
 
