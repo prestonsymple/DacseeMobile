@@ -16,16 +16,6 @@ import {
   account, application
 } from '../../redux/actions'
 
-const changeMail = async () => {    
-  try {
-    const resp = await Session.User.Put('v1/profile', { email: '222@test.com' })
-    // this.props.dispatch(application.showMessage('邮箱修改成功'))
-  } catch (e) {
-    // this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
-  }    
-  
-}
-
 // 主菜单
 const SettingMenuScreen = connect(state => ({}))(class SettingScreen extends PureComponent {
   static navigationOptions = { title: '设置' }
@@ -68,17 +58,26 @@ const SettingMenuScreen = connect(state => ({}))(class SettingScreen extends Pur
 const SettingAccountScreen = connect(state => ({ user: state.account.user }))(class SettingProfileScreen extends PureComponent {
   static navigationOptions = { title: '账号与安全' }
 
-  async _changeFullName(value) {
-    console.log(value)
+  async _changeFullName(value) {    
     try {
       const resp = await Session.user.put('v1/profile', { fullName: value })
-      console.log('返回数据', resp)
       this.props.dispatch(account.setAccountValue({
         user: Object.assign({}, this.props.user, { fullName: resp.data.fullName })
       }))
       this.props.dispatch(application.showMessage('全名修改成功'))
     } catch (e) {
-      console.log(e)
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+    } 
+  }
+
+  async _changeEmail(value) {    
+    try {
+      const data = await Session.User.Put('v1/profile', { email: value })
+      this.props.dispatch(account.setAccountValue({
+        user: Object.assign({}, this.props.user, { email: data.email })
+      }))
+      this.props.dispatch(application.showMessage('邮箱修改成功'))
+    } catch (e) {
       this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
     } 
   }
