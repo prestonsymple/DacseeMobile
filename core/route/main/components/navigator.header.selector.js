@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-import { booking } from '../../redux/actions'
+import { booking } from '../../../redux/actions'
 
 // type={this.props.data.type} dispatch={this.props.dispatch}
 

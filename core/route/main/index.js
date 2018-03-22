@@ -1,7 +1,7 @@
-import BookingScreen from './booking'
+import DriverAndPassengerScreen from './main'
 // import BookingOptionsScreen from './booking.options'
-import BookingDriverDetailScreen from './booking.driver.detail'
-import BookingCompleteScreen from './booking.complete'
+import PassengerDriverDetailScreen from './passenger/passenger.driver.detail'
+import PassengerCompleteScreen from './passenger/passenger.complete'
 
 import FriendsCircleScreen from './friends/friends.circle'
 import FriendsCircleAddScreen from './friends/friends.circle.add'
@@ -9,19 +9,19 @@ import FriendsRequestScreen from './friends/friends.request'
 import FriendsDetailScreen from './friends/friends.circle.detail'
 import FriendsSearchScreen from './friends/friends.search.base'
 
-import BOOKING_STATUS from './booking.status.define'
+import BOOKING_STATUS from './status.define'
 
 export {
-  BookingScreen,
-  BookingDriverDetailScreen,
-  BookingCompleteScreen,
+  DriverAndPassengerScreen,
+  
+  PassengerDriverDetailScreen,
+  PassengerCompleteScreen,
+
   FriendsCircleScreen,
   FriendsCircleAddScreen,
   FriendsDetailScreen,
   FriendsRequestScreen,
   FriendsSearchScreen,
-
-
 
   BOOKING_STATUS
 }

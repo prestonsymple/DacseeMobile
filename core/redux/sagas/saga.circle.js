@@ -10,11 +10,11 @@ const DEFAULT_LIMIT = 50
 
 function* fetchFriends() {
   while (true) {
+    const { payload = {} } = yield take(circle.asyncFetchFriends().type)
+    let { init = false, page = 'UNSET', limit = DEFAULT_LIMIT } = payload
+    yield put(circle.setValues({ loading: true }))
+
     try {
-      const { payload = {} } = yield take(circle.asyncFetchFriends().type)
-      let { init = false, page = 'UNSET', limit = DEFAULT_LIMIT } = payload
-      yield put(circle.setValues({ loading: true }))
-      
       const circleReducer = yield select(state => ({ ...state.circle }))
       if (page === 'UNSET' && init) {
         page = 0
@@ -35,8 +35,7 @@ function* fetchFriends() {
 
       yield put(circle.setValues({ loading: false, requestor, friend, page }))
     } catch (e) {
-      // console.warn('[获取朋友圈数据][失败]')
-      // TODO
+      yield put(circle.setValues({ loading: false, requestor: [], friend: [], page: page }))
     }
   }
 }

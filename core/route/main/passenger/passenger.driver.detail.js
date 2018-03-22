@@ -7,11 +7,11 @@ import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import ActionSheet from 'react-native-actionsheet'
 
-import { MapView, Marker, Utils, Polyline } from '../../native/AMap'
-import { Screen, Icons, Define, System, Session } from '../../utils'
-import { booking, application } from '../../redux/actions'
-import { Button } from '../../components'
-import { BOOKING_STATUS } from '.'
+import { MapView, Marker, Utils, Polyline } from '../../../native/AMap'
+import { Screen, Icons, Define, System, Session } from '../../../utils'
+import { booking, application } from '../../../redux/actions'
+import { Button } from '../../../components'
+import { BOOKING_STATUS } from '..'
 
 const { height, width } = Screen.window
 

@@ -1,16 +1,14 @@
 import React, { PureComponent } from 'react'
 import {
-  Text, View, TouchableOpacity, Platform, DeviceEventEmitter, Image, Linking, ScrollView, Animated, ActivityIndicator
+  Text, View, TouchableOpacity, Image, ScrollView, ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
-import Lottie from 'lottie-react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 
-import Resources from '../../resources'
-import { circle, booking } from '../../redux/actions'
-import { Screen, Icons, Define, System, Session } from '../../utils'
-import { BOOKING_STATUS } from '.'
+import { circle, booking } from '../../../redux/actions'
+import { Icons, Define } from '../../../utils'
+import { BOOKING_STATUS } from '..'
 
 export default connect(state => ({ 
   ...state.circle,

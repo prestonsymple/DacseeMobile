@@ -11,10 +11,10 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { System, Icons, Screen, Session } from '../utils'
-import { Button } from '../components' 
-import { booking, application } from '../redux/actions'
-import { BOOKING_STATUS } from '../route/main'
+import { System, Icons, Screen, Session } from '../../../utils'
+import { Button } from '../../../components' 
+import { booking, application } from '../../../redux/actions'
+import { BOOKING_STATUS } from '..'
 /*****************************************************************************************************/
 
 

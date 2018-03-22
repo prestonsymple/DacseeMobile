@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
 import {
-  Text, View, TouchableOpacity, Platform, DeviceEventEmitter, Image, Linking, ScrollView
+  Text, View, TouchableOpacity, ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
-import ActionSheet from 'react-native-actionsheet'
 import { NavigationActions } from 'react-navigation'
 
-import { MapView, Marker, Utils, Polyline } from '../../native/AMap'
-import { Screen, Icons, Define, System, Session } from '../../utils'
-import { booking, application } from '../../redux/actions'
-import { Button } from '../../components'
+import { Screen, Icons, Define, Session } from '../../../utils'
+import { application } from '../../../redux/actions'
 
 const { height, width } = Screen.window
 
