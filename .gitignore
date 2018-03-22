@@ -18,6 +18,9 @@ Pods/
 ios/build/
 ios/Podfile.lock
 
+#VSCODE
+.vscode
+
 # ReactNative
 index.bundle
 index.map
