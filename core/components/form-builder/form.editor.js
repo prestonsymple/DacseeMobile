@@ -44,6 +44,10 @@ class StringEditor extends BaseEditor {
     })
   }
 
+  componentWillUnmount() {
+    this.subscription && this.subscription.remove()
+  }
+
   render() {
     const { option = {} } = this.props
     const { value, placeholder, onValidValue, onChangeValue, keyboardType, style } = option
@@ -93,7 +97,7 @@ class FormEditorScreen extends Component {
           style={{ width: 54, paddingRight: 15, justifyContent: 'center', alignItems: 'flex-end' }} 
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.EDITOR.CHANGE.VALUE')}
         >
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '600' }}>完成</Text>
+          <Text style={{ fontSize: 16, color: 'white', fontWeight: '600' }}>完成</Text>
         </TouchableOpacity>
       )    
     }, params.navigationOptions || {})
@@ -103,6 +107,9 @@ class FormEditorScreen extends Component {
     const { state } = this.props.navigation
     const { params } = state
     const NodeComponent = Components[params.editorName]
+
+    console.log(NodeComponent)
+
     return NodeComponent ? (
       <ScrollView style={{ flex: 1, backgroundColor: '#f8f8f8' }} contentContainerStyle={{ backgroundColor: '#f8f8f8', paddingTop: 15 }}>
         <NodeComponent {...this.props} option={params.option} />

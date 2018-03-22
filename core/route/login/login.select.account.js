@@ -78,7 +78,7 @@ class RowItem extends Component {
       <TouchableOpacity onPress={onPress} activeOpacity={.7} style={{ height: 68, backgroundColor: 'white', justifyContent: 'center' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 15 }}>
           <View style={{ width: 68, justifyContent: 'center' }}>
-            <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
+            <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[avatars.length - 1].url }} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>

@@ -147,10 +147,35 @@ const sessionBuilder2 = (baseUrl) => {
       return response
     },
 
-    Upload: async (path: string, data, config) => {
-      const response = await instance.post(`${path}`, data, Object.assign({}, {
-        header: { 'content-type': 'multipart/form-data' }
-      }, config))
+    Upload: async (path: string, body = {}) => {
+      const _instance = axios.create({
+        baseURL: baseUrl,
+        timeout: 120000
+      })
+
+      _instance.interceptors.request.use((config) => {
+        const state = store.getState()
+        config.headers['Accept-Language'] = 'CN'
+        if (state.account.authToken) {
+          config.headers.Authorization = state.account.authToken
+        }
+        return config
+      }, err => {
+        return Promise.reject(err)
+      })
+    
+      // DEBUG && API请求响应中间件 - 记录组件
+      _instance.interceptors.response.use((response) => {
+        const { config } = response
+        const { url, method, baseURL } = config
+        console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
+        const _response = response || { data: null }
+        return _response.data || {}
+      }, (err) => {
+        console.warn(err)
+        return Promise.reject(err)
+      })
+      const response = await _instance.post(`${path}`, body)
       return response
     }
   }

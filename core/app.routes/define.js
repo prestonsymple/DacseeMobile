@@ -16,6 +16,7 @@ const _HEADER_BACK_BUTTON = (navigation) => (
 const STACKNAVIGATOR_DEFAULT_OPTIONS = {
   navigationOptions: ({ navigation }) => {
     let options = {
+      drawerLockMode: 'locked-closed',
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',

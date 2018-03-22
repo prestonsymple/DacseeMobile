@@ -1,22 +1,18 @@
 /* @flow */
 /* global FormData */
 
-import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, Image, Alert, ScrollView, StatusBar, ActivityIndicator, DeviceEventEmitter } from 'react-native'
+import React, { PureComponent } from 'react'
+import { View, TouchableOpacity, Image, Alert, StatusBar, ActivityIndicator, DeviceEventEmitter } from 'react-native'
 import InteractionManager from 'InteractionManager'
-import lodash from 'lodash'
-import { NavigationActions } from 'react-navigation'
 import ActionSheet from 'react-native-actionsheet'
-import fs, { DocumentDirectoryPath } from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
 import { connect } from 'react-redux'
 
 
 import { application, account } from '../../redux/actions'
 import { Icons, Screen, Session, Define } from '../../utils'
-import resources from '../../resources'
 
-const { width, height } = Screen.window
+const { width } = Screen.window
 
 const PICKER_OPTIONS = {
   title: '相册',
@@ -36,7 +32,7 @@ const PICKER_OPTIONS = {
   }
 }
 
-export default connect(state => ({ account: state.account }))(class ProfileChangeAvatarsScreen extends Component {
+export default connect(state => ({ account: state.account }))(class ProfileChangeAvatarsScreen extends PureComponent {
 
 
   static navigationOptions = ({ navigation }) => {
@@ -121,7 +117,7 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
   async uploadImage(base64) {
     try {
       this.setState({ uploading: true })
-      const { data } = await Session.user.post('v1/profile/avatar2', {
+      const data = await Session.User.Upload('v1/profile/avatar2', {
         data: `data:image/jpeg;base64,${base64}`
       })
       this.props.dispatch(account.setAccountValue({

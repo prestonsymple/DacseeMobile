@@ -15,33 +15,19 @@ import {
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ 
-  user: state.account.user
-}))(class Settings extends BaseComponent {
-
-  static propTypes = {
-    producer: PropTypes.func
-  }
+export default class Settings extends BaseComponent {
 
   constructor(props: Object) {
     super(props)
-    const data = dataContrast.cloneWithRowsAndSections(props.producer(props))
-    this.state = {
-      source: data
-    }
-    this.struct = {
-      section: data.getSectionLengths(),
-      // length: data.getSectionLengths().reduce((prev, next) => prev + next)
-    }
+    const data = dataContrast.cloneWithRowsAndSections(props.producer)
+    this.state = { source: data }
+    this.struct = { section: data.getSectionLengths() }
   }
 
   componentWillReceiveProps(props) {
-    console.log(props)
-    const data = dataContrast.cloneWithRowsAndSections(props.producer(props))
+    const data = dataContrast.cloneWithRowsAndSections(props.producer)
     this.setState({ source: data })
-    this.struct = {
-      section: data.getSectionLengths(),
-    }
+    this.struct = { section: data.getSectionLengths() }
   }
 
   async componentDidMount() {
@@ -50,7 +36,6 @@ export default connect(state => ({
 
   renderSeparator(sectionKey, row) {
     const { section } = this.struct
-    // 判断最后一行，补下划线
     if (
       parseInt(sectionKey) === section.length - 1 &&
       parseInt(row) === section[sectionKey] - 1
@@ -81,7 +66,7 @@ export default connect(state => ({
 
     return React.createElement(View, wrapProps, (<ListView {...viewProps} />))
   }
-})
+}
 
 class ListViewItem extends Component {
 
