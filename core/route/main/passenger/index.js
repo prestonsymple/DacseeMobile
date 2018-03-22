@@ -1,30 +1,22 @@
-/* global navigator */
-
 import React, { Component, PureComponent } from 'react'
-import {
-  Text, View, Animated, StyleSheet, Image, TouchableOpacity,
-  DeviceEventEmitter, ListView, Platform, ScrollView, StatusBar
-} from 'react-native'
-import moment from 'moment'
+import { Text, View, Animated, TouchableOpacity } from 'react-native'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
 
-import Resources from '../../resources'
-import ModalDriverRespond from '../../modal/modal.driver.respond'
+import Resources from '../../../resources'
+import ModalDriverRespond from './passenger.modal.wait.driver'
 
-import HeaderSection from './booking.header.section'
-import BookingSelectCircle from './booking.select.circle'
-import BookingNavigationBarSwipe from './booking.navigation.bar.swipe'
+import HeaderSection from '../components/navigator.header.selector'
+import CircleBar from '../components/circle.bar'
 
-import { MapView, Search, Marker, Utils } from '../../native/AMap'
-import { Screen, Icons, Define, Session, System } from '../../utils'
-import { application, booking } from '../../redux/actions'
-import { Button, SelectCarType } from '../../components'
-import { JobsListScreen } from '../jobs'
-import { BOOKING_STATUS } from '.'
+import { MapView as AMapView, Search, Marker, Utils } from '../../../native/AMap'
+import GoogleMap from 'react-native-maps'
+import { Screen, Icons, Define, Session } from '../../../utils'
+import { booking } from '../../../redux/actions'
+import { BOOKING_STATUS } from '..'
 
 const { height, width } = Screen.window
 
@@ -38,165 +30,8 @@ const MAP_DEFINE = {
 }
 
 const PIN_HEIGHT = ((height - 22) / 2)
-const BOTTOM_MARGIN = Platform.select({
-  ios: Define.system.ios.x ? 35 : 5,
-  android: 25
-}) 
 
-// TODO: Optimize the callback
-const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-
-// export default connect(state => ({ data: state.booking })) // TEST
-export default connect(state => ({
-  booking_status: state.booking.status,
-  jobs_status: state.jobs.status,
-  app_status: state.application.application_status
-}))(class MainScreen extends Component {
-
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state
-    const { status = BOOKING_STATUS.PASSGENER_BOOKING_INIT } = params
-
-    const SETTER = {
-      activeOpacity: .7,
-      style: { top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' },
-      onPress: () => {
-        if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
-          DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN') 
-        } else {
-          navigation.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
-        }
-      }
-    } 
-
-    const maps = {
-      drawerLockMode: 'locked-closed',
-      headerStyle: {
-        backgroundColor: '#1AB2FD',
-        shadowColor: 'transparent',
-        shadowOpacity: 0,
-        borderBottomWidth: 0,
-        borderBottomColor: 'transparent',
-        elevation: 0,
-      },
-      title: (status >= BOOKING_STATUS.PASSGENER_BOOKING_INIT) ? 'DACSEE' : '确认行程',
-      headerLeft: (
-        <TouchableOpacity {...SETTER}>
-          {
-            (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (Icons.Generator.Octicons('three-bars', 23, 'white', { style: { left: 8 } }))
-          }
-          {
-            (status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) && (Icons.Generator.Material('keyboard-arrow-left', 30, 'white'))
-          }
-        </TouchableOpacity>
-      )
-    }
-
-    return maps
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      deniedAccessLocation: false
-    }
-  }
-
-  async componentDidMount() {
-    await InteractionManager.runAfterInteractions()
-    this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
-    this.checkLocationPermission()
-  }
-
-  componentWillUnmount() {
-    this.subscription && this.subscription.remove()
-  }
-
-  async componentWillReceiveProps(props) {
-    const { booking_status, jobs_status } = props
-    if (this.props.booking_status !== booking_status) {
-      this.props.navigation.setParams({ status: booking_status })
-    }
-
-    if (this.props.app_status !== props.app_status && props.app_status === 'active') {
-      this.checkLocationPermission()
-    }
-  }
-
-  checkLocationPermission() {
-    navigator.geolocation.getCurrentPosition(() => this.setState({ deniedAccessLocation: false }), (e) => {
-      if (e.code === 1 || e.code === 2) this.setState({ deniedAccessLocation: true })
-    }, { timeout: 1000 })
-  }
-
-  render() {
-    const { deniedAccessLocation } = this.state
-    return deniedAccessLocation ? (
-      <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
-        <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
-        <Text style={{ color: '#666', fontSize: 14 }}>请确认您的位置权限是否打开</Text>
-      </View>
-    ) : (
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
-        <BookingNavigationBarSwipe />
-        <BookingContainerSwipe />
-      </View>
-    )
-  }
-})
-
-const BookingContainerSwipe = connect(state => ({ core_mode: state.application.core_mode }))(class BookingContainerSwipe extends Component {
-
-  constructor(props) { 
-    super(props)
-  }
-
-  async componentDidMount() { 
-    await InteractionManager.runAfterInteractions()
-    this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) 
-
-    // 修复Android初始化加载延迟问题, Tab页切换不对
-    if (System.Platform.Android) {
-      await new Promise((resolve, reject) => setTimeout(() => resolve(), 250))
-      this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) 
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    if (props.core_mode !== this.props.core_mode) {
-      this.scrollView.scrollTo({ x: props.core_mode === 'driver' ? 0 : width, animated: false })
-    }
-  }
-
-  render() {
-    const VIEW_SETTER = {
-      scrollEnabled: false,
-      horizontal: true,
-      ref: (e) => this.scrollView = e
-    }
-    return (
-      <ScrollView {...VIEW_SETTER}>
-        <DriverComponent />
-        <PassengerComponent />
-      </ScrollView>
-    )
-  }
-})
-
-class DriverComponent extends Component {
-  render() {
-    return (
-      <View style={{ width }}>
-        <JobsListScreen />
-      </View>
-    )
-  }
-}
-
-const PassengerComponent = connect(state => ({
-  ...state.booking
-}))(class PassengerComponent extends Component {
+export default connect(state => ({ ...state.booking }))(class PassengerComponent extends Component {
 
   constructor(props) {
     super(props)
@@ -344,6 +179,11 @@ const PassengerComponent = connect(state => ({
       ref: (e) => this.map = e
     }
 
+    const GOOGLE_MAP_SETTER = {
+      followsUserLocation: true,
+
+    }
+
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
     }
@@ -357,13 +197,18 @@ const PassengerComponent = connect(state => ({
     from_loc = { latitude: from_loc.lat, longitude: from_loc.lng }
     destination_loc = { latitude: destination_loc.lat, longitude: destination_loc.lng }
     /** FIX ANDROID LOCATION SERVICE CRASH */
+
+    
     
     return (
       <View style={{ flex: 1, width }}>
-        <MapView {...MAP_DEFINE} {...MAP_SETTER}>
+        {/* <MapView {...MAP_DEFINE} {...MAP_SETTER}>
           <Marker image={'rn_amap_startpoint'} coordinate={from_loc} />
           <Marker image={'rn_amap_endpoint'} coordinate={destination_loc} />
-        </MapView>
+        </MapView> */}
+        <GoogleMap style={{ flex: 1 }}>
+
+        </GoogleMap>
 
         { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />) }
 
@@ -374,7 +219,7 @@ const PassengerComponent = connect(state => ({
           (
             status === BOOKING_STATUS.PASSGENER_BOOKING_INIT ||
             status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS
-          ) && (<BookingSelectCircle init={true} />) 
+          ) && (<CircleBar init={true} />) 
         }
 
         { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />) }
@@ -414,38 +259,6 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
     )
   }
 })
-
-class SelectButton extends Component {
-  constructor(props) {
-    super(props) 
-  }
-
-  render() {
-    const { data = {} } = this.props
-    const { image, title, price, circle, label, key, icon, onPress = () => {} } = data
-    return (
-      <Button onPress={onPress} key={key} style={{ alignItems: 'center', justifyContent: 'center', marginHorizontal: 12, top: 3 }}>
-        <Animated.View style={[
-          { width: 58, height: 58, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#fff' }
-        ]}>
-          {
-            icon ? (
-              <View style={{ backgroundColor: '#f2f2f2', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center' }}>
-                { icon }
-              </View>
-            ) : (
-              <Animated.Image 
-                style={{ opacity: 0.7, width: 58, height: 58, borderRadius: 29, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }} 
-                source={image}
-              />
-            )
-          }
-        </Animated.View>
-        <Text style={{ color: '#666', fontSize: 14, fontWeight: '400', marginTop: 6 }}>{ title }</Text>
-      </Button>
-    )
-  }
-}
 
 const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends PureComponent {
 

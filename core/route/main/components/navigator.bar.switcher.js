@@ -1,13 +1,11 @@
-import React, { PureComponent, Component } from 'react'
-import {
-  Text, View, Animated, StyleSheet, Image, TouchableOpacity, Platform, ScrollView, StatusBar
-} from 'react-native'
+import React, { PureComponent } from 'react'
+import { View, Animated, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
-import { Screen } from '../../utils' 
-import { application } from '../../redux/actions'
+import { Screen } from '../../../utils' 
+import { application } from '../../../redux/actions'
 
-const { height, width } = Screen.window
+const { width } = Screen.window
 
 const BUTTON_WIDTH = 88
 
@@ -15,7 +13,7 @@ export default connect(state => ({
   core_mode: state.application.core_mode,
   status: state.booking.status,
   hidden: (state.booking.status >= 1) || (state.jobs.working)
-}))(class NavigationBarSwipe extends Component {
+}))(class NavigationBarSwipe extends PureComponent {
 
   constructor(props) {
     super(props)

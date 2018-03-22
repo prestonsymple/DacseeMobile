@@ -8,9 +8,11 @@ import {
 } from '../route/login'
 
 import { 
-  BookingScreen,
-  BookingDriverDetailScreen,
-  BookingCompleteScreen,
+  DriverAndPassengerScreen,
+
+  PassengerCompleteScreen,
+  PassengerDriverDetailScreen,
+
   FriendsCircleScreen,
   FriendsCircleAddScreen,
   FriendsRequestScreen,
@@ -74,9 +76,10 @@ const AuthScreen = {
 
 // 首页流程
 const HomeScreen = {
-  Main: { screen: BookingScreen },
-  BookingDriverDetail: { screen: BookingDriverDetailScreen },
-  BookingComplete: { screen: BookingCompleteScreen },
+  Main: { screen: DriverAndPassengerScreen },
+
+  PassengerDriverDetail: { screen: PassengerDriverDetailScreen },
+  PassengerCompleteScreen: { screen: PassengerCompleteScreen },
 
   FriendsCircle: { screen: FriendsCircleScreen },
   FriendsCircleAdd: { screen: FriendsCircleAddScreen },
