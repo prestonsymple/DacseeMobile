@@ -6,7 +6,7 @@ import {
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
-
+import Input from '../../components/input'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
@@ -118,26 +118,27 @@ export default connect(state => ({
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'interactive' } >
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>转账金额</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 ,marginBottom:5}}>转账金额</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
               {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
-              <TextInput style={{ flex: 1, fontSize: 14}} placeholder={'0.00'} keyboardType={ 'number-pad' } onChangeText={ (value) => this.setState({ amount: value}) } />
+              <Input  style={{ flex: 1, fontSize: 14}} placeholder={'0.00'} keyboardType={ 'number-pad' } onChangeText={ (value) => this.setState({ amount: value}) } />
             </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>收款账户类型</Text>            
+            <Text style={{ fontSize: 12, opacity: 0.5,marginBottom:5 }}>收款账户类型</Text>            
             <CheckBox titles={[ '手机号', '邮箱', '用户账号']} style={{ flex: 1, height: 44 }} 
               onPress={ (index, title) => {
                 this.setState({
                   searchType: index,
-                  searchTitle: title
+                  searchTitle: title,
+                  accountVal:this.state.searchType==index?this.state.accountVal:""
                 })
               }}/>                   
           </View>
           
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>收款账户</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5,marginBottom:5 }}>收款账户</Text>
             <View style={{ flex: 1, flexDirection: 'row' }}>              
               {
                 this.state.searchType  == 0 ?
@@ -150,13 +151,15 @@ export default connect(state => ({
                     </Button>
                   ) : null
               }
-              <TextInput style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }} placeholder={ this.state.searchTitle } returnKeyType={'done'} onChangeText={ (value) => this.setState({searchContent: value}) } />
+              <Input style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }}
+              value={this.state.accountVal} placeholder={ this.state.searchTitle } 
+              returnKeyType={'done'} onChangeText={ (value) => this.setState({searchContent: value,accountVal:value}) } />
             </View>                        
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>备注</Text>
-            <TextInput style={{ marginVertical: 10, fontSize: 14, height: 70}} placeholder={'请输入备注'} returnKeyType={'done'} onChangeText={ (value) => this.setState({ remark: value}) }/>
+            <Text style={{ fontSize: 12, opacity: 0.5 ,marginBottom:5}}>备注</Text>
+            <Input style={{ paddingVertical: 10, fontSize: 14, height: 70 ,textAlignVertical: 'top'}} multiline={true} placeholder={'请输入备注'} returnKeyType={'done'} onChangeText={ (value) => this.setState({ remark: value}) }/>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
@@ -198,13 +201,13 @@ class CheckBox extends Component {
         {
           titles.map( (item, index) => {
             return (
-              <Button key={ index } onPress={ () => {
+              <Button key={ index }activeOpacity={1} onPress={ () => {
                 this.setState({
                   selectIndex: index
                 })              
                 this.props.onPress(index, item)
               }} style={{ height: 40, justifyContent: 'center' }}>
-                <Text style={ selectIndex == index ? { fontSize: 17, color: '#FFB639' } : { fontSize: 14, color: '#a5a5a5', opacity: 0.7 } }>{ item }</Text>
+                <Text style={ selectIndex == index ? { fontSize: 14, color: '#FFB639' } : { fontSize: 14, color: '#a5a5a5', opacity: 0.7 } }>{ item }</Text>
               </Button> 
             )             
           })

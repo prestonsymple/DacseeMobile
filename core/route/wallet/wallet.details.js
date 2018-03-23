@@ -44,14 +44,18 @@ export default connect(state => ({
   }
 
   render() {
-    const { name, country, countryFlag } = this.state.walletInfo
+    const { name, country, countryFlag } = this.state.walletInfo;
+    let countryName=name.split(" ")[0];
+    let walletName=name.split(" ")[1];
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1  }}>
         <View style={{ width: width, height: 150, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
           <Image style={{ width: 66, height:66, borderRadius: 33}}
             source={{ uri: countryFlag }}/>
-          <Text style={{ fontSize:13, paddingTop: 10 }}>{ country }</Text>
-          <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ name }</Text>
+          {/* <Text style={{ fontSize:13, paddingTop: 10 }}>{ country }</Text>
+          <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ name }</Text> */}
+          <Text style={{ fontSize:13, paddingTop: 10 }}>{ countryName }</Text>
+          <Text style={{ fontSize:13, color: '#a5a5a5' }}>{ walletName }</Text>
         </View>
         <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer')} walletInfo={ this.state.walletInfo }/>
         {/* <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer', { walletInfo: this.state.walletInfo})} walletInfo={ this.state.walletInfo }/> */}
@@ -123,6 +127,7 @@ class ScrollTabView extends Component {
         scrollEnabled={false}
         pagingEnabled={true}
         horizontal={true}
+        showsHorizontalScrollIndicator={false}
         // contentOffset={{x:this.state.currentPage*width, y:0}}
         // onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
         
@@ -169,11 +174,18 @@ class OverView extends Component {
 
   render() {
     const { availableAmount, floatingDriverAmount, floatingPassengerAmount } = this.props.walletInfo
+    console.log(availableAmount, floatingDriverAmount, floatingPassengerAmount)
     return (
       <View style={{ flex: 1, width: width, marginTop: 20 }}>
         {
-          this._renderItem({name: '可用余额', value: availableAmount})          
+          this._renderItem({name: '可获余额', value: availableAmount})       
         }
+       {/*  {
+          this._renderItem({name: '可用余额（乘客）', value: floatingPassengerAmount})       
+        }
+        {
+          this._renderItem({name: '可用余额（司机）', value: floatingDriverAmount})       
+        } */}
         <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
           <Button onPress={ this.props.onNavigate } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
             <Text style={{ fontSize: 20, color: 'white' }}>转账</Text>

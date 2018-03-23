@@ -11,16 +11,16 @@ export default class Button extends PureComponent {
 
     return Platform.select({
       ios: props.underlayColor ? (
-        <TouchableHighlight {...props} style={[ styles.buttonWrap, props.style ]} activeOpacity={0.7}>
+        <TouchableHighlight activeOpacity={0.7} {...props} style={[ styles.buttonWrap, props.style ]}>
           {props.children}
         </TouchableHighlight>
       ) : (
-        <TouchableOpacity {...props} style={[ styles.buttonWrap, props.style ]} activeOpacity={0.7}>
+        <TouchableOpacity activeOpacity={0.7} {...props} style={[ styles.buttonWrap, props.style ]} >
           {props.children}
         </TouchableOpacity>
       ),
       android: ( // TODO: Fix Android
-        <TouchableOpacity {...props} style={[ styles.buttonWrap, props.style ]} activeOpacity={0.7}>
+        <TouchableOpacity activeOpacity={0.7} {...props} style={[ styles.buttonWrap, props.style ]}>
           {props.children}
         </TouchableOpacity>
       )
