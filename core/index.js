@@ -4,6 +4,7 @@
 import React, { Component, PureComponent } from 'react'
 import { View, StatusBar, ActivityIndicator, NetInfo, AppState, NativeModules, BackHandler, PushNotificationIOS, Platform } from 'react-native'
 import { Provider, connect } from 'react-redux'
+import { Text } from 'react-native'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
 // import PushNotification from 'react-native-push-notification'
@@ -19,6 +20,18 @@ import { BOOKING_STATUS } from './route/main'
 import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
+
+import {addLocaleData,IntlProvider,FormattedMessage} from 'react-intl';
+import languages from './localization';
+import en from 'react-intl/locale-data/en';
+import zh from 'react-intl/locale-data/zh';
+
+let messages = {};
+// messages['zh-CN'] = zh_CN;
+messages['en-US'] = languages.en_US;
+messages['zh-CN'] = languages.zh_CN;
+
+addLocaleData([...en, ...zh]);
 
 const initializationModule = () => {}
 
@@ -261,14 +274,16 @@ class Core extends PureComponent {
 
   render() {
     return (
-      <Provider store={this.state.store}>
+      <Provider store={this.state.store}>        
         <PersistGate loading={
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="small" color="#333" />
           </View>
         } persistor={store.persist}>
-          <Launch />
-        </PersistGate>
+          <IntlProvider locale={'en'} messages={ messages['en-US'] } textComponent={Text}>
+            <Launch />
+          </IntlProvider>
+        </PersistGate>        
       </Provider>
     )
   }

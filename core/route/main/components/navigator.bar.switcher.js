@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { Screen } from '../../../utils' 
 import { application } from '../../../redux/actions'
+import { FormattedMessage } from 'react-intl';
 
 const { width } = Screen.window
 
@@ -49,7 +50,9 @@ export default connect(state => ({
                 activeOpacity={1} 
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
               >
-                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>司机</Animated.Text>
+                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>
+                  <FormattedMessage id={'driver'} />
+                </Animated.Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => this.onPress(1)} 
