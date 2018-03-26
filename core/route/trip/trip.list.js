@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import moment from 'moment'
-import FONT from "../../utils/util.textSize"
+import FONT from '../../utils/util.textSize'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'

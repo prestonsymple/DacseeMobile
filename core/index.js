@@ -298,7 +298,7 @@ class Core extends PureComponent {
             <ActivityIndicator size="small" color="#333" />
           </View>
         } persistor={store.persist}>
-          <IntlProvider locale={language} messages={ messages['mas'] } textComponent={Text}>
+          <IntlProvider locale={language} messages={ messages[language] } textComponent={Text}>
             <Launch />            
           </IntlProvider>
         </PersistGate>        
