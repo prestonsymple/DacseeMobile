@@ -117,6 +117,12 @@ android {
         }
     }
     signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "android"
+            keyPassword "android"
+        }
         release {
             storeFile file("release.keystore")
             storePassword "Quzhi17168"
@@ -164,6 +170,7 @@ dependencies {
     compile project(':react-native-fs')
     compile project(':react-native-device-info')
     compile project(':react-native-vector-icons')
+    compile project(':react-native-code-push')
     compile fileTree(include: ['*.jar'], dir: 'libs')
 //    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:26.1.0'
@@ -175,7 +182,9 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.1.0'
-    compile project(':react-native-code-push')
+
+    compile 'com.google.android.gms:play-services-base:+'
+    compile 'com.google.android.gms:play-services-maps:+'
 }
 
 // Run this once to be able to run the application with BUCK
