@@ -9,6 +9,7 @@ import _ from 'lodash'
 
 import { application, booking, circle } from '../../../redux/actions'
 import { Icons, Screen, Define, Session } from '../../../utils'
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
 
@@ -121,7 +122,7 @@ export default connect(state => ({
   render() {
     const { dataSource, selected } = this.state
     const { loading } = this.props
-
+    console.log(this.props)
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <HeaderSearchBar />
@@ -138,8 +139,12 @@ export default connect(state => ({
             } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
               <View style={{ marginTop: 108 }}>
                 <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
-                <Text style={{ color: '#666', fontSize: 22, fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>暂无好友</Text>
-                <Text style={{ color: '#999', fontSize: 15, fontWeight: '400', textAlign: 'center' }}>{'点击"+"进行添加'}</Text>
+                <Text style={{ color: '#666', fontSize: 22, fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
+                  <FormattedMessage id={'no_friend'}/>
+                </Text>
+                <Text style={{ color: '#999', fontSize: 15, fontWeight: '400', textAlign: 'center' }}>
+                  <FormattedMessage id={'clickto_add_friend'}/>
+                </Text>
               </View>
             </ScrollView>
           ) : (
@@ -205,7 +210,9 @@ export default connect(state => ({
                     { width: width - 90, left: 45, borderRadius: 33 },
                     { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
                   ]}>
-                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>全选</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>
+                      <FormattedMessage id={'select_all'}/>
+                    </Text>
                   </TouchableOpacity>
                 ) 
               }
@@ -219,7 +226,9 @@ export default connect(state => ({
                     { width: width - 90, left: 45, borderRadius: 33 },
                     { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
                   ]}>
-                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>确认</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>
+                      <FormattedMessage id={'confirm'}/>
+                    </Text>
                   </TouchableOpacity>
                 ) 
               }

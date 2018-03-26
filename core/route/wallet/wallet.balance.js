@@ -7,6 +7,7 @@ import {
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
@@ -127,7 +128,9 @@ class ListItem extends Component {
               </View>
 
               <View style={{ flex: 1, marginRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 11, color: '#a5a5a5' }}>可用余额</Text>
+                <Text style={{ fontSize: 11, color: '#a5a5a5' }}>
+                  <FormattedMessage id={'available_balance'}/>
+                </Text>
                 <View style={{ flexDirection: 'row'}}>
                   {/* <Text style={{ fontSize: 15, marginTop: 12}}>RM</Text> */}
                   <Text style={{ fontSize: 27}}>{ availableAmount.toFixed(2) }</Text>

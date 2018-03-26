@@ -8,6 +8,7 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 import { Screen, Icons, Redux, Define } from '../../utils'
 import resources from '../../resources'
 import { application as app, account } from '../../redux/actions'
+import { FormattedMessage } from 'react-intl';
 
 const { width, height } = Screen.window
 
@@ -29,19 +30,19 @@ export default class PickerCountryComponent extends Component {
     this.setState({
       source: dataContrast.cloneWithRows([{
         key: '2',
-        name: '马来西亚',
+        name: 'malaysia',
         code: '+60'
       }, {
         key: '1',
-        name: '中国',
+        name: 'china',
         code: '+86'
       }, {
         key: '3',
-        name: '韩国',
+        name: 'southkorea',
         code: '+82'
       }, {
         key: '4',
-        name: '日本',
+        name: 'japan',
         code: '+81'
       }])
     })
@@ -53,7 +54,7 @@ export default class PickerCountryComponent extends Component {
     const {
       onPress = () => {}
     } = this.props.navigation.state.params
-
+    
     return Platform.select({
       android: (
         <View style={{ flex: 1 }}>
@@ -66,10 +67,17 @@ export default class PickerCountryComponent extends Component {
               >
                 { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
               </TouchableOpacity>
-              <TextInput 
-                placeholder={'选择国家/地区'}
-                style={{ height: 54, flex: 1 }}
-              />
+              <FormattedMessage id={'choose_country'}>
+                {
+                  msg => (
+                    <TextInput 
+                      placeholder={msg}
+                      style={{ height: 54, flex: 1 }}
+                    />
+                  )
+                }
+              </FormattedMessage>
+              
             </View>
           </View>
           <View style={{ flex: 1 }}>
@@ -107,10 +115,15 @@ export default class PickerCountryComponent extends Component {
               >
                 { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
               </TouchableOpacity>
-              <TextInput 
-                placeholder={'选择国家/地区'}
-                style={{ height: 44, flex: 1 }}
-              />
+              <FormattedMessage id={'choose_country'}>
+                {
+                  msg => (
+                    <TextInput 
+                      placeholder={msg}
+                      style={{ height: 44, flex: 1 }}
+                    />)
+                }
+              </FormattedMessage>
             </View>
           </View>
           <View style={{ flex: 1 }}>
@@ -126,8 +139,10 @@ export default class PickerCountryComponent extends Component {
                   onPress(row)
                   this.props.navigation.goBack()
                 }} style={{ flex: 1, height: 52, justifyContent: 'center', backgroundColor: 'white' }}>
-                  <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>
-                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{ row.name }</Text>
+                  <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>                  
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>
+                      <FormattedMessage id={ row.name } />                      
+                    </Text>
                     <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({ row.code })</Text>
                   </View>
                 </TouchableOpacity>

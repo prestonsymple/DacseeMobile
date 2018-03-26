@@ -5,6 +5,7 @@ import {
 import { connect } from 'react-redux'
 
 import { booking } from '../../../redux/actions'
+import { FormattedMessage } from 'react-intl'
 
 // type={this.props.data.type} dispatch={this.props.dispatch}
 
@@ -26,18 +27,20 @@ export default connect(state => ({
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ height: 34 }}>
           {
             [{
-              title: '出租车', key: 'taxi'
+              title: 'taxi', key: 'taxi'
             }, {
-              title: '朋友圈', key: 'circle'
+              title: 'mycircle', key: 'circle'
             }, {
-              title: '优选出行', key: 'standard'
+              title: 'preferred', key: 'standard'
             }, {
-              title: '经济', key: 'eco'
+              title: 'economy', key: 'eco'
             }, {
-              title: '专车', key: 'lux'
+              title: 'special', key: 'lux'
             }].map((pipe, index) => (
               <TouchableOpacity activeOpacity={1} onPress={() => this.props.dispatch(booking.passengerSetValue({ type: pipe.key }))} key={index} style={{ paddingHorizontal: 10, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={selected_type === pipe.key ? { color: 'white', fontSize: 13, fontWeight: '600' } : { color: 'white', fontSize: 13, fontWeight: '600', opacity: .7  }}>{ pipe.title }</Text>
+                <Text style={selected_type === pipe.key ? { color: 'white', fontSize: 13, fontWeight: '600' } : { color: 'white', fontSize: 13, fontWeight: '600', opacity: .7  }}>
+                  <FormattedMessage id={ pipe.title }/>
+                </Text>
               </TouchableOpacity>
             ))
           }

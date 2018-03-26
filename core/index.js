@@ -20,18 +20,21 @@ import { BOOKING_STATUS } from './route/main'
 import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
+import DeviceInfo from 'react-native-device-info'
 
 import {addLocaleData,IntlProvider,FormattedMessage} from 'react-intl';
 import languages from './localization';
 import en from 'react-intl/locale-data/en';
 import zh from 'react-intl/locale-data/zh';
+import mas from 'react-intl/locale-data/mas';
 
 let messages = {};
 // messages['zh-CN'] = zh_CN;
-messages['en-US'] = languages.en_US;
-messages['zh-CN'] = languages.zh_CN;
+messages['en'] = languages.en_US;
+messages['zh'] = languages.zh_CN;
+messages['mas'] = languages.mas;
 
-addLocaleData([...en, ...zh]);
+addLocaleData([...en, ...zh, ...mas]);
 
 const initializationModule = () => {}
 
@@ -272,7 +275,22 @@ class Core extends PureComponent {
     AppState.addEventListener('change', (state) => store.dispatch(application.changeApplicationStatus(state)))
   }
 
+  chooseLocale() {
+    console.log('[Locale Language]', DeviceInfo.getDeviceLocale())
+    switch (DeviceInfo.getDeviceLocale()) {
+    case 'en', 'en-US':
+      return 'en'
+    case 'zh', 'zh-CN', 'zh-Hans-CN':
+      return 'zh'
+    case 'mas':
+      return 'mas'
+    default:
+      return 'en'
+    }
+  }
+
   render() {
+    const language = this.chooseLocale()
     return (
       <Provider store={this.state.store}>        
         <PersistGate loading={
@@ -280,8 +298,8 @@ class Core extends PureComponent {
             <ActivityIndicator size="small" color="#333" />
           </View>
         } persistor={store.persist}>
-          <IntlProvider locale={'en'} messages={ messages['en-US'] } textComponent={Text}>
-            <Launch />
+          <IntlProvider locale={language} messages={ messages['mas'] } textComponent={Text}>
+            <Launch />            
           </IntlProvider>
         </PersistGate>        
       </Provider>

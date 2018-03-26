@@ -14,6 +14,7 @@ import { Button } from '../../components'
 import ShareUtile from '../../native/umeng/ShareUtil'
 import actionApplication, { application as app, account } from '../../redux/actions'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl';
 
 const codeInputWidth = ((Screen.window.width - 40 * 2) - 35 * 3) / 4
 const codeInputProps = {
@@ -233,7 +234,9 @@ export default connect(state => ({
               { fontSize: 35, lineHeight: 40, fontWeight: '400', color: 'white' },
               { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [35, -200, -200], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, .6, 2], outputRange: [1, 0, 0], extrapolate: 'clamp' }) }
-            ]}>欢迎使用</Animated.Text>
+            ]}>
+              <FormattedMessage id={'welcome_to_use'} />
+            </Animated.Text>
             <Animated.Text style={[
               { fontSize: 35, top: 205, lineHeight: 40, fontWeight: '400', color: 'white', position: 'absolute' },
               { left: stage.interpolate({ inputRange: [0, .5, .9, 1.4, 2], outputRange: [35, 35, -150, width, (width / 2) - 62], extrapolate: 'clamp' }) },
@@ -264,18 +267,24 @@ export default connect(state => ({
                     <Text style={styles.stdInput}>{this.state.countryCode}</Text>
                   </Button>
                 </Animated.View>
-                <TextInput
-                  {...Define.TextInputArgs}
-                  clearTextOnFocus={false}
-                  placeholderTextColor={'#eee'}
-                  placeholder={'电话号码 / 邮箱'}
-                  returnKeyType={'done'}
-                  onChangeText={text => {
-                    this.setState({ value: text })
-                    if (this.isEmail(text)) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear }).start()
-                    Animated.timing(this.animated.isMail, { toValue: 0, duration: 250, easing: Easing.linear }).start()
-                  }}
-                  style={[styles.stdInput, { flex: 7, borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 }]} />
+                <FormattedMessage id={'phone_or_email'} >
+                  {
+                    msg => (
+                      <TextInput
+                        {...Define.TextInputArgs}
+                        clearTextOnFocus={false}
+                        placeholderTextColor={'#eee'}
+                        placeholder={msg}
+                        returnKeyType={'done'}
+                        onChangeText={text => {
+                          this.setState({ value: text })
+                          if (this.isEmail(text)) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear }).start()
+                          Animated.timing(this.animated.isMail, { toValue: 0, duration: 250, easing: Easing.linear }).start()
+                        }}
+                        style={[styles.stdInput, { flex: 7, borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 }]} />
+                    )
+                  }
+                </FormattedMessage>                
               </View>
             </Animated.View>
 
@@ -327,11 +336,18 @@ export default connect(state => ({
                   { backgroundColor: stage.interpolate({ inputRange: [0, 1, 2], outputRange: ['#ffa81d', '#ffa81d', '#ffa81d'], extrapolate: 'clamp' }) },
                   { width: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [width * 3, (width - 70) * 3, (width - 70) * 3], extrapolate: 'clamp' }), }
                 ]}>
-                  <Animated.Text style={[
-                    { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' },
-                    { opacity: stage.interpolate({ inputRange: [0, 1.4, 1.8, 2], outputRange: [1, 1, 0, 0], extrapolate: 'clamp' }) },
-                    { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
-                  ]}>登录</Animated.Text>
+
+                  <FormattedMessage id={'login'}>
+                    {
+                      msg => (
+                        <Animated.Text style={[
+                          { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' },
+                          { opacity: stage.interpolate({ inputRange: [0, 1.4, 1.8, 2], outputRange: [1, 1, 0, 0], extrapolate: 'clamp' }) },
+                          { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
+                        ]}>{msg}</Animated.Text>
+                      )
+                    }                  
+                  </FormattedMessage>
                   <Animated.View style={[
                     { flex: 1, alignItems: 'center' },
                     { opacity: stage.interpolate({ inputRange: [0, 1.5, 1.9, 2, 2.4], outputRange: [0, 0, 1, 1, 0], extrapolate: 'clamp' }) },
@@ -356,7 +372,9 @@ export default connect(state => ({
               { left: stage.interpolate({ inputRange: [0, 1.2, 2], outputRange: [-width, 0, 0], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, 0.8, 2], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
             ]}>
-              <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>使用社交账号进行登录</Text>
+              <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>
+                <FormattedMessage id={'login_social'} />
+              </Text>
               <View style={{ flexDirection: 'row', justifyContent: 'center', width: 150, marginTop: 25 }}>
                 {/* <Button onPress={() => {
                   ShareUtile.auth(0, (code, result, message) =>{
@@ -402,7 +420,9 @@ export default connect(state => ({
             flex: 1, paddingHorizontal: 45, marginTop: this.isEmail(this.state.value) ? 110 : 200
           }}>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
-              <Text style={{ fontSize: 26, color: '#f2f2f2', fontWeight: '400' }}>激活您的账号</Text>
+              <Text style={{ fontSize: 26, color: '#f2f2f2', fontWeight: '400' }}>
+                <FormattedMessage id={'active_account'} />
+              </Text>
             </View>
             <View style={{ marginBottom: 15 }}>
               <TextInput
@@ -475,7 +495,9 @@ export default connect(state => ({
                       activeOpacity={0.9} 
                       style={[{ marginLeft: 15, backgroundColor: '#ffa81d', borderRadius: 22, width: 120, height: 44, justifyContent: 'center' }]}
                     >
-                      <Text style={styles.stdInput}>发送验证码</Text>
+                      <Text style={styles.stdInput}>
+                        <FormattedMessage id={'send_code'} />
+                      </Text>
                     </Button>
                   </View>
                 )
@@ -505,18 +527,24 @@ export default connect(state => ({
                 style={[styles.stdInput, styles.registerTextInput]} />
             </View>
             <View style={{ flexDirection: 'row', marginBottom: 25, justifyContent: 'center' }}>
-              <Text style={{ fontSize: 12, color: '#f2f2f2', fontWeight: '200' }}>点击「完成」视为您已阅读并同意</Text>
+              <Text style={{ fontSize: 12, color: '#f2f2f2', fontWeight: '200' }}>
+                <FormattedMessage id={'active_account_tip'} />
+              </Text>
               <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', { 
                 title: '隐私协议及使用条款',
                 source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
               })} style={{  }}>
-                <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>《用户使用协议》</Text>
+                <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>
+                  <FormattedMessage id={'user_protocol'}/>
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={{ height: 44 }}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.onPressComplate.bind(this)}>
                 <View style={{ height: 44, alignItems: 'center', flexDirection: 'row', backgroundColor: '#ffa81d', borderRadius: 22 }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>完成</Text>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>
+                    <FormattedMessage id={'finish'} />
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>

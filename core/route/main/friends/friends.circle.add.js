@@ -11,10 +11,11 @@ import { } from '../../../redux/actions'
 import { Icons, Screen, Define, System } from '../../../utils'
 import ShareUtil from '../../../native/umeng/ShareUtil'
 import { application } from '../../../redux/actions'
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
 
-export default connect(state => ({ account: state.account }))(class FriendsCircleAddComponent extends Component {
+export default connect(state => ({ account: state.account }))(injectIntl(class FriendsCircleAddComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -42,16 +43,16 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
 
   render() {
     const { dataSource } = this.state
-
-    return (
+    const {formatMessage} = this.props.intl    
+    return (      
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 22, paddingVertical: 22 }} style={{ flex: 1 }}>
           {/* PHONE NO. */}
           <BlockWrap 
             iconBackgroundColor={'#4fb2f9'} 
-            icon={Icons.Generator.Awesome('phone', 36, 'white')} 
-            title={'电话号码'}
-            describer={'通过电话号码搜索'}
+            icon={Icons.Generator.Awesome('phone', 36, 'white') } 
+            title={formatMessage({ id: 'phone' })}
+            describer={formatMessage({ id: 'search_byphone' })}
             isPhoneNo={true}
             placeholder={'13x xxxx xxxx'}
             canInput={true}
@@ -66,8 +67,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#4f9029'} 
             icon={Icons.Generator.Awesome('envelope', 28, 'white')} 
-            title={'邮箱'}
-            describer={'通过注册邮箱搜索'}
+            title={formatMessage({ id: 'email' })}
+            describer={formatMessage({ id: 'search_byemail' })}
             placeholder={'example@mail.com'}
             canInput={true}
             onPress={(value) => {
@@ -80,8 +81,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={Icons.Generator.Awesome('address-card', 28, 'white')} 
-            title={'姓名或用户账号'}
-            describer={'通过姓名或用户账号进行搜索'}
+            title={formatMessage({ id: 'name_or_userid' })}
+            describer={formatMessage({ id: 'search_byname_userid' })}
             placeholder={''}
             canInput={true}
             navigation={this.props.navigation}
@@ -95,8 +96,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={Icons.Generator.Awesome('wechat', 28, 'white')} 
-            title={'微信好友'}
-            describer={'将邀请链接分享给好友'}
+            title={formatMessage({ id: 'wechat_friend' })}
+            describer={formatMessage({ id: 'wechat_shareto_friend' })}
             onPress={async () => {
               await ShareUtil.share(
                 '分享至微信', 
@@ -113,8 +114,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={<Image source={require('../../../resources/images/wechat_moments.png')} />} 
-            title={'微信朋友圈'}
-            describer={'将邀请链接分享至朋友圈'}
+            title={formatMessage({ id: 'wechat_moment' })}
+            describer={formatMessage({ id: 'wechat_shareto_moment' })}
             onPress={async () => {
               await ShareUtil.share(
                 '分享至微信', 
@@ -131,14 +132,14 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={Icons.Generator.Awesome('weibo', 32, 'white')} 
-            title={'新浪微博'}
-            describer={'将邀请链接分享至新浪微博'}
+            title={formatMessage({ id: 'weibo' })}
+            describer={formatMessage({ id: 'wechat_shareto_weibo' })}
           />
         </ScrollView>
       </View>
     )
   }
-})
+}))
 
 class BlockWrap extends Component {
 

@@ -13,6 +13,7 @@ import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
+import { FormattedMessage } from 'react-intl';
 
 const {height, width} = Screen.window
 
@@ -140,7 +141,9 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
         
         <View style={{ flex: 4 }}>
           <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#333' }}>上线</Text>
+            <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#333' }}>
+              <FormattedMessage id={'online'}/>
+            </Text>
             <Switch value={ switchValue } onValueChange={this._onSwitchValueChange.bind(this)} />
           </View>
           <View style={{ flex: 1 }}>
@@ -158,7 +161,9 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                   } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={Resources.image.joblist_empty} style={{ marginTop: 70, width: 100, height: 100 }} />
-                      <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>暂无行程</Text>
+                      <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>
+                        <FormattedMessage id={'no_job'}/>
+                      </Text>
                     </View>                    
                   </ScrollView>
                 ) :

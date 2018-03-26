@@ -6,6 +6,7 @@ import {
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
@@ -98,7 +99,7 @@ class ScrollTabView extends Component {
     return (
       <View style={{ width: width, height: 50, flexDirection: 'row', backgroundColor: 'white'}} >
         {
-          ['概览', '转账记录', '浮动'].map((item, index) => {          
+          ['overView', 'transaction', 'floating_comm'].map((item, index) => {          
             return (
               <Button key={ index } 
                 style={ [{ flex: 1, justifyContent: 'center', alignItems:'center' }, index == this.state.currentPage ? { borderBottomWidth: 3, borderColor: '#FFB639' } : {}]}
@@ -108,7 +109,9 @@ class ScrollTabView extends Component {
                   })
                   this._goToPage(index)
                 }}>
-                <Text style={ [{ fontSize: 15 },  index == this.state.currentPage ? {color: '#FFB639' } : {color: '#a5a5a5', opacity: 0.7}] }>{ item }</Text>
+                <Text style={ [{ fontSize: 15 },  index == this.state.currentPage ? {color: '#FFB639' } : {color: '#a5a5a5', opacity: 0.7}] }>
+                  <FormattedMessage id={item}/>
+                </Text>
               </Button>
             )
           })
@@ -166,7 +169,9 @@ class OverView extends Component {
   _renderItem(obj) {
     return (      
       <View key={obj.name} style={{ marginHorizontal: 20, height: 44, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Text style={{ fontSize: 13, color: '#a5a5a5', }}>{obj.name}</Text>
+        <Text style={{ fontSize: 13, color: '#a5a5a5', }}>
+          <FormattedMessage id={obj.name}/>
+        </Text>
         <Text style={{ fontSize: 18 }}>{obj.value.toFixed(2)}</Text>
       </View>      
     )
@@ -178,7 +183,7 @@ class OverView extends Component {
     return (
       <View style={{ flex: 1, width: width, marginTop: 20 }}>
         {
-          this._renderItem({name: '可获余额', value: availableAmount})       
+          this._renderItem({name: 'available_balance', value: availableAmount})       
         }
        {/*  {
           this._renderItem({name: '可用余额（乘客）', value: floatingPassengerAmount})       
@@ -188,7 +193,9 @@ class OverView extends Component {
         } */}
         <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
           <Button onPress={ this.props.onNavigate } style={{ width:240, height: 44, backgroundColor: '#4cb1f7', borderRadius: 4 }}>
-            <Text style={{ fontSize: 20, color: 'white' }}>转账</Text>
+            <Text style={{ fontSize: 20, color: 'white' }}>
+              <FormattedMessage id={'transfer'}/>
+            </Text>
           </Button>
         </View>        
       </View>    

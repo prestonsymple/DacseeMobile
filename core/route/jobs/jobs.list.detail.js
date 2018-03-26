@@ -9,6 +9,7 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import moment from 'moment'
+import { injectIntl } from 'react-intl'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
@@ -17,6 +18,7 @@ import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 import WalletTransactionListScreen from '../wallet/wallet.transaction.list'
 import IncomeList from '../income/income.list'
+import { FormattedMessage } from 'react-intl';
 
 const { height, width } = Screen.window
 
@@ -37,7 +39,7 @@ const MAP_DEFINE = {
 //   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 // })
 
-export default class JobsListDetailScreen extends Component {
+export default injectIntl(class JobsListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -120,9 +122,9 @@ export default class JobsListDetailScreen extends Component {
   _getStatus(status) {
     switch (status) {
     case 'Pending_Acceptance':
-      return {left: '拒绝', right: '接受', leftAction: () => { }, rightAction: () => {} }
+      return {left: 'reject', right: 'accept', leftAction: () => { }, rightAction: () => {} }
     case 'On_The_Way':
-      return {left: '取消', right: '接驾中', leftAction: () => { }, rightAction: () => {} }
+      return {left: 'cancel', right: 'on_the_way', leftAction: () => { }, rightAction: () => {} }
     case 'Arrived':
       return {left: 'No Show', right: 'On Board', leftAction: () => {}, rightAction: () => {} }
     }
@@ -170,6 +172,7 @@ export default class JobsListDetailScreen extends Component {
     // const { destination = { coords: { lat: 0, lng: 0 } }, from = { coords: { lat: 0, lng: 0 } }} = this.state.jobDetail
     const { destination, from, payment_method, fare, booking_at, status, passenger_info } = this.state.jobDetail
     const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
+    const { formatMessage } = this.props.intl
     return (      
       <View style={{ flex: 1 }}>
         <MapView
@@ -191,17 +194,23 @@ export default class JobsListDetailScreen extends Component {
             <ScrollView style={{ marginTop: 50, marginBottom: 70 }} >
               <View style={{ paddingHorizontal: 20 }}>
                 <View style={{ flexDirection: 'row', width: width - 40, justifyContent: 'space-between' }}>
-                  <Text style={{ fontSize: 17, color:'#999', width: 120 }}>出发地</Text>
+                  <Text style={{ fontSize: 17, color:'#999', width: 120 }}>
+                    <FormattedMessage id={'from'} />
+                  </Text>
                   <Text style={{ flex: 1, fontSize: 16, color: '#333', fontWeight: 'bold', textAlign: 'right' }}>{ from.name }({ from.address })</Text>
                 </View>
 
                 <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ fontSize: 17, color:'#999', width: 120 }}>目的地</Text>
+                  <Text style={{ fontSize: 17, color:'#999', width: 120 }}>
+                    <FormattedMessage id={'destination'}/>
+                  </Text>
                   <Text style={{ flex: 1, fontSize: 16, color: '#333', fontWeight: 'bold', textAlign: 'right' }}>{ destination.name }({ destination.address })</Text>
                 </View>
                 
                 <View style={{ marginTop: 20, flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 17, color:'#999', width: 120 }}>日期时间</Text>
+                  <Text style={{ fontSize: 17, color:'#999', width: 120 }}>
+                    <FormattedMessage id={'book_time'}/>
+                  </Text>
                   <Text style={{ flex: 1, fontSize: 16, color: '#333', fontWeight: 'bold', textAlign: 'right' }}>{ moment(Date.parse(booking_at)).format('YYYY-MM-D HH:mm') }</Text>               
                 </View>
 
@@ -210,7 +219,9 @@ export default class JobsListDetailScreen extends Component {
               <View style={{ marginHorizontal: 20, marginVertical: 12, flexDirection: 'row', justifyContent: 'center' }}>
                 <View style={{flex: 1, alignItems:'center', }}>
                   <Image source={ Resources.image.joblist_car} resizeMethod={'scale'} style={{ width:40, height: 40}} />
-                  <Text style={{ marginTop: 10, fontSize: 15, color: '#333' }}>标准车型</Text>
+                  <Text style={{ marginTop: 10, fontSize: 15, color: '#333' }}>
+                    <FormattedMessage id={'car_standard'}/>
+                  </Text>
                 </View>
                 <View style={{ flex: 1, alignItems:'center'}}>
                   <Image source={ Resources.image.joblist_payment} resizeMethod={'scale'} style={{ height: 40}} />
@@ -219,8 +230,12 @@ export default class JobsListDetailScreen extends Component {
               </View>
               <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>              
               <View style={{ marginHorizontal: 20, marginVertical: 12 }}>
-                <Text style={{ fontSize: 17, fontWeight: 'bold', color: '#333' }}>提示信息</Text>
-                <Text style={{ marginTop: 10, fontSize: 17, color: '#999' }}>无</Text>
+                <Text style={{ fontSize: 17, fontWeight: 'bold', color: '#333' }}>
+                  <FormattedMessage id={'note_to_driver'}/>
+                </Text>
+                <Text style={{ marginTop: 10, fontSize: 17, color: '#999' }}>
+                  <FormattedMessage id={'no_content'}/>
+                </Text>
               </View>
             </ScrollView>
 
@@ -232,10 +247,10 @@ export default class JobsListDetailScreen extends Component {
                   this._getOptionable(status) ?               
                     <View style={{ flexDirection: 'row' }}>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ this._getStatus(status).leftAction }>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}}>{ this._getStatus(status).left }</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}}>{ formatMessage({ id: this._getStatus(status).left }) }</Text>
                       </Button>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ this._getStatus(status).right }</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ formatMessage({ id: this._getStatus(status).right }) }</Text>
                       </Button>
                     </View> :
                     <Text style={{ fontSize: 17 }}>{ this._statusInChinese(status) }</Text>
@@ -267,108 +282,12 @@ export default class JobsListDetailScreen extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
-
-          
-        </View>
-        {/* <View style={{ marginTop: -30 }}>
-          <View style={{ backgroundColor: 'white', borderTopRightRadius: 20, borderTopLeftRadius: 20, shadowOffset: {width: 0, height: 5}, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 20 }}>
-            <View style={{ margin: 20, flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
-              <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[0].url }} style={{ width: 50, height: 50 , borderRadius: 25}} />
-                <Text style={{ marginLeft: 20, fontSize: 15 }}>{ fullName }</Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => {
-                  Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)
-                }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                  { Icons.Generator.Material('textsms', 24, '#555') }
-                </TouchableOpacity>       
-                <TouchableOpacity onPress={() => {
-                  Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)
-                }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center' }}>
-                  { Icons.Generator.Material('phone', 24, '#555') }
-                </TouchableOpacity>
-              </View>            
-            </View>
-
-            <View style={{ marginHorizontal: 20}}>
-              <View style={{ justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, color:'#a5a5a5' }}>出发地</Text>
-                <Text style={{ marginTop: 5, fontSize: 16 }}>{ from.name }({ from.address })</Text>
-              </View>
-              <View style={{ marginTop: 15, justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, color:'#a5a5a5' }}>目的地</Text>
-                <Text style={{ marginTop: 5, fontSize: 16 }}>{ destination.name }({ destination.address })</Text>
-              </View>
-                        
-              <View style={{ marginTop: 15, justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, color:'#a5a5a5' }}>日期时间</Text>
-                <Text style={{ marginTop: 5, fontSize: 16  }}>{ moment(Date.parse(booking_at)).format('YYYY-MM-D HH:mm') }</Text>
-              </View>            
-            </View>
-            
-            <View style={[styles.JobDetailWrap, {flexDirection: 'row', justifyContent: 'space-between' , alignItems: 'center', borderTopColor: '#d5d5d5', borderTopWidth: 1, height: 70}]}>
-              <Text style={{ fontSize: 25 }}>{ fare.toFixed(2) }</Text>
-              {
-                this._getOptionable(status) ?               
-                  <View style={{ flexDirection: 'row' }}>
-                    <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ this._getStatus(status).leftAction }><Text style={{color: 'white'}}>{ this._getStatus(status).left }</Text></Button>
-                    <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}><Text style={{color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ this._getStatus(status).right }</Text></Button>
-                  </View> :
-                  <Text>{status}</Text>
-              }                        
-            </View>
-          </View>
-        </View> */}
-        
-        {/*
-        <View style={[
-          styles.JobDetailWrap
-        ]}>
-          <View style={[
-            { marginBottom: 6, backgroundColor: 'white' }, 
-            Platform.select({
-              ios: {},
-              android: { borderColor: '#ccc', borderWidth: .8 },
-            }),
-            { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-          ]}>
-            <View style={{ margin: 15, height: 166, flex: 1, justifyContent: 'space-between' }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Text style={{ width:60, fontSize: 14, color:'#a5a5a5' }}>出发地</Text>
-                <Text style={{ marginRight: 50, fontSize: 14 }}>{ from.name }({ from.address })</Text>
-              </View>
-              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>目的地</Text>
-                <Text style={{ marginRight: 50, fontSize: 14 }}>{ destination.name }({ destination.address })</Text>
-              </View>
-              
-              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>支付金额</Text>
-                <Text style={{  marginRight: 5, fontSize: 14  }}>{ parseInt(fare).toFixed(2) }</Text>
-              </View>
-              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>支付方式</Text>
-                <Text style={{  marginRight: 5, fontSize: 14  }}>{ payment_method }</Text>
-              </View>
-              <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>预订时间</Text>
-                <Text style={{  marginRight: 5, fontSize: 14  }}>{ moment(Date.parse(booking_at)).format('YYYY-MM-D HH:mm') }</Text>
-              </View>
-              {/* <View style={{ marginTop:10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{  width:60, fontSize: 14, color:'#a5a5a5' }}>订单状态</Text>
-                <Text style={{  marginLeft: 10, fontSize: 14  }}>{ status }</Text>
-              </View> 
-            </View>          
-          </View>
-        </View>
-        */}
+          </View>          
+        </View>        
       </View> 
     )
   }
-}
+})
 
 const styles = StyleSheet.create({
   JobDetailWrap: Platform.select({

@@ -7,6 +7,7 @@ import { Screen, Icons, Define, Session } from '../../utils'
 import resources from '../../resources'
 const { height, width } = Screen.window
 import { application, booking } from '../../redux/actions'
+import { FormattedMessage } from 'react-intl'
 
 export default connect(state => ({ }))(class IncomeList extends Component {
 
@@ -36,7 +37,9 @@ export default connect(state => ({ }))(class IncomeList extends Component {
               <Image resizeMode={'cover'} style={{ width:50, height: 50 }} source={resources.image.floating_driver} />
               <View style={{ marginLeft: 30 }}>
                 <Text style={{ fontSize: 26, color: '#333', fontWeight: '600' }}>{ float_driver.toFixed(2) }</Text>
-                <Text style={{ marginTop: 10, color: '#999' }}>浮动余额（司机）</Text>
+                <Text style={{ marginTop: 10, color: '#999' }}>
+                  <FormattedMessage id={'floating_amount_driver'}/>
+                </Text>
                 {/* <Text style={{ fontSize: 14, color: '#666', fontWeight: '400', top: -2.5 }}>TOKEN</Text> */}
               </View>
               
@@ -67,7 +70,9 @@ export default connect(state => ({ }))(class IncomeList extends Component {
               <Image resizeMode={'cover'} style={{ width:50, height: 50 }} source={resources.image.floating_passenger} />
               <View style={{ marginLeft: 30 }}>
                 <Text style={{ fontSize: 26, color: '#333', fontWeight: '600' }}>{ float_passenger.toFixed(2) }</Text>
-                <Text style={{ marginTop: 10, color: '#999' }}>浮动余额（乘客）</Text>
+                <Text style={{ marginTop: 10, color: '#999' }}>
+                  <FormattedMessage id={'floating_amount_passenger'}/>
+                </Text>
                 {/* <Text style={{ fontSize: 14, color: '#666', fontWeight: '400', top: -2.5 }}>TOKEN</Text> */}
               </View>
               

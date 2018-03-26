@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { SafeAreaView } from 'react-navigation'
+import { injectIntl } from 'react-intl'
 
 import { Icons, System } from '../utils'
 import { Button } from '../components'
@@ -11,17 +12,17 @@ const ICONS_COLOR = '#888'
 
 const MENUS_OPTIONS = [{
   key: '1',
-  name: '我的行程',
+  name: 'mytrip',
   icon: Icons.Generator.Material('data-usage', 24, ICONS_COLOR, { style: { left: .5, top: 1 } }),
   onPress: ({ navigation }) => navigation.navigate('TripList')
 }, {
   key: '2',
-  name: '钱包',
+  name: 'wallet',
   icon: Icons.Generator.Material('account-balance-wallet', 24, ICONS_COLOR, { style: { left: .5 } }),
   onPress: ({ navigation }) => navigation.navigate('WalletBalance')
 }, {
   key: '3',
-  name: '设置',
+  name: 'settings',
   icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 }
@@ -39,7 +40,7 @@ const MENUS_OPTIONS = [{
 // }, 
 ]
 
-export default connect(state => ({ user: state.account.user }))(class DrawerContentComponent extends Component {
+export default injectIntl( connect(state => ({ user: state.account.user }))(class DrawerContentComponent extends Component {
 
   constructor(props) {
     super(props)
@@ -47,7 +48,8 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
 
   render() {
     const { fullName, avatars } = this.props.user
-
+    console.log(this.props.user)
+    const { formatMessage } = this.props.intl
     return (
       <View style={{ flex: 1 }}>
         {/* TODO: Fix iPhone X */}
@@ -70,7 +72,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
               { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.5 },
               { backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }
             ]}>
-              <Text style={{ color: '#666', fontWeight: '600', fontSize: 12 }}>乘客</Text>
+              <Text style={{ color: '#666', fontWeight: '600', fontSize: 12 }}>{formatMessage({id: 'passenger'})}</Text>
             </View>
           </View>
 
@@ -81,7 +83,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
               MENUS_OPTIONS.map(pipe => (
                 <Button onPress={pipe.onPress ? pipe.onPress.bind(this, this.props) : () => {}} key={pipe.key} style={{ height: 44, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                   <View style={{ marginRight: 10 }}>{ pipe.icon }</View>
-                  <Text style={{ fontSize: 14, fontWeight: System.Platform.Android ? '400' : '600', color: '#333' }}>{pipe.name}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: System.Platform.Android ? '400' : '600', color: '#333' }}>{formatMessage({ id: pipe.name })}</Text>
                 </Button>
               ))
             }
@@ -90,7 +92,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
       </View>
     )
   }
-})
+}))
 
 const styles = StyleSheet.create({
   container: {

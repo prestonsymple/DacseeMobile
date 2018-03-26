@@ -11,6 +11,7 @@ import { Screen, Icons, Redux, Define, System } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, wallet } from '../../redux/actions'
+import { FormattedMessage } from 'react-intl';
 
 const {height, width} = Screen.window
 
@@ -48,8 +49,12 @@ export default connect( state=>({
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <View style={{ marginTop: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 13, opacity: 0.5 }}>查找到多个相关账户</Text>
-          <Text style={{ marginTop: 10, fontSize: 13, opacity: 0.5 }}>请选择您要转账的账户</Text>
+          <Text style={{ fontSize: 13, opacity: 0.5 }}>
+            <FormattedMessage id={'multi_account_tip'}/>
+          </Text>
+          <Text style={{ marginTop: 10, fontSize: 13, opacity: 0.5 }}>
+            <FormattedMessage id={'choose_transfer_account'}/>
+          </Text>
         </View>
 
         <ListView 

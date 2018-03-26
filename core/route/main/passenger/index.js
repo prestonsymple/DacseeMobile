@@ -13,7 +13,7 @@ import HeaderSection from '../components/navigator.header.selector'
 import CircleBar from '../components/circle.bar'
 
 import { MapView as AMapView, Search, Marker, Utils } from '../../../native/AMap'
-import GoogleMap from 'react-native-maps'
+// import GoogleMap from 'react-native-maps'
 import { Screen, Icons, Define, Session } from '../../../utils'
 import { booking } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
@@ -202,13 +202,10 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
     
     return (
       <View style={{ flex: 1, width }}>
-        {/* <MapView {...MAP_DEFINE} {...MAP_SETTER}>
+        <AMapView {...MAP_DEFINE} {...MAP_SETTER}>
           <Marker image={'rn_amap_startpoint'} coordinate={from_loc} />
           <Marker image={'rn_amap_endpoint'} coordinate={destination_loc} />
-        </MapView> */}
-        <GoogleMap style={{ flex: 1 }}>
-
-        </GoogleMap>
+        </AMapView>
 
         { status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />) }
 

@@ -9,6 +9,7 @@ import { NavigationActions } from 'react-navigation'
 import { circle, booking } from '../../../redux/actions'
 import { Icons, Define } from '../../../utils'
 import { BOOKING_STATUS } from '..'
+import { FormattedMessage } from 'react-intl';
 
 export default connect(state => ({ 
   ...state.circle,
@@ -63,7 +64,9 @@ export default connect(state => ({
               }} activeOpacity={.7} style={{ borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 }}>
                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                   { Icons.Generator.Awesome('plus', 14, '#959595', { style: { top: .5 } }) }
-                  <Text style={{ color: '#5d5d5d', marginLeft: 6 }}>添加朋友圈</Text>
+                  <Text style={{ color: '#5d5d5d', marginLeft: 6 }}>
+                    <FormattedMessage id={'add_mycircle'}/>
+                  </Text>
                 </View>
               </TouchableOpacity>
             )
@@ -81,7 +84,9 @@ export default connect(state => ({
                   <Text style={[
                     { color: '#5d5d5d', marginLeft: 6, fontWeight: '600' },
                     selected_friends.length === friend.length ? { color: 'white' } : {  }
-                  ]}>全部朋友</Text>
+                  ]}>
+                    <FormattedMessage id={'friend_all'}/>
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   onPress={() => {
@@ -91,7 +96,9 @@ export default connect(state => ({
                   activeOpacity={.7} 
                   style={{ marginLeft: 3, justifyContent: 'center', alignItems: 'center', height: 46, borderRadius: 23.5, backgroundColor: '#E5E5E5', flex: 1 }}
                 >
-                  <Text style={{ color: '#5d5d5d', marginLeft: 6, fontWeight: '600' }}>指定朋友</Text>
+                  <Text style={{ color: '#5d5d5d', marginLeft: 6, fontWeight: '600' }}>
+                    <FormattedMessage id={'friend_select'}/>
+                  </Text>
                 </TouchableOpacity>
               </View>
             )

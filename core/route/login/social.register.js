@@ -11,6 +11,7 @@ import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, account, booking } from '../../redux/actions'
+import { FormattedMessage } from 'react-intl';
 
 const {height, width} = Screen.window
 
@@ -99,7 +100,9 @@ export default connect(() => ({ }))(class SocialRegisterScreen extends Component
           </View>
 
           <View style={{ paddingTop: 20, justifyContent: 'flex-end' }}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>验证码</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>
+              <FormattedMessage id={'verification_code'} />
+            </Text>
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <TextInput style={{ flex: 1, fontSize: 14, height: 50, borderBottomWidth: 1, borderBottomColor: '#a5a5a5' }} placeholder={ '请输入验证码' } keyboardType={'numeric'} onChangeText={ (value) => this.setState({phoneVerificationCode: value}) } />
               <Button style={{ marginLeft: 10, marginTop: 5, borderRadius: 5, width: 110, height: 45, backgroundColor: '#4cb1f7' }} 
