@@ -18,6 +18,7 @@ import { Screen, Icons, Define, Session } from '../../../utils'
 import { booking } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import Wheel from '../../../components/Wheel'
+import _ from 'lodash'
 const { height, width } = Screen.window
 
 const MAP_DEFINE = {
@@ -230,27 +231,65 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 })
 
 const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare }))(class PickerOptions extends PureComponent {
+ 
+  render() {
+    return (
+      <Animated.View style={[
+        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? 160 + 22 : 160, justifyContent: 'center' },
+        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
+        { backgroundColor: 'white', paddingHorizontal: 23 },
+        { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
+      ]}>
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+            <TouchableOpacity activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.setState({showTP:true})}
+              activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现在</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={() => {
+            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
+          }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
+          </TouchableOpacity>
+        </View>
+       
+      </Animated.View>
+    )
+  }
+})
+
+const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends PureComponent {
   constructor(props) {
     super(props)
-    this.date=[getDateStr(0),getDateStr(1),getDateStr(2)]
-    this.hour = [0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16,17,18,19,20,21,22,23];
-    this.minute = [0,10,20,30,40,50];
-    Object.assign(this.state, {
-      date: new Date(),
-    });
+    this.animated = new Animated.Value(0)
+    this.dates=[this.getDateStr(0),this.getDateStr(1),this.getDateStr(2)]
+    // this.hours = ['0点', '1点', '2点', '3点','4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点','13点','14点','15点','16点','17点','18点','19点','20点','21点','22点','23点'];
+    // this.minutes = ['0分','10分','20分','30分','40分','50分'];
+    this.hours = [0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16,17,18,19,20,21,22,23];
+    this.minutes = [0,10,20,30,40,50];
+    this.date=this.getDateStr(0);
+    this.hour=this.getDateStr()[0];
+    this.minute=this.getDafultMinutes()[0];
     this.state = {
-      showTP:false
+      showTP:false,
+      hours:this.getDafultHours(),
+      minutes:this.getDafultMinutes(),
+      date:"",
     }
   }
   //获取今天前后n天的日期
-  function getDateStr(n) {     
+   getDateStr(n) {     
     let date = new Date();    
     date.setDate(date.getDate()+n);//获取n天后的日期   
     let w='';
     let day=date.getDay();
-    // let y = date.getFullYear();     
-    let m = (date.getMonth()+1)<10?"0"+(dd.getMonth()+1):(dd.getMonth()+1);//获取当前月份的日期，不足10补0    
-    let d = date.getDate()<10?"0"+dd.getDate():dd.getDate();//获取当前几号，不足10补0   
+    // let y = date.getFullYear();                  
+    let m = (date.getMonth()+1)<10?"0"+(date.getMonth()+1):(date.getMonth()+1);//获取当前月份的日期，不足10补0    
+    let d = date.getDate()<10?"0"+date.getDate():date.getDate();//获取当前几号，不足10补0   
     switch (day) {
       case 0:
         w = '星期日';
@@ -277,102 +316,84 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
     } 
     return m+'月'+d+'日 '+w;     
   }  
-  isLeapYear(year) {
-    return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
+  getDafultHours(){
+    let HM=this.getNowHM();
+    let nowHour=HM.hour;
+    let nowMinute=HM.minute;
+    let index = _.findIndex(this.hours, function (chr) {
+      return chr == nowHour;
+    });
+    return _.drop(this.hours,index)
   }
-
-  onDateChange(year, month, day) {
-    let {date} = this.state;
-    date.setFullYear(year);
-
-    let daysCount = this.daysCount[this.isLeapYear(year) ? 1 : 0][month];
-    if (day > daysCount) {
-      day = daysCount;
-      date.setDate(day);
-      date.setMonth(month);
-    } else {
-      date.setMonth(month);
-      date.setDate(day);      
+  getDafultMinutes(){
+    let HM=this.getNowHM();
+    let nowHour=HM.hour;
+    let nowMinute=HM.minute;
+    let index = _.findIndex(this.minutes, function (chr) {
+        return chr == nowMinute;
+      });
+      return _.drop(this.minutes,index)
+  }
+  getNowHM(key){
+    let json={};
+    let timestamp  = new Date().valueOf();  
+    let date=new Date(timestamp+30*60*1000);
+    let h=date.getHours();
+    let m=date.getMinutes();
+    
+    if(m%10>0){
+      m=(parseInt(m/10)+1)*10;
+      if(m==60){
+        h+=1;m=0
+      }
+    }else{ m=parseInt(m/10)*10}
+    json.hour=h;
+    json.minute=m;
+    return json
+  }
+  onDateChange(index) {
+    let date=this.dates[index];
+    let HM=this.getNowHM();
+    let nowHour=HM.hour;
+    let nowMinute=HM.minute;
+    if(date==this.dates[0]){
+      let index = _.findIndex(this.hours, function (chr) {
+        return chr == nowHour;
+      });
+      this.setState({hours:_.drop(this.hours,index)})
+      if(this.hour==nowHour){
+        let index = _.findIndex(this.minutes, function (chr) {
+          return chr == nowMinute;
+        });
+        this.setState({minutes:_.drop(this.minutes,index)})
+      }
     }
-    this.setState({date});
+    if(this.date==this.dates[0]){
+      this.setState({hours:this.hours})
+    }
+    this.date=date;
   }
-  render() {
-    return (
-      <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? 160 + 22 : 160, justifyContent: 'center' },
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
-        { backgroundColor: 'white', paddingHorizontal: 23 },
-        { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
-      ]}>
-        <View style={{ alignItems: 'center' }}>
-          <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <TouchableOpacity activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setState({showTP:true})}
-              activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现在</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={() => {
-            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
-          }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
-          </TouchableOpacity>
-        </View>
-        <Modal
-          animationType='slide'           // 从底部滑入
-          transparent={true}             // 不透明
-          visible={this.state.showTP}    // 根据isModal决定是否显示
-          onRequestClose={() => this.setState({showTP:false})}  // android必须实现 安卓返回键调用
-        >
-          <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.8)' }}>
-            <TouchableOpacity style={{ width: width, height: height/2 }} onPress={() =>this.setState({showTP:false})} ></TouchableOpacity>
-            <View style={{ height:height/2, backgroundColor: '#fff', paddingBottom: 10 }}>
-              <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center',width:width,height:50}}>
-                <TouchableOpacity style={{ height: 50,paddingHorizontal:5 }} onPress={() =>this.setState({showTP:false})} >
-                  <Text style={{color: '#1ab2fd' }}>取消</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ height: 50,paddingHorizontal:5 }} onPress={() =>this.setState({showTP:false})} >
-                  <Text style={{color: '#1ab2fd' }}>确定</Text>
-                </TouchableOpacity>
-                <Wheel
-                  style={{height: (height/2)-80, width: width/2}}
-                  itemStyle={{textAlign: 'center'}}
-                  items={this.date}
-                  index={this.date.indexOf(year)}
-                  onChange={index => this.onDateChange(this.years[index], month, day)}
-                  />
-                <Wheel
-                  style={{height: (height/2)-80, width: width/4}}
-                  itemStyle={{textAlign: 'center'}}
-                  items={this.months}
-                  index={this.months.indexOf(month + 1)}
-                  onChange={index => this.onDateChange(year, this.months[index] - 1, day)}
-                  />
-                <Wheel
-                  style={{height: (height/2)-80, width: width/4}}
-                  itemStyle={{textAlign: 'center'}}
-                  items={days}
-                  index={days.indexOf(day)}
-                  onChange={index => this.onDateChange(year, month, days[index])}
-                  />
-              </View>
-            </View>
-          </View>
-        </Modal>
-      </Animated.View>
-    )
+  onHourChange(index){
+    
+    let hour=this.state.hours[index];
+    let HM=this.getNowHM();
+    let nowHour=HM.hour;
+    let nowMinute=HM.minute;
+    if(this.date==this.dates[0]&& hour==nowHour){
+      let index = _.findIndex(this.minutes, function (chr) {
+        return chr == nowMinute;
+      });
+      this.setState({minutes:_.drop(this.minutes,index)})
+    }
+    if(this.date==this.dates[0]&& this.hour==nowHour){
+      this.setState({minutes:this.minutes})
+    }
+    this.hour=hour
   }
-})
+  onMinuteChange(index){
+    this.hour=this.state.minutes[index];
 
-const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends PureComponent {
-
-  constructor(props) {
-    super(props)
-    this.animated = new Animated.Value(0)
   }
-
   componentWillReceiveProps(props) {
     if (props.drag) { Animated.loop(Animated.timing(this.animated, { toValue: 1, duration: 800, useNativeDriver: true })).start() }
     if (props.from.name) { this.animated.stopAnimation() }
@@ -403,13 +424,55 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
           </TouchableOpacity>
           <View style={{ backgroundColor: '#e8e8e8', height: .5, marginHorizontal: 18 }} />
           {/* To */}
-          <TouchableOpacity onPress={() => {
-            this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'destination' } }))
+          <TouchableOpacity onPress={() => {this.setState({showTP:true})
+            //this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'destination' } }))
           }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#7ED321', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
             <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
           </TouchableOpacity>
         </View>
+        <Modal
+          animationType='fade'           //渐变
+          transparent={true}             // 不透明
+          visible={this.state.showTP}    // 根据isModal决定是否显示
+          onRequestClose={() => this.setState({showTP:false})}  // android必须实现 安卓返回键调用
+        >
+          <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
+            <TouchableOpacity style={{ width: width, height: height/2 }} onPress={() =>this.setState({showTP:false})} ></TouchableOpacity>
+            <View style={{ height:height/2, backgroundColor: '#fff', paddingBottom: 10 }}>
+              <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center',width:width,height:50}}>
+                <TouchableOpacity style={{ height: 50,paddingHorizontal:5 }} onPress={() =>this.setState({showTP:false})} >
+                  <Text style={{color: '#1ab2fd' }}>取消</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ height: 50,paddingHorizontal:5 }} onPress={() =>this.setState({showTP:false})} >
+                  <Text style={{color: '#1ab2fd' }}>确定</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',width:width,}}>
+                <Wheel
+                  style={{height: (height/2)-80, width: width/2}}
+                  itemStyle={{textAlign: 'center'}}
+                  items={this.dates}
+                  onChange={index => this.onDateChange(index)}
+                  />
+                <Wheel
+                  style={{height: (height/2)-80, width: width/4}}
+                  itemStyle={{textAlign: 'center'}}
+                  type={'h'}
+                  items={this.state.hours}
+                  onChange={index => this.onHourChange(index)}
+                  />
+                <Wheel
+                  style={{height: (height/2)-80, width: width/4}}
+                  itemStyle={{textAlign: 'center'}}
+                  type={'m'}
+                  items={this.state.minutes}
+                  onChange={index => this.onMinuteChange(index)}
+                  />
+              </View>
+            </View>
+          </View>
+        </Modal>
       </Animated.View>
     )
   }

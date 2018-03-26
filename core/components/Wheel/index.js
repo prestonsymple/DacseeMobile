@@ -20,6 +20,7 @@ export default class Wheel extends Component {
     index: PropTypes.number,
     defaultIndex: PropTypes.number,
     onChange: PropTypes.func, //(index)
+    type:PropTypes.string
   };
 
   static defaultProps = {
@@ -179,13 +180,13 @@ export default class Wheel extends Component {
     let {style, items, itemStyle, holeStyle, maskStyle, holeLine, ...others} = this.props;
 
     style = [{
-      backgroundColor: '#252527',
+      backgroundColor: '#fff',
       overflow: 'hidden',
     }].concat(style);
     itemStyle = [{
       backgroundColor: 'rgba(0, 0, 0, 0)',
       fontSize: 14,
-      color: '#ccc',
+      color: '#555',
     }].concat(itemStyle);
     holeStyle = [{
       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -193,27 +194,27 @@ export default class Wheel extends Component {
       zIndex: 1,
     }].concat(holeStyle);
     maskStyle = [{
-      backgroundColor:  '#252527',
+      backgroundColor:  '#fff',
       opacity: 0.4,
       flex: 1,
       zIndex: 100,
     }].concat(maskStyle);
     if (holeLine === undefined) {
-      holeLine = <View style={{height: 1, backgroundColor: '#555'}} />;
+      holeLine = <View style={{height: 1, backgroundColor: '#ccc'}} />;
     } else if (typeof holeLine === 'number') {
-      holeLine = <View style={{height: holeLine, backgroundColor: '#555'}} />;
+      holeLine = <View style={{height: holeLine, backgroundColor: '#ccc'}} />;
     }
 
     this.props = {style, items, itemStyle, holeStyle, maskStyle, holeLine, ...others};
   }
 
   renderItem(item, itemIndex) {
-    let {itemStyle} = this.props;
+    let {itemStyle,type} = this.props;
 
     if (Math.abs(this.index - itemIndex) > this.hiddenOffset) return null;
 
     if (typeof item === 'string' || typeof item === 'number') {
-      item = <Text style={itemStyle}>{item}</Text>;
+      item = <Text style={itemStyle}>{item+(type=='h'?'点':type=='m'?'分':'')}</Text>;
     }
     
     return (
