@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 //import android.support.multidex.MultiDex;
 
+import com.airbnb.android.react.maps.MapsPackage;
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
@@ -62,7 +63,7 @@ public class MainApplication extends Application implements ReactApplication {
               new SplashScreenPackage(),
               new LottiePackage(),
               new ReactNativePushNotificationPackage(),
-//            new MapsPackage(),
+              new MapsPackage(),
               new RNFSPackage(),
               new RNDeviceInfo(),
               new VectorIconsPackage(),

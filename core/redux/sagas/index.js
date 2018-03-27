@@ -8,8 +8,8 @@ import Toast from 'react-native-root-toast'
 import { application, account } from '../actions'
 import { System } from '../../utils'
 import loginSaga from './saga.login'
-import bookingSaga from './saga.booking'
-import jobsSaga from './saga.jobs'
+import passengerSaga from './saga.passenger'
+import driverSaga from './saga.driver'
 import circleSaga from './saga.circle'
 
 
@@ -88,9 +88,10 @@ export default function* sagaService() {
     fork(watchAndroidBackButton),
     fork(watchShowMessage),
 
-    fork(bookingSaga),
+    fork(passengerSaga),
+    fork(driverSaga),
+    
     fork(loginSaga),
-    fork(jobsSaga),
     fork(circleSaga)
   ])
 }

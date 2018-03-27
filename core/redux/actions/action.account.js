@@ -26,5 +26,7 @@ export default {
   loginSuccess: LOGIN_ACTIONS.loginSuccess,
   loginFail: LOGIN_ACTIONS.loginFail,
   
-  logoutSuccess: LOGIN_ACTIONS.logoutSuccess
+  logoutSuccess: LOGIN_ACTIONS.logoutSuccess,
+
+  updateLocation: createAction('ACCOUNT_UPDATE_LOCATION')
 }

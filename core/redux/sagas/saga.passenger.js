@@ -55,7 +55,7 @@ function* bookingFlow() {
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
       yield put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
-      if (!destination.location || !from.location) continue
+      if (!destination.coords || !from.coords) continue
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) {
@@ -69,21 +69,13 @@ function* bookingFlow() {
       }
 
       const body = {
-        type: 'now',
-        from : {
-          address : from.address, 
-          coords : { lat : from.location.lat,  lng : from.location.lng }, 
-          name : from.name, 
-          placeId : from.uid
-        },
-        notes : '', 
-        destination : {
-          address : destination.address, 
-          coords : { lat : destination.location.lat,  lng : destination.location.lng }, 
-          name : destination.name, 
-          placeId : destination.uid
-        },
+        from,
+        destination,
+
         fare: fare,
+
+        type: 'now',
+        notes : '', 
         booking_at: Methods.timeZone(time),
         payment_method: Methods.payment(payment),
       }
@@ -158,7 +150,8 @@ function* bookingBoardCastListener() {
     /* PASSENGER */
     if (action === 'CANCELLED_BY_DRIVER') { // 司机取消
       if (status >= STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
-        ///
+        yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+        yield put(application.showMessage('很抱歉，该订单已被司机取消'))
       }
     } else if (action === 'ON_THE_WAY') { // 司机接单-已在路上
       if (status < STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
@@ -198,9 +191,33 @@ function* bookingTriggerEventListener() {
   }
 }
 
+function* passengerStatusObserver() {
+  while (true) {
+    const { booking_id, app_status } = yield select(state => ({
+      booking_id: state.storage.booking_id,
+      app_status: state.application.application_status === 'active'
+    }))
+
+    if (!booking_id || !app_status) {
+      yield delay(2500)
+      continue
+    } else {
+      try {
+        const status = yield select(state => state.booking.status)
+        const booking = yield call(Session.Booking.Get, '/v1') 
+        console.log(booking)
+      } catch (e) {
+        console.log(e)
+      }
+      yield delay(2500)
+    }
+  }
+}
+
 export default function* bookingHandle() {
   try {
     yield all([
+      fork(passengerStatusObserver),
       fork(bookingFlow),
       fork(bookingBoardCastListener),
       fork(bookingTriggerEventListener)

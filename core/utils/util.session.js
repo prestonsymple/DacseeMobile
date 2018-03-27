@@ -210,6 +210,10 @@ export default {
     'https://lookup-dev.dacsee.io/api/'
   ),
 
+  lookup_cn: sessionBuilder(
+    'http://47.98.40.59'
+  ),
+
   wallet: sessionBuilder(
     'https://wallet-dev.dacsee.io/api/'
   ),
@@ -244,6 +248,11 @@ export default {
 
   Lookup: sessionBuilder2(
     'https://lookup-dev.dacsee.io/api/'
+  ),
+
+  Lookup_CN: sessionBuilder2(
+    // 'http://lookup-cn-dev.dacsee.cn'
+    'http://47.98.40.59/api/'
   ),
 
   Wallet: sessionBuilder2(
