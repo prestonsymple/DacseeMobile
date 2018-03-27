@@ -129,6 +129,16 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 
   onStatusChangeListener({ nativeEvent }) {
     const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
+    /* Fix Offset */
+    const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
+    const maxValue = OFFSET_RANGE[Math.floor(zoomLevel) - 5]
+    const minValue = OFFSET_RANGE[Math.ceil(zoomLevel) - 5]
+
+    const dValue = maxValue - (maxValue - minValue) * (zoomLevel % 1)
+    const _longitude = longitude
+    const _latitude = latitude + dValue
+    /* Fix Offset */
+
     if (!this.state.drag) {
       this.setState({ drag: true })
       this.props.dispatch(booking.passengerSetValue({ from: {} }))
@@ -136,7 +146,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       Animated.timing(this.board, { toValue: 1, duration: 100 }).start()
     }
     this.timer && clearTimeout(this.timer)
-    this.timer = setTimeout(this.onLocationSearch.bind(this, longitude, latitude), 1000)
+    this.timer = setTimeout(this.onLocationSearch.bind(this, _longitude, _latitude), 1000)
   }
 
   async onLocationSearch(longitude, latitude) {
@@ -148,7 +158,13 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       this.props.dispatch(booking.passengerSetValue({ from: data || {} }))
       this.setState({ drag: false })
     } catch (e) {
-      return
+      this.props.dispatch(booking.passengerSetValue({ 
+        from: {
+          address: '自定义位置', name: '当前位置',
+          coords: { lng: longitude, lat: latitude },
+        } 
+      }))
+      this.setState({ drag: false })
     }
   }
 
@@ -165,10 +181,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       ref: (e) => this.map = e
     }
 
-    const GOOGLE_MAP_SETTER = {
-      followsUserLocation: true,
-
-    }
+    const GOOGLE_MAP_SETTER = { followsUserLocation: true }
 
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
@@ -186,7 +199,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 
     return (
       <View style={{ flex: 1, width }}>
-        <AMapView {...MAP_DEFINE} {...MAP_SETTER}>
+        <AMapView minZoomLevel={5} {...MAP_DEFINE} {...MAP_SETTER}>
           <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
           <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
         </AMapView>
@@ -197,7 +210,6 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />)}
 
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<MapPin timing={this.pin} />)}
-        {/* {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<MapPinTip timing={this.board} />)} */}
 
         {
           (
@@ -275,7 +287,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
             !drag && this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'from' } }))
           }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#FEA81C', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
             <View style={{ position: 'absolute', top: 0, bottom: 0, left: (Screen.window.width - 46 - 44) / 2, alignItems: 'center', justifyContent: 'center' }}>
               {
                 (!from.name || drag) && (<Lottie progress={this.animated} style={{ width: 44, height: 44 }} source={Resources.animation.simpleLoader} />)
@@ -288,7 +300,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
             this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'destination' } }))
           }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#7ED321', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -326,7 +338,7 @@ class MapPin extends PureComponent {
       <View style={{ position: 'absolute', left: (Screen.window.width - 18) / 2 }}>
         <Animated.Image style={[
           { width: 18, height: 28 },
-          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 56, PIN_HEIGHT - 60] }) }
+          { top: timing.interpolate({ inputRange: [0, 1], outputRange: [PIN_HEIGHT - 100, PIN_HEIGHT - 104] }) }
         ]} source={Resources.image.pin} />
       </View>
     )
