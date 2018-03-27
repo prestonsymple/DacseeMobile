@@ -5,7 +5,7 @@ import {
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
-const { height, width } = Screen.windowy
+const { height, width } = Screen.window
 
 export default class TimePicker extends PureComponent {
   constructor(props) {
