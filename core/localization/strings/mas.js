@@ -149,7 +149,9 @@ const mas = {
   privacy_policy: 'Perjanjian Privasi dan Syarat Penggunaan',
   version: 'Versi',
 
-  logout: 'Tukar akaun'
+  logout: 'Tukar akaun',
+
+  hello: 'hello'
 }
 
 export default mas
