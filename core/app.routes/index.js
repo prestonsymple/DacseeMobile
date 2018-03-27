@@ -23,7 +23,7 @@ const ModalContainerNavigator = StackNavigator({
 export default SwitchNavigator({
   AuthLoading: AuthComponent,
   App: ModalContainerNavigator,
-  Auth: AuthNavigator,
+  Auth: AuthNavigator
 }, { initialRouteName: 'AuthLoading' })
 
 

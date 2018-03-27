@@ -34,6 +34,9 @@ const PIN_HEIGHT = ((height - 22) / 2)
 export default connect(state => ({ ...state.booking }))(class PassengerComponent extends Component {
 
   constructor(props) {
+
+    console.log(props)
+
     super(props)
     this.state = {
       drag: false,

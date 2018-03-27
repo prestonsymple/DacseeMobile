@@ -1,12 +1,14 @@
 /* global store */
+/*eslint no-unused-vars: [0, { "vars": "intl" }]*/
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { View, StatusBar, Platform, Linking, Text } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import SplashScreen from 'rn-splash-screen'
 import { addNavigationHelpers, NavigationActions } from 'react-navigation'
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers'
+import { IntlProvider } from 'react-intl-redux'
 
 import SwitchNavigation from './app.routes'
 import { System } from './utils'
@@ -17,52 +19,11 @@ import ModalBookingOrderDetail from './modal/modal.booking.order.detail'
 import ModalBookingAcceptJobs from './modal/modal.booking.accept.jobs'
 import Hud from './modal/modal.hud'
 import { application } from './redux/actions'
-import DeviceInfo from 'react-native-device-info'
-import { addLocaleData, IntlProvider, FormattedMessage } from 'react-intl'
-
-import languages from './localization'
-import en from 'react-intl/locale-data/en'
-import zh from 'react-intl/locale-data/zh'
-import mas from 'react-intl/locale-data/mas'
-
-const messages = {}
-messages['en'] = languages.en_US
-messages['zh'] = languages.zh_CN
-messages['mas'] = languages.mas
-
-addLocaleData([...en, ...zh, ...mas])
+import i18n from './i18n'
 
 const addListener = createReduxBoundAddListener('AuthLoading');
 
-export default connect(state => {
-  return {
-    application: state.application,
-    config: state.config,
-    account: state.account,
-    nav: state.nav,
-    store: state.storage
-  }
-})(class AppLaunch extends Component {
-
-  static propTypes = {
-    dispatch: PropTypes.func,
-
-    homeNav: PropTypes.object,
-    loginNav: PropTypes.object,
-
-    account: PropTypes.object,
-    application: PropTypes.object
-  }
-
-  constructor(props) {
-    super(props)
-  }
-
-  // componentWillReceiveProps(props) {
-  //   if (this.props.account.status !== props.account.status) {
-  //     this.props.navigation
-  //   }
-  // }
+export default connect(state => ({ nav: state.nav }))(class AppLaunch extends PureComponent {
 
   componentDidMount() {
     Linking.addEventListener('url', event => this.handleOpenURL(event.url))
@@ -97,35 +58,24 @@ export default connect(state => {
     }
   }
 
-  chooseLocale() {
-    console.log('[Locale Language]', DeviceInfo.getDeviceLocale())
-    switch (DeviceInfo.getDeviceLocale()) {
-    case 'en', 'en-US':
-      return 'en'
-    case 'zh', 'zh-CN', 'zh-Hans-CN':
-      return 'zh'
-    case 'mas':
-      return 'mas'
-    default:
-      return 'en'
-    }
-  }
-
   render() {
-    console.log(this.props)
-    const { account, application, config, store } = this.props
     const prefix = System.Platform.Android ? 'dacsee://dacsee/' : 'dacsee://'
-    const defaultLanguage = this.chooseLocale()
+    // const defaultLanguage = localization.chooseLocale()
+    // const messages = localization.messages[store.language] === undefined ? 
+    //   localization.messages[defaultLanguage] : 
+    //   localization.messages[store.language]
+
+    // console.log(messages)
     // {/* TODO: 接到推送订单时，禁用自动升级 */}
     return (
-      <IntlProvider locale={defaultLanguage} messages={messages[store.language] === undefined ? messages[defaultLanguage] : messages[store.language]} textComponent={Text}>
+      <IntlProvider textComponent={Text}>
         <View style={{ flex: 1 }}>
           <SwitchNavigation 
             // uriPrefix={prefix}
             navigation={addNavigationHelpers({
               dispatch: this.props.dispatch,
               state: this.props.nav,
-              addListener,
+              addListener
             })}
           />
           <ModalBookingOrderDetail />

@@ -15,7 +15,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
 
-export default connect(state => ({ account: state.account }))(injectIntl(class FriendsCircleAddComponent extends Component {
+export default connect(state => ({ account: state.account }))(class FriendsCircleAddComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -38,7 +38,7 @@ export default connect(state => ({ account: state.account }))(injectIntl(class F
   }
 
   async componentDidMount() {
-    
+    console.log(this.props)
   }
 
   render() {
@@ -139,7 +139,7 @@ export default connect(state => ({ account: state.account }))(injectIntl(class F
       </View>
     )
   }
-}))
+})
 
 class BlockWrap extends Component {
 

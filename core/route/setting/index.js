@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import Settings from './settings'
 import SettingAboutScreen from './setting.about'
@@ -14,49 +14,54 @@ import ProfileChangeAvatarScreen from './profile.change.avatars'
 import { Session } from '../../utils'
 
 import {
-  account, application
+  account, application, intl
 } from '../../redux/actions'
 
 // 主菜单
-const SettingMenuScreen = injectIntl(connect(state => ({}))(class SettingScreen extends PureComponent {
+const SettingMenuScreen = connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class SettingScreen extends PureComponent {
   static navigationOptions = { title: '设置' }
   
   render() {
-    const { navigation, dispatch } = this.props
-    const { formatMessage } = this.props.intl
+    const { navigation, dispatch, i18n } = this.props
+
     return (
       <Settings producer={[
         [{
-          title: formatMessage({id: 'profile'}), type: 'text', onPress: () => navigation.navigate('SettingAccount')
+          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingAccount')
         }],
         [{
-          title: formatMessage({id: 'language_region'}), type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
+          title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
         }],
         [{
-          title: formatMessage({id: 'feedback'}), type: 'text', onPress: async () => navigation.navigate('SettingWetView', { 
+          title: i18n.feedback, type: 'text', onPress: async () => navigation.navigate('SettingWetView', { 
             title: '意见反馈 - 演示',
             source: { uri: 'https://m.connect.aliyun.com/?utm_source=mmenu' }
           })
         }, {
-          title: formatMessage({id: 'help'}), type: 'text', onPress: () => navigation.navigate('SettingWetView', { 
+          title: i18n.help, type: 'text', onPress: () => navigation.navigate('SettingWetView', { 
             title: '帮助中心 - 演示',
             source: { uri: 'https://m.aliyun.com/doc/index.html' }
           })
         }, {
-          title: formatMessage({id: 'about'}), type: 'text', onPress: () => navigation.navigate('SettingAbout')
+          title: i18n.about, type: 'text', onPress: () => navigation.navigate('SettingAbout')
         }],
         [{
-          title: formatMessage({id: 'logout'}), type: 'button', onPress: () => {
+          title: i18n.logout, type: 'button', onPress: () => {
             dispatch(account.logoutSuccess())
           }
         }]
       ]} />
     )
   }
-}))
+})
 
 // 账号与安全
-const SettingAccountScreen = injectIntl(connect(state => ({ user: state.account.user }))(class SettingProfileScreen extends PureComponent {
+const SettingAccountScreen = connect(state => ({ 
+  user: state.account.user,
+  i18n: state.intl.messages || {}
+}))(class SettingProfileScreen extends PureComponent {
   static navigationOptions = { title: '账号与安全' }
 
   async _changeFullName(value) {    
@@ -84,18 +89,18 @@ const SettingAccountScreen = injectIntl(connect(state => ({ user: state.account.
   }
 
   render() {
-    const { navigation, dispatch, user } = this.props
-    const { formatMessage } = this.props.intl
+    const { navigation, dispatch, user, i18n } = this.props
+
     return (
       <Settings producer={[
         [{
-          title: formatMessage({id: 'my_avatar'}), type: 'image', value: { uri: user.avatars[user.avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar')
+          title: i18n.my_avatar, type: 'image', value: { uri: user.avatars[user.avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar')
         }],[{
-          title: formatMessage({id: 'phone'}), type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, editable: false
+          title: i18n.phone, type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, editable: false
         }, {
-          title: formatMessage({id: 'account'}), type: 'text', value: user.userId, editable: false
+          title: i18n.account, type: 'text', value: user.userId, editable: false
         }, {
-          title: formatMessage({id: 'fullname'}), 
+          title: i18n.fullname, 
           type: 'text', 
           value: `${user.fullName}`, 
           onPress: () => navigation.navigate('FormEditor', { 
@@ -108,9 +113,9 @@ const SettingAccountScreen = injectIntl(connect(state => ({ user: state.account.
             } 
           })
         }, {
-          title: formatMessage({id: 'email'}), 
+          title: i18n.email, 
           type: 'text', 
-          value: user.email || formatMessage({id: 'no_content'}), 
+          value: user.email || i18n.no_content, 
           onPress: () => navigation.navigate('FormEditor', { 
             title: '修改邮箱',
             editorName: 'String', 
@@ -121,19 +126,21 @@ const SettingAccountScreen = injectIntl(connect(state => ({ user: state.account.
             } 
           })
         }], [{
-          title: formatMessage({id: 'bind_wechat'}), type: 'text', value: '', onPress: () => { this.props }
+          title: i18n.bind_wechat, type: 'text', value: '', onPress: () => { this.props }
         },{
-          title: formatMessage({id: 'bind_weibo'}), type: 'text', value: '', onPress: () => {}
+          title: i18n.bind_weibo, type: 'text', value: '', onPress: () => {}
         }, {
-          title: formatMessage({id: 'bind_qq'}), type: 'text', value: '', onPress: () => {}
+          title: i18n.bind_qq, type: 'text', value: '', onPress: () => {}
         }]
       ]} />
     )
   }
-}))
+})
 
 // 新消息通知
-const SettingMessageNotificationScreen = connect(state => ({}))(class PushNotificationScreen extends PureComponent {
+const SettingMessageNotificationScreen = connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class PushNotificationScreen extends PureComponent {
   static navigationOptions = { title: '新消息通知' }
 
   render() {
@@ -148,62 +155,61 @@ const SettingMessageNotificationScreen = connect(state => ({}))(class PushNotifi
 })
 
 // 语言和地区
-const SettingLanguageRegionScreen = injectIntl(connect(state => ({}))(class SettingLanguageRegionScreen extends PureComponent {
+const SettingLanguageRegionScreen = connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class SettingLanguageRegionScreen extends PureComponent {
   static navigationOptions = { title: '语言及地区' }
 
   render() {
-    const { navigation } = this.props
-    const { formatMessage } = this.props.intl
+    const { navigation, i18n } = this.props
+
     return (
       <Settings producer={[
         [{
-          title: formatMessage({id: 'language'}), type: 'text', value: '中文(简体)', editable: true, onPress: () => navigation.navigate('SettingLanguageChoose')
+          title: i18n.language, type: 'text', value: '中文(简体)', editable: true, onPress: () => navigation.navigate('SettingLanguageChoose')
         }, {
-          title: formatMessage({id: 'region'}), type: 'text', value: '中国大陆', editable: true, onPress: () => {}
+          title: i18n.region, type: 'text', value: '中国大陆', editable: true, onPress: () => {}
         }]
       ]} />
     )
   }
-}))
+})
 
 // 语言选择
-const SettingLanguageChooseScreen = injectIntl(connect(state => ({
-  ...state.storage
+const SettingLanguageChooseScreen = connect(state => ({
+  i18n: state.intl.messages || {},
+  language: state.intl.locale
 }))(class SettingLanguageChooseScreen extends PureComponent {
   static navigationOptions = { title: '语言选择' }
 
-  constructor (props) {
-    super(props)
-  }
-
   render() {    
-    const { navigation, dispatch, language } = this.props    
-    const { formatMessage } = this.props.intl    
+    const { navigation, dispatch, language, i18n } = this.props    
+
     return (
       <Settings producer={[
         [{
-          title: formatMessage({id: 'cn_simple'}), type: 'radio', value: language == 'zh', editable: false, 
+          title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false, 
           onPress: () => {
-            dispatch(application.setLanguage('zh'))
+            dispatch(intl.update('zh'))
             navigation.goBack()
           }
         }, {
-          title: formatMessage({id: 'mas'}), type: 'radio', value: language == 'mas', editable: false, 
+          title: i18n.mas, type: 'radio', value: language == 'mas', editable: false, 
           onPress: () => {
-            dispatch(application.setLanguage('mas'))
+            dispatch(intl.update('mas'))
             navigation.goBack()
           }
         }, {
-          title: formatMessage({id: 'en'}), type: 'radio', value: language == 'en', editable: false, 
+          title: i18n.en, type: 'radio', value: language == 'en', editable: false, 
           onPress: () => {
-            dispatch(application.setLanguage('en'))
+            dispatch(intl.update('en'))
             navigation.goBack()
           }
         }]
       ]} />
     )
   }
-}))
+})
 
 export {
   SettingMenuScreen,

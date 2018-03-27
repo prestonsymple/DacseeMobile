@@ -1,6 +1,4 @@
 import { combineReducers } from 'redux'
-import storage from 'redux-persist/lib/storage'
-import { persistStore, persistCombineReducers } from 'redux-persist'
 
 import application from './reducer.application'
 import account from './reducer.account'
@@ -9,6 +7,7 @@ import storage_reducer from './reducer.storage'
 import jobs from './reducer.jobs'
 import circle from './reducer.circle'
 import wallet from './reducer.wallet'
+import intl from './reducer.intl'
 
 import SwitchNavigator from '../../app.routes'
 const initialState = SwitchNavigator.router.getStateForAction(SwitchNavigator.router.getActionForPathAndParams('AuthLoading'))
@@ -28,5 +27,7 @@ export default combineReducers({
 
   storage: storage_reducer,
 
-  nav: navReducer
+  nav: navReducer,
+
+  intl
 })

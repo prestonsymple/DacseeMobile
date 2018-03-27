@@ -31,7 +31,5 @@ export default {
   setCoreMode: createAction('APPLICATION_SET_CORE_MODE'),
 
   showHUD: createAction('APPLICATION_SHOW_HUD'),
-  hideHUD: createAction('APPLICATION_HIDE_HUD'),
-
-  setLanguage: createAction('APPLICATION_SET_LANGUAGE')
+  hideHUD: createAction('APPLICATION_HIDE_HUD')
 }

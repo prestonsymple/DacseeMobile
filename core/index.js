@@ -7,8 +7,13 @@ import { Provider, connect } from 'react-redux'
 import { Text } from 'react-native'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
+import { addLocaleData } from 'react-intl'
 // import PushNotification from 'react-native-push-notification'
 import PushService from './native/push-service'
+
+import zhLocaleData from 'react-intl/locale-data/zh'
+import masLocaleData from 'react-intl/locale-data/mas'
+import enLocaleData from 'react-intl/locale-data/en'
 
 import InteractionManager from 'InteractionManager'
 /*eslint-enabled no-unused-vars*/
@@ -55,6 +60,7 @@ class Core extends PureComponent {
     await InteractionManager.runAfterInteractions()
 
     //#AMap SDK Init
+    this.initializationi18n()
     this.initializationPushNotification()
     this.initializationMomentConfig()
     this.initializationApplicationLinstener()
@@ -63,6 +69,10 @@ class Core extends PureComponent {
     this.initializationSocialConfig()
     // this.initializationPayment()
     // this.initializationLocation()
+  }
+
+  initializationi18n() {
+    addLocaleData([...zhLocaleData, ...masLocaleData, ...enLocaleData])
   }
 
   async initializationPushNotification() {
@@ -260,15 +270,17 @@ class Core extends PureComponent {
     AppState.addEventListener('change', (state) => store.dispatch(application.changeApplicationStatus(state)))
   }  
 
-  render() {    
+  render() {
+    const LOADING_VIEW = (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="small" color="#333" />
+      </View>
+    )
+
     return (
       <Provider store={this.state.store}>
-        <PersistGate loading={
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="small" color="#333" />
-          </View>
-        } persistor={store.persist}>          
-          <Launch />          
+        <PersistGate loading={LOADING_VIEW} persistor={store.persist}>          
+          <Launch />
         </PersistGate>
       </Provider>
     )
