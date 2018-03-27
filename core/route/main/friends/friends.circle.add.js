@@ -15,7 +15,10 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
 
-export default connect(state => ({ account: state.account }))(class FriendsCircleAddComponent extends Component {
+export default connect(state => ({ 
+  account: state.account,
+  i18n: state.intl.messages || {}
+}))(class FriendsCircleAddComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -42,8 +45,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
   }
 
   render() {
-    const { dataSource } = this.state
-    const {formatMessage} = this.props.intl    
+    const { dataSource } = this.state  
+    const { i18n } = this.props   
     return (      
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 22, paddingVertical: 22 }} style={{ flex: 1 }}>
@@ -51,8 +54,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#4fb2f9'} 
             icon={Icons.Generator.Awesome('phone', 36, 'white') } 
-            title={formatMessage({ id: 'phone' })}
-            describer={formatMessage({ id: 'search_byphone' })}
+            title={i18n.phone}
+            describer={i18n.search_byphone}
             isPhoneNo={true}
             placeholder={'13x xxxx xxxx'}
             canInput={true}
@@ -67,8 +70,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#4f9029'} 
             icon={Icons.Generator.Awesome('envelope', 28, 'white')} 
-            title={formatMessage({ id: 'email' })}
-            describer={formatMessage({ id: 'search_byemail' })}
+            title={i18n.email}
+            describer={i18n.search_byemail}
             placeholder={'example@mail.com'}
             canInput={true}
             onPress={(value) => {
@@ -81,8 +84,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={Icons.Generator.Awesome('address-card', 28, 'white')} 
-            title={formatMessage({ id: 'name_or_userid' })}
-            describer={formatMessage({ id: 'search_byname_userid' })}
+            title={i18n.name_or_userid}
+            describer={i18n.search_byname_userid}
             placeholder={''}
             canInput={true}
             navigation={this.props.navigation}
@@ -96,8 +99,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={Icons.Generator.Awesome('wechat', 28, 'white')} 
-            title={formatMessage({ id: 'wechat_friend' })}
-            describer={formatMessage({ id: 'wechat_shareto_friend' })}
+            title={i18n.wechat_friend}
+            describer={i18n.wechat_shareto_friend}
             onPress={async () => {
               await ShareUtil.share(
                 '分享至微信', 
@@ -114,8 +117,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={<Image source={require('../../../resources/images/wechat_moments.png')} />} 
-            title={formatMessage({ id: 'wechat_moment' })}
-            describer={formatMessage({ id: 'wechat_shareto_moment' })}
+            title={i18n.wechat_moment}
+            describer={i18n.wechat_shareto_moment}
             onPress={async () => {
               await ShareUtil.share(
                 '分享至微信', 
@@ -132,8 +135,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
           <BlockWrap 
             iconBackgroundColor={'#f4a951'} 
             icon={Icons.Generator.Awesome('weibo', 32, 'white')} 
-            title={formatMessage({ id: 'weibo' })}
-            describer={formatMessage({ id: 'wechat_shareto_weibo' })}
+            title={i18n.weibo}
+            describer={i18n.wechat_shareto_weibo}
           />
         </ScrollView>
       </View>

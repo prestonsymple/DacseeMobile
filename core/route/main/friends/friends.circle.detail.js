@@ -15,7 +15,10 @@ const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ booking: state.booking }))(class FriendsCircleDetailComponent extends Component {
+export default connect(state => ({ 
+  booking: state.booking,
+  i18n: state.intl.messages || {}
+}))(class FriendsCircleDetailComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const { _id, checked, friend_id, friend_info } = navigation.state.params
@@ -84,6 +87,7 @@ export default connect(state => ({ booking: state.booking }))(class FriendsCircl
   }
 
   render() {
+    const { i18n } = this.props
     const { dataSource } = this.state
     const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
     const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
@@ -102,19 +106,19 @@ export default connect(state => ({ booking: state.booking }))(class FriendsCircl
           </View>
           <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>用户编号</Text>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>
               { userId && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ userId }</Text>) }
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>联系电话</Text>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.phone }</Text>
               { phoneNo && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>电子邮箱</Text>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>
               <Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ email || '尚未填写' }</Text>
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>国家</Text>
+              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>
               <Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ '尚未填写' }</Text>
             </View>
           </View>

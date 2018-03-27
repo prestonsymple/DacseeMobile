@@ -18,7 +18,8 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id
 export default connect(state => ({ 
   account: state.account, 
   booking: state.booking,
-  ...state.circle
+  ...state.circle,
+  i18n: state.intl.messages || {}
 }))(class FriendsCircleComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -121,7 +122,7 @@ export default connect(state => ({
 
   render() {
     const { dataSource, selected } = this.state
-    const { loading } = this.props
+    const { loading, i18n } = this.props
     console.log(this.props)
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -167,7 +168,7 @@ export default connect(state => ({
                 renderSectionHeader={(data, section) => {
                   return (data.length > 0) && (
                     <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
-                      <Text style={{ fontSize: 12, color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? '等待接受' : '我的好友' }</Text>
+                      <Text style={{ fontSize: 12, color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
                     </View>
                   )
                 }}

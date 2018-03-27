@@ -149,7 +149,7 @@ const en_US = {
   privacy_policy: 'Privacy Agreement and Terms of Use',
   version: 'Version',
 
-  logout: 'LogOut'
+  logout: 'Logout'
 }
 
 export default en_US

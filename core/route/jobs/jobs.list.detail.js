@@ -39,7 +39,9 @@ const MAP_DEFINE = {
 //   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 // })
 
-export default injectIntl(class JobsListDetailScreen extends Component {
+export default connect( state => ({
+  i18n: state.intl.messages || {}
+}))(class JobsListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -172,7 +174,9 @@ export default injectIntl(class JobsListDetailScreen extends Component {
     // const { destination = { coords: { lat: 0, lng: 0 } }, from = { coords: { lat: 0, lng: 0 } }} = this.state.jobDetail
     const { destination, from, payment_method, fare, booking_at, status, passenger_info } = this.state.jobDetail
     const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
-    const { formatMessage } = this.props.intl
+    const { i18n } = this.props
+    const leftBtn = this._getStatus(status).left
+    const rightBtn = this._getStatus(status).right
     return (      
       <View style={{ flex: 1 }}>
         <MapView
@@ -247,10 +251,10 @@ export default injectIntl(class JobsListDetailScreen extends Component {
                   this._getOptionable(status) ?               
                     <View style={{ flexDirection: 'row' }}>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ this._getStatus(status).leftAction }>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}}>{ formatMessage({ id: this._getStatus(status).left }) }</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}}>{ i18n.leftBtn }</Text>
                       </Button>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ formatMessage({ id: this._getStatus(status).right }) }</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ i18n.rightBtn }</Text>
                       </Button>
                     </View> :
                     <Text style={{ fontSize: 17 }}>{ this._statusInChinese(status) }</Text>
