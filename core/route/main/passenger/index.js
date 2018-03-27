@@ -60,10 +60,13 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 
     if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
       const { destination, from } = props
-      // this.map.calculateDriveRouteWithStartPoints(
-      //   { latitude: from.location.lat, longitude: from.location.lng },
-      //   { latitude: destination.location.lat, longitude: destination.location.lng }
-      // )
+
+      const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
+      const mLng = ((from.coords.lng + destination.coords.lng) / 2)
+
+      const distance = await Utils.distance(from.coords.lat, from.coords.lng, destination.coords.lat, destination.coords.lng)
+      const zoom = this.mathDistanceZoom(distance)
+      this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
 
       const { fare } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
       this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
@@ -72,12 +75,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    // this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', (args) => this.aMapMathRouteSuccess(args))
     this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
-  }
-
-  componentWillUnmount() {
-    // this.eventListener && this.eventListener.remove()
   }
 
   async aMapMathRouteSuccess(args) {
@@ -177,20 +175,20 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
     }
 
     /** FIX ANDROID LOCATION SERVICE CRASH */
-    let { from_loc, destination_loc } = { from_loc: { lat: 0, lng: 0 }, destination_loc: { lat: 0, lng: 0 } }
+    let { from_coords, destination_coords } = { from_coords: { lat: 0, lng: 0 }, destination_coords: { lat: 0, lng: 0 } }
     if (from.coords && destination.coords) {
-      from_loc = from.coords
-      destination_loc = destination.coords
+      from_coords = from.coords
+      destination_coords = destination.coords
     }
-    from_loc = { latitude: from_loc.lat, longitude: from_loc.lng }
-    destination_loc = { latitude: destination_loc.lat, longitude: destination_loc.lng }
+    from_coords = { latitude: from_coords.lat, longitude: from_coords.lng }
+    destination_coords = { latitude: destination_coords.lat, longitude: destination_coords.lng }
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
     return (
       <View style={{ flex: 1, width }}>
         <AMapView {...MAP_DEFINE} {...MAP_SETTER}>
-          <Marker image={'rn_amap_startpoint'} coordinate={from_loc} />
-          <Marker image={'rn_amap_endpoint'} coordinate={destination_loc} />
+          <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
+          <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
         </AMapView>
         {/* <GoogleMap style={{ flex: 1 }}>
 
