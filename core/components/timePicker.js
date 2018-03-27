@@ -5,8 +5,7 @@ import {
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
-const { height, width } = Screen.window
-
+const { height, width } = Screen.windowy
 
 export default class TimePicker extends PureComponent {
   constructor(props) {
@@ -112,17 +111,20 @@ export default class TimePicker extends PureComponent {
     let HM = this.getNowHM()
     let nowHour = HM.hour
     let nowMinute = HM.minute
-    if (date == this.dates[0]) {
-      this.setState({ hours: this.getDropedDate(this.hours,nowHour) },()=>{
-        this.hour=this.state.hours[0]
-      })
-      if (this.hour == nowHour) {
-        this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
-          this.minute=this.state.minutes[0]
+    if (date == this.dates[0]&&this.date!=date) {
+      setTimeout(()=>{
+        this.setState({ hours: this.getDropedDate(this.hours,nowHour) },()=>{
+          this.hour=this.state.hours[0]
         })
-      }
+        if (this.hour == nowHour) {
+          this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
+            this.minute=this.state.minutes[0]
+          })
+        }
+      },0)
+
     }
-    if (this.date == this.dates[0]) {
+    if (this.date == this.dates[0]&&date!= this.dates[0]){
       this.setState({ hours: this.hours })
       if (this.hour == nowHour) {
         this.setState({ minutes: this.minutes })
@@ -137,11 +139,13 @@ export default class TimePicker extends PureComponent {
     let nowHour = HM.hour
     let nowMinute = HM.minute
     if (this.date == this.dates[0] && hour == nowHour) {
+      this.hour = hour
       this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
         this.minute=this.state.minutes[0]
       })
     }
-    if (this.date == this.dates[0] && this.hour == nowHour) {
+    if (this.date == this.dates[0] && this.hour == nowHour&&hour!=nowHour) {
+      this.hour = hour
       this.setState({ minutes: this.minutes })
     }
     this.hour = hour
