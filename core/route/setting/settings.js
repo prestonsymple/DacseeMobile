@@ -73,7 +73,7 @@ class ListViewItem extends Component {
   static propTypes = {
     data: PropTypes.shape({
       title: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['button', 'switch', 'text', 'image']),
+      type: PropTypes.oneOf(['button', 'switch', 'text', 'image', 'radio']),
       value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
@@ -101,7 +101,7 @@ class ListViewItem extends Component {
       title = '',
       onPress = () => { },
       type = 'any',
-      editable = true
+      editable = true,
     } = this.props.data
     const { value } = this.state
 
@@ -124,6 +124,15 @@ class ListViewItem extends Component {
         <View style={styles.itemRight}>
           <Image style={{ width: 68, height: 68, borderRadius: 34 }} source={value} />
           {editable ? Icons.Generator.Material('chevron-right', 24, '#bbb') : null}
+        </View>
+      </TouchableOpacity>
+    )
+
+    if (type === 'radio') return (
+      <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={styles.itemTouchable}>
+        <Text style={styles.itemTitle}>{title}</Text>
+        <View style={styles.itemRight}>
+          {value ? Icons.Generator.Material('check', 20, '#4fb2f9') : null}
         </View>
       </TouchableOpacity>
     )

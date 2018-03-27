@@ -148,21 +148,62 @@ const SettingMessageNotificationScreen = connect(state => ({}))(class PushNotifi
 })
 
 // 语言和地区
-const SettingLanguageRegionScreen = connect(state => ({}))(class SettingLanguageRegionScreen extends PureComponent {
+const SettingLanguageRegionScreen = injectIntl(connect(state => ({}))(class SettingLanguageRegionScreen extends PureComponent {
   static navigationOptions = { title: '语言及地区' }
 
   render() {
+    const { navigation } = this.props
+    const { formatMessage } = this.props.intl
     return (
       <Settings producer={[
         [{
-          title: '语言', type: 'text', value: '中文(简体)', editable: true, onPress: () => {}
+          title: formatMessage({id: 'language'}), type: 'text', value: '中文(简体)', editable: true, onPress: () => navigation.navigate('SettingLanguageChoose')
         }, {
-          title: '地区', type: 'text', value: '中国大陆', editable: true, onPress: () => {}
+          title: formatMessage({id: 'region'}), type: 'text', value: '中国大陆', editable: true, onPress: () => {}
         }]
       ]} />
     )
   }
-})
+}))
+
+// 语言选择
+const SettingLanguageChooseScreen = injectIntl(connect(state => ({
+  ...state.storage
+}))(class SettingLanguageChooseScreen extends PureComponent {
+  static navigationOptions = { title: '语言选择' }
+
+  constructor (props) {
+    super(props)
+  }
+
+  render() {    
+    const { navigation, dispatch, language } = this.props    
+    const { formatMessage } = this.props.intl    
+    return (
+      <Settings producer={[
+        [{
+          title: formatMessage({id: 'cn_simple'}), type: 'radio', value: language == 'zh', editable: false, 
+          onPress: () => {
+            dispatch(application.setLanguage('zh'))
+            navigation.goBack()
+          }
+        }, {
+          title: formatMessage({id: 'mas'}), type: 'radio', value: language == 'mas', editable: false, 
+          onPress: () => {
+            dispatch(application.setLanguage('mas'))
+            navigation.goBack()
+          }
+        }, {
+          title: formatMessage({id: 'en'}), type: 'radio', value: language == 'en', editable: false, 
+          onPress: () => {
+            dispatch(application.setLanguage('en'))
+            navigation.goBack()
+          }
+        }]
+      ]} />
+    )
+  }
+}))
 
 export {
   SettingMenuScreen,
@@ -170,6 +211,7 @@ export {
   SettingAccountScreen,
   SettingMessageNotificationScreen,
   SettingLanguageRegionScreen,
+  SettingLanguageChooseScreen,
   SettingFeedbackScreen,
   SettingHelpCenterScreen,
   SettingWetViewScreen,

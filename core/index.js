@@ -20,23 +20,8 @@ import { BOOKING_STATUS } from './route/main'
 import ShareUtil from './native/umeng/ShareUtil'
 
 import { Define, System } from './utils'
-import DeviceInfo from 'react-native-device-info'
 
-import {addLocaleData,IntlProvider,FormattedMessage} from 'react-intl';
-import languages from './localization';
-import en from 'react-intl/locale-data/en';
-import zh from 'react-intl/locale-data/zh';
-import mas from 'react-intl/locale-data/mas';
-
-let messages = {};
-// messages['zh-CN'] = zh_CN;
-messages['en'] = languages.en_US;
-messages['zh'] = languages.zh_CN;
-messages['mas'] = languages.mas;
-
-addLocaleData([...en, ...zh, ...mas]);
-
-const initializationModule = () => {}
+const initializationModule = () => { }
 
 const SHARE_MEDIA = {
   WECHAT_SESSION: Platform.select({ ios: 1, android: 2 }),
@@ -68,7 +53,7 @@ class Core extends PureComponent {
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    
+
     //#AMap SDK Init
     this.initializationPushNotification()
     this.initializationMomentConfig()
@@ -100,7 +85,7 @@ class Core extends PureComponent {
     // const msg = await PushService.component.getInitialNotification()
     // console.log('init', msg)
     PushService.configure({
-      onRegister: function(register) {
+      onRegister: function (register) {
         const { token, os, baidu_id } = register
         const state = {
           push_service_token: token,
@@ -110,10 +95,10 @@ class Core extends PureComponent {
         store.dispatch(application.setPushServiceToken(state))
         store.dispatch(application.updatePushToken())
       },
-  
+
       // (required) Called when a remote or local notification is opened or received
-      onNotification: async function(notification) {
-        const { 
+      onNotification: async function (notification) {
+        const {
           foreground, // 正在前台
           id, // 推送ID
           message, // 推送消息内容
@@ -144,13 +129,13 @@ class Core extends PureComponent {
 
           /* PASSENGER */
           if (_status === 'CANCELLED_BY_DRIVER' ||
-              _status === 'ON_THE_WAY' ||
-              _status === 'ARRIVED' ||
-              _status === 'NO_SHOW' || 
-              _status === 'ON_BOARD' ||
-              _status === 'NO_TAKER' ||
-              _status === 'COMPLETED'
-          ) { 
+            _status === 'ON_THE_WAY' ||
+            _status === 'ARRIVED' ||
+            _status === 'NO_SHOW' ||
+            _status === 'ON_BOARD' ||
+            _status === 'NO_TAKER' ||
+            _status === 'COMPLETED'
+          ) {
             store.dispatch(booking.passengerBoardCastListener({ action: _status, booking_id: booking_id }))
           } else {
             console.log('[未处理的]', _status)
@@ -178,27 +163,27 @@ class Core extends PureComponent {
           // }
         }
         // process the notification
-        
+
         // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
         notification.finish(PushNotificationIOS.FetchResult.NoData)
       },
-  
+
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
       // senderID: 'oDKwrgBkPKIyXpBsmVTx2dP3', // BAIDU TEST KEY
       senderID: 'dvzSIimOD9ipnqwssO5L1VNH', // AWS KEY
 
-  
+
       // IOS ONLY (optional): default: all - Permissions to register.
       permissions: {
         alert: true,
         badge: true,
         sound: true
       },
-  
+
       // Should the initial notification be popped automatically
       // default: true
       popInitialNotification: true,
-  
+
       /**
         * (optional) default: true
         * - Specified if permissions (ios) and token (android and ios) will requested or not,
@@ -227,19 +212,19 @@ class Core extends PureComponent {
 
   initializationMomentConfig() {
     moment.defineLocale('CUSTOM_TIME_LOCALE', {
-      relativeTime : {
+      relativeTime: {
         future: '%s后',
         past: '%s前',
-        s:  '%d秒',
-        m:  '1分钟',
+        s: '%d秒',
+        m: '1分钟',
         mm: '%d分钟',
-        h:  '1小时',
+        h: '1小时',
         hh: '%d小时',
-        d:  '1天',
+        d: '1天',
         dd: '%d天',
-        M:  '1个月',
+        M: '1个月',
         MM: '%d个月',
-        y:  '1年',
+        y: '1年',
         yy: '%d年'
       }
     })
@@ -252,7 +237,7 @@ class Core extends PureComponent {
   //   //   if (store.getState().account.logined)
   //   // })
   // }
-  
+
   initializationPayment() {
   }
   /* 监听位置信息 */
@@ -273,35 +258,18 @@ class Core extends PureComponent {
 
   initializationApplicationLinstener() {
     AppState.addEventListener('change', (state) => store.dispatch(application.changeApplicationStatus(state)))
-  }
+  }  
 
-  chooseLocale() {
-    console.log('[Locale Language]', DeviceInfo.getDeviceLocale())
-    switch (DeviceInfo.getDeviceLocale()) {
-    case 'en', 'en-US':
-      return 'en'
-    case 'zh', 'zh-CN', 'zh-Hans-CN':
-      return 'zh'
-    case 'mas':
-      return 'mas'
-    default:
-      return 'en'
-    }
-  }
-
-  render() {
-    const language = this.chooseLocale()
+  render() {    
     return (
-      <Provider store={this.state.store}>        
+      <Provider store={this.state.store}>
         <PersistGate loading={
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="small" color="#333" />
           </View>
-        } persistor={store.persist}>
-          <IntlProvider locale={language} messages={ messages[language] } textComponent={Text}>
-            <Launch />            
-          </IntlProvider>
-        </PersistGate>        
+        } persistor={store.persist}>          
+          <Launch />          
+        </PersistGate>
       </Provider>
     )
   }

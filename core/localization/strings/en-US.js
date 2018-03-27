@@ -46,13 +46,13 @@ const en_US = {
   search_byname_userid: 'Search by name / ID',
   wechat_friend: 'Wechat Friends',
   wechat_shareto_friend: 'Share invitation link to my friend',
-  wechat_moment: '微信朋友圈',
+  wechat_moment: 'Wechat Circle of Friends',
   wechat_shareto_moment: 'Share invitation link to my circle',
   weibo: 'Weibo',
   wechat_shareto_weibo: 'Share invitation link to Weibo',
   no_friend: 'No friend yet',
   clickto_add_friend: 'Click“+”to add new friend',
-  search_name_phone_email: '姓名/手机/邮箱搜索',
+  search_name_phone_email: 'Search by Name / Phone No. / Email',
   add_mycircle: 'Add circle',
 
   driver: 'Driver',
@@ -80,7 +80,7 @@ const en_US = {
   note_to_driver: 'Note to driver',
   reject: 'Reject',
   accept: 'Accept',
-  on_the_way: 'On the Way',
+  on_the_way: 'On The Way',
 
   Pending_Acceptance: 'Pending Acceptance',
   On_The_Way: 'On The Way',
@@ -96,7 +96,7 @@ const en_US = {
   mytrip: 'My Trip',
   trip_detail: 'Trip Details',
   driver_info: 'Driver Info',
-  no_driver_info: '暂无司机信息',
+  no_driver_info: 'No driver at the moments',
   fare_total: 'Total Fare',
 
   wallet: 'Wallet',
@@ -122,8 +122,9 @@ const en_US = {
   searching: 'Searching...',
   transfering: 'Transfering...',
   transfer_success: 'Transfer Success',
+  pls_enter_remarks: 'Please enter remarks',
 
-  settings: '设置',
+  settings: 'Settings',
   profile: 'Account & Safety',
   account: 'Account',
   my_avatar: 'Profile Picture',
@@ -134,10 +135,12 @@ const en_US = {
   update_fullname: 'Update Full Name',
   update_email: 'Update Email',
 
-  language_region: 'Language And Region',
+  language_region: 'Language & Region',
   language: 'Language',
   region: 'Region',
   cn_simple: '中文(简体)',
+  en: 'English',
+  mas: 'Bahasa Malaysia',
 
   feedback: 'Feedback',
   help: 'Help',
