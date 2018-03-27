@@ -17,8 +17,7 @@ import { MapView as AMapView, Search, Marker, Utils } from '../../../native/AMap
 import { Screen, Icons, Define, Session } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
-import Wheel from '../../../components/Wheel'
-import _ from 'lodash'
+import TimePicker from '../../../components/timePicker'
 const { height, width } = Screen.window
 
 const MAP_DEFINE = {
@@ -38,6 +37,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
     super(props)
     this.state = {
       drag: false,
+      visible:false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0
     }
     this.currentLoc = {}
@@ -158,16 +158,24 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       this.props.dispatch(booking.passengerSetValue({ from: data || {} }))
       this.setState({ drag: false })
     } catch (e) {
-      this.props.dispatch(booking.passengerSetValue({ 
+      this.props.dispatch(booking.passengerSetValue({
         from: {
           address: '自定义位置', name: '当前位置',
           coords: { lng: longitude, lat: latitude },
-        } 
+        }
       }))
       this.setState({ drag: false })
     }
   }
-
+  wheelSubmit(time){
+    this.setState({visible:false})
+  }
+  wheelCancel(time){
+    this.setState({visible:false})
+  }
+  showTimerPicker(){
+    this.setState({visible:true})
+  }
   render() {
     const { drag } = this.state
     const { status, from, destination } = this.props
@@ -219,7 +227,14 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
         }
 
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />)}
-        {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (<PickerOptions />)}
+        {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (
+          <PickerOptions
+            visible={this.state.visible}
+            showTimerPicker={()=>this.showTimerPicker()}
+            wheelSubmit={(time)=>this.wheelSubmit(time)}
+            wheelCancel={(time)=>this.wheelCancel(time)}
+          />
+        )}
 
         <ModalDriverRespond />
       </View>
@@ -228,7 +243,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 })
 
 const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare }))(class PickerOptions extends PureComponent {
- 
+
   render() {
     return (
       <Animated.View style={[
@@ -242,7 +257,7 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
             <TouchableOpacity activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setState({showTP:true})}
+            <TouchableOpacity onPress={() => this.props.showTimerPicker()}
               activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现在</Text>
             </TouchableOpacity>
@@ -253,7 +268,9 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
-       
+        <TimePicker visible={this.props.visible}
+          wheelSubmit={(time)=>this.props.wheelSubmit(time)}
+          wheelCancel={(time)=>this.props.wheelCancel(time)}/>
       </Animated.View>
     )
   }
