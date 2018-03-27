@@ -1,12 +1,12 @@
 // Wheel.js
 
-'use strict';
+'use strict'
 
-import React, {Component} from "react";
-import PropTypes from 'prop-types';
-import {StyleSheet, View, Text, Animated, PanResponder, ViewPropTypes} from 'react-native';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { StyleSheet, View, Text, Animated, PanResponder, ViewPropTypes } from 'react-native'
 
-import WheelItem from './WheelItem';
+import WheelItem from './WheelItem'
 
 export default class Wheel extends Component {
 
@@ -20,48 +20,48 @@ export default class Wheel extends Component {
     index: PropTypes.number,
     defaultIndex: PropTypes.number,
     onChange: PropTypes.func, //(index)
-    type:PropTypes.string
-  };
+    type: PropTypes.string
+  }
 
   static defaultProps = {
     ...View.defaultProps,
     pointerEvents: 'box-only',
     defaultIndex: 0,
-  };
+  }
 
-  static Item = WheelItem;
-  static preRenderCount = 10;
+  static Item = WheelItem
+  static preRenderCount = 10
 
   constructor(props) {
-    super(props);
-    this.createPanResponder();
-    this.prevTouches = [];
-    this.index = props.index || props.index === 0 ? props.index : props.defaultIndex;
-    this.lastRenderIndex = this.index;
-    this.height = 0;
-    this.holeHeight = 0;
-    this.hiddenOffset = 0;
-    this.currentPosition = new Animated.Value(0);
-    this.targetPositionValue = null;
+    super(props)
+    this.createPanResponder()
+    this.prevTouches = []
+    this.index = props.index || props.index === 0 ? props.index : props.defaultIndex
+    this.lastRenderIndex = this.index
+    this.height = 0
+    this.holeHeight = 0
+    this.hiddenOffset = 0
+    this.currentPosition = new Animated.Value(0)
+    this.targetPositionValue = null
   }
 
   componentWillMount() {
     if (!this.positionListenerId) {
-      this.positionListenerId = this.currentPosition.addListener(e => this.handlePositionChange(e.value));
+      this.positionListenerId = this.currentPosition.addListener(e => this.handlePositionChange(e.value))
     }
   }
 
   componentWillUnmount() {
     if (this.positionListenerId) {
-      this.currentPosition.removeListener(this.positionListenerId);
-      this.positionListenerId = null;
+      this.currentPosition.removeListener(this.positionListenerId)
+      this.positionListenerId = null
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.index || nextProps.index === 0) {
-      this.index = nextProps.index;
-      this.currentPosition.setValue(nextProps.index * this.holeHeight);
+      this.index = nextProps.index
+      this.currentPosition.setValue(nextProps.index * this.holeHeight)
     }
   }
 
@@ -77,146 +77,146 @@ export default class Wheel extends Component {
       onPanResponderRelease: (e, gestureState) => this.onPanResponderRelease(e, gestureState),
       onPanResponderTerminate: (e, gestureState) => null,
       onShouldBlockNativeResponder: (e, gestureState) => true,
-    });
+    })
   }
 
   onPanResponderGrant(e, gestureState) {
-    this.currentPosition.stopAnimation();
-    this.prevTouches = e.nativeEvent.touches;
-    this.speed = 0;
+    this.currentPosition.stopAnimation()
+    this.prevTouches = e.nativeEvent.touches
+    this.speed = 0
   }
 
   onPanResponderMove(e, gestureState) {
-    let {touches} = e.nativeEvent;
-    let prevTouches = this.prevTouches;
-    this.prevTouches = touches;
+    let { touches } = e.nativeEvent
+    let prevTouches = this.prevTouches
+    this.prevTouches = touches
 
     if (touches.length != 1 || touches[0].identifier != prevTouches[0].identifier) {
-      return;
+      return
     }
 
-    let dy = touches[0].pageY - prevTouches[0].pageY;
-    let pos = this.currentPosition._value - dy;
-    this.currentPosition.setValue(pos);
+    let dy = touches[0].pageY - prevTouches[0].pageY
+    let pos = this.currentPosition._value - dy
+    this.currentPosition.setValue(pos)
 
-    let t = touches[0].timestamp - prevTouches[0].timestamp;
-    if (t) this.speed = dy / t;
+    let t = touches[0].timestamp - prevTouches[0].timestamp
+    if (t) this.speed = dy / t
   }
 
   onPanResponderRelease(e, gestureState) {
-    this.prevTouches = [];
-    if (Math.abs(this.speed) > 0.1) this.handleSwipeScroll();
-    else this.handleStopScroll();
+    this.prevTouches = []
+    if (Math.abs(this.speed) > 0.1) this.handleSwipeScroll()
+    else this.handleStopScroll()
   }
 
   handlePositionChange(value) {
-    let newIndex = Math.round(value / this.holeHeight);
+    let newIndex = Math.round(value / this.holeHeight)
     if (newIndex != this.index && newIndex >= 0 && newIndex < this.props.items.length) {
-      let moveCount = Math.abs(newIndex - this.lastRenderIndex);
-      this.index = newIndex;
+      let moveCount = Math.abs(newIndex - this.lastRenderIndex)
+      this.index = newIndex
       if (moveCount > this.constructor.preRenderCount) {
-        this.forceUpdate();
+        this.forceUpdate()
       }
     }
 
     // let the animation stop faster
     if (this.targetPositionValue != null && Math.abs(this.targetPositionValue - value) <= 2) {
-      this.targetPositionValue = null;
-      this.currentPosition.stopAnimation();
+      this.targetPositionValue = null
+      this.currentPosition.stopAnimation()
     }
   }
 
   handleSwipeScroll() {
-    let {items} = this.props;
+    let { items } = this.props
 
-    let inertiaPos = this.currentPosition._value - this.speed * 300;
-    let newIndex = Math.round(inertiaPos / this.holeHeight);
-    if (newIndex < 0) newIndex = 0;
-    else if (newIndex > items.length - 1) newIndex = items.length - 1;
+    let inertiaPos = this.currentPosition._value - this.speed * 300
+    let newIndex = Math.round(inertiaPos / this.holeHeight)
+    if (newIndex < 0) newIndex = 0
+    else if (newIndex > items.length - 1) newIndex = items.length - 1
 
-    let toValue = newIndex * this.holeHeight;
-    this.targetPositionValue = toValue;
+    let toValue = newIndex * this.holeHeight
+    this.targetPositionValue = toValue
     Animated.spring(this.currentPosition, {
       toValue: toValue,
       friction: 9,
     }).start(() => {
-      this.currentPosition.setValue(toValue);
-      this.props.onChange && this.props.onChange(newIndex);
-    });
+      this.currentPosition.setValue(toValue)
+      this.props.onChange && this.props.onChange(newIndex)
+    })
   }
 
   handleStopScroll() {
-    let toValue = this.index * this.holeHeight;
-    this.targetPositionValue = toValue;
+    let toValue = this.index * this.holeHeight
+    this.targetPositionValue = toValue
     Animated.spring(this.currentPosition, {
       toValue: toValue,
       friction: 9,
     }).start(() => {
-      this.currentPosition.setValue(toValue);
-      this.props.onChange && this.props.onChange(this.index);
-    });
+      this.currentPosition.setValue(toValue)
+      this.props.onChange && this.props.onChange(this.index)
+    })
   }
 
   handleLayout(height, holeHeight) {
-    this.height = height;
-    this.holeHeight = holeHeight;
+    this.height = height
+    this.holeHeight = holeHeight
     if (holeHeight) {
-      let maskHeight = (height - holeHeight) / 2;
-      this.hiddenOffset = Math.ceil(maskHeight / holeHeight) + this.constructor.preRenderCount;
+      let maskHeight = (height - holeHeight) / 2
+      this.hiddenOffset = Math.ceil(maskHeight / holeHeight) + this.constructor.preRenderCount
     }
-    this.forceUpdate(() => this.currentPosition.setValue(this.index * holeHeight));
+    this.forceUpdate(() => this.currentPosition.setValue(this.index * holeHeight))
   }
 
   onLayout(e) {
-    this.handleLayout(e.nativeEvent.layout.height, this.holeHeight);
-    this.props.onLayout && this.props.onLayout(e);
+    this.handleLayout(e.nativeEvent.layout.height, this.holeHeight)
+    this.props.onLayout && this.props.onLayout(e)
   }
 
   onHoleLayout(e) {
-    this.handleLayout(this.height, e.nativeEvent.layout.height);
+    this.handleLayout(this.height, e.nativeEvent.layout.height)
   }
 
   buildProps() {
-    let {style, items, itemStyle, holeStyle, maskStyle, holeLine, ...others} = this.props;
+    let { style, items, itemStyle, holeStyle, maskStyle, holeLine, ...others } = this.props
 
     style = [{
       backgroundColor: '#fff',
       overflow: 'hidden',
-    }].concat(style);
+    }].concat(style)
     itemStyle = [{
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      fontSize: 14,
+      fontSize: 15,
       color: '#555',
-    }].concat(itemStyle);
+    }].concat(itemStyle)
     holeStyle = [{
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      height: 28,
+      height: 40,
       zIndex: 1,
-    }].concat(holeStyle);
+    }].concat(holeStyle)
     maskStyle = [{
-      backgroundColor:  '#fff',
+      backgroundColor: '#fff',
       opacity: 0.4,
       flex: 1,
       zIndex: 100,
-    }].concat(maskStyle);
+    }].concat(maskStyle)
     if (holeLine === undefined) {
-      holeLine = <View style={{height: 1, backgroundColor: '#ccc'}} />;
+      holeLine = <View style={{ height: 1, backgroundColor: '#ccc' }} />
     } else if (typeof holeLine === 'number') {
-      holeLine = <View style={{height: holeLine, backgroundColor: '#ccc'}} />;
+      holeLine = <View style={{ height: holeLine, backgroundColor: '#ccc' }} />
     }
 
-    this.props = {style, items, itemStyle, holeStyle, maskStyle, holeLine, ...others};
+    this.props = { style, items, itemStyle, holeStyle, maskStyle, holeLine, ...others }
   }
 
   renderItem(item, itemIndex) {
-    let {itemStyle,type} = this.props;
+    let { itemStyle, type } = this.props
 
-    if (Math.abs(this.index - itemIndex) > this.hiddenOffset) return null;
+    if (Math.abs(this.index - itemIndex) > this.hiddenOffset) return null
 
     if (typeof item === 'string' || typeof item === 'number') {
-      item = <Text style={itemStyle}>{item+(type=='h'?'点':type=='m'?'分':'')}</Text>;
+      item = <Text style={itemStyle}>{item + (type == 'h' ? '点' : type == 'm' ? '分' : '')}</Text>
     }
-    
+
     return (
       <this.constructor.Item
         itemHeight={this.holeHeight}
@@ -227,14 +227,14 @@ export default class Wheel extends Component {
       >
         {item}
       </this.constructor.Item>
-    );
+    )
   }
 
   render() {
-    this.buildProps();
-    this.lastRenderIndex = this.index;
+    this.buildProps()
+    this.lastRenderIndex = this.index
 
-    let {items, itemStyle, holeStyle, maskStyle, holeLine, defaultIndex, onChange, onLayout, ...others} = this.props;
+    let { items, itemStyle, holeStyle, maskStyle, holeLine, defaultIndex, onChange, onLayout, ...others } = this.props
 
     return (
       <View
