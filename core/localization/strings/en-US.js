@@ -28,7 +28,7 @@ const en_US = {
   friend_select: 'Selected Friends',
   search: 'Search',
   friend_my: 'My Friends',
-  friend_waitfor_accept: '等待接受',
+  friend_waitfor_accept: 'Pending Acceptance',
   select_all: 'Select all',
   friend_list: 'Friend listing',
   friend_request: 'Friend request',
@@ -149,7 +149,7 @@ const en_US = {
   privacy_policy: 'Privacy Agreement and Terms of Use',
   version: 'Version',
 
-  logout: '切换账号'
+  logout: 'LogOut'
 }
 
 export default en_US
