@@ -13,14 +13,14 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 /*****************************************************************************************************/
 import { booking } from '../../redux/actions'
 import { Search } from '../../native/AMap'
-import { System, Icons, Screen, Define } from '../../utils'
+import { System, Icons, Screen, Define, Session } from '../../utils'
 import { Button } from '../../components'
 import { BOOKING_STATUS } from '../main'
 /*****************************************************************************************************/
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(state => ({ }))(class SelectAddressModal extends Component {
+export default connect(state => ({ location: state.account.location }))(class SelectAddressModal extends Component {
 
   constructor(props) {
     super(props)
@@ -38,18 +38,20 @@ export default connect(state => ({ }))(class SelectAddressModal extends Componen
       this.timer && clearTimeout(this.timer)
       this.timer = setTimeout(async () => {
         try {
-          const { count, type, pois } = await Search.searchKeywords(keywords, this.state.city)
-          const args = pois.map(pipe => ({
+          const { lat, lng } = this.props.location
+          const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
+          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/上海/${keywords}`)
+          const _source = data.map(pipe => ({
             address: pipe.address,
-            location: pipe.location,
+            location: pipe.coords,
             name: pipe.name,
             type: 'keywords'
           }))
-          this.setState({ source: dataContrast.cloneWithRows(args) })
+          this.setState({ source: dataContrast.cloneWithRows(_source) })
         } catch (e) {
-          // 
+          console.log(e)
         }
-      }, 600)
+      }, 350)
     } catch (e) {
       // nothing
     }
@@ -95,6 +97,7 @@ export default connect(state => ({ }))(class SelectAddressModal extends Componen
             enableEmptySections={true}
             dataSource={source}
             renderRow={(rowData) => <PickAddressRowItem onPress={() => {
+              console.log(type, rowData)
               this.props.dispatch(booking.passengerSetValue({ [type]: rowData }))
               this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               this.props.navigation.goBack()

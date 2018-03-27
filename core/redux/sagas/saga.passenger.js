@@ -198,9 +198,33 @@ function* bookingTriggerEventListener() {
   }
 }
 
+function* passengerStatusObserver() {
+  while (true) {
+    const booking_id = yield select(state => state.storage.booking_id)
+    console.log('[PASSENGER][LISTENER]')
+
+    if (!booking_id) {
+      yield delay(2500)
+      continue
+    } else {
+      
+      yield delay(2500)
+    }
+    
+    try {
+      const status = yield select(state => state.booking.status)
+      const booking = yield call(Session.Booking.Get, '/v1') 
+      console.log(booking)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
 export default function* bookingHandle() {
   try {
     yield all([
+      fork(passengerStatusObserver),
       fork(bookingFlow),
       fork(bookingBoardCastListener),
       fork(bookingTriggerEventListener)
