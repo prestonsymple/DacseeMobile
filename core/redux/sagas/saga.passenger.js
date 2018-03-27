@@ -55,7 +55,7 @@ function* bookingFlow() {
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
       yield put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
-      if (!destination.location || !from.location) continue
+      if (!destination.coords || !from.coords) continue
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
     } else if (status === STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) {
@@ -207,7 +207,7 @@ function* passengerStatusObserver() {
       yield delay(2500)
       continue
     } else {
-      
+
       yield delay(2500)
     }
     

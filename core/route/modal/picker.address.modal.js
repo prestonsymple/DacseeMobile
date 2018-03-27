@@ -40,14 +40,8 @@ export default connect(state => ({ location: state.account.location }))(class Se
         try {
           const { lat, lng } = this.props.location
           const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/上海/${keywords}`)
-          const _source = data.map(pipe => ({
-            address: pipe.address,
-            location: pipe.coords,
-            name: pipe.name,
-            type: 'keywords'
-          }))
-          this.setState({ source: dataContrast.cloneWithRows(_source) })
+          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+          this.setState({ source: dataContrast.cloneWithRows(data) })
         } catch (e) {
           console.log(e)
         }
@@ -97,7 +91,6 @@ export default connect(state => ({ location: state.account.location }))(class Se
             enableEmptySections={true}
             dataSource={source}
             renderRow={(rowData) => <PickAddressRowItem onPress={() => {
-              console.log(type, rowData)
               this.props.dispatch(booking.passengerSetValue({ [type]: rowData }))
               this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               this.props.navigation.goBack()

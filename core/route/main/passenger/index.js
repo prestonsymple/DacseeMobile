@@ -65,7 +65,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       //   { latitude: destination.location.lat, longitude: destination.location.lng }
       // )
 
-      const { fare } = await Session.Booking.Get(`v1/fares?from_lat=${from.location.lat}&from_lng=${from.location.lng}&destination_lat=${destination.location.lat}&destination_lng=${destination.location.lng}`)
+      const { fare } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
       this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
     }
   }
@@ -178,9 +178,9 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 
     /** FIX ANDROID LOCATION SERVICE CRASH */
     let { from_loc, destination_loc } = { from_loc: { lat: 0, lng: 0 }, destination_loc: { lat: 0, lng: 0 } }
-    if (from.location && destination.location) {
-      from_loc = from.location
-      destination_loc = destination.location
+    if (from.coords && destination.coords) {
+      from_loc = from.coords
+      destination_loc = destination.coords
     }
     from_loc = { latitude: from_loc.lat, longitude: from_loc.lng }
     destination_loc = { latitude: destination_loc.lat, longitude: destination_loc.lng }
