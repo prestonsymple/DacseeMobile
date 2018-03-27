@@ -60,7 +60,7 @@ export default class Wheel extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.index || nextProps.index === 0) {
-      this.index = nextProps.index
+      this.index = nextProps.index==-1?0:nextProps.index
       this.currentPosition.setValue(nextProps.index * this.holeHeight)
     }
   }

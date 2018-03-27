@@ -20,17 +20,19 @@ export default class TimePicker extends PureComponent {
     this.hour = this.getDafultHours()[0]
     this.minute = this.getDafultMinutes()[0]
     this.state = {
-      showTP: this.props.showTP,
-      hours: this.getDafultHours(),
-      minutes: this.getDafultMinutes(),
+      hours: this.hours,
+      minutes: this.minutes,
       date: '',
     }
   }
-  componentWillReceiveProps(props) {
-    if (props.showTP != this.props.showTP) {
-      this.setState({ showTP: props.showTP })
-    }
+  componentDidMount(){
+    this.setState({
+      hours: this.getDafultHours(),
+      minutes: this.getDafultMinutes(),
+    })
   }
+
+
   //获取今天前后n天的日期
   getDateStr(n) {
     let date = new Date()
@@ -72,16 +74,13 @@ export default class TimePicker extends PureComponent {
     let index = _.findIndex(this.hours, function (chr) {
       return chr == nowHour
     })
-    return _.drop(this.hours, index)
+    return this.getDropedDate(this.hours,nowHour)
   }
   getDafultMinutes() {
     let HM = this.getNowHM()
     // let nowHour = HM.hour
     let nowMinute = HM.minute
-    let index = _.findIndex(this.minutes, function (chr) {
-      return chr == nowMinute
-    })
-    return _.drop(this.minutes, index)
+    return this.getDropedDate(this.minutes,nowMinute)
   }
   getNowHM() {
     let json = {}
@@ -101,21 +100,26 @@ export default class TimePicker extends PureComponent {
     json.minute = m
     return json
   }
+  getDropedDate(data,pa){
+    let index = _.findIndex(data, function (chr) {
+      return chr == pa
+    })
+    return _.drop(data, index)
+  }
   onDateChange(index) {
+
     let date = this.dates[index]
     let HM = this.getNowHM()
     let nowHour = HM.hour
     let nowMinute = HM.minute
     if (date == this.dates[0]) {
-      let index = _.findIndex(this.hours, function (chr) {
-        return chr == nowHour
+      this.setState({ hours: this.getDropedDate(this.hours,nowHour) },()=>{
+        this.hour=this.state.hours[0]
       })
-      this.setState({ hours: _.drop(this.hours, index) })
       if (this.hour == nowHour) {
-        let index = _.findIndex(this.minutes, function (chr) {
-          return chr == nowMinute
+        this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
+          this.minute=this.state.minutes[0]
         })
-        this.setState({ minutes: _.drop(this.minutes, index) })
       }
     }
     if (this.date == this.dates[0]) {
@@ -127,62 +131,66 @@ export default class TimePicker extends PureComponent {
     this.date = date
   }
   onHourChange(index) {
+    this.hindex=index
     let hour = this.state.hours[index]
     let HM = this.getNowHM()
     let nowHour = HM.hour
     let nowMinute = HM.minute
     if (this.date == this.dates[0] && hour == nowHour) {
-      let index = _.findIndex(this.minutes, function (chr) {
-        return chr == nowMinute
+      this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
+        this.minute=this.state.minutes[0]
       })
-      this.setState({ minutes: _.drop(this.minutes, index) })
     }
     if (this.date == this.dates[0] && this.hour == nowHour) {
-
       this.setState({ minutes: this.minutes })
     }
     this.hour = hour
   }
   onMinuteChange(index) {
+    this.mindex=index
     this.minute = this.state.minutes[index]
   }
+  //
+
   render() {
     return (
       <Modal
         animationType='fade'           //渐变
         transparent={true}             // 不透明
-        visible={this.state.showTP}    // 根据isModal决定是否显示
-        onRequestClose={() => this.setState({ showTP: false })}  // android必须实现 安卓返回键调用
+        visible={this.props.visible}    // 根据isModal决定是否显示
+        onRequestClose={() => this.props.wheelCancel('now')}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-          <TouchableOpacity style={{ width: width, height: height / 2 }} onPress={() => this.setState({ showTP: false })} ></TouchableOpacity>
+          <TouchableOpacity style={{ width: width, height: height / 2 }} onPress={() => this.props.wheelCancel('now')} ></TouchableOpacity>
           <View style={{ height: height / 2, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.5, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.setState({ showTP: false })} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelCancel('now')} >
                 <Text style={{ color: '#1ab2fd', fontSize: 15 }}>取消</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.setState({ showTP: false })} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelSubmit(this.date+this.hour+'点'+this.minute+'分')} >
                 <Text style={{ color: '#ffa03c', fontSize: 15 }}>确定</Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width, }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height: (height / 2) - 100 }}>
               <Wheel
-                style={{ height: (height / 2) - 80, width: width / 2 }}
+                style={{ height: (height / 2) - 100, width: width / 2 }}
                 itemStyle={{ textAlign: 'center' }}
                 items={this.dates}
                 onChange={index => this.onDateChange(index)}
               />
               <Wheel
-                style={{ height: (height / 2) - 80, width: width / 4 }}
+                style={{ height: (height / 2) - 100, width: width / 4 }}
                 itemStyle={{ textAlign: 'center' }}
+                index={this.state.hours.indexOf(this.hour)}
                 type={'h'}
                 items={this.state.hours}
                 onChange={index => this.onHourChange(index)}
               />
               <Wheel
-                style={{ height: (height / 2) - 80, width: width / 4 }}
+                style={{ height: (height / 2) - 100, width: width / 4 }}
                 itemStyle={{ textAlign: 'center' }}
                 type={'m'}
+                index={this.state.minutes.indexOf(this.minute)}
                 items={this.state.minutes}
                 onChange={index => this.onMinuteChange(index)}
               />
