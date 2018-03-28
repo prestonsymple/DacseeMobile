@@ -31,11 +31,46 @@ export default connect(state => ({
       onPress: () => {
         if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
           DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN') 
+        } else if (status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
+          // DO NOTHING
         } else {
           navigation.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
         }
       }
     } 
+
+    let title = 'DACSEE'
+    switch(status) {
+    case BOOKING_STATUS.PASSGENER_BOOKING_INIT: 
+      title = 'DACSEE'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS: 
+      title = '确认行程'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE: 
+      title = '发送订单中'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT: 
+      title = '等待接单'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY: 
+      title = '接驾中'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED: 
+      title = '司机已到达'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD: 
+      title = '行驶中'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_ON_RATING: 
+      title = '等待评价'
+      break
+    case BOOKING_STATUS.PASSGENER_BOOKING_HAVE_COMPLETE: 
+      title = '行程结束'
+      break
+    default:
+      title = 'DACSEE'
+    }
 
     const maps = {
       drawerLockMode: 'locked-closed',
@@ -47,14 +82,17 @@ export default connect(state => ({
         borderBottomColor: 'transparent',
         elevation: 0,
       },
-      title: (status >= BOOKING_STATUS.PASSGENER_BOOKING_INIT) ? 'DACSEE' : '确认行程',
+      title,
       headerLeft: (
         <TouchableOpacity {...SETTER}>
           {
             (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (Icons.Generator.Octicons('three-bars', 23, 'white', { style: { left: 8 } }))
           }
           {
-            (status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) && (Icons.Generator.Material('keyboard-arrow-left', 30, 'white'))
+            (
+              status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS &&
+              status < BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY
+            ) && (Icons.Generator.Material('keyboard-arrow-left', 30, 'white'))
           }
         </TouchableOpacity>
       )

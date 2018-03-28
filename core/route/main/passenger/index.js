@@ -32,7 +32,7 @@ const MAP_DEFINE = {
 
 const PIN_HEIGHT = ((height - 22) / 2)
 
-export default connect(state => ({ ...state.booking }))(class PassengerComponent extends Component {
+export default connect(state => ({ ...state.booking, booking_id: state.storage.booking_id }))(class PassengerComponent extends Component {
 
   constructor(props) {
     super(props)
@@ -55,12 +55,14 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
   }
 
   async componentWillReceiveProps(props) {
-    if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
+    if (this.props.status === props.status) return
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
       this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
       this.setState({ ready: true })
     }
 
-    if (this.props.status !== props.status && props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
       const { destination, from } = props
 
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
@@ -73,11 +75,19 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
       this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
     }
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
+      const { latitude, longitude } = props.driver
+      // await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${latitude},${longitude}/${}`)
+      // console.log('司机在路上了')
+    }
   }
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
+    if (!this.props.booking_id) {
+      this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
+    }
   }
 
   async aMapMathRouteSuccess(args) {

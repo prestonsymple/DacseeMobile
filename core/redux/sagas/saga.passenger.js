@@ -44,13 +44,18 @@ function* bookingFlow() {
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
     const { booking_id, destination, from, time, payment, type, selected_friends, fare } = yield select(state => ({
-      ...state.booking
+      ...state.booking,
+      booking_id: state.storage.booking_id
     }))
 
 
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
-      yield put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
+      yield all([
+        put(booking.passengerSetID('')),
+        put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
+      ])
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
+      yield put(booking.passengerSetID(''))
       if (!destination.coords || !from.coords) continue
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
@@ -94,7 +99,7 @@ function* bookingFlow() {
 
         const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
         if (isSuccess) {
-          yield put(booking.passengerSetValue({ booking_id: doc._id }))
+          yield put(booking.passengerSetID(doc._id))
           yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
         } else {
           yield put(application.showMessage('订单创建失败'))
@@ -121,17 +126,24 @@ function* bookingFlow() {
       //   yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
       // }, 2000)
       continue
-    } else if (status === STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
-      // MAIN_TIMER_QUEUE[0] && clearTimeout(MAIN_TIMER_QUEUE[0])
-      yield put(NavigationActions.navigate({ routeName: 'BookingDriverDetail', params: { booking_id } }))
-    } else if (status === STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED) {
-      //
-    } else if (status === STATUS.PASSGENER_BOOKING_ON_BOARD) {
-      //
-    } else if (status === STATUS.PASSGENER_BOOKING_ON_RATING) {
-      //
-    } else if (status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE) {
-      //
+    } else if (
+      status === STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY ||
+      status === STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED ||
+      status === STATUS.PASSGENER_BOOKING_ON_BOARD ||
+      status === STATUS.PASSGENER_BOOKING_ON_RATING ||
+      status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE
+    ) {
+      // DATA RECEIVE
+      if ((destination && from) && !('coords' in destination) || !('coords' in from)) {
+        // TODO: 恢复车型数据
+        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare`)  
+        yield put(booking.passengerSetValue({
+          destination: bookingDetail.destination,
+          fare: bookingDetail.fare,
+          from: bookingDetail.from,
+          payment: bookingDetail.payment_method
+        }))
+      }
     }
 
     yield put(booking.passengerSaveStatus(status))
@@ -187,6 +199,25 @@ function* bookingTriggerEventListener() {
   }
 }
 
+function* passengerUpdateDriverLocation() {
+  while(true) {
+    const { driver_id, app_status, passengerStatus } = yield select(state => ({
+      driver_id: state.booking.driver_id,
+      passengerStatus: state.booking.status,
+      app_status: state.application.application_status === 'active'
+    }))
+
+    if (!driver_id || !app_status || !(passengerStatus < STATUS.PASSGENER_BOOKING_ON_BOARD)) {
+      yield delay(2500)
+      continue
+    } else {
+      const driver = yield call(Session.Location.Get, `v1?reqUser_id=${driver_id}&userRole=passenger`)
+      yield put(booking.passengerSetValue({ driver }))
+      yield delay(10000)
+    }
+  }
+}
+
 function* passengerStatusObserver() {
   while (true) {
     const { booking_id, app_status } = yield select(state => ({
@@ -199,8 +230,33 @@ function* passengerStatusObserver() {
       continue
     } else {
       try {
-        const booking = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=to,from,notes`) 
-        console.log(booking)
+        const passengerStatus = yield select(state => state.booking.status)
+        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=driver_id,status`) 
+        const driver_id = bookingDetail.driver_id
+        const bookingStatus = bookingDetail.status
+
+        if (bookingStatus === 'No_Taker') {
+          yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+          yield put(application.showMessage('暂无司机接单，订单超时，已被取消'))
+        } else if (bookingStatus === 'Cancelled_by_Driver') {
+          const backStatus = passengerStatus === STATUS.PASSGENER_BOOKING_INIT ? STATUS.PASSGENER_BOOKING_INIT : STATUS.PASSGENER_BOOKING_PICKED_ADDRESS
+          yield put(booking.passengerSetStatus(backStatus))
+          yield put(application.showMessage('订单已被司机取消，请尝试重新预订'))
+        } else if (
+          bookingStatus === 'On_The_Way' && 
+          passengerStatus < STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY
+        ) {
+          yield all([
+            put(booking.passengerSetValue({ driver_id })),
+            put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY))
+          ])
+        } 
+
+        console.log({
+          driver_id, 
+          bookingStatus, 
+          passengerStatus
+        })
       } catch (e) {
         console.log(e)
       }
@@ -212,6 +268,7 @@ function* passengerStatusObserver() {
 export default function* bookingHandle() {
   try {
     yield all([
+      fork(passengerUpdateDriverLocation),
       fork(passengerStatusObserver),
       fork(bookingFlow),
       fork(bookingBoardCastListener),

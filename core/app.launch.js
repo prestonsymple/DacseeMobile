@@ -78,8 +78,8 @@ export default connect(state => ({ nav: state.nav }))(class AppLaunch extends Pu
               addListener
             })}
           />
-          <ModalBookingOrderDetail />
-          <ModalBookingAcceptJobs />
+          {/* <ModalBookingOrderDetail />
+          <ModalBookingAcceptJobs /> */}
           <ModalProgress />
           <Hud />
           <ModalUpdate />        

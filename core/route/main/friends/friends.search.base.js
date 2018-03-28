@@ -79,7 +79,7 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
                 <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('FriendsRequest', { referrer: userId, id: _id })} style={{ height: 58, backgroundColor: 'white', paddingHorizontal: 15 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
                     <View style={{ justifyContent: 'center', marginRight: 12 }}>
-                      <Image style={{ width: 42, height: 42, borderRadius: 21 }} source={{ uri: avatars[0].url }} />
+                      <Image style={{ width: 42, height: 42, borderRadius: 21 }} source={{ uri: avatars[avatars.length - 1].url }} />
                     </View>
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 16, color: '#666', marginBottom: 2 }}>{ fullName }</Text>

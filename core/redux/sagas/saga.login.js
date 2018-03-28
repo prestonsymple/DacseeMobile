@@ -232,7 +232,6 @@ function* registerDevice() {
 }
 
 function* loginSuccess(data: object) {
-  yield delay(2000)
   yield put(account.saveLogin(data))
   yield put(application.hideProgress())
   yield put(application.updatePushToken())

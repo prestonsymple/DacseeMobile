@@ -30,15 +30,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
     const { title } = navigation.state.params
     return {
       drawerLockMode: 'locked-closed',
-      // headerRight: (
-      //   <TouchableOpacity
-      //     activeOpacity={0.7}
-      //     style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
-      //     onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.OPEN.MORE.MENU')}
-      //   >
-      //     { Icons.Generator.Material('more-horiz', 28, '#2f2f2f', { style: { left: 8 } }) }
-      //   </TouchableOpacity>
-      // ),
+      headerLeft: (null),
       title: title || '等待接驾'
     }
   }
@@ -62,42 +54,42 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
 
-    this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', async (args) => {
-      if (this.props.status === 'ARRIVED') return undefined
-      if (this.props.status === '' || this.props.status === 'ON_BOARD') {
-        const { from, carLocation, destination, current } = this.state
+    // this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', async (args) => {
+    //   if (this.props.status === 'ARRIVED') return undefined
+    //   if (this.props.status === '' || this.props.status === 'ON_BOARD') {
+    //     const { from, carLocation, destination, current } = this.state
 
-        // 初始化
-        const route = Array.isArray(args) ? args[0] : args
-        route.polylines = route.routeNaviPoint.map(pipe => ({
-          latitude: pipe.lat,
-          longitude: pipe.lng
-        }))
-        const distance = this.props.status === '' ?
-          await Utils.distance(from.coords.lat, from.coords.lng, carLocation.latitude, carLocation.longitude) : // 等待接驾
-          await Utils.distance(destination.coords.lat || 0, destination.coords.lng || 0, current.latitude || 0, current.longitude || 0) // 前往目的地
-        const km = distance / 1000
+    //     // 初始化
+    //     const route = Array.isArray(args) ? args[0] : args
+    //     route.polylines = route.routeNaviPoint.map(pipe => ({
+    //       latitude: pipe.lat,
+    //       longitude: pipe.lng
+    //     }))
+    //     const distance = this.props.status === '' ?
+    //       await Utils.distance(from.coords.lat, from.coords.lng, carLocation.latitude, carLocation.longitude) : // 等待接驾
+    //       await Utils.distance(destination.coords.lat || 0, destination.coords.lng || 0, current.latitude || 0, current.longitude || 0) // 前往目的地
+    //     const km = distance / 1000
 
-        let zoom = 16
-        if (km >= 160) { zoom = 8 }
-        else if (km >= 80) { zoom = 9 }
-        else if (km >= 40) { zoom = 10 }
-        else if (km >= 20) { zoom = 11 }
-        else if (km >= 10) { zoom = 12 }
-        else if (km >= 5) { zoom = 13 }
-        else if (km >= 2.5) { zoom = 14 }
-        else { zoom = 15 }
+    //     let zoom = 16
+    //     if (km >= 160) { zoom = 8 }
+    //     else if (km >= 80) { zoom = 9 }
+    //     else if (km >= 40) { zoom = 10 }
+    //     else if (km >= 20) { zoom = 11 }
+    //     else if (km >= 10) { zoom = 12 }
+    //     else if (km >= 5) { zoom = 13 }
+    //     else if (km >= 2.5) { zoom = 14 }
+    //     else { zoom = 15 }
 
-        zoom -= 1
+    //     zoom -= 1
 
-        const { routeCenterPoint, routeLength } = route
+    //     const { routeCenterPoint, routeLength } = route
 
-        if (this.map) {
-          this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
-        }
-        this.setState({ route })
-      }
-    })
+    //     if (this.map) {
+    //       this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
+    //     }
+    //     this.setState({ route })
+    //   }
+    // })
 
     this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.OPEN.MORE.MENU', () => this.ActionSheet.show())
     this.fetchOrderDetail()

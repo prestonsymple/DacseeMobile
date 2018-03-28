@@ -79,7 +79,14 @@ export default connect(state => ({
             }
           } }
         ])
-      }, rightAction: () => {} }
+      }, rightAction: async () => {
+        try {
+          await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
+          this.props.navigation.goBack()
+        } catch (e) {
+          this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+        }
+      } }
     case 'On_The_Way':
       return {left: 'cancel', right: 'on_the_way', leftAction: async () => { 
         Alert.alert('取消行程', '乘客正等待接驾中，取消订单将会影响您的信用，继续吗?', [
@@ -93,7 +100,14 @@ export default connect(state => ({
             }
           } }
         ])
-      }, rightAction: () => {} }
+      }, rightAction: async () => {
+        try {
+          await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
+          this.props.navigation.goBack()
+        } catch (e) {
+          this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+        }
+      } }
     case 'Arrived':
       return {left: 'No Show', right: 'On Board', leftAction: () => {}, rightAction: () => {} }
     }

@@ -11,7 +11,6 @@ import {
   DriverAndPassengerScreen,
 
   PassengerCompleteScreen,
-  PassengerDriverDetailScreen,
 
   FriendsCircleScreen,
   FriendsCircleAddScreen,
@@ -78,7 +77,6 @@ const AuthScreen = {
 const HomeScreen = {
   Main: { screen: DriverAndPassengerScreen },
 
-  PassengerDriverDetail: { screen: PassengerDriverDetailScreen },
   PassengerCompleteScreen: { screen: PassengerCompleteScreen },
 
   FriendsCircle: { screen: FriendsCircleScreen },
