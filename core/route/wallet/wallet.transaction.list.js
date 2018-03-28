@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(state => ({ 
+export default connect(state => ({
   ...state.wallet
 }))(class WalletTransactionListScreen extends Component {
-  
+
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '钱包'
     }
   }
@@ -47,7 +47,7 @@ export default connect(state => ({
     // await InteractionManager.runAfterInteractions()
 
     this._fetchData()
-    
+
     //   {
     //     "_id": "28172224-2430-11e8-b67d-91aeb57f5e5b",
     //     "type": "Adjustment In"
@@ -55,7 +55,7 @@ export default connect(state => ({
     //     "remarks": "hold for booking",
     //     "yourRef": "booking_id here",
     //     "timestamp": "2018-03-10T06:56:28.000Z"
-    // }    
+    // }
   }
 
   async _fetchData(index=0) {
@@ -63,7 +63,7 @@ export default connect(state => ({
       loading: true
     })
     try {
-      const resp = await Session.wallet.get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
+      const resp = await Session.Wallet.Get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
       this.setState({
         loading: false,
         detail: dataContrast.cloneWithRows(resp.data)
@@ -83,7 +83,7 @@ export default connect(state => ({
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1, width: width}}>
         {/* DETAIL */}
-        <ListView 
+        <ListView
           refreshControl={
             <RefreshControl
               refreshing={this.state.loading}
@@ -113,7 +113,7 @@ class DetailItem extends Component {
       <View style={{ paddingHorizontal: 26, flex: 1, height: 104, backgroundColor: 'white', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
         {/* <View style={{  }}> */}
         <View style={{ width: 40 }}>
-          { 
+          {
             amount > 0 ?
               Icons.Generator.Material('arrow-upward', 18, '#e74a6e') :
               Icons.Generator.Material('arrow-downward', 18, '#6bd19e')

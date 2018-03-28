@@ -1,7 +1,7 @@
 
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -31,7 +31,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
 
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '钱包'
     }
   }
@@ -44,7 +44,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
 
-    const resp = await Session.wallet.get('v1/wallets')
+    const resp = await Session.Wallet.Get('v1/wallets')
     // [{
     //   _id: '0d8f4330-1dac-11e8-b67d-91aeb57f5e5b',
     //   amount: 101,
@@ -53,7 +53,7 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
     // }]
 
     console.log('[参数]', resp.data[0]._id)
-    const wallet = await Session.wallet.get(`v1/transactions?batch_id=${resp.data[0]._id}`)
+    const wallet = await Session.Wallet.Get(`v1/transactions?batch_id=${resp.data[0]._id}`)
     // {{url_wallet}}/api/
   }
 

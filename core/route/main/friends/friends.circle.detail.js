@@ -15,7 +15,7 @@ const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ 
+export default connect(state => ({
   booking: state.booking,
   i18n: state.intl.messages || {}
 }))(class FriendsCircleDetailComponent extends Component {
@@ -23,7 +23,7 @@ export default connect(state => ({
   static navigationOptions = ({ navigation }) => {
     const { _id, checked, friend_id, friend_info } = navigation.state.params
     const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
-    
+
     return {
       drawerLockMode: 'locked-closed',
       headerRight: (
@@ -74,12 +74,12 @@ export default connect(state => ({
         onPress: async () => {
           try {
             const { _id } = this.props.navigation.state.params
-            await Session.circle.delete(`v1/circle/${_id}`)
+            await Session.Circle.Delete(`v1/circle/${_id}`)
             this.props.dispatch(circle.asyncFetchFriends({ init: true }))
             Alert.alert('完成', '朋友身份已解除', [{ text: '确定', onPress: () => this.props.navigation.goBack() }])
           } catch (e) {
             console.log(e)
-            this.props.dispatch(application.showMessage('请求超时，请稍后再试')) 
+            this.props.dispatch(application.showMessage('请求超时，请稍后再试'))
           }
         }
       }, { text: '取消' }])

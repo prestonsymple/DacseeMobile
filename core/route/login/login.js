@@ -75,9 +75,9 @@ export default connect(state => ({
     this.animated.stage.stopAnimation()
     Animated.timing(this.animated.stage, { toValue: STAGE_VALUE_MAP[stage], duration, easing: Easing.linear }).start()
 
-    if (stage === 2) { 
+    if (stage === 2) {
       this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
-      this.codeInput.v1.focus() 
+      this.codeInput.v1.focus()
     }
   }
 
@@ -188,7 +188,7 @@ export default connect(state => ({
 
     try {
       const data = await Session.User.Post('v1/auth/oauth', body)
-      
+
       this.props.dispatch(account.setAccountValue(data))
       this.props.dispatch(account.loginSuccess())
       this.props.dispatch(application.updatePushToken())
@@ -257,11 +257,11 @@ export default connect(state => ({
                   { width: isMail.interpolate({ inputRange: [0, 0.6, 1], outputRange: [65, 65, 0], extrapolate: 'clamp' }) },
                   { marginRight: isMail.interpolate({ inputRange: [0, 0.6, 1], outputRange: [15, 15, 0], extrapolate: 'clamp' }) }
                 ]}>
-                  <Button 
+                  <Button
                     onPress={() => this.props.navigation.navigate('PickerCountry', {
                       onPress: ({ name, code }) => this.setState({ countryCode: code })
-                    })} 
-                    activeOpacity={0.9} 
+                    })}
+                    activeOpacity={0.9}
                     style={[{ borderColor: '#f2f2f2', borderBottomWidth: 1, flex: 1, height: 44, justifyContent: 'center' }]}
                   >
                     <Text style={styles.stdInput}>{this.state.countryCode}</Text>
@@ -284,7 +284,7 @@ export default connect(state => ({
                         style={[styles.stdInput, { flex: 7, borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 }]} />
                     )
                   }
-                </FormattedMessage>                
+                </FormattedMessage>
               </View>
             </Animated.View>
 
@@ -346,7 +346,7 @@ export default connect(state => ({
                           { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
                         ]}>{msg}</Animated.Text>
                       )
-                    }                  
+                    }
                   </FormattedMessage>
                   <Animated.View style={[
                     { flex: 1, alignItems: 'center' },
@@ -391,12 +391,12 @@ export default connect(state => ({
                 </Button> */}
                 <Button onPress={() => {
                   ShareUtile.auth(7, (code, result, message) =>{
-                    this.setState({ result: message })                    
+                    this.setState({ result: message })
                     if (code == 200){
                       this.setState({ result: result.uid })
                       console.log('facebook用户', result)
                       this._facebookAuth(result)
-                    } else {                      
+                    } else {
                       console.log('第三方登录' + code)
                     }
                   })
@@ -434,11 +434,11 @@ export default connect(state => ({
               {
                 this.isEmail(this.state.value) && (
                   <View style={{ flexDirection: 'row', marginBottom: 15 }}>
-                    <Button 
+                    <Button
                       onPress={() => this.props.navigation.navigate('PickerCountry', {
                         onPress: ({ name, code }) => this.setState({ countryCode: code })
-                      })} 
-                      activeOpacity={0.9} 
+                      })}
+                      activeOpacity={0.9}
                       style={[{ borderColor: '#f2f2f2', marginRight: 15, borderBottomWidth: 1, width: 70, height: 44, justifyContent: 'center' }]}
                     >
                       <Text style={styles.stdInput}>{this.state.countryCode}</Text>
@@ -477,13 +477,13 @@ export default connect(state => ({
                         borderColor: 'white',
                         textAlign: 'center',
                         color: 'white'
-                      }]} 
+                      }]}
                     />
-                    <Button 
+                    <Button
                       onPress={async () => {
                         try {
                           const { verify_code_extend, value_extend } = this.state
-                          await Session.user.post('v1/sendVerificationCode/phone', {
+                          await Session.User.Post('v1/sendVerificationCode/phone', {
                             phoneCountryCode: this.state.countryCode,
                             phoneNo: value_extend
                           })
@@ -491,8 +491,8 @@ export default connect(state => ({
                         } catch (e) {
                           this.props.dispatch(app.showMessage('发生错误'))
                         }
-                      }} 
-                      activeOpacity={0.9} 
+                      }}
+                      activeOpacity={0.9}
                       style={[{ marginLeft: 15, backgroundColor: '#ffa81d', borderRadius: 22, width: 120, height: 44, justifyContent: 'center' }]}
                     >
                       <Text style={styles.stdInput}>
@@ -530,7 +530,7 @@ export default connect(state => ({
               <Text style={{ fontSize: 12, color: '#f2f2f2', fontWeight: '200' }}>
                 <FormattedMessage id={'active_account_tip'} />
               </Text>
-              <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', { 
+              <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', {
                 title: '隐私协议及使用条款',
                 source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
               })} style={{  }}>
@@ -550,9 +550,9 @@ export default connect(state => ({
             </View>
           </ScrollView>
           <View style={{ position: 'absolute', left: 15, top: 42, width: 120, height: 120 }}>
-            <TouchableOpacity 
-              activeOpacity={0.7} 
-              style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
               onPress={() => {
                 if (isMail) {
                   this.props.dispatch(account.loginBack(1))

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component, PureComponent } from 'react'
-import { 
+import {
   View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView,
   Image, Platform, DeviceEventEmitter, Linking
 } from 'react-native'
@@ -77,7 +77,7 @@ export default connect(state => ({
         if (!detail || !detail.from || !this.props.visible) return undefined;
         const route = Array.isArray(args) ? args[0] : args
         route.polylines = route.routeNaviPoint.map(pipe => ({
-          latitude: pipe.lat, 
+          latitude: pipe.lat,
           longitude: pipe.lng
         }))
         this.setState({ route })
@@ -86,7 +86,7 @@ export default connect(state => ({
         if (!detail || !detail.from || !this.props.visible) return undefined;
         const route = Array.isArray(args) ? args[0] : args
         route.polylines = route.routeNaviPoint.map(pipe => ({
-          latitude: pipe.lat, 
+          latitude: pipe.lat,
           longitude: pipe.lng
         }))
         this.setState({ route })
@@ -106,7 +106,7 @@ export default connect(state => ({
     try {
       if (this.props.jobs.status === 'ARRIVED') return undefined
       const reqUser_id = this.props.account.user.userId
-      await Session.location.put('v1', { latitude, longitude, reqUser_id, logged: false })
+      await Session.Location.Put('v1', { latitude, longitude, reqUser_id, logged: false })
     } catch (e) {
       console.log(e)
     }
@@ -134,7 +134,7 @@ export default connect(state => ({
           const { visible, jobs = {} } = this.props
           const { booking_id = '' } = jobs
           try {
-            await Session.booking.put(`v1/${booking_id}`, { action: 'reject' })
+            await Session.Location.Put(`v1/${booking_id}`, { action: 'reject' })
           } catch (e) { //
           } finally {
             this.props.dispatch(Jobs.cancelJobs())
@@ -215,7 +215,7 @@ export default connect(state => ({
               }
               {
                 ('polylines' in route) && (
-                  <Polyline 
+                  <Polyline
                     coordinates={route.polylines}
                     width={6}
                     color={'#2d2a4a'}
@@ -250,7 +250,7 @@ export default connect(state => ({
                     Alert.alert('等待乘客上车', '立即通知乘客车辆已到达指定位置', [
                       { text: '确定', onPress: async () => {
                         try {
-                          await Session.booking.put(`v1/${booking_id}`, { action: 'arrived' })
+                          await Session.Location.Put(`v1/${booking_id}`, { action: 'arrived' })
                           this.props.dispatch(Jobs.setJobs({ status: 'ARRIVED' }))
                           this.setState({ route: {} })
                         } catch (e) {
@@ -270,7 +270,7 @@ export default connect(state => ({
                     Alert.alert('开始行程', '乘客已上车，立即开始行程？', [
                       { text: '是', onPress: async () => {
                         try {
-                          await Session.booking.put(`v1/${booking_id}`, { action: 'on_board' })
+                          await Session.Location.Put(`v1/${booking_id}`, { action: 'on_board' })
                           this.props.dispatch(Jobs.setJobs({ status: 'ON_BOARD' }))
                           //TODO
                         } catch (e) {
@@ -290,9 +290,9 @@ export default connect(state => ({
                     Alert.alert('已到达目的地', '立即结束行程', [
                       { text: '确定', onPress: async () => {
                         try {
-                          await Session.booking.put(`v1/${booking_id}`, { action: 'completed' })
+                          await Session.Location.Put(`v1/${booking_id}`, { action: 'completed' })
                           this.props.dispatch(Jobs.setJobs({ status: '', working: false, route: {}, detail: {}, booking_id: '' }))
-                          //TODO 
+                          //TODO
                         } catch (e) {
                           this.props.dispatch(application.showMessage('无法连接到服务器，请检查您的网络'))
                         }

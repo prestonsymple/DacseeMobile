@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -28,7 +28,7 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 export default connect(() => ({ }))(class TripListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '我的行程'
     }
   }
@@ -36,7 +36,7 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
   constructor(props) {
     super(props)
     const todayUtc = new Date().toISOString()
-    
+
     this.state = {
       // dateDic: null,
       loading: false,
@@ -49,7 +49,7 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
   async componentWillMount() {
     console.log(FONT.TextSize(25));
     // await InteractionManager.runAfterInteractions()
-    this._fetchData()    
+    this._fetchData()
   }
 
   async _fetchData(index=0) {
@@ -62,7 +62,7 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
       // console.log(this.state.selectedDate)
       // const dateFrom = this._getFormatterDate(this.state.selectedDate).dateFrom
       // const dateTo = this._getFormatterDate(this.state.selectedDate).dateTo
-      const resp = await Session.booking.get('v1/bookings?role=passenger')
+      const resp = await Session.Booking.Get('v1/bookings?role=passenger')
 
       this.setState({
         // dateDic: dateDic,
@@ -72,13 +72,13 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
-        loading: false        
+        loading: false
       })
-    }    
+    }
   }
 
   render () {
-    const { detail } = this.state 
+    const { detail } = this.state
     return (
       <View style={{ flex: 1 }}>
         {
@@ -96,10 +96,10 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                   <Image source={Resources.image.joblist_empty} style={{ marginTop: 200, width: 100, height: 100 }} />
                   <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>暂无行程</Text>
-                </View>                    
+                </View>
               </ScrollView>
             ) :
-            ( <ListView 
+            ( <ListView
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.loading}
@@ -113,11 +113,11 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
               enableEmptySections={true}
               renderRow={(row) => {
                 return (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => {
                       this.props.dispatch(NavigationActions.navigate({
-                        routeName: 'TripListDetail', 
-                        params: { tripDetail: row } 
+                        routeName: 'TripListDetail',
+                        params: { tripDetail: row }
                       }))
                     }}
                     activeOpacity={.7}
@@ -183,25 +183,25 @@ class ListItem extends Component {
         <View style={[
           { width: width - 20, borderRadius: 6, backgroundColor: 'white' },
           { shadowOffset: { width: 0, height: 0 }, shadowColor: '#a2a3a8', shadowOpacity: .5, shadowRadius: 3 }
-        ]}>          
+        ]}>
           <View style={{margin: 15}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center'}}>              
+            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
               <Text numberOfLines={1} style={{ fontSize: FONT.TextSize(20), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{ from.name }</Text>
             </View>
             <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
               {/* <Text style={{ fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
               <Text style={{fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}>to { destination.name } </Text>
             </View>
-            
+
             <View style={{ marginTop:30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
               <View>{ Icons.Generator.Material('access-time', FONT.TextSize(14), '#000000') }</View>
               <Text style={{ marginLeft: 5, fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
               <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', FONT.TextSize(14), '#000000') }</View>
-              <Text style={{ marginLeft: 5,  fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>              
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>                
+              <Text style={{ marginLeft: 5,  fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 14, '#bbb') }</View> */}
                 <Text style={{fontSize: FONT.TextSize(20), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{ fare }</Text>
-              </View>              
+              </View>
             </View>
           </View>
         </View>

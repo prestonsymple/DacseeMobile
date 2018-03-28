@@ -15,8 +15,8 @@ const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ 
-  account: state.account, 
+export default connect(state => ({
+  account: state.account,
   booking: state.booking,
   ...state.circle,
   i18n: state.intl.messages || {}
@@ -161,7 +161,7 @@ export default connect(state => ({
                   />
                 }
                 contentContainerStyle={{
-                  paddingHorizontal: 25 
+                  paddingHorizontal: 25
                 }}
                 enableEmptySections={true}
                 dataSource={dataSource}
@@ -172,29 +172,29 @@ export default connect(state => ({
                     </View>
                   )
                 }}
-                renderRow={(data, section, rowId) => 
-                  section === '0' ? 
-                    (<RequestorPerson 
+                renderRow={(data, section, rowId) =>
+                  section === '0' ?
+                    (<RequestorPerson
                       onPressAccept={async (requestor_id) => {
                         try {
-                          const data = await Session.circle.put(`v1/requests/${requestor_id}`, { action: 'accept' })
+                          const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
                         } catch (e) {
                           this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
                         } finally {
                           this.props.dispatch(circle.asyncFetchFriends({ init: true }))
                         }
-                      }} 
+                      }}
                       onPressReject={async (requestor_id) => {
                         try {
-                          const data = await Session.circle.put(`v1/requests/${requestor_id}`, { action: 'reject' })
+                          const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
                         } catch (e) {
                           this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
                         } finally {
                           this.props.dispatch(circle.asyncFetchFriends({ init: true }))
                         }
-                      }} 
-                      data={data} />) : 
-                    (<ItemPerson 
+                      }}
+                      data={data} />) :
+                    (<ItemPerson
                       data={data}
                       onPressCheck={() => this.onPressCheck(data)}
                       onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { ...data })}
@@ -215,13 +215,13 @@ export default connect(state => ({
                       <FormattedMessage id={'select_all'}/>
                     </Text>
                   </TouchableOpacity>
-                ) 
+                )
               }
               {
                 (selected.length !== 0) && (
                   <TouchableOpacity onPress={() => {
                     this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
-                    this.props.navigation.goBack()    
+                    this.props.navigation.goBack()
                   }} activeOpacity={.7} style={[
                     { height: 56, bottom: Define.system.ios.x ? 27 + 22 : 27 },
                     { width: width - 90, left: 45, borderRadius: 33 },
@@ -231,7 +231,7 @@ export default connect(state => ({
                       <FormattedMessage id={'confirm'}/>
                     </Text>
                   </TouchableOpacity>
-                ) 
+                )
               }
             </View>
           )

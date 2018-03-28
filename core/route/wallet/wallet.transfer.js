@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default injectIntl(connect(state => ({ 
+export default injectIntl(connect(state => ({
   ...state.wallet
 }))(class WalletTransferScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '转账'
     }
   }
@@ -75,12 +75,12 @@ export default injectIntl(connect(state => ({
     }
 
     await InteractionManager.runAfterInteractions()
-    
+
     try {
       this.setState({
         searching: true
       })
-      const resp = await Session.user.get('v1/search?' + url)
+      const resp = await Session.User.Get('v1/search?' + url)
       // console.log('[账户]' + resp)
       const transferInfo = {
         // wallet: this.props.navigation.state.params.walletInfo,
@@ -98,7 +98,7 @@ export default injectIntl(connect(state => ({
         })
       } else {
         resp.data.length == 1 ?
-          this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) : 
+          this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) :
           this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
 
         this.setState({
@@ -110,13 +110,13 @@ export default injectIntl(connect(state => ({
       this.setState({
         searching: false
       })
-    } 
+    }
   }
 
   render() {
     const { searching } = this.state
     const { formatMessage } = this.props.intl
-    return (      
+    return (
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'interactive' } >
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
@@ -132,22 +132,22 @@ export default injectIntl(connect(state => ({
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5,marginBottom:5 }}>
               <FormattedMessage id={'recipient_account_type'}/>
-            </Text>            
-            <CheckBox titles={[ 'phone', 'email', 'userid']} style={{ flex: 1, height: 44 }} 
+            </Text>
+            <CheckBox titles={[ 'phone', 'email', 'userid']} style={{ flex: 1, height: 44 }}
               onPress={ (index, title) => {
                 this.setState({
                   searchType: index,
                   searchTitle: title,
                   accountVal:this.state.searchType==index?this.state.accountVal:''
                 })
-              }}/>                   
+              }}/>
           </View>
-          
+
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5,marginBottom:5 }}>
               <FormattedMessage id={'recipient_account'}/>
             </Text>
-            <View style={{ flex: 1, flexDirection: 'row' }}>              
+            <View style={{ flex: 1, flexDirection: 'row' }}>
               {
                 this.state.searchType  == 0 ?
                   (
@@ -163,12 +163,12 @@ export default injectIntl(connect(state => ({
                 {
                   msg => (
                     <Input style={{ flex: 1, fontSize: 14, height: 40, justifyContent: 'center' }}
-                      value={this.state.accountVal} placeholder={msg} 
+                      value={this.state.accountVal} placeholder={msg}
                       returnKeyType={'done'} onChangeText={ (value) => this.setState({searchContent: value,accountVal:value}) } />
                   )
                 }
-              </FormattedMessage>              
-            </View>                        
+              </FormattedMessage>
+            </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
@@ -180,16 +180,16 @@ export default injectIntl(connect(state => ({
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button disabled={ searching } onPress={ () => {
-              if (this.state.searchContent == '' | this.state.amount == 0 ) { 
+              if (this.state.searchContent == '' | this.state.amount == 0 ) {
                 this.props.dispatch(application.showMessage('请输入 转账金额、收款账号'))
               } else {
-                this._fetchData()                
-              }                
-            }       
+                this._fetchData()
+              }
+            }
               // this.props.navigation.navigate('WalletTransferSelection')
             } style={[{ width:240, height: 44, borderRadius: 4 }, searching ? {backgroundColor: '#a5a5a5'} : {backgroundColor: '#4cb1f7'}]}>
               {
-                searching ? 
+                searching ?
                   <Text style={{ fontSize: 20, color: 'white' }}>
                     <FormattedMessage id={'searching'}/>
                   </Text> :
@@ -200,7 +200,7 @@ export default injectIntl(connect(state => ({
             </Button>
           </View>
         </View>
-      </ScrollView>       
+      </ScrollView>
     )
   }
 }))
@@ -224,17 +224,17 @@ class CheckBox extends Component {
               <Button key={ index }activeOpacity={1} onPress={ () => {
                 this.setState({
                   selectIndex: index
-                })              
+                })
                 this.props.onPress(index, item)
               }} style={{ height: 40, justifyContent: 'center' }}>
                 <Text style={ selectIndex == index ? { fontSize: 14, color: '#FFB639' } : { fontSize: 14, color: '#a5a5a5', opacity: 0.7 } }>
                   <FormattedMessage id={item} />
                 </Text>
-              </Button> 
-            )             
+              </Button>
+            )
           })
-        }                     
-      </View> 
+        }
+      </View>
     )
   }
 }

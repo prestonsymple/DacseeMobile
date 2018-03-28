@@ -34,7 +34,7 @@ function* loginFlow() {
       if (stage === STAGE_DEFINE.ENTER_MOBILE_COMPLATE) { // 输入手机号&&邮箱
         try {
           const url = 'v1/sendVerificationCode/phone'
-          yield call(session.user.post, url, value)
+          yield call(session.User.Post, url, value)
           yield put(application.showMessage('已将验证码发送至您的手机'))
         } catch (e) {
           if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
@@ -70,7 +70,7 @@ function* loginFlow() {
           if (!body._id) {
             delete body._id
           }
-          const { data }  = yield call(session.user.post, path, body)
+          const { data }  = yield call(session.User.Post, path, body)
 
           yield call(loginSuccess, data) // 登录成功
 
@@ -111,7 +111,7 @@ function* loginFlow() {
             yield all(actions)
           } else if (e.response && e.response.data.code == 'MISSING_PHONE_VERIFICATION_CODE' && isMail) {
             const url = 'v1/sendVerificationCode/email'
-            yield call(session.user.post, url, { email: id })
+            yield call(session.User.Post, url, { email: id })
             yield all([
               put(application.hideProgress()),
               put(application.showMessage('已将验证码发送至您的手机')),

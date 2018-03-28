@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component, PureComponent } from 'react'
-import { 
+import {
   View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView,
   Image, Platform, DeviceEventEmitter
 } from 'react-native'
@@ -55,7 +55,7 @@ export default connect(state => ({
       if (km >= 160) { zoom = 8 }
       else if (km >= 80) { zoom = 9 }
       else if (km >= 40) { zoom = 10 }
-      else if (km >= 20) { zoom = 11 } 
+      else if (km >= 20) { zoom = 11 }
       else if (km >= 10) { zoom = 12 }
       else if (km >= 5) { zoom = 13 }
       else if (km >= 2.5) { zoom = 14 }
@@ -65,7 +65,7 @@ export default connect(state => ({
 
       const { routeCenterPoint, routeLength } = route
 
-      this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500) 
+      this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
       this.props.dispatch(Jobs.setJobs({ route }))
     })
   }
@@ -165,7 +165,7 @@ export default connect(state => ({
             <View style={{ flexDirection: 'row', height: Define.system.ios.x ? 52 + 22 : 52 }}>
               <TouchableOpacity onPress={async () => {
                 try {
-                  const { data } = await Session.booking.put(`v1/${booking_id}`, { action: 'accept' })
+                  const { data } = await Session.Booking.Put(`v1/${booking_id}`, { action: 'accept' })
                   const { isSuccess } = data
                   if (isSuccess) {
                     this.props.dispatch(Jobs.hideJobsDetail())
@@ -180,7 +180,7 @@ export default connect(state => ({
               </TouchableOpacity>
               <TouchableOpacity onPress={async () => {
                 try {
-                  const { data } = await Session.booking.put(`v1/${booking_id}`, { action: 'reject' })
+                  const { data } = await Session.Booking.Put(`v1/${booking_id}`, { action: 'reject' })
                   console.log(data)
                 } catch (e) {
                   console.log(e)

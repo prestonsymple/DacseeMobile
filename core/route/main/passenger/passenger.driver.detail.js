@@ -51,7 +51,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
       current: {},
       carLocation: {},
       ready: false,
-      from: {}, 
+      from: {},
       destination: {},
       route: {}
     }
@@ -66,14 +66,14 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
       if (this.props.status === 'ARRIVED') return undefined
       if (this.props.status === '' || this.props.status === 'ON_BOARD') {
         const { from, carLocation, destination, current } = this.state
-    
+
         // 初始化
         const route = Array.isArray(args) ? args[0] : args
         route.polylines = route.routeNaviPoint.map(pipe => ({
-          latitude: pipe.lat, 
+          latitude: pipe.lat,
           longitude: pipe.lng
         }))
-        const distance = this.props.status === '' ? 
+        const distance = this.props.status === '' ?
           await Utils.distance(from.coords.lat, from.coords.lng, carLocation.latitude, carLocation.longitude) : // 等待接驾
           await Utils.distance(destination.coords.lat || 0, destination.coords.lng || 0, current.latitude || 0, current.longitude || 0) // 前往目的地
         const km = distance / 1000
@@ -82,7 +82,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
         if (km >= 160) { zoom = 8 }
         else if (km >= 80) { zoom = 9 }
         else if (km >= 40) { zoom = 10 }
-        else if (km >= 20) { zoom = 11 } 
+        else if (km >= 20) { zoom = 11 }
         else if (km >= 10) { zoom = 12 }
         else if (km >= 5) { zoom = 13 }
         else if (km >= 2.5) { zoom = 14 }
@@ -93,7 +93,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
         const { routeCenterPoint, routeLength } = route
 
         if (this.map) {
-          this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500) 
+          this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
         }
         this.setState({ route })
       }
@@ -121,7 +121,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
   async fetchOrderDetail() {
     try {
       const { booking_id } = this.props.navigation.state.params
-      const { data: { driver_info, driver_id, from, destination } } = await Session.booking.get(`v1/bookings/${booking_id}?fields=driver_info,driver_id,from,destination`)
+      const { data: { driver_info, driver_id, from, destination } } = await Session.Booking.Get(`v1/bookings/${booking_id}?fields=driver_info,driver_id,from,destination`)
       this.setState({ driver_info, driver_id, from, destination })
       this.activeLocationTrack()
     } catch (e) {
@@ -142,7 +142,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
       this.trackTimer = setTimeout(async () => {
         if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) {
           try {
-            const { data } = await Session.location.get(`/v1?reqUser_id=${driver_id}&userRole=passenger`)
+            const { data } = await Session.Location.Get(`/v1?reqUser_id=${driver_id}&userRole=passenger`)
             const { latitude, longitude } = data
             if (!latitude || !longitude) return undefined
             this.map.calculateDriveRouteWithStartPoints({ latitude, longitude }, {
@@ -157,7 +157,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
             this.trackTimer && clearTimeout(this.trackTimer)
             this.trackTimer = undefined
             this.activeLocationTrack()
-          } 
+          }
         } else if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
           return undefined
         } else if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_ON_BOARD) {
@@ -175,7 +175,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
             this.trackTimer && clearTimeout(this.trackTimer)
             this.trackTimer = undefined
             this.activeLocationTrack()
-          } 
+          }
         }
       }, 2500)
     }
@@ -224,7 +224,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
           }
           {
             ('polylines' in route) && (
-              <Polyline 
+              <Polyline
                 coordinates={route.polylines}
                 width={6}
                 color={'#2d2a4a'}

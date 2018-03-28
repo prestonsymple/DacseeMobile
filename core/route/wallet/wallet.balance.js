@@ -1,7 +1,7 @@
 
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -34,7 +34,7 @@ export default connect(state => ({
 
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '钱包'
     }
   }
@@ -58,7 +58,7 @@ export default connect(state => ({
     })
     // this.props.dispatch(application.showHUD())
     try {
-      const resp = await Session.wallet.get('v1/wallets')
+      const resp = await Session.Wallet.Get('v1/wallets')
       this.props.dispatch(Wallet.setValues({ walletList: resp.data }))
       this.setState({
         detail: dataContrast.cloneWithRows(resp.data),
@@ -76,11 +76,11 @@ export default connect(state => ({
 
   render() {
     const { detail } = this.state
-    const wrapWidth = width    
+    const wrapWidth = width
 
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
-        <ListView 
+        <ListView
           refreshControl={
             <RefreshControl
               refreshing={this.state.loading}
@@ -92,9 +92,9 @@ export default connect(state => ({
           }
           dataSource={detail}
           enableEmptySections={true}
-          renderRow={(row) => <TouchableOpacity onPress={() => { 
-            
-            this.props.dispatch(Wallet.setValues({ selected_wallet: row}))           
+          renderRow={(row) => <TouchableOpacity onPress={() => {
+
+            this.props.dispatch(Wallet.setValues({ selected_wallet: row}))
             this.props.navigation.navigate('WalletDetail')
           }} activeOpacity={.7}><ListItem data={row} /></TouchableOpacity>}
           // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
@@ -121,7 +121,7 @@ class ListItem extends Component {
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
               <Image style={{ marginLeft: 15, width: 66, height: 66, borderRadius: 33}}
                 source={{ uri: countryFlag }}/>
-              
+
               <View style={{ marginLeft: 10, justifyContent: 'center'}}>
                 <Text style={{ fontSize: 13 }}>{ countryName }</Text>
                 <Text style={{ fontSize: 11, color: '#a5a5a5' }}>{ name }</Text>
@@ -141,11 +141,11 @@ class ListItem extends Component {
           </View>
 
           {
-            floatingDriverAmount === undefined & floatingPassengerAmount === undefined ? 
+            floatingDriverAmount === undefined & floatingPassengerAmount === undefined ?
               null :
               <FloatingAmounView amount={{ floatingDriverAmount: floatingDriverAmount, floatingPassengerAmount: floatingPassengerAmount}} />
           }
-          
+
         </View>
       </View>
     )
@@ -161,14 +161,14 @@ class FloatingAmounView extends Component {
     const { floatingPassengerAmount, floatingDriverAmount } = this.props.amount
     const height = (floatingDriverAmount === undefined ? 0 : 50) + (floatingPassengerAmount === undefined ? 0 : 50)
     return (
-      <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 1, borderRadius: 6, flexDirection: 'column', height: height}}>            
+      <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 1, borderRadius: 6, flexDirection: 'column', height: height}}>
         {
           floatingPassengerAmount === undefined ?
             null :
             <View style={{ flex: 1, paddingLeft:15, paddingTop: 10}}>
               <Text style={{ fontSize: 11, color: '#a5a5a5' }}>Floating Balance (Passenger)</Text>
               <Text style={{ fontSize: 13 }}>{ floatingPassengerAmount.toFixed(2) }</Text>
-            </View>                  
+            </View>
         }
         {
           floatingDriverAmount === undefined ?

@@ -27,9 +27,9 @@ export default connect(state => ({ booking: state.booking }))(class BookingCompl
       drawerLockMode: 'locked-closed',
       title: '支付及评价',
       headerLeft: (
-        <TouchableOpacity 
-          activeOpacity={0.7} 
-          style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }} 
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={{ top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
           onPress={() => {
             navigation.dispatch(NavigationActions.reset({
               index: 0,
@@ -66,7 +66,7 @@ export default connect(state => ({ booking: state.booking }))(class BookingCompl
   async fetchOrderDetail() {
     try {
       const { booking_id } = this.props.navigation.state.params
-      const { data: { driver_info, driver_id, from, destination, fare, payment_method } } = await Session.booking.get(`v1/bookings/${booking_id}?fields=fare,driver_info,driver_id,from,destination,payment_method`)
+      const { data: { driver_info, driver_id, from, destination, fare, payment_method } } = await Session.Booking.Get(`v1/bookings/${booking_id}?fields=fare,driver_info,driver_id,from,destination,payment_method`)
       this.setState({ driver_info, driver_id, from, destination, fare, payment_method })
     } catch (e) {
       this.tick += 1

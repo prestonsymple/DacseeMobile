@@ -70,7 +70,7 @@ export default injectIntl(connect(() => ({ }))(class TripListDetailScreen extend
       // console.log(this.state.selectedDate)
       // const dateFrom = this._getFormatterDate(this.state.selectedDate).dateFrom
       // const dateTo = this._getFormatterDate(this.state.selectedDate).dateTo
-      const resp = await Session.booking.get('v1/bookings?role=passenger')
+      const resp = await Session.Booking.Get('v1/bookings?role=passenger')
 
       this.setState({
         // dateDic: dateDic,

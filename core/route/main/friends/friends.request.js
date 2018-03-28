@@ -29,7 +29,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     const { referrer, id } = this.state
-    const { data } = await Session.user.get(`v1/search?country=CN&userId=${referrer}`)
+    const { data } = await Session.User.Get(`v1/search?country=CN&userId=${referrer}`)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage('该邀请已失效'))
     console.log(data[0])
     const { _id, avatars, fullName, userId } = data[0]
@@ -41,7 +41,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
 
   render() {
     const { invite_id, id, avatars = { url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }, fullName, userId } = this.state
-    
+
     return (
       <ScrollView contentContainerStyle={{ flex: 1 }} style={{ flex: 1 }}>
         <View style={{ backgroundColor: 'white', paddingTop: 45, justifyContent: 'center', alignItems: 'center' }}>
@@ -64,16 +64,16 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
               <View style={{ flexDirection: 'row', marginTop: 45 }}>
                 <TouchableOpacity onPress={async () => {
                   try {
-                    const response = await Session.circle.post('v1/requests', { addFriend_id: id })
+                    const response = await Session.Circle.Post('v1/requests', { addFriend_id: id })
                     this.props.dispatch(application.showMessage('对方已收到你的好友请求，请等待对方确认'))
                   } catch (e) {
                     console.log(e)
                     if (e.response && e.response.data && e.response.data.code === 'CIRCLE_REQUEST_EXIST') {
-                      this.props.dispatch(application.showMessage('对方已收到你的好友请求，等待确认中')) 
+                      this.props.dispatch(application.showMessage('对方已收到你的好友请求，等待确认中'))
                     } else if (e.response && e.response.data && e.response.data.code === 'ALREADY_IN_CIRCLE') {
-                      this.props.dispatch(application.showMessage('您已经是对方的好友了')) 
+                      this.props.dispatch(application.showMessage('您已经是对方的好友了'))
                     } else {
-                      this.props.dispatch(application.showMessage('发生错误，请稍后再试')) 
+                      this.props.dispatch(application.showMessage('发生错误，请稍后再试'))
                     }
                   }
                 }} activeOpacity={.7} style={{ backgroundColor: '#70c040', height: 44, flex: 1, alignItems: 'center', justifyContent: 'center' }}>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component, PureComponent } from 'react'
-import { 
+import {
   View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView,
   Image
 } from 'react-native'
@@ -12,7 +12,7 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
 import { System, Icons, Screen, Session } from '../../../utils'
-import { Button } from '../../../components' 
+import { Button } from '../../../components'
 import { booking, application } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 /*****************************************************************************************************/
@@ -35,7 +35,7 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
   render() {
     const { status } = this.props
     const show = (
-      status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT || 
+      status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT ||
       status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE
     )
     const active = status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT
@@ -52,10 +52,10 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
               { height: 120, width: Screen.window.width - 90, justifyContent: 'center', alignItems: 'center' },
               { top: 35, position: 'absolute' }
             ]}>
-              <Progress.Circle 
+              <Progress.Circle
                 size={124}
-                color={'#ccccccEE'} 
-                indeterminate={true} 
+                color={'#ccccccEE'}
+                indeterminate={true}
                 // borderRadius={4}
                 // animationType={'decay'}
                 // borderColor={'transparent'}
@@ -74,7 +74,7 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
             <Button onPress={async () => {
               if (!active) return
               try {
-                await Session.booking.put(`v1/${this.props.booking_id}`, { action: 'cancel' })
+                await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
                 this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               } catch(e) {
                 this.props.dispatch(application.showMessage('无法连接到服务器'))

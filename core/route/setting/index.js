@@ -22,7 +22,7 @@ const SettingMenuScreen = connect(state => ({
   i18n: state.intl.messages || {}
 }))(class SettingScreen extends PureComponent {
   static navigationOptions = { title: '设置' }
-  
+
   render() {
     const { navigation, dispatch, i18n } = this.props
 
@@ -35,12 +35,12 @@ const SettingMenuScreen = connect(state => ({
           title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
         }],
         [{
-          title: i18n.feedback, type: 'text', onPress: async () => navigation.navigate('SettingWetView', { 
+          title: i18n.feedback, type: 'text', onPress: async () => navigation.navigate('SettingWetView', {
             title: '意见反馈 - 演示',
             source: { uri: 'https://m.connect.aliyun.com/?utm_source=mmenu' }
           })
         }, {
-          title: i18n.help, type: 'text', onPress: () => navigation.navigate('SettingWetView', { 
+          title: i18n.help, type: 'text', onPress: () => navigation.navigate('SettingWetView', {
             title: '帮助中心 - 演示',
             source: { uri: 'https://m.aliyun.com/doc/index.html' }
           })
@@ -58,25 +58,25 @@ const SettingMenuScreen = connect(state => ({
 })
 
 // 账号与安全
-const SettingAccountScreen = connect(state => ({ 
+const SettingAccountScreen = connect(state => ({
   user: state.account.user,
   i18n: state.intl.messages || {}
 }))(class SettingProfileScreen extends PureComponent {
   static navigationOptions = { title: '账号与安全' }
 
-  async _changeFullName(value) {    
+  async _changeFullName(value) {
     try {
-      const resp = await Session.user.put('v1/profile', { fullName: value })
+      const resp = await Session.User.Put('v1/profile', { fullName: value })
       this.props.dispatch(account.setAccountValue({
         user: Object.assign({}, this.props.user, { fullName: resp.data.fullName })
       }))
       this.props.dispatch(application.showMessage('全名修改成功'))
     } catch (e) {
       this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
-    } 
+    }
   }
 
-  async _changeEmail(value) {    
+  async _changeEmail(value) {
     try {
       const data = await Session.User.Put('v1/profile', { email: value })
       this.props.dispatch(account.setAccountValue({
@@ -85,7 +85,7 @@ const SettingAccountScreen = connect(state => ({
       this.props.dispatch(application.showMessage('邮箱修改成功'))
     } catch (e) {
       this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
-    } 
+    }
   }
 
   render() {
@@ -100,30 +100,30 @@ const SettingAccountScreen = connect(state => ({
         }, {
           title: i18n.account, type: 'text', value: user.userId, editable: false
         }, {
-          title: i18n.fullname, 
-          type: 'text', 
-          value: `${user.fullName}`, 
-          onPress: () => navigation.navigate('FormEditor', { 
+          title: i18n.fullname,
+          type: 'text',
+          value: `${user.fullName}`,
+          onPress: () => navigation.navigate('FormEditor', {
             title: '修改全名',
-            editorName: 'String', 
-            option: { 
+            editorName: 'String',
+            option: {
               placeholder: '请输入您的全名',
               value: user.fullName,
               onChangeValue:  (val) => this._changeFullName(val)
-            } 
+            }
           })
         }, {
-          title: i18n.email, 
-          type: 'text', 
-          value: user.email || i18n.no_content, 
-          onPress: () => navigation.navigate('FormEditor', { 
+          title: i18n.email,
+          type: 'text',
+          value: user.email || i18n.no_content,
+          onPress: () => navigation.navigate('FormEditor', {
             title: '修改邮箱',
-            editorName: 'String', 
-            option: { 
+            editorName: 'String',
+            option: {
               placeholder: '请输入您的邮箱',
               value: user.email,
               onChangeValue:  (val) => this._changeEmail(val)
-            } 
+            }
           })
         }], [{
           title: i18n.bind_wechat, type: 'text', value: '', onPress: () => { this.props }
@@ -194,25 +194,25 @@ const SettingLanguageChooseScreen = connect(state => ({
 }))(class SettingLanguageChooseScreen extends PureComponent {
   static navigationOptions = { title: '语言选择' }
 
-  render() {    
-    const { navigation, dispatch, language, i18n } = this.props    
+  render() {
+    const { navigation, dispatch, language, i18n } = this.props
 
     return (
       <Settings producer={[
         [{
-          title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false, 
+          title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false,
           onPress: () => {
             dispatch(intl.update('zh'))
             navigation.goBack()
           }
         }, {
-          title: i18n.mas, type: 'radio', value: language == 'mas', editable: false, 
+          title: i18n.mas, type: 'radio', value: language == 'mas', editable: false,
           onPress: () => {
             dispatch(intl.update('mas'))
             navigation.goBack()
           }
         }, {
-          title: i18n.en, type: 'radio', value: language == 'en', editable: false, 
+          title: i18n.en, type: 'radio', value: language == 'en', editable: false,
           onPress: () => {
             dispatch(intl.update('en'))
             navigation.goBack()
