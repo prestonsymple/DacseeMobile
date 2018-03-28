@@ -21,7 +21,6 @@ import {
 } from '../route/main'
 
 import {
-  JobsListenerScreen,
   JobsListScreen,
   JobsListDetailScreen
 } from '../route/jobs'
@@ -88,7 +87,6 @@ const HomeScreen = {
   FriendsRequest: { screen: FriendsRequestScreen },
   FriendsDetail: { screen: FriendsDetailScreen },
 
-  JobsListener: { screen: JobsListenerScreen },
   JobsList: { screen: JobsListScreen },
   JobsListDetail: { screen: JobsListDetailScreen },
 

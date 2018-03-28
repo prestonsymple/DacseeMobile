@@ -20,7 +20,7 @@ export default connect(state => ({
   booking: state.booking,
   ...state.circle,
   i18n: state.intl.messages || {}
-}))(class FriendsCircleComponent extends Component {
+}))(class FriendsCircleComponent extends PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     return {

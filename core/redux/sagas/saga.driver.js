@@ -10,42 +10,69 @@ import { System, Session } from '../../utils'
 function* watchBooking() {
   while(true) {
     try {
-      const { payload } = yield take(driver.newJobs().type)
-      const { data } = yield call(Session.booking.get, `v1/bookings/${payload}?fields=type,from,notes,destination,booking_at,payment_method,fare,passenger_info`)
-      yield put(driver.setJobs({ detail: data }))
-      yield put(driver.showJobsDetail())
+      const { payload } = yield take(driver.driverSetStatus().type)
+      // const { data } = yield call(Session.booking.get, `v1/bookings/${payload}?fields=type,from,notes,destination,booking_at,payment_method,fare,passenger_info`)
+      // yield put(driver.setJobs({ detail: data }))
+      // yield put(driver.showJobsDetail())
     } catch (e) {
       console.log(e)
     }
   }
 }
 
-function* driverStatusObserver() {
-  // while (true) {
-    // const { booking_id, app_status } = yield select(state => ({
-    //   booking_id: state.storage.booking_id,
-    //   app_status: state.application.application_status === 'active'
-    // }))
+function* updateDriverLocation() {
+  try {
+    const { location } = yield select(state => ({ location: state.account.location }))
+    yield call(Session.Location.Put, 'v1', location)
+  } catch (e) {
+    // DO NOTHING
+  }
+}
 
-    // if (!booking_id || !app_status) {
-    //   yield delay(2500)
-    //   continue
-    // } else {
-    //   try {
-    //     const status = yield select(state => state.booking.status)
-    //     const booking = yield call(Session.Booking.Get, '/v1') 
-    //     console.log(booking)
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    //   yield delay(2500)
-    // }
-  // }
+function* updateDriverJobs() {
+  try {
+    let jobs = yield call(Session.Booking.Get, 'v1/bookings?role=driver&limit=20&order=desc')
+    jobs = jobs.filter(({ status }) => {
+      if (
+        status === 'Cancelled_by_Passenger' ||
+        status === 'asdsad'
+      ) return false
+      return true
+    })
+    yield put(driver.driverSetValue({ jobs }))
+  } catch (e) {
+    // DO NOTHING
+  }
+}
+
+function* driverStatusObserver() {
+  while (true) {
+    const { booking_id, app_status, working } = yield select(state => ({
+      booking_id: state.storage.driver_booking_id,
+      app_status: state.application.application_status === 'active',
+      working: state.driver.working
+    }))
+
+    // WAIT WORK STATUS
+    if (!working) {
+      yield delay(2500)
+      continue
+    }
+
+    yield all([
+      // UPDATE DRIVER LOCATION
+      fork(updateDriverLocation),
+      // LISTEN NEW JOBS
+      fork(updateDriverJobs)
+    ])
+
+    yield delay(2500)
+  }
 }
 
 export default function* driverSaga() {
   yield all([
-    // fork(driverStatusObserver),
+    fork(driverStatusObserver),
     fork(watchBooking)
   ])
 }

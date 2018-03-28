@@ -18,7 +18,6 @@ const initialState = {
 
   status_bar_hidden: false,
   progress_modal_visible: false,
-  show_driver_order: false,
   
   // throw_error: [],
   referrerValue: undefined,

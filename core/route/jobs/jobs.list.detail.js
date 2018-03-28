@@ -1,15 +1,9 @@
 import React, { Component, PureComponent } from 'react'
 import { 
-  Text, View, Animated, StyleSheet, Platform, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, Linking
+  Text, View, Animated, StyleSheet, Platform, StatusBar, Image, TouchableOpacity, ScrollView, Linking
 } from 'react-native'
-import DatePicker from 'react-native-datepicker'
-import InteractionManager from 'InteractionManager'
-import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import moment from 'moment'
-import { injectIntl } from 'react-intl'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
@@ -39,8 +33,10 @@ const MAP_DEFINE = {
 //   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 // })
 
-export default connect( state => ({
-  i18n: state.intl.messages || {}
+export default connect(state => ({
+  i18n: state.intl.messages || {},
+  working: state.driver.working,
+  jobs: state.driver.jobs
 }))(class JobsListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -63,63 +59,9 @@ export default connect( state => ({
         routeNaviPoint: [],
         routeTime: 0,
         routeTollCost: 0
-      },
-      jobDetail: this.props.navigation.state.params.jobDetail,
+      }
     }
-    console.log(this.state.jobDetail)
   }
-
-  // async componentDidMount() {
-  //   const { from, destination } = this.props.data
-  //   await InteractionManager.runAfterInteractions()
-  //   this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.BACK.BOOKING', () => {
-  //     this.props.navigation.goBack()
-  //     this.props.dispatch(booking.journeyUpdateData({ to: { location: { lat: 0, lng: 0 } } }))
-  //   })
-  //   this.eventListener = RCTDeviceEventEmitter.addListener('EVENT_AMAP_VIEW_ROUTE_SUCCESS', async (args) => {
-  //       // 初始化
-  //   const route = Array.isArray(args) ? args[0] : args
-  //   const distance = await Utils.distance(from.location.lat, from.location.lng, destination.location.lat, destination.location.lng)
-  //   const km = distance / 1000
-
-  //   let zoom = 16
-  //   if (km >= 160) { zoom = 8 }
-  //   else if (km >= 80) { zoom = 9 }
-  //   else if (km >= 40) { zoom = 10 }
-  //   else if (km >= 20) { zoom = 11 } 
-  //   else if (km >= 10) { zoom = 12 }
-  //   else if (km >= 5) { zoom = 13 }
-  //   else if (km >= 2.5) { zoom = 14 }
-  //   else { zoom = 15 }
-
-  //   zoom -= 1
-
-  //   const { routeCenterPoint, routeLength } = route
-
-  //   if (System.Platform.Android) { // TODO: Android 中心点存在偏移
-  //     this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500) 
-  //   } else {
-  //     this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
-  //   }
-  //     this.setState({ route })
-
-  //     Animated.loop(Animated.timing(this.indicator, { toValue: 1, duration: 800, useNativeDriver: true })).start()
-  //     this.selectCarType(this.props.data.type, routeLength, this.props.data)
-  //   })
-
-  //   this.map.calculateDriveRouteWithStartPoints({
-  //     latitude: from.location.lat,
-  //     longitude: from.location.lng
-  //   }, {
-  //     latitude: destination.location.lat,
-  //     longitude: destination.location.lng
-  //   })
-  // }
-
-  // componentWillUnmount() {
-  //   this.eventListener && this.eventListener.remove()
-  //   // this.subscription && this.subscription.remove()
-  // }
 
   _getStatus(status) {
     switch (status) {
@@ -170,13 +112,24 @@ export default connect( state => ({
     }
   }
 
+  componentWillReceiveProps(props) {
+    if (props.working && props.jobs !== this.props.jobs) {
+      const { _id } = props.navigation.state.params.jobDetail
+      const detail = props.jobs.find(pipe => pipe._id === _id)
+      if (!detail) { 
+        this.props.navigation.goBack()
+        this.props.dispatch(application.showMessage('该订单已有乘客取消'))
+      }
+    }
+  }
+
   render() {
-    // const { destination = { coords: { lat: 0, lng: 0 } }, from = { coords: { lat: 0, lng: 0 } }} = this.state.jobDetail
-    const { destination, from, payment_method, fare, booking_at, status, passenger_info } = this.state.jobDetail
+    const { destination, from, payment_method, fare, booking_at, status, passenger_info, _id } = this.props.navigation.state.params.jobDetail
     const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
     const { i18n } = this.props
     const leftBtn = this._getStatus(status).left
     const rightBtn = this._getStatus(status).right
+
     return (      
       <View style={{ flex: 1 }}>
         <MapView

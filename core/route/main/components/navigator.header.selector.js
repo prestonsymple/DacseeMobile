@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import {
   Text, View, TouchableOpacity, ScrollView, Platform
 } from 'react-native'
@@ -23,7 +23,7 @@ const DEFAULT_MENU = [{
 export default connect(state => ({
   selected_type: state.booking.type,
   locale: state.intl.locale
-}))(class HeaderSection extends PureComponent {
+}))(class HeaderSection extends Component {
 
   constructor(props) {
     super(props)

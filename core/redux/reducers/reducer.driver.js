@@ -16,10 +16,8 @@ const initialState = {
 }
 
 export default handleActions({
-  [driver.newJobs]: (state, { payload }) => Object.assign({}, state, { booking_id: payload }),
 
-  [driver.setJobs]: (state, { payload }) => Object.assign({}, state, payload),
+  [driver.driverSetValue]: (state, { payload }) => Object.assign({}, state, payload),
+  [driver.driverSaveStatus]: (state, { payload }) => Object.assign({}, state, { status: payload }),
 
-  [driver.acceptJobs]: (state) => Object.assign({}, state, { working: true }),
-  [driver.cancelJobs]: (state) => Object.assign({}, state, { status: '', working: false, detail: {}, route: {} })
 }, initialState)
