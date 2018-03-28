@@ -21,27 +21,17 @@ function* watchBooking() {
 }
 
 function* updateDriverLocation() {
-  try {
-    const { location } = yield select(state => ({ location: state.account.location }))
-    yield call(Session.Location.Put, 'v1', location)
-  } catch (e) {
-    // DO NOTHING
-  }
-}
-
-function* updateDriverJobs() {
-  try {
-    let jobs = yield call(Session.Booking.Get, 'v1/bookings?role=driver&limit=20&order=desc')
-    jobs = jobs.filter(({ status }) => {
-      if (
-        status === 'Cancelled_by_Passenger' ||
-        status === 'asdsad'
-      ) return false
-      return true
-    })
-    yield put(driver.driverSetValue({ jobs }))
-  } catch (e) {
-    // DO NOTHING
+  while(true) {
+    try {
+      const working = yield select(state => state.driver.working)
+      if (working) {
+        const { location } = yield select(state => ({ location: state.account.location }))
+        yield call(Session.Location.Put, 'v1', location)
+      }
+    } catch (e) {
+      // DO NOTHING
+    }
+    yield delay(5000)
   }
 }
 
@@ -53,19 +43,26 @@ function* driverStatusObserver() {
       working: state.driver.working
     }))
 
-    // WAIT WORK STATUS
-    if (!working) {
-      yield delay(2500)
-      continue
-    }
-
-    yield all([
-      // UPDATE DRIVER LOCATION
-      fork(updateDriverLocation),
+    if (working) {
       // LISTEN NEW JOBS
-      fork(updateDriverJobs)
-    ])
-
+      try {
+        const fields = [
+          '_id', 'assign_type', 'booking_at', 'country', 'destination', 
+          'fare', 'from', 'notes', 'status', 'payment_method', 'passenger_info'
+        ]
+        let jobs = yield call(Session.Booking.Get, `v1/bookings?role=driver&limit=10&sort=-booking_at&fields=${fields.join(',')}`)
+        jobs = jobs.filter(({ status }) => {
+          if (
+            status === 'Cancelled_by_Passenger' ||
+            status === 'Cancelled_by_Driver'
+          ) return false
+          return true
+        })
+        yield put(driver.driverSetValue({ jobs }))
+      } catch (e) {
+        // DO NOTHING
+      } 
+    }
     yield delay(2500)
   }
 }
@@ -73,6 +70,7 @@ function* driverStatusObserver() {
 export default function* driverSaga() {
   yield all([
     fork(driverStatusObserver),
+    fork(updateDriverLocation),
     fork(watchBooking)
   ])
 }

@@ -39,10 +39,6 @@ function* bookingOnComplete() {
   }
 }
 
-function* bookingDetailWatch() {
-  
-}
-
 function* bookingFlow() {
   while(true) {
     const action = yield take(booking.passengerSetStatus().type)
@@ -203,8 +199,7 @@ function* passengerStatusObserver() {
       continue
     } else {
       try {
-        const status = yield select(state => state.booking.status)
-        const booking = yield call(Session.Booking.Get, '/v1') 
+        const booking = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=to,from,notes`) 
         console.log(booking)
       } catch (e) {
         console.log(e)

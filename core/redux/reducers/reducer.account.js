@@ -16,7 +16,7 @@ const initialState = {
 export default handleActions({
 
   [account.saveLogin]: (state, { payload }) => Object.assign({}, state, { ...payload, status: true }),
-  [account.saveLogout]: (state) => Object.assign({}, state, { status: false, authToken: '', user: {} }),
+  [account.saveLogout]: (state) => Object.assign({}, state, Object.assign({}, { status: false, authToken: '' })),
 
   [account.setAccountValue]: (state, { payload }) => Object.assign({}, state, payload),
 

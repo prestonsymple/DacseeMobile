@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/dacsee.iml" filepath="$PROJECT_DIR$/dacsee.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../node_modules/lottie-react-native/lib/android/lottie-react-native.iml" filepath="$PROJECT_DIR$/../node_modules/lottie-react-native/lib/android/lottie-react-native.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../node_modules/lottie-react-native/src/android/lottie-react-native.iml" filepath="$PROJECT_DIR$/../node_modules/lottie-react-native/src/android/lottie-react-native.iml" />
       <module fileurl="file://$PROJECT_DIR$/../node_modules/lottie-react-native/lib/android/lottie-react-native.iml" filepath="$PROJECT_DIR$/../node_modules/lottie-react-native/lib/android/lottie-react-native.iml" />
       <module fileurl="file://$PROJECT_DIR$/../node_modules/react-native-camera/android/react-native-camera.iml" filepath="$PROJECT_DIR$/../node_modules/react-native-camera/android/react-native-camera.iml" />
       <module fileurl="file://$PROJECT_DIR$/../node_modules/react-native-camera/android/react-native-camera.iml" filepath="$PROJECT_DIR$/../node_modules/react-native-camera/android/react-native-camera.iml" />

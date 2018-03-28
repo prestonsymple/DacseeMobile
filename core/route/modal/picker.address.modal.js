@@ -37,22 +37,18 @@ export default connect(state => ({
   }
 
   onEnterKeywords(keywords) {
-    try {
-      this.timer && clearTimeout(this.timer)
-      this.timer = setTimeout(async () => {
-        if (keywords.length === 0) return this.setState({ source: dataContrast.cloneWithRows([]) })
-        try {
-          const { lat, lng } = this.props.location
-          const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
-          this.setState({ source: dataContrast.cloneWithRows(data) })
-        } catch (e) {
-          console.log(e)
-        }
-      }, 350)
-    } catch (e) {
-      // nothing
-    }
+    this.timer && clearTimeout(this.timer)
+    this.timer = setTimeout(async () => {
+      if (keywords.length === 0) return this.setState({ source: dataContrast.cloneWithRows([]) })
+      try {
+        const { lat, lng } = this.props.location
+        const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
+        const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+        this.setState({ source: dataContrast.cloneWithRows(data) })
+      } catch (e) {
+        console.log(e)
+      }
+    }, 350)
   }
 
   render() {

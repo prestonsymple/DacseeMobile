@@ -109,8 +109,8 @@ android {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18032701
-        versionName "0.30.0"
+        versionCode 18032901
+        versionName "0.31.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -162,12 +162,12 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':lottie-react-native')
     compile project(':react-native-camera')
     compile project(':react-native-image-picker')
     compile project(':react-native-picker')
     compile project(':rn-splash-screen')
     //    compile project(':react-native-push-notification')
-    compile project(':lottie-react-native')
     compile project(':react-native-maps')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')

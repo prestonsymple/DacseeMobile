@@ -35,7 +35,7 @@ function* fetchFriends() {
 
       yield put(circle.setValues({ loading: false, requestor, friend, page }))
     } catch (e) {
-      if (circleReducer.friend.lenght !== 0 && circleReducer.requestor.length !== 0) {
+      if (circleReducer.friend.lenght !== 0 || circleReducer.requestor.length !== 0) {
         yield put(circle.setValues({ loading: false, requestor: circleReducer.requestor, friend: circleReducer.friend, page: page }))
       } else {
         yield put(circle.setValues({ loading: false, requestor: [], friend: [], page: page }))

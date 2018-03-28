@@ -187,6 +187,7 @@ function* logoutFlow() {
       yield put(account.loginPutValue(0))
       yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
     } catch (e) {
+      console.log(e)
       yield put(application.showMessage('无法连接到服务器，请确认您的网络是否正常'))
     }
   }

@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 import { 
-  Text, View, Animated, StyleSheet, Platform, StatusBar, Image, TouchableOpacity, ScrollView, Linking
+  Text, View, Animated, StyleSheet, Platform, StatusBar, Image, TouchableOpacity, ScrollView, Linking, Alert
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -64,11 +64,36 @@ export default connect(state => ({
   }
 
   _getStatus(status) {
+    const { _id } = this.props.navigation.state.params.jobDetail
     switch (status) {
     case 'Pending_Acceptance':
-      return {left: 'reject', right: 'accept', leftAction: () => { }, rightAction: () => {} }
+      return {left: 'reject', right: 'accept', leftAction: async () => {
+        Alert.alert('拒绝该订单', '确认拒绝该订单吗?', [
+          { text: '取消' },
+          { text: '确认', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'reject' })
+              this.props.navigation.goBack()
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
+      }, rightAction: () => {} }
     case 'On_The_Way':
-      return {left: 'cancel', right: 'on_the_way', leftAction: () => { }, rightAction: () => {} }
+      return {left: 'cancel', right: 'on_the_way', leftAction: async () => { 
+        Alert.alert('取消行程', '乘客正等待接驾中，取消订单将会影响您的信用，继续吗?', [
+          { text: '放弃' },
+          { text: '确认取消', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
+              this.props.navigation.goBack()
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
+      }, rightAction: () => {} }
     case 'Arrived':
       return {left: 'No Show', right: 'On Board', leftAction: () => {}, rightAction: () => {} }
     }
@@ -118,7 +143,6 @@ export default connect(state => ({
       const detail = props.jobs.find(pipe => pipe._id === _id)
       if (!detail) { 
         this.props.navigation.goBack()
-        this.props.dispatch(application.showMessage('该订单已有乘客取消'))
       }
     }
   }
