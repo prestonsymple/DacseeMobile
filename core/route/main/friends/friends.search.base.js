@@ -46,12 +46,12 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
     try {
       const location = await System.Location.Current()
       const { latitude, longitude } = location
-      const placeId = await Session.lookup.get(`v1/lookup/nearbyPlaces?latitude=${latitude}&longitude=${longitude}&resultType=countryOnly`)
-      const searchRet = await Session.user.get(`v1/search?country=${placeId.data}${searchStr}`)
+      const placeId = await Session.Lookup.Get(`v1/lookup/nearbyPlaces?latitude=${latitude}&longitude=${longitude}&resultType=countryOnly`)
+      const searchRet = await Session.User.Get(`v1/search?country=${placeId.data}${searchStr}`)
       this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
     } catch (e) {
       try {
-        const searchRet = await Session.user.get(`v1/search?country=CN&${searchStr}`)
+        const searchRet = await Session.User.Get(`v1/search?country=CN&${searchStr}`)
         this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
       } catch (err) {
         this.props.dispatch(application.showMessage('请确认输入是否正确，并再次尝试'))
@@ -71,8 +71,8 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
               <Text style={{ color: '#666', fontWeight: '600', marginTop: 12 }}>请等待...</Text>
             </View>
           ) : (
-            <ListView 
-              dataSource={this.state.dataSource} 
+            <ListView
+              dataSource={this.state.dataSource}
               enableEmptySections={true}
               renderSeparator={() => (<View style={{ paddingLeft: 15 }}><View style={{ height: .8, backgroundColor: '#f2f2f2' }} /></View>)}
               renderRow={({ _id, avatars, fullName, userId }) => (
