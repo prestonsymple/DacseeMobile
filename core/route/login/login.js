@@ -12,7 +12,7 @@ import { Screen, Icons, Define, Session } from '../../utils'
 import resources from '../../resources'
 import { Button } from '../../components'
 import ShareUtile from '../../native/umeng/ShareUtil'
-import actionApplication, { application as app, account } from '../../redux/actions'
+import { application as app, account } from '../../redux/actions'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl';
 
@@ -191,7 +191,7 @@ export default connect(state => ({
 
       this.props.dispatch(account.setAccountValue(data))
       this.props.dispatch(account.loginSuccess())
-      this.props.dispatch(application.updatePushToken())
+      this.props.dispatch(app.updatePushToken())
       // console.log('facebook登录', data)
     } catch(e) {
       // console.log('facebook登录失败', e)
