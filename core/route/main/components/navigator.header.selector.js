@@ -26,18 +26,18 @@ export default connect(state => ({
   i18n: state.intl.messages
 }))(class HeaderSection extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      menu: DEFAULT_MENU
-    }
-  }
+  // constructor(props) {
+  //   super(props)
+  //   this.state = {
+  //     menu: DEFAULT_MENU
+  //   }
+  // }
 
-  componentWillReceiveProps(props) {
-    if (this.props.locale !== props.locale) {
-      this.setState({ menu: lodash.cloneDeep(DEFAULT_MENU) })
-    }
-  }
+  // componentWillReceiveProps(props) {
+  //   if (this.props.locale !== props.locale) {
+  //     this.setState({ menu: lodash.cloneDeep(DEFAULT_MENU) })
+  //   }
+  // }
 
   render() {
     const { selected_type, i18n } = this.props
@@ -53,7 +53,7 @@ export default connect(state => ({
       ]}>
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ height: 34 }}>
           {
-            this.state.menu.map((pipe, index) => (
+            DEFAULT_MENU.map((pipe, index) => (
               <TouchableOpacity activeOpacity={1} onPress={() => this.props.dispatch(booking.passengerSetValue({ type: pipe.key }))} key={index} style={{ paddingHorizontal: 10, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={selected_type === pipe.key ? { color: 'white', fontSize: 13, fontWeight: '600' } : { color: 'white', fontSize: 13, fontWeight: '600', opacity: .7  }}>
                   {i18n[`${pipe.title}`]}

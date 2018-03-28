@@ -203,12 +203,7 @@ const SettingLanguageChooseScreen = connect(state => ({
           title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false,
           onPress: () => {
             dispatch(intl.update('zh'))
-            dispatch(application.showHUD)
-            setTimeout(() => {
-              dispatch(application.hideHUD)
-              navigation.goBack()
-            }, 1000);
-
+            navigation.goBack()
           }
         }, {
           title: i18n.mas, type: 'radio', value: language == 'mas', editable: false,
