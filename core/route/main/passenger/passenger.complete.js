@@ -66,7 +66,7 @@ export default connect(state => ({ booking: state.booking }))(class BookingCompl
   async fetchOrderDetail() {
     try {
       const { booking_id } = this.props.navigation.state.params
-      const { data: { driver_info, driver_id, from, destination, fare, payment_method } } = await Session.Booking.Get(`v1/bookings/${booking_id}?fields=fare,driver_info,driver_id,from,destination,payment_method`)
+      const { driver_info, driver_id, from, destination, fare, payment_method } = await Session.Booking.Get(`v1/bookings/${booking_id}?fields=fare,driver_info,driver_id,from,destination,payment_method`)
       this.setState({ driver_info, driver_id, from, destination, fare, payment_method })
     } catch (e) {
       this.tick += 1

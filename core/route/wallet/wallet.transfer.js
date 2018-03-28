@@ -84,20 +84,20 @@ export default connect(state => ({
       // console.log('[账户]' + resp)
       const transferInfo = {
         // wallet: this.props.navigation.state.params.walletInfo,
-        userList: resp.data,
+        userList: resp,
         amount:  amount,
         remark: remark
       }
       // console.log(transferInfo)
       // this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
 
-      if (resp.data.length == 0) {
+      if (resp.length == 0) {
         this.props.dispatch(application.showMessage('账号信息错误，未找到对应的账号'))
         this.setState({
           searching: false
         })
       } else {
-        resp.data.length == 1 ?
+        resp.length == 1 ?
           this.props.navigation.navigate('WalletTransferSummary', { transferInfo: transferInfo }) :
           this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
 
