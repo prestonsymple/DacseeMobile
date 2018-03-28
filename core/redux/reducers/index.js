@@ -4,7 +4,7 @@ import application from './reducer.application'
 import account from './reducer.account'
 import booking from './reducer.booking'
 import storage_reducer from './reducer.storage'
-import jobs from './reducer.jobs'
+import driver from './reducer.driver'
 import circle from './reducer.circle'
 import wallet from './reducer.wallet'
 import intl from './reducer.intl'
@@ -21,7 +21,7 @@ export default combineReducers({
   application,
   account,
   booking,
-  jobs,
+  driver,
   circle,
   wallet,
 

@@ -37,6 +37,7 @@ export default connect(state => ({ location: state.account.location }))(class Se
     try {
       this.timer && clearTimeout(this.timer)
       this.timer = setTimeout(async () => {
+        if (keywords.length === 0) return this.setState({ source: dataContrast.cloneWithRows([]) })
         try {
           const { lat, lng } = this.props.location
           const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)

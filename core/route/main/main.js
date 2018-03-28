@@ -17,7 +17,7 @@ const { width } = Screen.window
 
 export default connect(state => ({
   booking_status: state.booking.status,
-  jobs_status: state.jobs.status,
+  jobs_status: state.driver.status,
   app_status: state.application.application_status
 }))(class MainScreen extends Component {
 
@@ -101,6 +101,7 @@ export default connect(state => ({
     const { deniedAccessLocation } = this.state
     return deniedAccessLocation ? (
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
         <Text style={{ color: '#666', fontSize: 14 }}>请确认您的位置权限是否打开</Text>
       </View>

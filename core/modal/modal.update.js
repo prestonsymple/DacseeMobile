@@ -84,6 +84,8 @@ class CodePushComponent extends Component {
       await delay(1000)
       this.setState({ indeterminate: false, progress: 100 })
 
+      await delay(2000)
+      this.setState({ visible: false })
       await CodePush.notifyAppReady()
       await CodePush.restartApp()
     }

@@ -29,7 +29,7 @@ const MAP_DEFINE = {
 
 export default connect(state => ({
   visible: state.application.show_driver_order,
-  jobs: state.jobs
+  jobs: state.driver
 }))(class BookingOrderDetailModal extends Component {
 
   constructor(props) {

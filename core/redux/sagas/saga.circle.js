@@ -14,8 +14,8 @@ function* fetchFriends() {
     let { init = false, page = 'UNSET', limit = DEFAULT_LIMIT } = payload
     yield put(circle.setValues({ loading: true }))
 
+    const circleReducer = yield select(state => ({ ...state.circle }))
     try {
-      const circleReducer = yield select(state => ({ ...state.circle }))
       if (page === 'UNSET' && init) {
         page = 0
       } else 
@@ -35,7 +35,11 @@ function* fetchFriends() {
 
       yield put(circle.setValues({ loading: false, requestor, friend, page }))
     } catch (e) {
-      yield put(circle.setValues({ loading: false, requestor: [], friend: [], page: page }))
+      if (circleReducer.friend.lenght !== 0 && circleReducer.requestor.length !== 0) {
+        yield put(circle.setValues({ loading: false, requestor: circleReducer.requestor, friend: circleReducer.friend, page: page }))
+      } else {
+        yield put(circle.setValues({ loading: false, requestor: [], friend: [], page: page }))
+      }
     }
   }
 }

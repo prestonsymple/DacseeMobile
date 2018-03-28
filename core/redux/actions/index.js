@@ -1,7 +1,7 @@
 export { default as application } from './action.application'
 export { default as account } from './action.account'
 export { default as booking } from './action.booking'
-export { default as jobs } from './action.jobs'
+export { default as driver } from './action.driver'
 export { default as circle } from './action.circle'
 export { default as wallet } from './action.wallet'
 export { default as intl } from './action.intl'

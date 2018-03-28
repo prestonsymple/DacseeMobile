@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 import SplashScreen from 'rn-splash-screen'
 import { addNavigationHelpers, NavigationActions } from 'react-navigation'
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers'
+import intl from 'intl'
 import { IntlProvider } from 'react-intl-redux'
 
 import SwitchNavigation from './app.routes'
@@ -28,7 +29,6 @@ export default connect(state => ({ nav: state.nav }))(class AppLaunch extends Pu
   componentDidMount() {
     Linking.addEventListener('url', event => this.handleOpenURL(event.url))
     Linking.getInitialURL().then(url => url && this.handleOpenURL(url))
-
     SplashScreen.hide()
   }
 

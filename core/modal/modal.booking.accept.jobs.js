@@ -29,8 +29,8 @@ const MAP_DEFINE = {
 }
 
 export default connect(state => ({
-  visible: state.jobs.working,
-  jobs: state.jobs,
+  visible: state.driver.working,
+  jobs: state.driver,
   account: state.account
 }))(class BookingAcceptJobsModal extends Component {
 

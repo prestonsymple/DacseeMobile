@@ -3,7 +3,7 @@
 import {
   application,
   account,
-  jobs
+  driver
 } from '../actions'
 
 import _ from 'lodash'
@@ -51,10 +51,10 @@ export default handleActions({
   [application.setFullValue]: (state, { payload }) => Object.assign({}, state, { fullValue: payload }),
   [application.setMailModeValue]: (state, { payload }) => Object.assign({}, state, { mail_login_mode_id: payload }),
 
-  [jobs.showJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: true }),
-  [jobs.hideJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: false }),
+  [driver.showJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: true }),
+  [driver.hideJobsDetail]: (state) => Object.assign({}, state, { show_driver_order: false }),
 
-  [jobs.cancelJobs]: (state) => Object.assign({}, state, { show_driver_order: false }),
+  [driver.cancelJobs]: (state) => Object.assign({}, state, { show_driver_order: false }),
 
   [application.setCoreMode]: (state, { payload }) => Object.assign({}, state, { core_mode: payload }),
   // [application.throwErrorMessage]: (state, { payload }) => {

@@ -139,7 +139,8 @@ const zh_CN = {
   region: '地区',
   cn_simple: '中文(简体)',
   en: 'English',
-  mas: 'Bahasa Malaysia',   
+  mas: 'Bahasa Malaysia',
+  current_language: '中文(简体)',
 
   feedback: '意见反馈',
   help: '帮助中心',

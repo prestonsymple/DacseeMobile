@@ -13,7 +13,7 @@ const BUTTON_WIDTH = 88
 export default connect(state => ({ 
   core_mode: state.application.core_mode,
   status: state.booking.status,
-  hidden: (state.booking.status >= 1) || (state.jobs.working)
+  hidden: (state.booking.status >= 1) || (state.driver.working)
 }))(class NavigationBarSwipe extends PureComponent {
 
   constructor(props) {

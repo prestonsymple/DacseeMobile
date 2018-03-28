@@ -132,6 +132,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
 
   onStatusChangeListener({ nativeEvent }) {
     const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
+    if (this.props.status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) return
     /* Fix Offset */
     const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
     const maxValue = OFFSET_RANGE[Math.floor(zoomLevel) - 5]

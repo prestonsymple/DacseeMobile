@@ -179,10 +179,14 @@ function* loginFlow() {
 function* logoutFlow() {
   while(true) {
     const payload = yield take(account.logoutSuccess().type)
-    yield put(booking.passengerSetValue({ type: 'circle', name: '优选', payment: '现金支付', book: false, time: 'now', selected_friends: [] }))
-    yield put(account.loginPutValue(0))
-    yield call(session.Push.Put, `v1/unsubscribe`, { uuid: System.UUID })
-    yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
+    try {
+      yield call(session.Push.Put, 'v1/unsubscribe', { uuid: System.UUID })
+      yield put(booking.passengerSetValue({ type: 'circle', name: '优选', payment: '现金支付', book: false, time: 'now', selected_friends: [] }))
+      yield put(account.loginPutValue(0))
+      yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
+    } catch (e) {
+      yield put(application.showMessage('无法连接到服务器，请确认您的网络是否正常'))
+    }
   }
 }
 

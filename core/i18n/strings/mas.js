@@ -141,6 +141,7 @@ const mas = {
   cn_simple: '中文(简体)',
   en: 'English',
   mas: 'Bahasa Malaysia',
+  current_language: 'Bahasa Malaysia',
 
   feedback: 'Maklumbalas',
   help: 'Bantuan',

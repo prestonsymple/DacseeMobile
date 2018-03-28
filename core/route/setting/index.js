@@ -156,9 +156,21 @@ const SettingMessageNotificationScreen = connect(state => ({
 
 // 语言和地区
 const SettingLanguageRegionScreen = connect(state => ({
-  i18n: state.intl.messages || {}
+  i18n: state.intl.messages || {},
+  language: state.intl.locale
 }))(class SettingLanguageRegionScreen extends PureComponent {
   static navigationOptions = { title: '语言及地区' }
+
+  languageName(language) {
+    switch (language) {
+    case 'zh':
+      return '中文(简体)'
+    case 'mas':
+      return 'Bahasa Malaysia'
+    case 'en':
+      return 'English'
+    }
+  }
 
   render() {
     const { navigation, i18n } = this.props
@@ -166,7 +178,7 @@ const SettingLanguageRegionScreen = connect(state => ({
     return (
       <Settings producer={[
         [{
-          title: i18n.language, type: 'text', value: '中文(简体)', editable: true, onPress: () => navigation.navigate('SettingLanguageChoose')
+          title: i18n.language, type: 'text', value: i18n.current_language, editable: true, onPress: () => navigation.navigate('SettingLanguageChoose')
         }, {
           title: i18n.region, type: 'text', value: '中国大陆', editable: true, onPress: () => {}
         }]

@@ -123,7 +123,7 @@ export default connect(state => ({
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
-    console.log(this.props)
+
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <HeaderSearchBar />
