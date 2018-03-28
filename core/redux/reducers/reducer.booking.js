@@ -11,13 +11,15 @@ const initialState = {
   from: {},
   type: 'circle',
   name: '优选',
-  payment: '现金支付',
+  payment: 'Cash',
   book: false,
   time: 'now',
   fare: 0,
   selected_friends: [],
 
-  status: 0
+  status: 0,
+  driver_id: '',
+  driver: {}
 }
 
 export default handleActions({

@@ -52,10 +52,13 @@ function* bookingFlow() {
     if (status === STATUS.PASSGENER_BOOKING_INIT) {
       yield all([
         put(booking.passengerSetID('')),
-        put(booking.passengerSetValue({ destination: {}, time: 'now', payment: '现金支付' }))
+        put(booking.passengerSetValue({ destination: {}, time: 'now', payment: 'Cash' }))
       ])
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
-      yield put(booking.passengerSetID(''))
+      yield all([
+        put(booking.passengerSetID('')),
+        put(booking.passengerSetValue({ driver_id: '', driver: {} }))
+      ])
       if (!destination.coords || !from.coords) continue
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
       //
@@ -213,7 +216,7 @@ function* passengerUpdateDriverLocation() {
     } else {
       const driver = yield call(Session.Location.Get, `v1?reqUser_id=${driver_id}&userRole=passenger`)
       yield put(booking.passengerSetValue({ driver }))
-      yield delay(10000)
+      yield delay(30000)
     }
   }
 }
@@ -250,7 +253,17 @@ function* passengerStatusObserver() {
             put(booking.passengerSetValue({ driver_id })),
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY))
           ])
-        } 
+        } else if (bookingStatus === 'Arrived') {
+          yield all([
+            put(booking.passengerSetValue({ driver_id })),
+            put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED))
+          ])
+        } else if (bookingStatus === 'On_Board') {
+          yield all([
+            put(booking.passengerSetValue({ driver_id })),
+            put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_ON_BOARD))
+          ])
+        }
 
         console.log({
           driver_id, 

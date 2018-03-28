@@ -12,9 +12,9 @@ import ModalDriverRespond from './passenger.modal.wait.driver'
 import HeaderSection from '../components/navigator.header.selector'
 import CircleBar from '../components/circle.bar'
 
-import { MapView as AMapView, Search, Marker, Utils } from '../../../native/AMap'
+import { MapView as AMapView, Marker, Utils, Polyline } from '../../../native/AMap'
 // import GoogleMap from 'react-native-maps'
-import { Screen, Icons, Define, Session } from '../../../utils'
+import { Screen, Icons, Define, Session, UtilMath } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
@@ -30,6 +30,8 @@ const MAP_DEFINE = {
   showsZoomControls: false, /* android fix */
 }
 
+const DEFAULT_COORDS = { lat: 0, lng: 0, latitude: 0, longitude: 0 }
+
 const PIN_HEIGHT = ((height - 22) / 2)
 
 export default connect(state => ({ ...state.booking, booking_id: state.storage.booking_id }))(class PassengerComponent extends Component {
@@ -40,7 +42,8 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
       drag: false,
       showTP:false,
       showSP:false,
-      routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0
+      routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
+      polyline: []
     }
     this.currentLoc = {}
     this.timer = null
@@ -55,14 +58,12 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
   }
 
   async componentWillReceiveProps(props) {
-    if (this.props.status === props.status) return
-
-    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.status !== props.status) {
       this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
-      this.setState({ ready: true })
+      this.setState({ ready: true, polyline: [] })
     }
 
-    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && this.props.status !== props.status) {
       const { destination, from } = props
 
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
@@ -74,12 +75,21 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
 
       const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
       this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
+      this.setState({ polyline: [] })
     }
 
-    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
-      const { latitude, longitude } = props.driver
-      // await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${latitude},${longitude}/${}`)
-      // console.log('司机在路上了')
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY && props.driver !== this.props.driver && ('latitude' in props.driver)) {
+      const { driver, from } = props
+      const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
+      const passengerCoords = [from.coords.lng, from.coords.lat]
+
+      const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${passengerCoords.join(',')}`)
+      const lnglat = data.map(pipe => {
+        const coords = pipe.split(',')
+        return { longitude: parseFloat(coords[0]), latitude: parseFloat(coords[1]) }
+      })
+      this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
+      this.map.animateTo({ zoomLevel: 15, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
     }
   }
 
@@ -88,23 +98,6 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
     if (!this.props.booking_id) {
       this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
     }
-  }
-
-  async aMapMathRouteSuccess(args) {
-    const route = Array.isArray(args) ? args[0] : args
-    const { routeCenterPoint } = route
-    let zoom = 15
-
-    if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
-      const { destination, from } = this.props
-      const distance = await Utils.distance(
-        from.location.lat, from.location.lng,
-        destination.location.lat, destination.location.lng
-      )
-      zoom = this.mathDistanceZoom(distance)
-      this.setState({ ...route })
-    }
-    this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: routeCenterPoint.latitude, longitude: routeCenterPoint.longitude } }, 500)
   }
 
   mathDistanceZoom(distance) {
@@ -196,8 +189,8 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
     this.setState({showSP:false})
   }
   render() {
-    const { drag } = this.state
-    const { status, from, destination } = this.props
+    const { drag, polyline } = this.state
+    const { status, from, destination, driver } = this.props
 
     const MAP_SETTER = {
       style: { flex: 1 },
@@ -215,20 +208,36 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
     }
 
     /** FIX ANDROID LOCATION SERVICE CRASH */
-    let { from_coords, destination_coords } = { from_coords: { lat: 0, lng: 0 }, destination_coords: { lat: 0, lng: 0 } }
+
+    // TODO: FIX
+    let { from_coords, destination_coords } = { 
+      from_coords: DEFAULT_COORDS, 
+      destination_coords: DEFAULT_COORDS,
+      // driver_coords: DEFAULT_COORDS
+    }
     if (from.coords && destination.coords) {
       from_coords = from.coords
       destination_coords = destination.coords
     }
+    // if (driver.latitude && driver.longitude) {
+    //   driver_coords = { latitude: driver.latitude + .0002, longitude: driver.longitude }
+    // }
     from_coords = { latitude: from_coords.lat, longitude: from_coords.lng }
     destination_coords = { latitude: destination_coords.lat, longitude: destination_coords.lng }
     /** FIX ANDROID LOCATION SERVICE CRASH */
+
+    /* CAR POLYLINE */
+    let direction = polyline.length === 0 ? 0 : UtilMath.carDirection(polyline[0].latitude, polyline[0].longitude, polyline[1].latitude, polyline[1].longitude)
+    direction += 1
+    /* CAR POLYLINE */
 
     return (
       <View style={{ flex: 1, width }}>
         <AMapView minZoomLevel={5} {...MAP_DEFINE} {...MAP_SETTER}>
           <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
           <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
+          <Marker image={`rn_car_${direction}`} coordinate={polyline[0]} />
+          <Polyline coordinates={polyline} width={6} color={'#666'} />
         </AMapView>
         {/* <GoogleMap style={{ flex: 1 }}>
 

@@ -82,7 +82,6 @@ export default connect(state => ({
       }, rightAction: async () => {
         try {
           await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
-          this.props.navigation.goBack()
         } catch (e) {
           this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
         }
@@ -101,15 +100,42 @@ export default connect(state => ({
           } }
         ])
       }, rightAction: async () => {
-        try {
-          await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
-          this.props.navigation.goBack()
-        } catch (e) {
-          this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
-        }
+        Alert.alert('已到达上车地点', '点击继续将通知乘客已到达', [
+          { text: '取消' },
+          { text: '继续', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'arrived' })
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
       } }
     case 'Arrived':
-      return {left: 'No Show', right: 'On Board', leftAction: () => {}, rightAction: () => {} }
+      return {left: 'No_Show', right: 'On_Board', leftAction: () => {
+        Alert.alert('取消订单', '无法找到乘客?该订单将转至人工处理', [
+          { text: '放弃' },
+          { text: '确认取消', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
+              this.props.navigation.goBack()
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
+      }, rightAction: () => {
+        Alert.alert('开始行程', '点击继续将开始行程', [
+          { text: '取消' },
+          { text: '继续', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'on_board' })
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
+      } }
     }
   }
 
