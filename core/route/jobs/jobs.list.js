@@ -99,45 +99,50 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
 
   render() {
     const { dateDic, selectedDate, detail, switchValue, loading } = this.state
+
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          <Agenda
-            // items = { dateDic }
-            // items={
-            //   {'2018-03-11': [DEMO_DATA],
-            //     '2018-03-12': [DEMO_DATA, DEMO_DATA],
-            //     '2018-03-13': [],
-            //     '2018-03-14': [DEMO_DATA],
-            //   }}
-            loadItemsForMonth={(month) => {}}
-            onCalendarToggled={(calendarOpened) => {}}
-            onDayPress={(day)=>{
-              const dateStr = moment(day.timestamp).toISOString()
-              // console.log('clicked', dateStr)
-              this.setState({
-                selectedDate: dateStr
-              })
-              this._fetchData(dateStr)
-            }}
-            onDayChange={(day)=>{}}
-            selected={selectedDate}
-            pastScrollRange={50}
-            futureScrollRange={50}
-            renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>)}}
-            renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>)}}
-            rowHasChanged={(r1, r2) => {return r1._id !== r2._id}}
-            theme={{
-              // ...calendarTheme,
-              agendaDayTextColor: 'yellow',
-              agendaDayNumColor: 'green',
-              agendaTodayColor: 'red',
-              agendaKnobColor: 'blue'
-            }}
-            // agenda container style
-            style={{  }}
-          />
-        </View>
+        {
+          !switchValue && (
+            <View style={{ flex: 1 }}>
+              <Agenda
+                // items = { dateDic }
+                // items={
+                //   {'2018-03-11': [DEMO_DATA],
+                //     '2018-03-12': [DEMO_DATA, DEMO_DATA],
+                //     '2018-03-13': [],
+                //     '2018-03-14': [DEMO_DATA],
+                //   }}
+                loadItemsForMonth={(month) => {}}
+                onCalendarToggled={(calendarOpened) => {}}
+                onDayPress={(day)=>{              
+                  const dateStr = moment(day.timestamp).toISOString()
+                  // console.log('clicked', dateStr)
+                  this.setState({
+                    selectedDate: dateStr
+                  })
+                  this._fetchData(dateStr)              
+                }}
+                onDayChange={(day)=>{}}
+                selected={selectedDate}                  
+                pastScrollRange={50}
+                futureScrollRange={50}            
+                renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>);}}
+                renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>);}}
+                rowHasChanged={(r1, r2) => {return r1._id !== r2._id}}
+                theme={{
+                  // ...calendarTheme,
+                  agendaDayTextColor: 'yellow',
+                  agendaDayNumColor: 'green',
+                  agendaTodayColor: 'red',
+                  agendaKnobColor: 'blue'
+                }}
+                // agenda container style
+                style={{  }}
+              />
+            </View>
+          )
+        }
 
         <View style={{ flex: 4 }}>
           <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
