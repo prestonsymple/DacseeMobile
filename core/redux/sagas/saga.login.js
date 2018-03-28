@@ -70,7 +70,7 @@ function* loginFlow() {
           if (!body._id) {
             delete body._id
           }
-          const { data }  = yield call(session.User.Post, path, body)
+          const data = yield call(session.User.Post, path, body)
 
           yield call(loginSuccess, data) // 登录成功
 

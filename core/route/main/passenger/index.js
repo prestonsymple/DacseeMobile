@@ -73,7 +73,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       const zoom = this.mathDistanceZoom(distance)
       this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
 
-      const { fare } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
+      const fare = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
       this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
     }
   }
@@ -160,7 +160,7 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
 
-      const { data } = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
+      const data = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
       this.props.dispatch(booking.passengerSetValue({ from: data || {} }))
       this.setState({ drag: false })
     } catch (e) {

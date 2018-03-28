@@ -165,7 +165,7 @@ export default connect(state => ({
             <View style={{ flexDirection: 'row', height: Define.system.ios.x ? 52 + 22 : 52 }}>
               <TouchableOpacity onPress={async () => {
                 try {
-                  const { data } = await Session.Booking.Put(`v1/${booking_id}`, { action: 'accept' })
+                  const data = await Session.Booking.Put(`v1/${booking_id}`, { action: 'accept' })
                   const { isSuccess } = data
                   if (isSuccess) {
                     this.props.dispatch(Jobs.hideJobsDetail())
@@ -180,7 +180,7 @@ export default connect(state => ({
               </TouchableOpacity>
               <TouchableOpacity onPress={async () => {
                 try {
-                  const { data } = await Session.Booking.Put(`v1/${booking_id}`, { action: 'reject' })
+                  const data = await Session.Booking.Put(`v1/${booking_id}`, { action: 'reject' })
                   console.log(data)
                 } catch (e) {
                   console.log(e)

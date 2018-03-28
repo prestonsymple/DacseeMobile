@@ -29,7 +29,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     const { referrer, id } = this.state
-    const { data } = await Session.User.Get(`v1/search?country=CN&userId=${referrer}`)
+    const data = await Session.User.Get(`v1/search?country=CN&userId=${referrer}`)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage('该邀请已失效'))
     console.log(data[0])
     const { _id, avatars, fullName, userId } = data[0]

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component, PureComponent } from 'react'
-import { 
+import {
   View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView, Platform,
   StatusBar
 } from 'react-native'
@@ -20,7 +20,7 @@ import { BOOKING_STATUS } from '../main'
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(state => ({ 
+export default connect(state => ({
   location: state.account.location,
   i18n: state.intl.messages
 }))(class SelectAddressModal extends Component {
@@ -44,7 +44,7 @@ export default connect(state => ({
         try {
           const { lat, lng } = this.props.location
           const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+          const data = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
           this.setState({ source: dataContrast.cloneWithRows(data) })
         } catch (e) {
           console.log(e)
@@ -69,10 +69,10 @@ export default connect(state => ({
           <View style={{ height: Platform.select({ ios: 64, android: 44 }), backgroundColor: 'white', justifyContent: 'flex-end' }}>
             <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', height: 44 }}>
               <View style={{ flex: 1, paddingHorizontal: 12 }}>
-                <TextInput 
-                  {...Define.TextInputArgs} 
-                  onChangeText={onChangeWords} 
-                  placeholder={i18n.please_enter_keywords} 
+                <TextInput
+                  {...Define.TextInputArgs}
+                  onChangeText={onChangeWords}
+                  placeholder={i18n.please_enter_keywords}
                   style={[
                     { height: 44, fontWeight: '400', fontSize: 15, color: '#666' }
                   ]

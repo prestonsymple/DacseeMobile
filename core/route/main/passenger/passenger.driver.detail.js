@@ -121,7 +121,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
   async fetchOrderDetail() {
     try {
       const { booking_id } = this.props.navigation.state.params
-      const { data: { driver_info, driver_id, from, destination } } = await Session.Booking.Get(`v1/bookings/${booking_id}?fields=driver_info,driver_id,from,destination`)
+      const { driver_info, driver_id, from, destination } = await Session.Booking.Get(`v1/bookings/${booking_id}?fields=driver_info,driver_id,from,destination`)
       this.setState({ driver_info, driver_id, from, destination })
       this.activeLocationTrack()
     } catch (e) {
@@ -142,7 +142,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
       this.trackTimer = setTimeout(async () => {
         if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) {
           try {
-            const { data } = await Session.Location.Get(`/v1?reqUser_id=${driver_id}&userRole=passenger`)
+            const data = await Session.Location.Get(`/v1?reqUser_id=${driver_id}&userRole=passenger`)
             const { latitude, longitude } = data
             if (!latitude || !longitude) return undefined
             this.map.calculateDriveRouteWithStartPoints({ latitude, longitude }, {
