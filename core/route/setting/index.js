@@ -36,12 +36,12 @@ const SettingMenuScreen = connect(state => ({
         }],
         [{
           title: i18n.feedback, type: 'text', onPress: async () => navigation.navigate('SettingWetView', { 
-            title: '意见反馈 - 演示',
+            title: i18n.feedback,
             source: { uri: 'https://m.connect.aliyun.com/?utm_source=mmenu' }
           })
         }, {
           title: i18n.help, type: 'text', onPress: () => navigation.navigate('SettingWetView', { 
-            title: '帮助中心 - 演示',
+            title: i18n.help,
             source: { uri: 'https://m.aliyun.com/doc/index.html' }
           })
         }, {
@@ -107,7 +107,7 @@ const SettingAccountScreen = connect(state => ({
             title: '修改全名',
             editorName: 'String', 
             option: { 
-              placeholder: '请输入您的全名',
+              placeholder: i18n.pls_enter_fullname,
               value: user.fullName,
               onChangeValue:  (val) => this._changeFullName(val)
             } 
@@ -120,7 +120,7 @@ const SettingAccountScreen = connect(state => ({
             title: '修改邮箱',
             editorName: 'String', 
             option: { 
-              placeholder: '请输入您的邮箱',
+              placeholder: i18n.pls_enter_email,
               value: user.email,
               onChangeValue:  (val) => this._changeEmail(val)
             } 
@@ -203,7 +203,12 @@ const SettingLanguageChooseScreen = connect(state => ({
           title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false, 
           onPress: () => {
             dispatch(intl.update('zh'))
-            navigation.goBack()
+            dispatch(application.showHUD)
+            setTimeout(() => {
+              dispatch(application.hideHUD)
+              navigation.goBack()  
+            }, 1000);
+            
           }
         }, {
           title: i18n.mas, type: 'radio', value: language == 'mas', editable: false, 

@@ -20,7 +20,10 @@ import { BOOKING_STATUS } from '../main'
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(state => ({ location: state.account.location }))(class SelectAddressModal extends Component {
+export default connect(state => ({ 
+  location: state.account.location,
+  i18n: state.intl.messages
+}))(class SelectAddressModal extends Component {
 
   constructor(props) {
     super(props)
@@ -57,7 +60,7 @@ export default connect(state => ({ location: state.account.location }))(class Se
     const { source } = this.state
     const onPressCancel = () => this.props.navigation.goBack()
     const onChangeWords = (words) => this.onEnterKeywords(words)
-
+    const { i18n } = this.props
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
@@ -69,7 +72,7 @@ export default connect(state => ({ location: state.account.location }))(class Se
                 <TextInput 
                   {...Define.TextInputArgs} 
                   onChangeText={onChangeWords} 
-                  placeholder={'请输入关键词以检索'} 
+                  placeholder={i18n.please_enter_keywords} 
                   style={[
                     { height: 44, fontWeight: '400', fontSize: 15, color: '#666' }
                   ]
@@ -78,7 +81,7 @@ export default connect(state => ({ location: state.account.location }))(class Se
               <View style={{ height: 22, width: 1, backgroundColor: '#e2e2e2' }} />
               <View style={{ width: 70 }}>
                 <Button onPress={onPressCancel} style={{ justifyContent: 'center', height: 44 }}>
-                  <Text style={{ fontWeight: '400', fontSize: 15, color: '#888' }}>取消</Text>
+                  <Text style={{ fontWeight: '400', fontSize: 15, color: '#888' }}>{i18n.cancel}</Text>
                 </Button>
               </View>
             </View>

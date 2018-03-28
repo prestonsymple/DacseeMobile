@@ -30,7 +30,8 @@ export default connect(state => ({
   account: state.account,
   referrer_id: state.application.referrerValue,
   full_name: state.application.full_name,
-  stage: state.application.login_stage
+  stage: state.application.login_stage,
+  i18n: state.intl.messages
 }))(class LoginScreen extends Component {
 
   static navigationOptions = { header: null }
@@ -206,7 +207,8 @@ export default connect(state => ({
     const { width, height } = Screen.window
     const { stage, isMail } = this.animated
     const bottomBtnHeight = Define.system.ios.x ? 66 : 44
-
+    const { i18n } = this.props
+    console.log('多语言', i18n)
     return (
       <View style={{ flex: 1 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'black'} barStyle={'light-content'} />
@@ -447,7 +449,7 @@ export default connect(state => ({
                       {...Define.TextInputArgs}
                       clearTextOnFocus={false}
                       placeholderTextColor={'#999'}
-                      placeholder={'请输入手机号'}
+                      placeholder={i18n.enter_phone}
                       onChangeText={value_extend => this.setState({ value_extend })}
                       style={[styles.stdInput, {
                         flex: 1,
@@ -468,7 +470,7 @@ export default connect(state => ({
                       clearTextOnFocus={false}
                       keyboardType={'number-pad'}
                       placeholderTextColor={'#999'}
-                      placeholder={'输入验证码'}
+                      placeholder={i18n.enter_code}
                       onChangeText={verify_code_extend => this.setState({ verify_code_extend })}
                       style={[styles.stdInput, {
                         flex: 1,
@@ -506,7 +508,7 @@ export default connect(state => ({
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
                 placeholderTextColor={'#999'}
-                placeholder={'请输入您的姓名'}
+                placeholder={i18n.enter_name}
                 returnKeyType={'done'}
                 value={this.state.fullName}
                 { ...Object.assign({}, this.props.full_name !== undefined ? { defaultValue: this.props.full_name } : {}) }
@@ -516,7 +518,7 @@ export default connect(state => ({
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
                 placeholderTextColor={'#999'}
-                placeholder={'请输入您的推荐人ID'}
+                placeholder={i18n.enter_referee_id}
                 returnKeyType={'done'}
                 value={this.state.referralUserId}
                 { ...Object.assign({}, this.props.referrer_id !== undefined ? {

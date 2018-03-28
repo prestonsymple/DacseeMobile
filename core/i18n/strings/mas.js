@@ -9,6 +9,10 @@ const mas = {
   login_social: 'Log Masuk Sosial',
   active_account: 'Aktifkan akaun',
   please_enter: 'Sila masukkan',
+  enter_phone: 'Masukkan Nombor Telefon',
+  enter_code: 'Masukkan Kod Pengesahan',
+  enter_name: 'Masukkan Nama',
+  enter_referee_id: 'Masukkan ID Pengadil',
   referee_id: 'ID Pengadil',
   send_code: 'Hantar Kod',
   choose_account: 'Pilih Account',
@@ -82,6 +86,7 @@ const mas = {
   accept: 'Terima',
   on_the_way: 'Dalam penjalanan',
 
+  start: '开始',
   Pending_Acceptance: 'Menunggu pesanan',
   On_The_Way: 'Pemandu akan tiba',
   Arrived: 'Pemandu telah tiba',
@@ -134,6 +139,8 @@ const mas = {
   bind_qq: 'Terikat dengan QQ',
   update_fullname: 'Ubah suai nama penuh',
   update_email: 'Ubah suai e-mel',
+  pls_enter_fullname: 'Sila masukkan Nama',
+  pls_enter_email: 'Sila masukkan E-mel',
 
   language_region: 'Bahasa dan Wilayah',
   language: 'Bahasa',
@@ -150,9 +157,7 @@ const mas = {
   privacy_policy: 'Perjanjian Privasi dan Syarat Penggunaan',
   version: 'Versi',
 
-  logout: 'Tukar akaun',
-
-  hello: 'hello'
+  logout: 'Tukar akaun'
 }
 
 export default mas

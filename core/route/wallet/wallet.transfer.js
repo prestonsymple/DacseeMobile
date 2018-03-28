@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default injectIntl(connect(state => ({ 
+export default connect(state => ({ 
   ...state.wallet
 }))(class WalletTransferScreen extends Component {
 
@@ -115,7 +115,6 @@ export default injectIntl(connect(state => ({
 
   render() {
     const { searching } = this.state
-    const { formatMessage } = this.props.intl
     return (      
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} keyboardDismissMode={ 'interactive' } >
         <View style={{ padding:20 }}>
@@ -203,7 +202,7 @@ export default injectIntl(connect(state => ({
       </ScrollView>       
     )
   }
-}))
+})
 
 class CheckBox extends Component {
   constructor(props) {

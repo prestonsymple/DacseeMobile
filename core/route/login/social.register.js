@@ -15,7 +15,9 @@ import { FormattedMessage } from 'react-intl';
 
 const {height, width} = Screen.window
 
-export default connect(() => ({ }))(class SocialRegisterScreen extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages
+}))(class SocialRegisterScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed', 
@@ -70,6 +72,7 @@ export default connect(() => ({ }))(class SocialRegisterScreen extends Component
   }
 
   render() {
+    const { i18n } = this.props
     const { registering, userInfo, fullName, phoneCountryCode, phoneNo, phoneVerificationCode, referralUserId } = this.state
     const { iconurl, name, uid } = userInfo
     return (
@@ -82,7 +85,7 @@ export default connect(() => ({ }))(class SocialRegisterScreen extends Component
             <Text style={{ fontSize: 12, opacity: 0.5 }}>姓名</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 50}}>
               {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
-              <TextInput style={{ flex: 1, fontSize: 14}} placeholder={'请输入姓名'} onChangeText={ (value) => this.setState({ fullName: value}) } value={ fullName } />
+              <TextInput style={{ flex: 1, fontSize: 14}} placeholder={i18n.enter_name} onChangeText={ (value) => this.setState({ fullName: value}) } value={ fullName } />
             </View>
           </View>          
           
@@ -95,7 +98,7 @@ export default connect(() => ({ }))(class SocialRegisterScreen extends Component
                 })} >
                 <Text style={{}}>{ phoneCountryCode }</Text>
               </Button>
-              <TextInput style={{ flex: 1, fontSize: 14, height: 50, justifyContent: 'center' }} placeholder={ '请输入手机号' } returnKeyType={'done'} keyboardType={'phone-pad'} onChangeText={ (value) => this.setState({phoneNo: value}) } />
+              <TextInput style={{ flex: 1, fontSize: 14, height: 50, justifyContent: 'center' }} placeholder={i18n.enter_phone} returnKeyType={'done'} keyboardType={'phone-pad'} onChangeText={ (value) => this.setState({phoneNo: value}) } />
             </View>                        
           </View>
 
@@ -104,7 +107,7 @@ export default connect(() => ({ }))(class SocialRegisterScreen extends Component
               <FormattedMessage id={'verification_code'} />
             </Text>
             <View style={{ flex: 1, flexDirection: 'row' }}>
-              <TextInput style={{ flex: 1, fontSize: 14, height: 50, borderBottomWidth: 1, borderBottomColor: '#a5a5a5' }} placeholder={ '请输入验证码' } keyboardType={'numeric'} onChangeText={ (value) => this.setState({phoneVerificationCode: value}) } />
+              <TextInput style={{ flex: 1, fontSize: 14, height: 50, borderBottomWidth: 1, borderBottomColor: '#a5a5a5' }} placeholder={i18n.enter_code} keyboardType={'numeric'} onChangeText={ (value) => this.setState({phoneVerificationCode: value}) } />
               <Button style={{ marginLeft: 10, marginTop: 5, borderRadius: 5, width: 110, height: 45, backgroundColor: '#4cb1f7' }} 
                 onPress={ async () => {
                   const body = {
@@ -132,7 +135,7 @@ export default connect(() => ({ }))(class SocialRegisterScreen extends Component
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>推荐人账号</Text>
-            <TextInput style={{ fontSize: 14, height: 50}} placeholder={'请输入推荐人账号'} returnKeyType={'done'} onChangeText={ (value) => this.setState({ referralUserId: value}) }/>
+            <TextInput style={{ fontSize: 14, height: 50}} placeholder={i18n.enter_referee_id} returnKeyType={'done'} onChangeText={ (value) => this.setState({ referralUserId: value}) }/>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>

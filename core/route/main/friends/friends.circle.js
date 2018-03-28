@@ -246,11 +246,17 @@ class HeaderSearchBar extends Component {
     return (
       <View style={{ height: 62, width, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
         <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
-          <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={'姓名/手机/邮箱搜索'} style={
-            Platform.select({
-              android: { height: 42, width: width - 56 },
-              ios: { height: 42, width: width - 56 }
-            })} />
+          <FormattedMessage id={'search_name_phone_email'}>
+            {
+              msg => (
+                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
+                  Platform.select({
+                    android: { height: 42, width: width - 56 },
+                    ios: { height: 42, width: width - 56 }
+                  })} />
+              )
+            }        
+          </FormattedMessage>          
         </View>
       </View>
     )
