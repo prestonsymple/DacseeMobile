@@ -1,12 +1,17 @@
 import React, { Component, PureComponent } from 'react'
-import { Text, View, TouchableOpacity, Modal } from 'react-native'
+import { Text, View, TouchableOpacity, Modal,PixelRatio } from 'react-native'
 import {
   Screen, Icons, Define
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
 const { height, width } = Screen.window
-
+const pixelSize = (function() {
+  let pixelRatio = PixelRatio.get()
+  if (pixelRatio >= 3) return 0.333
+  else if (pixelRatio >= 2) return 0.5
+  else return 1
+})()
 export default class TimePicker extends PureComponent {
   constructor(props) {
     super(props)
@@ -157,6 +162,8 @@ export default class TimePicker extends PureComponent {
   //
 
   render() {
+    let modalHeight = Define.system.ios.x ?  242 + 22 : 242
+    let weelHeight=modalHeight- 70
     return (
       <Modal
         animationType='fade'           //渐变
@@ -165,9 +172,9 @@ export default class TimePicker extends PureComponent {
         onRequestClose={() => this.props.wheelCancel('now')}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-          <TouchableOpacity style={{ width: width, height: height / 2 }} onPress={() => this.props.wheelCancel('now')} ></TouchableOpacity>
-          <View style={{ height: height / 2, backgroundColor: '#fff', paddingBottom: 10 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.5, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
+          <TouchableOpacity style={{ width: width, height: height -modalHeight }} onPress={() => this.props.wheelCancel('now')} ></TouchableOpacity>
+          <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelCancel('now')} >
                 <Text style={{ color: '#1ab2fd', fontSize: 15 }}>取消</Text>
               </TouchableOpacity>
@@ -175,15 +182,15 @@ export default class TimePicker extends PureComponent {
                 <Text style={{ color: '#ffa03c', fontSize: 15 }}>确定</Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height: (height / 2) - 100 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height: weelHeight }}>
               <Wheel
-                style={{ height: (height / 2) - 100, width: width / 2 }}
+                style={{ height: weelHeight, width: width / 2 }}
                 itemStyle={{ textAlign: 'center' }}
                 items={this.dates}
                 onChange={index => this.onDateChange(index)}
               />
               <Wheel
-                style={{ height: (height / 2) - 100, width: width / 4 }}
+                style={{ height: weelHeight, width: width / 4 }}
                 itemStyle={{ textAlign: 'center' }}
                 index={this.state.hours.indexOf(this.hour)}
                 type={'h'}
@@ -191,7 +198,7 @@ export default class TimePicker extends PureComponent {
                 onChange={index => this.onHourChange(index)}
               />
               <Wheel
-                style={{ height: (height / 2) - 100, width: width / 4 }}
+                style={{ height: weelHeight, width: width / 4 }}
                 itemStyle={{ textAlign: 'center' }}
                 type={'m'}
                 index={this.state.minutes.indexOf(this.minute)}

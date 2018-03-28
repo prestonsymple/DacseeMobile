@@ -18,6 +18,7 @@ import { Screen, Icons, Define, Session } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
+import SelectPay from '../../../components/selectPay'
 const { height, width } = Screen.window
 
 const MAP_DEFINE = {
@@ -40,7 +41,8 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
     super(props)
     this.state = {
       drag: false,
-      visible:false,
+      showTP:false,
+      showSP:false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0
     }
     this.currentLoc = {}
@@ -172,13 +174,19 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
     }
   }
   wheelSubmit(time){
-    this.setState({visible:false})
+    this.setState({showTP:false})
   }
   wheelCancel(time){
-    this.setState({visible:false})
+    this.setState({showTP:false})
   }
   showTimerPicker(){
-    this.setState({visible:true})
+    this.setState({showTP:true})
+  }
+  showSelcetPay(){
+    this.setState({showSP:true})
+  }
+  payCancel(){
+    this.setState({showSP:false})
   }
   render() {
     const { drag } = this.state
@@ -233,13 +241,15 @@ export default connect(state => ({ ...state.booking }))(class PassengerComponent
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />)}
         {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (
           <PickerOptions
-            visible={this.state.visible}
+            showTP={this.state.showTP}
+            showSP={this.state.showSP}
+            payCancel={()=>this.payCancel()}
+            showSelcetPay={()=>this.showSelcetPay()}
             showTimerPicker={()=>this.showTimerPicker()}
             wheelSubmit={(time)=>this.wheelSubmit(time)}
             wheelCancel={(time)=>this.wheelCancel(time)}
           />
         )}
-
         <ModalDriverRespond />
       </View>
     )
@@ -258,7 +268,8 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
       ]}>
         <View style={{ alignItems: 'center' }}>
           <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <TouchableOpacity activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => this.props.showSelcetPay()}
+              activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.showTimerPicker()}
@@ -272,9 +283,10 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
-        <TimePicker visible={this.props.visible}
+        <TimePicker visible={this.props.showTP}
           wheelSubmit={(time)=>this.props.wheelSubmit(time)}
           wheelCancel={(time)=>this.props.wheelCancel(time)}/>
+        <SelectPay visible={this.props.showSP} payCancel={()=>this.props.payCancel()}/>
       </Animated.View>
     )
   }

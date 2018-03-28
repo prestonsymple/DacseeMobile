@@ -4,15 +4,20 @@
 
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, Text, Animated, PanResponder, ViewPropTypes } from 'react-native'
+import { StyleSheet, Image,View, Text, Animated, PanResponder, ViewPropTypes ,PixelRatio} from 'react-native'
 
 import WheelItem from './WheelItem'
-
+const pixelSize = (function() {
+  let pixelRatio = PixelRatio.get()
+  if (pixelRatio >= 3) return 0.333
+  else if (pixelRatio >= 2) return 0.5
+  else return 1
+})()
 export default class Wheel extends Component {
 
   static propTypes = {
     ...ViewPropTypes,
-    items: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.number])).isRequired,
+    items: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.number,PropTypes.object])).isRequired,
     itemStyle: Text.propTypes.style,
     holeStyle: ViewPropTypes.style, //height is required
     maskStyle: ViewPropTypes.style,
@@ -60,7 +65,7 @@ export default class Wheel extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.index || nextProps.index === 0) {
-      this.index = nextProps.index==-1?0:nextProps.index
+      this.index = nextProps.index == -1 ? 0 : nextProps.index
       this.currentPosition.setValue(nextProps.index * this.holeHeight)
     }
   }
@@ -200,7 +205,7 @@ export default class Wheel extends Component {
       zIndex: 100,
     }].concat(maskStyle)
     if (holeLine === undefined) {
-      holeLine = <View style={{ height: 1, backgroundColor: '#ccc' }} />
+      holeLine = <View style={{ height:pixelSize, backgroundColor: '#ccc' }} />
     } else if (typeof holeLine === 'number') {
       holeLine = <View style={{ height: holeLine, backgroundColor: '#ccc' }} />
     }
@@ -216,7 +221,12 @@ export default class Wheel extends Component {
     if (typeof item === 'string' || typeof item === 'number') {
       item = <Text style={itemStyle}>{item + (type == 'h' ? '点' : type == 'm' ? '分' : '')}</Text>
     }
-
+    //  else {
+    //   item = <View style={{ flexDirection: 'row', alignItems: 'center' ,justifyContent:'center'}}>
+    //     {/* <Image style={{ width: 36, height:36, resizeMode: 'contain' }} source={{ uri: item.pic }} /> */}
+    //     <Text style={itemStyle}>{item.title}</Text>
+    //   </View>
+    // }
     return (
       <this.constructor.Item
         itemHeight={this.holeHeight}
