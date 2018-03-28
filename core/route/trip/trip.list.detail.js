@@ -97,22 +97,13 @@ export default connect( state => ({
         <View style={{ position: 'absolute', top:100, left: 20, right: 20, bottom: 20, borderRadius: 10, backgroundColor: 'white' }}>
           <ScrollView style={{}}>
             <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
-<<<<<<< HEAD
               <Text style={{ fontSize: 13, color: '#999' }}>{i18n.driver_info}</Text>              
               
-=======
-              <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'driver_info'})}</Text>
-
->>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
               {
                 driver_info == undefined ?
                   (
                     <View style={{ marginVertical: 10 }}>
-<<<<<<< HEAD
                       <Text style={{}}>{i18n.no_driver_info}</Text>  
-=======
-                      <Text style={{}}>{formatMessage({id: 'no_driver_info'})}</Text>
->>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
                     </View>
                   ) :
                   (
@@ -127,13 +118,8 @@ export default connect( state => ({
 
             <View style={{ padding: 20 }}>
               <View style={{ }}>
-<<<<<<< HEAD
                 <Text style={{ fontSize: 13, color: '#999' }}>{i18n.book_time}</Text>
-                <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ moment(Date(booking_at)).format('YYYY-MM-D HH:mm:ss') }</Text>
-=======
-                <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'book_time'})}</Text>
                 <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm:ss') }</Text>
->>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
               </View>
               <View style={{ marginTop: 20 }}>
                 <Text style={{ fontSize: 13, color: '#999' }}>{i18n.from}</Text>
@@ -161,8 +147,4 @@ export default connect( state => ({
       </View>
     )
   }
-<<<<<<< HEAD
 })
-=======
-}))
->>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
