@@ -47,12 +47,12 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
       const location = await System.Location.Current()
       const { latitude, longitude } = location
       const placeId = await Session.Lookup.Get(`v1/lookup/nearbyPlaces?latitude=${latitude}&longitude=${longitude}&resultType=countryOnly`)
-      const searchRet = await Session.User.Get(`v1/search?country=${placeId.data}${searchStr}`)
-      this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
+      const searchRet = await Session.User.Get(`v1/search?country=${placeId}${searchStr}`)
+      this.setState({ dataSource: dataContrast.cloneWithRows(searchRet) })
     } catch (e) {
       try {
         const searchRet = await Session.User.Get(`v1/search?country=CN&${searchStr}`)
-        this.setState({ dataSource: dataContrast.cloneWithRows(searchRet.data) })
+        this.setState({ dataSource: dataContrast.cloneWithRows(searchRet) })
       } catch (err) {
         this.props.dispatch(application.showMessage('请确认输入是否正确，并再次尝试'))
         this.props.navigation.goBack()

@@ -44,7 +44,7 @@ export default connect(state => ({
         try {
           const { lat, lng } = this.props.location
           const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-          const data = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+          const data = await Session.Lookup_CN.Get(`v1/map/search/address/${city}/${keywords}`)
           this.setState({ source: dataContrast.cloneWithRows(data) })
         } catch (e) {
           console.log(e)

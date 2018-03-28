@@ -52,8 +52,8 @@ export default connect(state => ({ data: state.booking }))(class WalletBalanceSc
     //   subType: 'standard',
     // }]
 
-    console.log('[参数]', resp.data[0]._id)
-    const wallet = await Session.Wallet.Get(`v1/transactions?batch_id=${resp.data[0]._id}`)
+    console.log('[参数]', resp[0]._id)
+    const wallet = await Session.Wallet.Get(`v1/transactions?batch_id=${resp[0]._id}`)
     // {{url_wallet}}/api/
   }
 

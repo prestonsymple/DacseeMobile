@@ -68,7 +68,7 @@ const SettingAccountScreen = connect(state => ({
     try {
       const resp = await Session.User.Put('v1/profile', { fullName: value })
       this.props.dispatch(account.setAccountValue({
-        user: Object.assign({}, this.props.user, { fullName: resp.data.fullName })
+        user: Object.assign({}, this.props.user, { fullName: resp.fullName })
       }))
       this.props.dispatch(application.showMessage('全名修改成功'))
     } catch (e) {

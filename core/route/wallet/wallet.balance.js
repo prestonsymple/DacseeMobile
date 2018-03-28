@@ -59,9 +59,9 @@ export default connect(state => ({
     // this.props.dispatch(application.showHUD())
     try {
       const resp = await Session.Wallet.Get('v1/wallets')
-      this.props.dispatch(Wallet.setValues({ walletList: resp.data }))
+      this.props.dispatch(Wallet.setValues({ walletList: resp }))
       this.setState({
-        detail: dataContrast.cloneWithRows(resp.data),
+        detail: dataContrast.cloneWithRows(resp),
         loading: false
       })
     } catch (e) {

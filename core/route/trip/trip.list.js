@@ -62,12 +62,12 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
       // console.log(this.state.selectedDate)
       // const dateFrom = this._getFormatterDate(this.state.selectedDate).dateFrom
       // const dateTo = this._getFormatterDate(this.state.selectedDate).dateTo
-      const resp = await Session.Booking.Get('v1/bookings?role=passenger')
+      const data = await Session.Booking.Get('v1/bookings?role=passenger')
 
       this.setState({
         // dateDic: dateDic,
         loading: false,
-        detail: dataContrast.cloneWithRows(resp.data)
+        detail: dataContrast.cloneWithRows(data)
       })
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))

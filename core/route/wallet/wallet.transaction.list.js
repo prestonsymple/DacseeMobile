@@ -66,7 +66,7 @@ export default connect(state => ({
       const resp = await Session.Wallet.Get(`v1/walletTransactions?walletType=${this.props.walletInfo.type}`)
       this.setState({
         loading: false,
-        detail: dataContrast.cloneWithRows(resp.data)
+        detail: dataContrast.cloneWithRows(resp)
       })
     } catch (e) {
       this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
