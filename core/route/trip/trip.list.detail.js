@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -30,7 +30,7 @@ export default connect( state => ({
 }))(class TripListDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '行程详情',
       headerStyle: {
         backgroundColor: '#1AB2FD',
@@ -46,7 +46,7 @@ export default connect( state => ({
   constructor(props) {
     super(props)
     const todayUtc = new Date().toISOString()
-    
+
     this.state = {
       // dateDic: null,
       loading: false,
@@ -59,7 +59,7 @@ export default connect( state => ({
 
   async componentWillMount() {
     await InteractionManager.runAfterInteractions()
-    this._fetchData()    
+    this._fetchData()
   }
 
   async _fetchData(index=0) {
@@ -82,9 +82,9 @@ export default connect( state => ({
     } catch (e) {
       this.props.dispatch(application.showMessage('无法请求到服务器'))
       this.setState({
-        loading: false        
+        loading: false
       })
-    }    
+    }
   }
 
   render () {
@@ -97,13 +97,22 @@ export default connect( state => ({
         <View style={{ position: 'absolute', top:100, left: 20, right: 20, bottom: 20, borderRadius: 10, backgroundColor: 'white' }}>
           <ScrollView style={{}}>
             <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
+<<<<<<< HEAD
               <Text style={{ fontSize: 13, color: '#999' }}>{i18n.driver_info}</Text>              
               
+=======
+              <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'driver_info'})}</Text>
+
+>>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
               {
-                driver_info == undefined ? 
+                driver_info == undefined ?
                   (
                     <View style={{ marginVertical: 10 }}>
+<<<<<<< HEAD
                       <Text style={{}}>{i18n.no_driver_info}</Text>  
+=======
+                      <Text style={{}}>{formatMessage({id: 'no_driver_info'})}</Text>
+>>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
                     </View>
                   ) :
                   (
@@ -112,14 +121,19 @@ export default connect( state => ({
                       <Text style={{ marginLeft: 20, fontSize: 21, color: '#333'}}>{ driver_info.fullName }</Text>
                       <Text style={{ fontSize: 15, color: '#666'}}></Text>
                     </View>)
-              }                                            
+              }
             </View>
-            <View style={{ height: 1, backgroundColor: '#e5e5e5' }}></View>              
+            <View style={{ height: 1, backgroundColor: '#e5e5e5' }}></View>
 
             <View style={{ padding: 20 }}>
               <View style={{ }}>
+<<<<<<< HEAD
                 <Text style={{ fontSize: 13, color: '#999' }}>{i18n.book_time}</Text>
                 <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ moment(Date(booking_at)).format('YYYY-MM-D HH:mm:ss') }</Text>
+=======
+                <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'book_time'})}</Text>
+                <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm:ss') }</Text>
+>>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
               </View>
               <View style={{ marginTop: 20 }}>
                 <Text style={{ fontSize: 13, color: '#999' }}>{i18n.from}</Text>
@@ -131,13 +145,13 @@ export default connect( state => ({
               </View>
               <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
             </View>
-            
+
             <View style={{ paddingHorizontal: 20 }}>
               <Text style={{ fontSize: 17, color:'#333'}}>{i18n.fare_total}</Text>
               <View stye={{ marginTop: 10, flex: 1, flexDirection: 'row'}}>
                 {/* <Text style={{ width: 60, fontSize: 14, color: '#555', backgroundColor: 'red' }}>总费用</Text> */}
                 <Text style={{ marginTop: 10, fontSize: 14, color: '#555', fontWeight: 'bold' }}>{ fare }</Text>
-              </View>              
+              </View>
             </View>
 
             {/* <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View> */}
@@ -147,4 +161,8 @@ export default connect( state => ({
       </View>
     )
   }
+<<<<<<< HEAD
 })
+=======
+}))
+>>>>>>> 0c3594562373ffcd4b46d20ea0ff1013d9e6997d
