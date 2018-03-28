@@ -31,5 +31,7 @@ export default {
   setCoreMode: createAction('APPLICATION_SET_CORE_MODE'),
 
   showHUD: createAction('APPLICATION_SHOW_HUD'),
-  hideHUD: createAction('APPLICATION_HIDE_HUD')
+  hideHUD: createAction('APPLICATION_HIDE_HUD'),
+
+  setAgentSvr: createAction('APPLICATION_SET_AGENT_SVR')
 }

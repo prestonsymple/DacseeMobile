@@ -4,258 +4,114 @@ import { account } from '../redux/actions'
 
 const SESSION_TIMEOUT = 10000
 
-const sessionBuilder = (baseUrl) => {
-  const instance = axios.create({
-    baseURL: baseUrl,
-    timeout: SESSION_TIMEOUT,
-    // headers: {'X-Custom-Header':'foobar'}
-  })
+const instance = axios.create({ timeout: SESSION_TIMEOUT })
+// REQUEST HANDLE
+instance.interceptors.request.use((config) => {
+  const { method, url, headers } = config
+  const reducer = store.getState()
+  const { agent_enable, agent_server } = reducer.storage
+  const { authToken } = reducer.account
 
-  instance.interceptors.request.use((config) => {
-    const state = store.getState()
-    config.headers['Accept-Language'] = 'CN'
-    if (state.account.authToken) {
-      config.headers.Authorization = state.account.authToken
-    }
-    return config
-  }, err => {
-    return Promise.reject(err)
-  })
-
-  // DEBUG && API请求响应中间件 - 记录组件
-  instance.interceptors.response.use((response) => {
-    const { config } = response
-    const { url, method, baseURL } = config
-
-    if (baseURL === 'http://location-dev.dacsee.io/api/' && method.toUpperCase() === 'PUT') return response
-    console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
-    return response
-
-  }, (err) => {
-    if (err.config) {
-      const { url, method, baseURL } = err.config
-      const { data, status } = err.response
-      console.warn(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
-
-      if (status === 400 && data.code === 'INVALID_AUTHORIZATION_TOKEN') {
-        store.dispatch(account.logoutSuccess())
-      }
-    } else {
-      console.warn(err) 
-    }
-    return Promise.reject(err)
-  })
-
-  // API请求响应中间件 - 数据结构解析
-  instance.interceptors.response.use((response) => {
-    const _response = response || { data: null }
-    return { data: _response.data }
-  }, (err) => {
-    return Promise.reject(err)
-  })
-
-  return {
-    post: async (path: string, body = {}) => {
-      const response = await instance.post(`${path}`, body)
-      return response
-    },
-  
-    get: async (path: string, body = {}, params = {}) => {
-      const response = await instance.get(`${path}`, Object.assign({}, body, { params }))
-      return response
-    },
-  
-    put: async (path: string, body = {}) => {
-      const response = await instance.put(`${path}`, body)
-      return response
-    },
-
-    delete: async (path: string, body = {}) => {
-      const response = await instance.delete(`${path}`, body)
-      return response
-    },
-
-    upload: async (path: string, data, config) => {
-      const response = await instance.post(`${path}`, data, Object.assign({}, {
-        header: { 'content-type': 'multipart/form-data' }
-      }, config))
-      return response
-    }
+  if (agent_enable && !headers['Agent-Disabled']) {
+    // 自动代理模式
+    config.headers['Origin-Url'] = url
+    config.url = `${agent_server}api/v1/agent`
   }
-}
+  
+  if (authToken) {
+    config.headers.Authorization = authToken
+  }
 
-const sessionBuilder2 = (baseUrl) => {
-  const instance = axios.create({
-    baseURL: baseUrl,
-    timeout: SESSION_TIMEOUT,
-    // headers: {'X-Custom-Header':'foobar'}
-  })
+  return config
+}, err => {
+  return Promise.reject(err)
+})
 
-  instance.interceptors.request.use((config) => {
-    const state = store.getState()
-    config.headers['Accept-Language'] = 'CN'
-    if (state.account.authToken) {
-      config.headers.Authorization = state.account.authToken
+instance.interceptors.response.use((response) => {
+  const { config } = response
+  const { url, method } = config
+
+  console.log(`[SESSION][${method.toUpperCase()}][${url}]`)
+  const _response = response || { data: null }
+  return _response.data || {}
+}, (err) => {
+  if (err.config) {
+    const { url, method } = err.config
+    const { data, status } = err.response
+    console.warn(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
+
+    if (status === 400 && data.code === 'INVALID_AUTHORIZATION_TOKEN') {
+      store.dispatch(account.asyncLogout())
     }
-    return config
-  }, err => {
-    return Promise.reject(err)
-  })
+  } else {
+    console.warn(err) 
+  }
+  return Promise.reject(err)
+})
 
-  // DEBUG && API请求响应中间件 - 记录组件
-  instance.interceptors.response.use((response) => {
-    const { config } = response
-    const { url, method, baseURL } = config
-
-    if (baseURL === 'http://location-dev.dacsee.io/api/' && method.toUpperCase() === 'PUT') return response
-    console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
-    const _response = response || { data: null }
-    return _response.data || {}
-  }, (err) => {
-    if (err.config) {
-      const { url, method, baseURL } = err.config
-      const { data, status } = err.response
-      console.warn(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
-
-      if (status === 400 && data.code === 'INVALID_AUTHORIZATION_TOKEN') {
-        store.dispatch(account.logoutSuccess())
-      }
-    } else {
-      console.warn(err) 
-    }
-    return Promise.reject(err)
-  })
+const sessionMethodBuild = (baseUrl, agent) => {
+  const config = { headers: { 'Agent-Disabled': agent } }
 
   return {
     Post: async (path: string, body = {}) => {
-      const response = await instance.post(`${path}`, body)
-      return response
+      return await instance.post(`${baseUrl}${path}`, body, config)
     },
   
     Get: async (path: string, body = {}, params = {}) => {
-      const response = await instance.get(`${path}`, Object.assign({}, body, { params }))
-      return response
+      return await instance.get(`${baseUrl}${path}`, Object.assign({}, body, { params }), config)
     },
   
     Put: async (path: string, body = {}) => {
-      const response = await instance.put(`${path}`, body)
-      return response
+      return await instance.put(`${baseUrl}${path}`, body, config)
     },
 
     Delete: async (path: string, body = {}) => {
-      const response = await instance.delete(`${path}`, body)
-      return response
+      return await instance.delete(`${baseUrl}${path}`, body, config)
     },
 
     Upload: async (path: string, body = {}) => {
-      const _instance = axios.create({
-        baseURL: baseUrl,
-        timeout: 120000
-      })
-
-      _instance.interceptors.request.use((config) => {
-        const state = store.getState()
-        config.headers['Accept-Language'] = 'CN'
-        if (state.account.authToken) {
-          config.headers.Authorization = state.account.authToken
-        }
-        return config
-      }, err => {
-        return Promise.reject(err)
-      })
-    
-      // DEBUG && API请求响应中间件 - 记录组件
-      _instance.interceptors.response.use((response) => {
-        const { config } = response
-        const { url, method, baseURL } = config
-        console.log(`[SESSION][${method.toUpperCase()}][${url}]`, response)
-        const _response = response || { data: null }
-        return _response.data || {}
-      }, (err) => {
-        console.warn(err)
-        return Promise.reject(err)
-      })
-      const response = await _instance.post(`${path}`, body)
-      return response
+      return await instance.post(`${baseUrl}${path}`, body, { timeout: 120000 }, config)
     }
   }
 }
 
 export default {
-  user: sessionBuilder(
+
+  User: sessionMethodBuild(
     'https://user-dev.dacsee.io/api/'
   ),
 
-  circle: sessionBuilder(
+  Circle: sessionMethodBuild(
     'https://circle-dev.dacsee.io/api/'
   ),
 
-  booking: sessionBuilder(
+  Booking: sessionMethodBuild(
     'https://booking-dev.dacsee.io/api/'
   ),
 
-  location: sessionBuilder(
+  Location: sessionMethodBuild(
     'https://location-dev.dacsee.io/api/'
   ),
 
-  driver: sessionBuilder(
+  Driver: sessionMethodBuild(
     'https://driver-verification-dev.dacsee.io/api/'
   ),
 
-  push: sessionBuilder(
+  Push: sessionMethodBuild(
     'https://push-dev.dacsee.io/api/'
   ),
 
-  lookup: sessionBuilder(
+  Lookup: sessionMethodBuild(
     'https://lookup-dev.dacsee.io/api/'
   ),
 
-  lookup_cn: sessionBuilder(
-    'http://47.98.40.59'
-  ),
-
-  wallet: sessionBuilder(
-    'https://wallet-dev.dacsee.io/api/'
-  ),
-
-
-
-  // V2
-
-  User: sessionBuilder2(
-    'https://user-dev.dacsee.io/api/'
-  ),
-
-  Circle: sessionBuilder2(
-    'https://circle-dev.dacsee.io/api/'
-  ),
-
-  Booking: sessionBuilder2(
-    'https://booking-dev.dacsee.io/api/'
-  ),
-
-  Location: sessionBuilder2(
-    'https://location-dev.dacsee.io/api/'
-  ),
-
-  Driver: sessionBuilder2(
-    'https://driver-verification-dev.dacsee.io/api/'
-  ),
-
-  Push: sessionBuilder2(
-    'https://push-dev.dacsee.io/api/'
-  ),
-
-  Lookup: sessionBuilder2(
-    'https://lookup-dev.dacsee.io/api/'
-  ),
-
-  Lookup_CN: sessionBuilder2(
+  Lookup_CN: sessionMethodBuild(
     // 'http://lookup-cn-dev.dacsee.cn'
-    'http://47.98.40.59/api/'
+    'http://47.98.40.59/api/',
+    true
   ),
 
-  Wallet: sessionBuilder2(
+  Wallet: sessionMethodBuild(
     'https://wallet-dev.dacsee.io/api/'
   )
 }

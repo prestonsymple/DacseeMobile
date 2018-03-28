@@ -56,12 +56,10 @@ export default connect(state => ({
     }
     try {
       const data = await Session.User.Post('v1/register', body)
-      console.log('Facebook注册', data)
 
-      this.props.dispatch(account.setAccountValue(data))
-      this.props.dispatch(account.loginSuccess())
-      this.props.dispatch(application.updatePushToken())      
-
+      this.props.dispatch(account.saveLogin(data))
+      this.props.dispatch(application.hideProgress())
+      this.props.dispatch(application.updatePushToken())
     } catch (e) {
       console.log('Facebook注册失败', e)
     } finally {

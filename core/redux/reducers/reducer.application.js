@@ -28,7 +28,23 @@ const initialState = {
 
   core_mode: 'passenger',
 
-  hud_modal_visible: false
+  hud_modal_visible: false,
+
+  api_maps: {
+    main: [
+      'https://user-dev.dacsee.io/',
+      'https://circle-dev.dacsee.io/',
+      'https://booking-dev.dacsee.io/',
+      'https://location-dev.dacsee.io/',
+      'https://driver-verification-dev.dacsee.io/',
+      'https://push-dev.dacsee.io/',
+      'https://lookup-dev.dacsee.io/',
+      'https://wallet-dev.dacsee.io/'
+    ],
+    agent: [
+      'http://47.98.40.59/'
+    ]
+  }
 }
 
 export default handleActions({

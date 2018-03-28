@@ -23,10 +23,11 @@ export default {
 
   setAccountValue: LOGIN_ACTIONS.setAccountValue,
 
-  loginSuccess: LOGIN_ACTIONS.loginSuccess,
-  loginFail: LOGIN_ACTIONS.loginFail,
+  // asyncLogin: createAction('ACCOUNT_ASYNC_LOGIN'),
+  saveLogin: createAction('ACCOUNT_SAVE_LOGIN'),
   
-  logoutSuccess: LOGIN_ACTIONS.logoutSuccess,
+  asyncLogout: createAction('ACCOUNT_ASYNC_LOGOUT'),
+  saveLogout: createAction('ACCOUNT_SAVE_LOGOUT'),
 
   updateLocation: createAction('ACCOUNT_UPDATE_LOCATION')
 }

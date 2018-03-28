@@ -13,7 +13,10 @@ const initialState = {
   baidu_user_id: '',
 
   booking_id: '',
-  driver_booking_id: ''
+  driver_booking_id: '',
+  
+  agent_enable: false,
+  agent_server: ''
 }
 
 export default handleActions({
@@ -21,5 +24,7 @@ export default handleActions({
 
   [driver.driverSetID]: (state, { payload }) => Object.assign({}, state, { driver_booking_id: payload }),
 
-  [application.setPushServiceToken]: (state, { payload }) => Object.assign({}, state, payload)
+  [application.setPushServiceToken]: (state, { payload }) => Object.assign({}, state, payload),
+
+  [application.setAgentSvr]: (state, { payload }) => Object.assign({}, state, { agent_server: payload, agent_enable: payload.length !== 0 }),
 }, initialState)

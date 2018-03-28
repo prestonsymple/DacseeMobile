@@ -190,8 +190,8 @@ export default connect(state => ({
     try {
       const data = await Session.User.Post('v1/auth/oauth', body)
 
-      this.props.dispatch(account.setAccountValue(data))
-      this.props.dispatch(account.loginSuccess())
+      this.props.dispatch(account.saveLogin(data))
+      this.props.dispatch(app.hideProgress())
       this.props.dispatch(app.updatePushToken())
       // console.log('facebook登录', data)
     } catch(e) {
@@ -208,7 +208,7 @@ export default connect(state => ({
     const { stage, isMail } = this.animated
     const bottomBtnHeight = Define.system.ios.x ? 66 : 44
     const { i18n } = this.props
-    console.log('多语言', i18n)
+
     return (
       <View style={{ flex: 1 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'black'} barStyle={'light-content'} />

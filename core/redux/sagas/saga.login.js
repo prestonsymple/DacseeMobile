@@ -71,6 +71,7 @@ function* loginFlow() {
             delete body._id
           }
           const data = yield call(session.User.Post, path, body)
+          console.log(data)
 
           yield call(loginSuccess, data) // 登录成功
 
@@ -178,9 +179,10 @@ function* loginFlow() {
 
 function* logoutFlow() {
   while(true) {
-    const payload = yield take(account.logoutSuccess().type)
+    const payload = yield take(account.asyncLogout().type)
     try {
       yield call(session.Push.Put, 'v1/unsubscribe', { uuid: System.UUID })
+      yield put(account.saveLogout())
       yield put(booking.passengerSetValue({ type: 'circle', name: '优选', payment: '现金支付', book: false, time: 'now', selected_friends: [] }))
       yield put(account.loginPutValue(0))
       yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
@@ -229,10 +231,9 @@ function* registerDevice() {
 }
 
 function* loginSuccess(data: object) {
-  yield put(account.setAccountValue(data))
   yield delay(2000)
+  yield put(account.saveLogin(data))
   yield put(application.hideProgress())
-  yield put(account.loginSuccess())
   yield put(application.updatePushToken())
 }
 

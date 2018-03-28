@@ -73,7 +73,7 @@ export default connect(state => ({
       const resp = await Session.Booking.Get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
       this.setState({ detail: dataContrast.cloneWithRows(resp) })
     } catch (e) {
-      console.log(e)
+      /*  */
     } finally {
       this.setState({ loading: false })
     }

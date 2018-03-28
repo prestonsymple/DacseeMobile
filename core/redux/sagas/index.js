@@ -11,6 +11,7 @@ import loginSaga from './saga.login'
 import passengerSaga from './saga.passenger'
 import driverSaga from './saga.driver'
 import circleSaga from './saga.circle'
+import networkSaga from './saga.network'
 
 
 /******************************************************************************/
@@ -92,6 +93,8 @@ export default function* sagaService() {
     fork(driverSaga),
     
     fork(loginSaga),
-    fork(circleSaga)
+    fork(circleSaga),
+
+    fork(networkSaga)
   ])
 }

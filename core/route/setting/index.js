@@ -49,7 +49,7 @@ const SettingMenuScreen = connect(state => ({
         }],
         [{
           title: i18n.logout, type: 'button', onPress: () => {
-            dispatch(account.logoutSuccess())
+            dispatch(account.asyncLogout())
           }
         }]
       ]} />
