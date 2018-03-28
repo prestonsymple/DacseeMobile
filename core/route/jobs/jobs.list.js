@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
-import { 
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -13,8 +13,8 @@ import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
-import { FormattedMessage } from 'react-intl';
-
+import { FormattedMessage } from 'react-intl'
+import FONT from '../../utils/util.textSize'
 const {height, width} = Screen.window
 
 const styles = StyleSheet.create({
@@ -39,7 +39,7 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 export default connect(() => ({ }))(class JobsListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: '订单列表'
     }
   }
@@ -47,7 +47,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
   constructor(props) {
     super(props)
     const todayUtc = new Date().toISOString()
-    
+
     this.state = {
       // dateDic: null,
       loading: false,
@@ -59,7 +59,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
 
   async componentWillMount() {
     await InteractionManager.runAfterInteractions()
-    this._fetchData()   
+    this._fetchData()
   }
 
   async _fetchData(dateStr) {
@@ -72,7 +72,7 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
     })
     // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
 
-    try {            
+    try {
       const resp = await Session.Booking.Get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
       this.setState({ detail: dataContrast.cloneWithRows(resp) })
     } catch (e) {
@@ -98,8 +98,8 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
   }
 
   render() {
-    const { dateDic, selectedDate, detail, switchValue, loading } = this.state    
-    return (                        
+    const { dateDic, selectedDate, detail, switchValue, loading } = this.state
+    return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
         <View style={{ flex: 1 }}>
           <Agenda
@@ -112,20 +112,20 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             //   }}
             loadItemsForMonth={(month) => {}}
             onCalendarToggled={(calendarOpened) => {}}
-            onDayPress={(day)=>{              
+            onDayPress={(day)=>{
               const dateStr = moment(day.timestamp).toISOString()
               // console.log('clicked', dateStr)
               this.setState({
                 selectedDate: dateStr
               })
-              this._fetchData(dateStr)              
+              this._fetchData(dateStr)
             }}
             onDayChange={(day)=>{}}
-            selected={selectedDate}                  
+            selected={selectedDate}
             pastScrollRange={50}
-            futureScrollRange={50}            
-            renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>);}}
-            renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>);}}
+            futureScrollRange={50}
+            renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>)}}
+            renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>)}}
             rowHasChanged={(r1, r2) => {return r1._id !== r2._id}}
             theme={{
               // ...calendarTheme,
@@ -136,9 +136,9 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             }}
             // agenda container style
             style={{  }}
-          />          
+          />
         </View>
-        
+
         <View style={{ flex: 4 }}>
           <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#333' }}>
@@ -161,17 +161,17 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                   } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={Resources.image.joblist_empty} style={{ marginTop: 70, width: 100, height: 100 }} />
-                      <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>
+                      <Text style={{ marginTop: 20, color: '#777', fontSize: FONT.TextSize(18), fontWeight: '400' }}>
                         <FormattedMessage id={'no_job'}/>
                       </Text>
-                    </View>                    
+                    </View>
                   </ScrollView>
                 ) :
-                ( <ListView 
+                ( <ListView
                   refreshControl={
                     <RefreshControl
                       refreshing={this.state.loading}
-                      onRefresh={this._fetchData.bind(this)}                   
+                      onRefresh={this._fetchData.bind(this)}
                       title={'下拉进行刷新'}
                       colors={['#ffffff']}
                       progressBackgroundColor={'#1c99fb'}
@@ -181,11 +181,11 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
                   enableEmptySections={true}
                   renderRow={(row) => {
                     return (
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         onPress={() => {
                           this.props.dispatch(NavigationActions.navigate({
-                            routeName: 'JobsListDetail', 
-                            params: { jobDetail: row } 
+                            routeName: 'JobsListDetail',
+                            params: { jobDetail: row }
                           }))
                         }}
                         activeOpacity={.7}
@@ -199,8 +199,8 @@ export default connect(() => ({ }))(class JobsListScreen extends Component {
             }
           </View>
         </View>
-        
-      </View>      
+
+      </View>
     )
   }
 })
@@ -212,7 +212,7 @@ class ListItem extends Component {
     // console.log(this.props.itemData)
     this.state = {
     }
-  }  
+  }
 
   render() {
     const { itemData, itemDay } = this.props
@@ -223,25 +223,25 @@ class ListItem extends Component {
         <View style={[
           { width: width - 20, borderRadius: 6, backgroundColor: 'white' },
           { shadowOffset: { width: 0, height: 0 }, shadowColor: '#a2a3a8', shadowOpacity: .5, shadowRadius: 3 }
-        ]}>          
+        ]}>
           <View style={{margin: 15}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center'}}>              
-              <Text style={{ fontSize: 25, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#333' }}>{ from.name }</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+              <Text numberOfLines={1} style={{ fontSize: FONT.TextSize(20), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{ from.name }</Text>
             </View>
             <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{ fontSize: 15, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#999'}}>to</Text>
-              <Text style={{ marginLeft: 10, fontSize: 15, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#999'}}>{ destination.name } </Text>
+              {/* <Text style={{ fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
+              <Text style={{fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}>to { destination.name } </Text>
             </View>
-            
+
             <View style={{ marginTop:30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View>{ Icons.Generator.Material('access-time', 14, '#bbb') }</View>
-              <Text style={{ marginLeft: 5, fontSize: 15, color: '#777' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
-              <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', 14, '#bbb') }</View>
-              <Text style={{ marginLeft: 5,  fontSize: 15, color: '#777' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>              
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>                
+              <View>{ Icons.Generator.Material('access-time', FONT.TextSize(14), '#000000') }</View>
+              <Text style={{ marginLeft: 5, fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
+              <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', FONT.TextSize(14), '#000000') }</View>
+              <Text style={{ marginLeft: 5,  fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 14, '#bbb') }</View> */}
-                <Text style={{ marginLeft: 10, fontWeight: 'bold', color: '#333' }}>{ fare }</Text>
-              </View>              
+                <Text style={{fontSize: FONT.TextSize(20), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{ fare }</Text>
+              </View>
             </View>
           </View>
         </View>
