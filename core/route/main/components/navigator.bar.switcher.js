@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 import { Screen } from '../../../utils' 
 import { application } from '../../../redux/actions'
-import { FormattedMessage } from 'react-intl';
 
 const { width } = Screen.window
 
@@ -13,7 +12,8 @@ const BUTTON_WIDTH = 88
 export default connect(state => ({ 
   core_mode: state.application.core_mode,
   status: state.booking.status,
-  hidden: (state.booking.status >= 1) || (state.driver.working)
+  hidden: (state.booking.status >= 1) || (state.driver.working),
+  i18n: state.intl.messages
 }))(class NavigationBarSwipe extends PureComponent {
 
   constructor(props) {
@@ -30,12 +30,12 @@ export default connect(state => ({
 
   render() {
     const { index } = this.state
-    const { hidden } = this.props
+    const { hidden, i18n } = this.props
     const translateX = index.interpolate({ inputRange: [0, 1], outputRange: [0, 88] })
     const opacity_0 = index.interpolate({ inputRange: [0, 1], outputRange: [1, .4] })
     const opacity_1 = index.interpolate({ inputRange: [0, 1], outputRange: [.4, 1] })
-
     return (
+
       <View style={{ backgroundColor: '#1AB2FD', width, alignItems: 'center', height: hidden ? 0 : 50 }}>
         {
           (true) && (
@@ -50,22 +50,14 @@ export default connect(state => ({
                 activeOpacity={1} 
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
               >
-                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>
-                  <FormattedMessage id={'driver'} />
-                </Animated.Text>
+                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>{ i18n.driver }</Animated.Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => this.onPress(1)} 
                 activeOpacity={1} 
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
-              >
-                <FormattedMessage id={'passenger'} >
-                  {
-                    msg => (
-                      <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_1 }}>{msg}</Animated.Text>
-                    )
-                  }                
-                </FormattedMessage>                
+              >               
+                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_1 }}>{ i18n.passenger }</Animated.Text>                                   
               </TouchableOpacity>
             </View>
           )

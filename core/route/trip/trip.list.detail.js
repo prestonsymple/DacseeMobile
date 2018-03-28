@@ -25,7 +25,9 @@ const styles = StyleSheet.create({
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
 
-export default injectIntl(connect(() => ({ }))(class TripListDetailScreen extends Component {
+export default connect( state => ({
+  i18n: state.intl.messages
+}))(class TripListDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
@@ -86,22 +88,22 @@ export default injectIntl(connect(() => ({ }))(class TripListDetailScreen extend
   }
 
   render () {
+    const { i18n } = this.props
     const { destination, from, payment_method, fare, booking_at, status, driver_info } = this.state.tripDetail
-    // const { fullName } = driver_info
-    const { formatMessage } = this.props.intl
+    // const { fullName } = driver_info    
     return (
       <View style={{ flex: 1, backgroundColor: '#1ab2fd', alignItems:'center' }}>
         <Image source={Resources.image.logo} style={{ marginTop:10, height: 80, width: 80, resizeMode: 'contain'}} />
         <View style={{ position: 'absolute', top:100, left: 20, right: 20, bottom: 20, borderRadius: 10, backgroundColor: 'white' }}>
           <ScrollView style={{}}>
             <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
-              <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'driver_info'})}</Text>
-
+              <Text style={{ fontSize: 13, color: '#999' }}>{i18n.driver_info}</Text>              
+              
               {
                 driver_info == undefined ?
                   (
                     <View style={{ marginVertical: 10 }}>
-                      <Text style={{}}>{formatMessage({id: 'no_driver_info'})}</Text>
+                      <Text style={{}}>{i18n.no_driver_info}</Text>  
                     </View>
                   ) :
                   (
@@ -116,22 +118,22 @@ export default injectIntl(connect(() => ({ }))(class TripListDetailScreen extend
 
             <View style={{ padding: 20 }}>
               <View style={{ }}>
-                <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'book_time'})}</Text>
+                <Text style={{ fontSize: 13, color: '#999' }}>{i18n.book_time}</Text>
                 <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm:ss') }</Text>
               </View>
               <View style={{ marginTop: 20 }}>
-                <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'from'})}</Text>
+                <Text style={{ fontSize: 13, color: '#999' }}>{i18n.from}</Text>
                 <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ from.name }</Text>
               </View>
               <View style={{ marginTop: 20 }}>
-                <Text style={{ fontSize: 13, color: '#999' }}>{formatMessage({id: 'destination'})}</Text>
+                <Text style={{ fontSize: 13, color: '#999' }}>{i18n.destination}</Text>
                 <Text style={{ marginTop: 10, fontSize: 17, color: '#555' }}>{ destination.name }</Text>
               </View>
               <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
             </View>
 
             <View style={{ paddingHorizontal: 20 }}>
-              <Text style={{ fontSize: 17, color:'#333'}}>{formatMessage({id: 'fare_total'})}</Text>
+              <Text style={{ fontSize: 17, color:'#333'}}>{i18n.fare_total}</Text>
               <View stye={{ marginTop: 10, flex: 1, flexDirection: 'row'}}>
                 {/* <Text style={{ width: 60, fontSize: 14, color: '#555', backgroundColor: 'red' }}>总费用</Text> */}
                 <Text style={{ marginTop: 10, fontSize: 14, color: '#555', fontWeight: 'bold' }}>{ fare }</Text>
@@ -145,4 +147,4 @@ export default injectIntl(connect(() => ({ }))(class TripListDetailScreen extend
       </View>
     )
   }
-}))
+})

@@ -9,6 +9,10 @@ const en_US = {
   login_social: 'Social Login',
   active_account: 'Activate your account',
   please_enter: 'Please enter',
+  enter_phone: 'Enter your Phone Number',
+  enter_code: 'Enter Verification Code',
+  enter_name: 'Enter your Name',
+  enter_referee_id: 'Enter your Referrer ID',
   referee_id: 'Referrer ID',
   send_code: 'Send Verification Code',
   choose_account: 'Please select your account',
@@ -82,6 +86,7 @@ const en_US = {
   accept: 'Accept',
   on_the_way: 'On The Way',
 
+  start: 'Start',
   Pending_Acceptance: 'Pending Acceptance',
   On_The_Way: 'On The Way',
   Arrived: 'Arrived',
@@ -134,6 +139,8 @@ const en_US = {
   bind_qq: 'Bind to QQ',
   update_fullname: 'Update Full Name',
   update_email: 'Update Email',
+  pls_enter_fullname: 'Please enter your Full Name',
+  pls_enter_email: 'Please enter your Email',
 
   language_region: 'Language & Region',
   language: 'Language',

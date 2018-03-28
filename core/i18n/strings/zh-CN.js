@@ -8,7 +8,11 @@ const zh_CN = {
   verification_code: '验证码',
   login_social: '使用社交账号进行登录',	
   active_account: '激活您的账号',
-  please_enter: '请输入',    
+  please_enter: '请输入',
+  enter_phone: '输入手机号',
+  enter_code: '输入验证码',
+  enter_name: '输入姓名',
+  enter_referee_id: '输入推荐人ID',    
   referee_id: '推荐人ID',
   send_code: '发送验证码',
   choose_account: '选择您的账号',
@@ -82,6 +86,7 @@ const zh_CN = {
   accept: '接受',
   on_the_way: '接驾中',
 
+  start: '开始',
   Pending_Acceptance: '等待接单',    
   On_The_Way: '司机即将到达',
   Arrived: '司机已到达',
@@ -122,6 +127,7 @@ const zh_CN = {
   searching: '查找中...',
   transfering: '转账中...',
   transfer_success: '转账成功',
+  pls_enter_remarks: '请输入备注',
 
   settings: '设置',
   profile: '账号与安全',
@@ -133,6 +139,8 @@ const zh_CN = {
   bind_qq: '绑定至QQ',
   update_fullname: '修改全名',
   update_email: '修改邮箱',
+  pls_enter_fullname: '请输入您的全名',
+  pls_enter_email: '请输入您的邮箱',
   
   language_region: '语言和地区',
   language: '语言',
@@ -149,8 +157,7 @@ const zh_CN = {
   privacy_policy: '隐私协议及使用条款',
   version: '版本',
 
-  logout: '切换账号',
-  hello: 'hello'
+  logout: '切换账号'
 }
 
 export default zh_CN

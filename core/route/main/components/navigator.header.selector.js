@@ -22,7 +22,8 @@ const DEFAULT_MENU = [{
 
 export default connect(state => ({
   selected_type: state.booking.type,
-  locale: state.intl.locale
+  locale: state.intl.locale,
+  i18n: state.intl.messages
 }))(class HeaderSection extends Component {
 
   constructor(props) {
@@ -39,7 +40,7 @@ export default connect(state => ({
   }
 
   render() {
-    const { selected_type } = this.props
+    const { selected_type, i18n } = this.props
 
     return (
       <View style={[
@@ -55,7 +56,7 @@ export default connect(state => ({
             this.state.menu.map((pipe, index) => (
               <TouchableOpacity activeOpacity={1} onPress={() => this.props.dispatch(booking.passengerSetValue({ type: pipe.key }))} key={index} style={{ paddingHorizontal: 10, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={selected_type === pipe.key ? { color: 'white', fontSize: 13, fontWeight: '600' } : { color: 'white', fontSize: 13, fontWeight: '600', opacity: .7  }}>
-                  <FormattedMessage id={ pipe.title } />
+                  {i18n[`${pipe.title}`]}
                 </Text>
               </TouchableOpacity>
             ))
