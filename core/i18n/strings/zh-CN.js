@@ -157,7 +157,13 @@ const zh_CN = {
   privacy_policy: '隐私协议及使用条款',
   version: '版本',
 
-  logout: '切换账号'
+  logout: '切换账号',
+
+  job_detail: '订单详情',
+  job_list: '订单列表',
+  login_select_account: '选择您的账号',
+  social_register: '第三方账号注册'
+
 }
 
 export default zh_CN

@@ -168,7 +168,7 @@ export default connect(state => ({
                   <Text style={{ fontSize: 17, color:'#999', width: 120 }}>
                     <FormattedMessage id={'book_time'}/>
                   </Text>
-                  <Text style={{ flex: 1, fontSize: 16, color: '#333', fontWeight: 'bold', textAlign: 'right' }}>{ moment(Date.parse(booking_at)).format('YYYY-MM-D HH:mm') }</Text>               
+                  <Text style={{ flex: 1, fontSize: 16, color: '#333', fontWeight: 'bold', textAlign: 'right' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm') }</Text>               
                 </View>
 
                 <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
@@ -204,10 +204,10 @@ export default connect(state => ({
                   this._getOptionable(status) ?               
                     <View style={{ flexDirection: 'row' }}>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ this._getStatus(status).leftAction }>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}}>{ i18n.leftBtn }</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}}>{ i18n[leftBtn] }</Text>
                       </Button>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ i18n.rightBtn }</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ i18n[rightBtn] }</Text>
                       </Button>
                     </View> :
                     <Text style={{ fontSize: 17 }}>{ this._statusInChinese(status) }</Text>
