@@ -8,12 +8,13 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import moment from 'moment'
-import FONT from '../../utils/util.textSize'
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 
-const {height, width} = Screen.window
+import font from '../../utils/util.textSize'
+const TextSize = font.TextSize
+const { height, width } = Screen.window
 
 const styles = StyleSheet.create({
   pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(() => ({ }))(class TripListScreen extends Component {
+export default connect(() => ({}))(class TripListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
@@ -47,12 +48,11 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
   }
 
   async componentWillMount() {
-    console.log(FONT.TextSize(25));
     // await InteractionManager.runAfterInteractions()
     this._fetchData()
   }
 
-  async _fetchData(index=0) {
+  async _fetchData(index = 0) {
     this.setState({
       loading: true
     })
@@ -77,12 +77,12 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
     }
   }
 
-  render () {
+  render() {
     const { detail } = this.state
     return (
       <View style={{ flex: 1 }}>
         {
-          (detail.rowIdentities[0].length === 0 ) ?
+          (detail.rowIdentities[0].length === 0) ?
             (
               <ScrollView refreshControl={
                 <RefreshControl
@@ -99,11 +99,11 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
                 </View>
               </ScrollView>
             ) :
-            ( <ListView
+            (<ListView
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.loading}
-                  onRefresh={() => {this._fetchData.bind(this)}}
+                  onRefresh={() => { this._fetchData.bind(this) }}
                   title={'下拉进行刷新'}
                   colors={['#ffffff']}
                   progressBackgroundColor={'#1c99fb'}
@@ -124,7 +124,8 @@ export default connect(() => ({ }))(class TripListScreen extends Component {
                   >
                     <ListItem itemData={row} />
                   </TouchableOpacity>
-                )}}
+                )
+              }}
               // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
               style={{ flex: 1 }}
             />)
@@ -144,7 +145,7 @@ class ListItem extends Component {
   }
 
   _statusInChinese(str) {
-    switch(str) {
+    switch (str) {
     // case 'Pending_Passenger':
     //   return '等待乘客'
     // case 'Pending_Assignment':
@@ -184,23 +185,23 @@ class ListItem extends Component {
           { width: width - 20, borderRadius: 6, backgroundColor: 'white' },
           { shadowOffset: { width: 0, height: 0 }, shadowColor: '#a2a3a8', shadowOpacity: .5, shadowRadius: 3 }
         ]}>
-          <View style={{margin: 15}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-              <Text numberOfLines={1} style={{ fontSize: FONT.TextSize(20), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{ from.name }</Text>
+          <View style={{ margin: 15 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text numberOfLines={1} style={{ fontSize: TextSize(25), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{from.name}</Text>
             </View>
-            <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
-              {/* <Text style={{ fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
-              <Text style={{fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}>to { destination.name } </Text>
+            <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}>
+              {/* <Text style={{ fontSize: TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
+              <Text style={{ fontSize: TextSize(15), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6' }}>to {destination.name} </Text>
             </View>
 
-            <View style={{ marginTop:30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View>{ Icons.Generator.Material('access-time', FONT.TextSize(14), '#000000') }</View>
-              <Text style={{ marginLeft: 5, fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
-              <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', FONT.TextSize(14), '#000000') }</View>
-              <Text style={{ marginLeft: 5,  fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 14, '#bbb') }</View> */}
-                <Text style={{fontSize: FONT.TextSize(20), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{ fare }</Text>
+            <View style={{ marginTop: 30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+              <View>{Icons.Generator.Material('access-time', TextSize(15), '#000000')}</View>
+              <Text style={{ marginLeft: 5, fontSize: TextSize(15), color: '#5C5B63' }}>{moment(Date.parse(booking_at)).format('HH:mm')}</Text>
+              <View style={{ marginLeft: 10, }}>{Icons.Generator.Material('payment', TextSize(15), '#000000')}</View>
+              <Text style={{ marginLeft: 5, fontSize: TextSize(15), color: '#5C5B63' }}>{payment_method == 'Cash' ? '现金' : payment_method}</Text>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 15, '#bbb') }</View> */}
+                <Text style={{ fontSize: TextSize(15), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{fare}</Text>
               </View>
             </View>
           </View>

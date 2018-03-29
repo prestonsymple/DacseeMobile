@@ -12,7 +12,8 @@ import { Screen, Icons, Session } from '../../utils'
 import Resources from '../../resources'
 import { application, driver } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
-import FONT from '../../utils/util.textSize'
+import font from '../../utils/util.textSize'
+const TextSize=font.TextSize
 const {height, width} = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -109,18 +110,18 @@ export default connect(state => ({
               <Agenda
                 loadItemsForMonth={(month) => {}}
                 onCalendarToggled={(calendarOpened) => {}}
-                onDayPress={(day)=>{              
+                onDayPress={(day)=>{
                   const dateStr = moment(day.timestamp).toISOString()
                   // console.log('clicked', dateStr)
                   this.setState({
                     selectedDate: dateStr
                   })
-                  this._fetchData(dateStr)              
+                  this._fetchData(dateStr)
                 }}
                 onDayChange={(day)=>{}}
-                selected={selectedDate}                  
+                selected={selectedDate}
                 pastScrollRange={50}
-                futureScrollRange={50}            
+                futureScrollRange={50}
                 renderKnob={() => {return (<View>{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>);}}
                 renderEmptyDate = {() => {return (<View style={{ margin: 20, alignItems: 'center', backgroundColor: '#d3d3d3',  height: 1}}></View>);}}
                 rowHasChanged={(r1, r2) => {return r1._id !== r2._id}}
@@ -166,9 +167,9 @@ export default connect(state => ({
                   dataSource={detail}
                   enableEmptySections={true}
                   renderRow={(row) => (
-                    <ListItem 
-                      itemData={row} 
-                      onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))} 
+                    <ListItem
+                      itemData={row}
+                      onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))}
                     />
                   )}
                   style={{ flex: 1, marginTop: 15 }}
@@ -182,9 +183,9 @@ export default connect(state => ({
                   dataSource={jobs}
                   enableEmptySections={true}
                   renderRow={(row) => (
-                    <ListItem 
-                      itemData={row} 
-                      onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))} 
+                    <ListItem
+                      itemData={row}
+                      onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))}
                     />
                   )}
                   style={{ flex: 1, marginTop: 15 }}
@@ -220,21 +221,21 @@ class ListItem extends PureComponent {
           ]}>
             <View style={{margin: 15}}>
               <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                <Text numberOfLines={1} style={{ fontSize: FONT.TextSize(20), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{ from.name }</Text>
+                <Text numberOfLines={1} style={{ fontSize: TextSize(25), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{ from.name }</Text>
               </View>
               <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
-                {/* <Text style={{ fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
-                <Text style={{fontSize: FONT.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}>to { destination.name } </Text>
+                {/* <Text style={{ fontSize: TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
+                <Text style={{fontSize: TextSize(15), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}>to { destination.name } </Text>
               </View>
 
               <View style={{ marginTop:30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <View>{ Icons.Generator.Material('access-time', FONT.TextSize(14), '#000000') }</View>
-                <Text style={{ marginLeft: 5, fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
-                <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', FONT.TextSize(14), '#000000') }</View>
-                <Text style={{ marginLeft: 5,  fontSize: FONT.TextSize(14), color: '#5C5B63' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
+                <View>{ Icons.Generator.Material('access-time', TextSize(15), '#000000') }</View>
+                <Text style={{ marginLeft: 5, fontSize: TextSize(15), color: '#5C5B63' }}>{ moment(Date.parse(booking_at)).format('HH:mm') }</Text>
+                <View style={{marginLeft: 10, }}>{ Icons.Generator.Material('payment', TextSize(15), '#000000') }</View>
+                <Text style={{ marginLeft: 5,  fontSize: TextSize(15), color: '#5C5B63' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                  {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 14, '#bbb') }</View> */}
-                  <Text style={{fontSize: FONT.TextSize(20), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{ fare }</Text>
+                  {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 15, '#bbb') }</View> */}
+                  <Text style={{fontSize: TextSize(15), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{ fare }</Text>
                 </View>
               </View>
             </View>
