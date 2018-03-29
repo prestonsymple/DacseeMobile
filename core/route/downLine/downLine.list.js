@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import FONT from '../../utils/util.textSize'
-import { Screen } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 
 import { application, booking } from '../../redux/actions'
 import UserList from './components/user.list'
@@ -34,33 +34,7 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
     super(props)
     this.state = {
       loading: false,
-      data: {
-        'level': 1,
-        'users': [
-          {
-            '_id': '5a697a7333f82544619072dd',
-            'fullName': 'Test User 1.1',
-            'avatars': [
-              {
-                'url': 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-              }
-            ],
-            'totalDownline': 2,
-            'userId': 'NS-4352533'
-          },
-          {
-            '_id': '5a697af033f82544619072de',
-            'fullName': 'Test User 1.2',
-            'avatars': [
-              {
-                'url': 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-              }
-            ],
-            'totalDownline': 0,
-            'userId': 'SN-8603898'
-          }
-        ]
-      },
+      data: {users:[]},
       total: 1
     }
   }
@@ -74,11 +48,12 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
       loading: true
     })
     try {
-      //获取列表 s
-      //const resp = await Session.Booking.Get('v1/bookings?role=passenger')
+      const { state } = this.props.navigation
+      const { params } = state
+      const data = await Session.User.Get('v1/downline/level/'+params.level)
       this.setState({
         loading: false,
-
+        data:data
       })
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))

@@ -33,10 +33,9 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
       loading: false,
-      data: { total: 7, level1: 1, level2: 2, level3: 4 }
+      data: {}
     }
   }
 
@@ -50,9 +49,10 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
     })
     try {
       //获取列表
-      //const resp = await Session.Booking.Get('v1/bookings?role=passenger')
+      const data = await Session.User.Get('v1/downline/level/0')
       this.setState({
         loading: false,
+        data:data
       })
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))
@@ -73,7 +73,7 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingLeft: 20 }}>
           <Text style={{ fontSize: 15, color: '#fff', marginBottom: 10 }}>Total Downline</Text>
-          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.level1 + data.level2 + data.level2}</Text>
+          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.level1 + data.level2 + data.level3}</Text>
         </View>
         <ScrollView refreshControl={
           <RefreshControl
@@ -102,7 +102,7 @@ class DownLineCell extends PureComponent {
       <TouchableOpacity onPress={() => this.props.goDownLineList(cellname)} style={{ paddingTop: 20 }}>
         <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#404040', paddingBottom: 5 }}>{'LEVEL ' + cellname}</Text>
         <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#ccc', paddingBottom: 5 }}>TOTAL DOWNLINE</Text>
-        <Text style={{ fontSize: 25, fontWeight: '300', color: '#404040', paddingBottom: 5 }}>{value}</Text>
+        <Text style={{ fontSize: 25, fontWeight: '300', color: '#404040', paddingBottom: 5 }}>{value?value:0}</Text>
       </TouchableOpacity>
     )
   }

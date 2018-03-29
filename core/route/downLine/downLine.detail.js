@@ -33,55 +33,7 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
     super(props)
     this.state = {
       loading: false,
-      data: {
-        '_id': '5a697a7333f82544619072dd',
-        'fullName': 'Test User 1.1',
-        'avatars': [
-          {
-            'url': 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-          }
-        ],
-        'referral': {
-          '_id': '5a4a36d9812d94d4dadf6f43',
-          'userId': 'AA-1234567',
-          'fullName': 'Test User 1',
-          'avatars': [
-            {
-              'url': 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-            }
-          ]
-        },
-        'users': [
-          {
-            '_id': '5a697a7333f82544619072dd',
-            'fullName': 'Test User 1.1',
-            'avatars': [
-              {
-                'url': 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-              }
-            ],
-            'totalDownline': 2,
-            'userId': 'NS-4352533'
-          },
-          {
-            '_id': '5a697af033f82544619072de',
-            'fullName': 'Test User 1.2',
-            'avatars': [
-              {
-                'url': 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
-              }
-            ],
-            'totalDownline': 0,
-            'userId': 'SN-8603898'
-          }
-        ],
-        'joinedOn': '25 Jan 2018',
-        'level': 1,
-        'totalDownline': 2,
-        'userId': 'NS-4352533',
-        'phoneCountryCode': '+60',
-        'phoneNo': '11000000'
-      }
+      data: {users:[],referral:{}}
     }
   }
 
@@ -94,11 +46,12 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
       loading: true
     })
     try {
-      //获取列表
-      //const resp = await Session.Booking.Get('v1/bookings?role=passenger')
+      const { state } = this.props.navigation
+      const { params } = state
+      const data = await Session.User.Get('v1/downline/user/'+params._id)
       this.setState({
         loading: false,
-
+        data:data
       })
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))
@@ -138,7 +91,6 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
                 <UserList users={data.users} goUserDetails={(_id) => this.goUserDetails(_id)} />
               </View> : null
           }
-
         </ScrollView>
       </View>
     )

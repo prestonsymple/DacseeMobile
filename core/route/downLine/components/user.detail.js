@@ -5,12 +5,13 @@ import {
 export default class UserDetail extends PureComponent {
   render() {
     const {data} = this.props
+    const {referral,joinedOn,phoneCountryCode,phoneNo,level}=data
     return (
       <View style={{paddingHorizontal:20,paddingTop:20,backgroundColor:'#fff'}}>
-        <InfoCell cellname='Referrer Name' value={data.referral.fullName} />
-        <InfoCell cellname='Join Date' value={data.joinedOn} />
-        <InfoCell cellname='Contact N0.' value={data.phoneCountryCode? (data.phoneCountryCode+ ' '+data.phoneNo):'' } />
-        <InfoCell cellname='Downline Level' value={data.level} />
+        <InfoCell cellname='Referrer Name' value={referral.fullName?referral.fullName:''} />
+        <InfoCell cellname='Join Date' value={joinedOn} />
+        <InfoCell cellname='Contact N0.' value={phoneCountryCode? (phoneCountryCode+ ' '+phoneNo):'' } />
+        <InfoCell cellname='Downline Level' value={level} />
       </View>
     )
   }

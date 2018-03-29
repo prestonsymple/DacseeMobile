@@ -38,7 +38,7 @@ class UserCell extends PureComponent {
             { backgroundColor: '#eee',marginRight:10, overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
             { borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }
           ]}>
-            <Image style={{ width: 50, height: 50 }} source={{uri:avatars[avatars.length - 1].url}} />
+            <Image style={{ width: 50, height: 50 }} source={{uri:avatars?avatars[avatars.length - 1].url:'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'}} />
           </View>
           <View style={{justifyContent:'center',}}>
             <Text style={{color:'#000'}}>{fullName}</Text>
