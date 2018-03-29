@@ -7,7 +7,7 @@ import {
   SocialRegisterScreen
 } from '../route/login'
 
-import { 
+import {
   DriverAndPassengerScreen,
 
   PassengerCompleteScreen,
@@ -29,7 +29,7 @@ import {
   TripListDetailScreen
 } from '../route/trip'
 
-import { 
+import {
   WalletBalanceScreen,
   WalletWithdrawScreen,
   WalletBalanceListScreen,
@@ -54,6 +54,12 @@ import {
 
   ProfileChangeAvatarScreen
 } from '../route/setting'
+
+import {
+  DownLineListScreen,
+  DownLineDetailScreen,
+  DownLineTotalScreen
+} from '../route/downLine'
 
 import {
   FormEditorScreen
@@ -103,7 +109,7 @@ const HomeScreen = {
   WalletTransferSummary: { screen: WalletTransferSummaryScreen },
 
   IncomeList: { screen: IncomeListScreen },
-  
+
   SettingMenu: { screen: SettingMenuScreen },
   SettingAbout: { screen: SettingAboutScreen },
   SettingAccount: { screen: SettingAccountScreen },
@@ -114,6 +120,10 @@ const HomeScreen = {
   SettingHelpCenter: { screen: SettingHelpCenterScreen },
   SettingPrivate: { screen: SettingPrivateScreen },
   SettingWetView: { screen: SettingWetViewScreen },
+
+  DownLineTotal: { screen: DownLineTotalScreen },
+  DownLineList: { screen: DownLineListScreen },
+  DownLineDetail: { screen: DownLineDetailScreen },
 
   ProfileChangeAvatar: { screen: ProfileChangeAvatarScreen },
 
