@@ -50,6 +50,7 @@ import {
   SettingFeedbackScreen,
   SettingHelpCenterScreen,
   SettingWetViewScreen,
+  SettingPrivateScreen,
 
   ProfileChangeAvatarScreen
 } from '../route/setting'
@@ -111,6 +112,7 @@ const HomeScreen = {
   SettingLanguageChoose: { screen: SettingLanguageChooseScreen },
   SettingFeedback: { screen: SettingFeedbackScreen },
   SettingHelpCenter: { screen: SettingHelpCenterScreen },
+  SettingPrivate: { screen: SettingPrivateScreen },
   SettingWetView: { screen: SettingWetViewScreen },
 
   ProfileChangeAvatar: { screen: ProfileChangeAvatarScreen },

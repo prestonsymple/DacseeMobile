@@ -136,11 +136,37 @@ export default connect(state => ({
           } }
         ])
       } }
+    case 'On_Board':
+      return { left: 'cancel', right: 'Completed', leftAction: () => {
+        Alert.alert('取消订单', '取消订单后，您将会受到处罚', [
+          { text: '放弃' },
+          { text: '确认取消', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
+              this.props.navigation.goBack()
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
+      }, rightAction: () => {
+        Alert.alert('结束行程', '已到达乘客目的地，点击确认完成行程', [
+          { text: '取消' },
+          { text: '继续', onPress: async () => {
+            try {
+              await Session.Booking.Put(`v1/${_id}`, { action: 'completed' })
+              this.props.navigation.goBack()
+            } catch (e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+            }
+          } }
+        ])
+      } }
     }
   }
 
   _getOptionable(status) {
-    if (status == 'Pending_Acceptance' || status == 'On_The_Way' || status == 'Arrived' ) {
+    if (status == 'Pending_Acceptance' || status == 'On_The_Way' || status == 'Arrived' || status === 'On_Board') {
       return true
     } 
     return false
@@ -163,7 +189,7 @@ export default connect(state => ({
     case 'No_Show':
       return '乘客未抵达'
     case 'On_Board':
-      return '乘客已上车'
+      return '完成订单'
     case 'Completed':
       return '订单完成'
     case 'Cancelled_by_Passenger':
@@ -275,7 +301,7 @@ export default connect(state => ({
                       </Button>
                     </View> :
                     <Text style={{ fontSize: 17 }}>{ this._statusInChinese(status) }</Text>
-                }                        
+                }
               </View>
             </View>              
           </View>

@@ -91,6 +91,29 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
       this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
       this.map.animateTo({ zoomLevel: 15, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
     }
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED && this.props.status !== props.status) {
+      this.setState({ polyline: [] })
+    }
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD && props.driver !== this.props.driver && ('latitude' in props.driver)) {
+      const { driver, destination } = props
+      console.log(driver, destination)
+      const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
+      const destinationCoords = [destination.coords.lng, destination.coords.lat]
+
+      const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${destinationCoords.join(',')}`)
+      const lnglat = data.map(pipe => {
+        const coords = pipe.split(',')
+        return { longitude: parseFloat(coords[0]), latitude: parseFloat(coords[1]) }
+      })
+      this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
+      this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
+    }
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_HAVE_COMPLETE && this.props.status !== props.status) {
+      this.setState({ polyline: [] })
+    }
   }
 
   async componentDidMount() {
@@ -227,7 +250,8 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
     /* CAR POLYLINE */
-    let direction = polyline.length === 0 ? 0 : UtilMath.carDirection(polyline[0].latitude, polyline[0].longitude, polyline[1].latitude, polyline[1].longitude)
+    let _polyline = polyline.length === 0 ? [{ latitude: 0, longitude: 0 }, { latitude: 0, longitude: 0 }] : polyline
+    let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
 
@@ -236,8 +260,8 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
         <AMapView minZoomLevel={5} {...MAP_DEFINE} {...MAP_SETTER}>
           <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
           <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
-          <Marker image={`rn_car_${direction}`} coordinate={polyline[0]} />
-          <Polyline coordinates={polyline} width={6} color={'#666'} />
+          <Marker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
+          <Polyline coordinates={_polyline} width={6} color={'#666'} />
         </AMapView>
         {/* <GoogleMap style={{ flex: 1 }}>
 

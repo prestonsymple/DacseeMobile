@@ -49,7 +49,10 @@ function* bookingFlow() {
     }))
 
 
-    if (status === STATUS.PASSGENER_BOOKING_INIT) {
+    if (
+      status === STATUS.PASSGENER_BOOKING_INIT ||
+      status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE
+    ) {
       yield all([
         put(booking.passengerSetID('')),
         put(booking.passengerSetValue({ destination: {}, time: 'now', payment: 'Cash' }))
@@ -133,8 +136,7 @@ function* bookingFlow() {
       status === STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY ||
       status === STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED ||
       status === STATUS.PASSGENER_BOOKING_ON_BOARD ||
-      status === STATUS.PASSGENER_BOOKING_ON_RATING ||
-      status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE
+      status === STATUS.PASSGENER_BOOKING_ON_RATING
     ) {
       // DATA RECEIVE
       if ((destination && from) && !('coords' in destination) || !('coords' in from)) {
@@ -147,7 +149,12 @@ function* bookingFlow() {
           payment: bookingDetail.payment_method
         }))
       }
-    }
+    } 
+    
+    // TODO COMPLETE
+    // else if (status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE) {
+      
+    // }
 
     yield put(booking.passengerSaveStatus(status))
   }
@@ -210,13 +217,13 @@ function* passengerUpdateDriverLocation() {
       app_status: state.application.application_status === 'active'
     }))
 
-    if (!driver_id || !app_status || !(passengerStatus < STATUS.PASSGENER_BOOKING_ON_BOARD)) {
+    if (!driver_id || !app_status || !(passengerStatus < STATUS.PASSGENER_BOOKING_HAVE_COMPLETE)) {
       yield delay(2500)
       continue
     } else {
       const driver = yield call(Session.Location.Get, `v1?reqUser_id=${driver_id}&userRole=passenger`)
       yield put(booking.passengerSetValue({ driver }))
-      yield delay(30000)
+      yield delay(10000)
     }
   }
 }
@@ -262,6 +269,11 @@ function* passengerStatusObserver() {
           yield all([
             put(booking.passengerSetValue({ driver_id })),
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_ON_BOARD))
+          ])
+        } else if (bookingStatus === 'Completed') {
+          yield all([
+            put(booking.passengerSetValue({ driver_id: '' })),
+            put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_INIT))
           ])
         }
 

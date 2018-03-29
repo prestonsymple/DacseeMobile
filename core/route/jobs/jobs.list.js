@@ -160,11 +160,26 @@ export default connect(state => ({
               )
             }
             {
-              (detail.rowIdentities[0].length !== 0 && !working) ||
+              (detail.rowIdentities[0].length !== 0 && !working) && (
+                <ListView
+                  refreshControl={refreshControl}
+                  dataSource={detail}
+                  enableEmptySections={true}
+                  renderRow={(row) => (
+                    <ListItem 
+                      itemData={row} 
+                      onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))} 
+                    />
+                  )}
+                  style={{ flex: 1, marginTop: 15 }}
+                />
+              )
+            }
+            {
               (jobs.rowIdentities[0].length !== 0 && working) && (
                 <ListView
                   refreshControl={refreshControl}
-                  dataSource={working ? jobs : detail}
+                  dataSource={jobs}
                   enableEmptySections={true}
                   renderRow={(row) => (
                     <ListItem 

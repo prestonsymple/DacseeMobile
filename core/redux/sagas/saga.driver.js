@@ -54,7 +54,8 @@ function* driverStatusObserver() {
         jobs = jobs.filter(({ status }) => {
           if (
             status === 'Cancelled_by_Passenger' ||
-            status === 'Cancelled_by_Driver'
+            status === 'Cancelled_by_Driver' ||
+            status === 'Completed'
           ) return false
           return true
         })

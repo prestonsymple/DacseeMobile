@@ -30,6 +30,8 @@ const SettingMenuScreen = connect(state => ({
       <Settings producer={[
         [{
           title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingAccount')
+        }, {
+          title: '隐私设置', type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
         [{
           title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
@@ -154,6 +156,29 @@ const SettingMessageNotificationScreen = connect(state => ({
   }
 })
 
+// 隐私设置
+const SettingPrivateScreen = connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class PushNotificationScreen extends PureComponent {
+  static navigationOptions = { title: '新消息通知' }
+
+  render() {
+    return (
+      <Settings producer={[
+        [{
+          title: '允许来自司机的好友请求', type: 'switch', value: false, editable: false, onPress: () => {}
+        }, {
+          title: '允许通过电话号码搜索', type: 'switch', value: false, editable: false, onPress: () => {}
+        }, {
+          title: '允许通过邮箱搜索', type: 'switch', value: false, editable: false, onPress: () => {}
+        }, {
+          title: '允许通过名字搜索', type: 'switch', value: false, editable: false, onPress: () => {}
+        }]
+      ]} />
+    )
+  }
+})
+
 // 语言和地区
 const SettingLanguageRegionScreen = connect(state => ({
   i18n: state.intl.messages || {},
@@ -233,5 +258,6 @@ export {
   SettingFeedbackScreen,
   SettingHelpCenterScreen,
   SettingWetViewScreen,
-  ProfileChangeAvatarScreen
+  ProfileChangeAvatarScreen,
+  SettingPrivateScreen
 }
