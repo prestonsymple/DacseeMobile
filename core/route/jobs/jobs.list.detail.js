@@ -49,6 +49,7 @@ export default connect(state => ({
 
   constructor(props) {
     super(props)
+    const { _id } = props.navigation.state.params.jobDetail
     this.state = {
       route: {
         routeBounds: {
@@ -60,8 +61,10 @@ export default connect(state => ({
         routeNaviPoint: [],
         routeTime: 0,
         routeTollCost: 0
-      }
-    }
+      },
+
+      detail: props.jobs.find(pipe => pipe._id === _id) ? props.jobs.find(pipe => pipe._id === _id) : props.navigation.state.params.jobDetail
+    }    
   }
 
   _getStatus(status) {
@@ -163,7 +166,9 @@ export default connect(state => ({
           } }
         ])
       } }
-    }
+    default:
+      return {}
+    }    
   }
 
   _getOptionable(status) {
@@ -207,19 +212,21 @@ export default connect(state => ({
   componentWillReceiveProps(props) {
     if (props.working && props.jobs !== this.props.jobs) {
       const { _id } = props.navigation.state.params.jobDetail
-      const detail = props.jobs.find(pipe => pipe._id === _id)
-      if (!detail) {
+      this.setState({
+        detail : props.jobs.find(pipe => pipe._id === _id)
+      })
+      if (!this.state.detail) {
         this.props.navigation.goBack()
       }
     }
   }
-  render() {
-    const { destination, from, payment_method, fare, booking_at, status, passenger_info, _id } = this.props.navigation.state.params.jobDetail
+  render() {    
+    const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = this.props.navigation.state.params.jobDetail    
+    const { status } = this.state.detail
     const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
     const { i18n } = this.props
-    const leftBtn = this._getStatus(status).left
-    const rightBtn = this._getStatus(status).right
-
+    const optionObject = this._getStatus(status)    
+    
     return (
       <View style={{ flex: 1 }}>
         <MapView
@@ -293,11 +300,11 @@ export default connect(state => ({
                 {
                   this._getOptionable(status) ?
                     <View style={{ flexDirection: 'row' }}>
-                      <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ this._getStatus(status).leftAction }>
-                        <Text style={{ fontSize: TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[leftBtn] }</Text>
+                      <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ optionObject.leftAction }>
+                        <Text style={{ fontSize: TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
                       </Button>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                        <Text style={{ fontSize: TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ this._getStatus(status).rightAction }>{ i18n[rightBtn] }</Text>
+                        <Text style={{ fontSize: TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
                       </Button>
                     </View> :
                     <Text style={{ fontSize: TextSize(17) }}>{ this._statusInChinese(status) }</Text>
