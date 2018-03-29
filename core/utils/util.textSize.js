@@ -13,10 +13,10 @@ export default {
         return size * 0.8;
       }
       // iphone 5
-      if (height < 667) {
+      if (height <=667) {
         return size * 0.833;
         // iphone 6-6s
-      } else if (height >= 667 && height <= 735) {
+      } else if (height > 667 && height <= 735) {
         return size;
       }
       // older phablets
@@ -29,7 +29,7 @@ export default {
         return size * 0.8;
       }
       // Catch other weird android width sizings
-      if (height < 667) {
+      if (height <= 667) {
         return size * 0.95;
         // catch in-between size Androids and scale font up
         // a tad but not too much
@@ -48,12 +48,12 @@ export default {
         return size* 0.833;
         // Catch other smaller android height sizings
       }
-      if (height < 667) {
+      if (height <= 667) {
         return size;
         // catch in-between size Androids and scale font up
         // a tad but not too much
       }
-      if (height >= 667 && height <= 735) {
+      if (height > 667 && height <= 735) {
         return size * 1.04;
       }
       // catch larger phablet devices
