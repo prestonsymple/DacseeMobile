@@ -40,7 +40,7 @@ export default connect(state => ({
       countryCode: this.props.selected_wallet.countryCode,
       phoneCountryCode: '+86',
       searchType: 0,
-      searchTitle: '手机号',
+      searchTitle: 'phone',
       searchContent: '',
       amount: 0,
       remark: '',
