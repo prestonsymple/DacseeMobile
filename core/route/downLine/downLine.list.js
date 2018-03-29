@@ -95,10 +95,12 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
   }
   render() {
     const { data } = this.state
+    const { state } = this.props.navigation
+    const { params } = state
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL '+data.level}</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL '+params.level}</Text>
           <Text style={{ fontSize: 15, color: '#fff', marginBottom: 5 }}>Total Downline</Text>
           <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 15 }}>{data.users.length}</Text>
         </View>

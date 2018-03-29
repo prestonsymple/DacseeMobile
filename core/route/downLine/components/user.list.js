@@ -7,7 +7,7 @@ export default class UserList extends PureComponent {
   render() {
     const { users } = this.props
     return (
-      <View style={{paddingHorizontal:20}}>
+      <View style={{paddingHorizontal:20,flex:1}}>
         <Text style={{fontSize:15,fontWeight:'bold',color:'#404040',marginVertical:10}}>DownLine Listing</Text>
         <ListView
           dataSource={dataContrast.cloneWithRows(users)}

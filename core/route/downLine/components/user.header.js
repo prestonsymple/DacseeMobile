@@ -7,7 +7,7 @@ export default class UserDetail extends PureComponent {
     const {data}=this.props
     const { userId,fullName,avatars } = data
     return (
-      <View style={{backgroundColor: '#1AB2FD',paddingBottom:10}}>
+      <View style={{backgroundColor: '#1AB2FD',paddingBottom:20}}>
         <View style={{flexDirection: 'row',alignItems: 'center'}}>
           <View style={[
             { backgroundColor: '#eee', overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
