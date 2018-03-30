@@ -9,6 +9,7 @@ import * as Progress from 'react-native-progress'
 import CodePush from 'react-native-code-push'
 import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
+import { application, address as Address } from '../../redux/actions'
 
 /*****************************************************************************************************/
 import { booking } from '../../redux/actions'
@@ -22,13 +23,29 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 
 export default connect(state => ({
   location: state.account.location,
-  i18n: state.intl.messages
+  i18n: state.intl.messages,
+  favorite: state.address.favorite
 }))(class SelectAddressModal extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      source: dataContrast.cloneWithRows([])
+      source: dataContrast.cloneWithRows(this.props.favorite)
+    }
+  }
+
+  // shouldComponentUpdate(props) {
+  //   if (props.i18n !== this.props.i18n || props.favorite !== this.props.favorite) {
+  //     return true
+  //   }
+  //   return false
+  // }
+
+  componentWillReceiveProps(props) {
+    if (props.favorite && props.favorite !== this.props.favorite) {
+      this.setState({
+        source: dataContrast.cloneWithRows(props.favorite)
+      })
     }
   }
 
@@ -36,10 +53,58 @@ export default connect(state => ({
     this.timer && clearTimeout(this.timer)
   }
 
+  componentDidMount() {
+    this._fetchFavoriteData()
+  }
+
+  async _fetchFavoriteData() {
+    try {
+      const resp = await Session.User.Get('v1/favPlaces')
+      this.props.dispatch(Address.setValues({ favorite: resp }))      
+    } catch(e) {
+      console.log(e)
+    }    
+  }
+
+  async _addedFavPlace(place) {
+    console.log('添加', place)
+    try {
+      const body = {
+        name: place.name,
+        latitude: place.coords.lat,
+        longitude: place.coords.lng,
+        address: place.address,
+        placeId: place.placeId
+      }
+      const resp = await Session.User.Post('v1/favPlaces/user', body)
+      // this.props.dispatch(Address.setValues({ favorite: resp }))
+    } catch(e) {
+      console.log(e)
+    }     
+  }
+
+  async _deleteFavPlace(place) {
+    console.log('删除', place)
+    try {
+      const body = {
+        name: place.name,
+        latitude: place.coords.lat,
+        longitude: place.coords.lng,
+        address: place.address,
+        placeId: place.placeId
+      }
+      const favPlace = this.props.favorite.find(pipe => pipe.placeId == place.placeId)
+      const resp = await Session.User.Delete(`v1/favPlaces/${favPlace._id}`, body)
+      // this.props.dispatch(Address.setValues({ favorite: resp }))
+    } catch(e) {
+      console.log(e)
+    }     
+  }
+
   onEnterKeywords(keywords) {
     this.timer && clearTimeout(this.timer)
     this.timer = setTimeout(async () => {
-      if (keywords.length === 0) return this.setState({ source: dataContrast.cloneWithRows([]) })
+      if (keywords.length === 0) return this.setState({ source: dataContrast.cloneWithRows(this.props.favorite) })        
       try {
         const { lat, lng } = this.props.location
         const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
@@ -51,12 +116,12 @@ export default connect(state => ({
     }, 350)
   }
 
-  render() {
+  render() {    
     const { type } = this.props.navigation.state.params
     const { source } = this.state
     const onPressCancel = () => this.props.navigation.goBack()
     const onChangeWords = (words) => this.onEnterKeywords(words)
-    const { i18n } = this.props
+    const { i18n, favorite } = this.props
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
@@ -67,6 +132,7 @@ export default connect(state => ({
               <View style={{ flex: 1, paddingHorizontal: 12 }}>
                 <TextInput
                   {...Define.TextInputArgs}
+                  clearTextOnFocus={false}
                   onChangeText={onChangeWords}
                   placeholder={i18n.please_enter_keywords}
                   style={[
@@ -94,7 +160,8 @@ export default connect(state => ({
               this.props.dispatch(booking.passengerSetValue({ [type]: rowData }))
               this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               this.props.navigation.goBack()
-            }} data={rowData} />}
+            }} onAddedFav={(d) => this._addedFavPlace(d)} 
+            onDeleteFav={(d) => this._deleteFavPlace(d)} isAddedFav={favorite.find(pipe => pipe.placeId == rowData.placeId) ? true : false} data={rowData} />}
             renderSeparator={() => <View style={{ marginLeft: 15, borderColor: '#eee', borderBottomWidth: 0.8 }} />}
             style={{ flex: 1, borderRadius: 4 }}
           />
@@ -105,17 +172,43 @@ export default connect(state => ({
 })
 
 class PickAddressRowItem extends Component {
-  render() {
-    const { onPress } = this.props
-    const { type, address, name } = this.props.data
+  constructor(props) {
+    super(props)
+    this.state={
+      isAddedFav: props.isAddedFav
+    }
+  }
+
+  render() {  
+    const { onPress, onAddedFav, onDeleteFav, data } = this.props
+    const { address, name } = this.props.data
+    const { isAddedFav } = this.state
+    console.log('展示', data)
     return (
-      <Button onPress={onPress} style={{ height: 48, flex: 1, backgroundColor: 'white', alignItems: 'flex-start', paddingHorizontal: 15 }}>
+      <Button onPress={onPress} style={{ height: 48, flex: 1, backgroundColor: 'white', alignItems: 'flex-start', paddingRight: 15 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ marginRight: 15 }}>
-            { type === 'favorite' && Icons.Generator.Material('star', 24, '#f3ae3d') }
-            { type === 'history' && Icons.Generator.Material('history', 24, '#999') }
-            { type === 'keywords' && Icons.Generator.Material('my-location', 24, '#999') }
-          </View>
+          <TouchableOpacity activeOpacity={0.7} onPress={ () => {
+            if (!isAddedFav) {
+               onAddedFav(data)
+            } else {
+               onDeleteFav(data)
+            }
+             this.setState({isAddedFav: !isAddedFav})             
+            }} >
+            <View style={{ width: 48, height: 48 }}>
+              <View style={{ marginTop: 12, marginLeft: 10 }}>
+                {
+                  this.state.isAddedFav ?
+                  Icons.Generator.Material('star', 24, '#f3ae3d') :
+                  Icons.Generator.Material('star-border', 24, '#e3e3e3')
+                }
+              </View>            
+              {/* { type === 'favorite' && Icons.Generator.Material('star', 24, '#f3ae3d') }
+              { type === 'history' && Icons.Generator.Material('history', 24, '#999') }
+              { type === 'keywords' && Icons.Generator.Material('my-location', 24, '#999') } */}
+            </View>
+          </TouchableOpacity>
+          
           <View style={{ flex: 1 }}>
             <Text style={{ color: '#666', fontSize: 15, fontWeight: '400' }}>{ name }</Text>
           </View>

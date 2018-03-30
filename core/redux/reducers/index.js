@@ -8,6 +8,7 @@ import driver from './reducer.driver'
 import circle from './reducer.circle'
 import wallet from './reducer.wallet'
 import intl from './reducer.intl'
+import address from './reducer.address'
 
 import SwitchNavigator from '../../app.routes'
 const initialState = SwitchNavigator.router.getStateForAction(SwitchNavigator.router.getActionForPathAndParams('AuthLoading'))
@@ -24,6 +25,7 @@ export default combineReducers({
   driver,
   circle,
   wallet,
+  address,
 
   storage: storage_reducer,
 
