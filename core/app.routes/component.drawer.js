@@ -25,6 +25,11 @@ const MENUS_OPTIONS = [{
   name: 'settings',
   icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
+},{
+  key: '4',
+  name: 'settings',
+  icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('DownLineTotal')
 }
 // {
 //   key: '1',
@@ -37,7 +42,7 @@ const MENUS_OPTIONS = [{
 //   name: '加入DACSEE',
 //   icon: (Icons.Generator.Material('drive-eta', 24, ICONS_COLOR, { style: { top: 1 } })),
 //   onPress: ({ navigation }) => navigation.navigate('UpgradeDriver')
-// }, 
+// },
 ]
 
 export default connect(state => ({ user: state.account.user }))(class DrawerContentComponent extends Component {
@@ -47,7 +52,7 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
   }
 
   render() {
-    const { fullName, avatars } = this.props.user    
+    const { fullName, avatars } = this.props.user
     return (
       <View style={{ flex: 1 }}>
         {/* TODO: Fix iPhone X */}
