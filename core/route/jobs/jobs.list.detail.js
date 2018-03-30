@@ -64,7 +64,7 @@ export default connect(state => ({
       },
 
       detail: props.jobs.find(pipe => pipe._id === _id) ? props.jobs.find(pipe => pipe._id === _id) : props.navigation.state.params.jobDetail
-    }    
+    }
   }
 
   _getStatus(status) {
@@ -168,7 +168,7 @@ export default connect(state => ({
       } }
     default:
       return {}
-    }    
+    }
   }
 
   _getOptionable(status) {
@@ -220,13 +220,13 @@ export default connect(state => ({
       }
     }
   }
-  render() {    
-    const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = this.props.navigation.state.params.jobDetail    
+  render() {
+    const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = this.props.navigation.state.params.jobDetail
     const { status } = this.state.detail
     const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
     const { i18n } = this.props
-    const optionObject = this._getStatus(status)    
-    
+    const optionObject = this._getStatus(status)
+
     return (
       <View style={{ flex: 1 }}>
         <MapView
@@ -272,14 +272,14 @@ export default connect(state => ({
               </View>
               <View style={{ marginHorizontal: 20, marginVertical: 12, flexDirection: 'row', justifyContent: 'center' }}>
                 <View style={{flex: 1, alignItems:'center', }}>
-                  <Image source={ Resources.image.joblist_car} resizeMethod={'scale'} style={{ width:40, height: 40}} />
-                  <Text style={{ marginTop: 10, fontSize: TextSize(15), color: '#3a3a3a' }}>
+                  <Image source={ Resources.image.joblist_car} resizeMethod={'scale'} style={{ width:36, height:36}} />
+                  <Text style={{ marginTop: 10, fontSize: TextSize(15), fontWeight: 'bold', color: '#3a3a3a' }}>
                     <FormattedMessage id={'car_standard'}/>
                   </Text>
                 </View>
                 <View style={{ flex: 1, alignItems:'center'}}>
                   <Image source={ Resources.image.joblist_payment} resizeMethod={'scale'} style={{ height: 40}} />
-                  <Text style={{ marginTop: 10, fontSize: TextSize(15), color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
+                  <Text style={{ marginTop: 10, fontSize: TextSize(15),fontWeight: 'bold',  color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
                 </View>
               </View>
               <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>

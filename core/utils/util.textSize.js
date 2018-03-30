@@ -14,7 +14,7 @@ export default {
       }
       // iphone 5
       if (height <=667) {
-        return size * 0.833;
+        return size * 0.85;
         // iphone 6-6s
       } else if (height > 667 && height <= 735) {
         return size;

@@ -15,7 +15,7 @@ const pixelSize = (function() {
 export default class SelectPay extends PureComponent {
   constructor(props) {
     super(props)
-    this.pays = ['支付宝支付','微信支付','一网通银行卡支付','国际银行卡支付','QQ钱包支付']
+    this.pays = ['支付宝','微信','一网通银行卡','国际银行卡','QQ钱包']
   }
   componentDidMount(){
 
