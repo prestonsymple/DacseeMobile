@@ -4,6 +4,7 @@ import React, { Component, PureComponent } from 'react'
 import { Text, View, Image, TouchableOpacity, DeviceEventEmitter, StatusBar, ScrollView, Linking } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
+import OpenAppSettings from 'react-native-app-settings'
 
 import NavigatorBarSwitcher from './components/navigator.bar.switcher'
 import DriverComponent from './driver'
@@ -142,7 +143,7 @@ export default connect(state => ({
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
         <Text style={{ color: '#666', fontSize: 14 }}>请确认您的位置权限是否打开</Text>
-        <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => { Linking.openURL('app-settings:')}}>
+        <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => {OpenAppSettings.open()}}>
           <Text style={{ fontSize: 20, color: 'white' }}>前往开启</Text>
         </TouchableOpacity>
       </View>

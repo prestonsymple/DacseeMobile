@@ -9,6 +9,7 @@ import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.facebook.react.ReactApplication;
+import com.krazylabs.OpenAppSettingsPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -58,6 +59,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new OpenAppSettingsPackage(),
             new LottiePackage(),
             new RNCameraPackage(),
             new ImagePickerPackage(),
