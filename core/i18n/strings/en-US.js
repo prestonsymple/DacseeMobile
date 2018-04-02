@@ -58,6 +58,8 @@ const en_US = {
   clickto_add_friend: 'Click“+”to add new friend',
   search_name_phone_email: 'Search by Name / Phone No. / Email',
   add_mycircle: 'Add circle',
+  pls_wait: '请等待...',
+  send_friend_request: '发送好友请求',
 
   driver: 'Driver',
   passenger: 'Passenger',
@@ -129,8 +131,19 @@ const en_US = {
   transfer_success: 'Transfer Success',
   pls_enter_remarks: 'Please enter remarks',
 
+  downline: 'Downline',
+  total_downline: 'Total Downline',
+  level_one: 'LEVEL 1',
+  level_two: 'LEVEL 2',
+  level_three: 'LEVEL 3',
+  downline_list: 'DownLine Listing',
+  referrer_name: 'Referer Name',
+  join_date: 'Join Date',
+  downline_level: 'Downline Level',
+
   settings: 'Settings',
   profile: 'Account & Safety',
+  privacy_setting: 'Privacy Setting',
   account: 'Account',
   my_avatar: 'Profile Picture',
   fullname: 'Full Name',
@@ -141,6 +154,11 @@ const en_US = {
   update_email: 'Update Email',
   pls_enter_fullname: 'Please enter your Full Name',
   pls_enter_email: 'Please enter your Email',
+
+  allow_request_from_driver: '允许来自司机的好友请求',
+  allow_search_by_phone: '允许通过电话号码搜索',
+  allow_search_by_email: '允许通过邮箱搜索',
+  allow_search_by_name: '允许通过名字搜索',
 
   language_region: 'Language & Region',
   language: 'Language',
