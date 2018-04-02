@@ -1,11 +1,11 @@
 import React, { Component, PureComponent } from 'react'
 import * as Progress from 'react-native-progress'
-import { 
-  View, Animated, StyleSheet, TouchableOpacity, TouchableHighlight, TouchableNativeFeedback, 
+import {
+  View, Animated, StyleSheet, TouchableOpacity, TouchableHighlight, TouchableNativeFeedback,
   Platform, ProgressViewIOS, ScrollView, Text, Image
 } from 'react-native'
 
-import { Screen, Icons, Redux } from '../utils'
+import { Screen, Icons, Redux ,TextFont} from '../utils'
 import { Button } from '../components'
 const { height, width } = Screen.window
 
@@ -13,7 +13,7 @@ const { height, width } = Screen.window
 const styles = StyleSheet.create({
   pageWrap: { width: width - 30, paddingHorizontal: 30, flexDirection: 'row', justifyContent: 'space-between' },
   itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: 14, fontWeight: '100', marginBottom: 8 },
+  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
   itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
@@ -55,15 +55,15 @@ export default class SelectCarType extends PureComponent {
     return (
       <Animated.View style={[{ flex: 1 }, style]}>
         {/* */}
-        <ScrollView 
+        <ScrollView
           pagingEnabled={true}
-          onScroll={({ nativeEvent }) => { 
+          onScroll={({ nativeEvent }) => {
             const { contentInset, contentOffset, contentSize, layoutMeasurement, velocity, zoomScale } = nativeEvent
             if (contentOffset.x < 0) return
             this.page.setValue(contentOffset.x)
           }}
           scrollEventThrottle={(width - 30) / 15}
-          horizontal={true} 
+          horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ height: 124, justifyContent: 'center', alignItems: 'center' }}
           style={{ }}
@@ -92,7 +92,7 @@ export default class SelectCarType extends PureComponent {
               </View>)
             })
           } */}
-          
+
 
           {
             data.map((item, index) => {

@@ -7,8 +7,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import FONT from '../../utils/util.textSize'
-import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 
 import { application, booking } from '../../redux/actions'
 import UserList from './components/user.list'
@@ -78,9 +77,9 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL ' + params.level}</Text>
-          <Text style={{ fontSize: 15, color: '#fff', marginBottom: 5 }}>Total Downline</Text>
-          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 15 }}>{data.users.length}</Text>
+          <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL ' + params.level}</Text>
+          <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 5 }}>Total Downline</Text>
+          <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#fff', marginBottom: 15 }}>{data.users.length}</Text>
         </View>
         <ScrollView refreshControl={
           <RefreshControl

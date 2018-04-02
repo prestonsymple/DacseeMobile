@@ -5,7 +5,7 @@ import {
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 
-import { Icons } from '../../utils'
+import { Icons ,TextFont} from '../../utils'
 import { account } from '../../redux/actions'
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
@@ -18,7 +18,7 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
       title: '激活您的账号'
     }
   }
-  
+
   constructor(props) {
     super(props)
     const { data } = this.props.navigation.state.params
@@ -38,12 +38,12 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
     return (
       <View style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />
-        <ListView 
+        <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={(row) => (<RowItem onPress={async () => {
             this.props.navigation.goBack()
-            this.props.dispatch(account.loginNext({ stage: 3, value: Object.assign({}, value, { 
+            this.props.dispatch(account.loginNext({ stage: 3, value: Object.assign({}, value, {
               _id: row._id
             }) }))
           }} data={row} />)}
@@ -71,7 +71,7 @@ class RowItem extends Component {
             <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
+            <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
             {/* <Text style={{ fontSize: 12, color: '#666', fontWeight: '400' }}>{ role }</Text> */}
           </View>
           <View style={{ width: 45, alignItems: 'flex-end' }}>

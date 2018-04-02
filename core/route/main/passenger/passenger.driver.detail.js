@@ -8,7 +8,7 @@ import InteractionManager from 'InteractionManager'
 import ActionSheet from 'react-native-actionsheet'
 
 import { MapView, Marker, Utils, Polyline } from '../../../native/AMap'
-import { Screen, Icons, Define, System, Session } from '../../../utils'
+import { Screen, Icons, Define, System, Session ,TextFont } from '../../../utils'
 import { booking, application } from '../../../redux/actions'
 import { Button } from '../../../components'
 import { BOOKING_STATUS } from '..'
@@ -242,7 +242,7 @@ class DriverOnTheWayLabel extends Component {
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 }
       ]}>
         { Icons.Generator.Material('volume-up', 16, '#999') }
-        <Text style={{ color: '#777', fontSize: 13, marginLeft: 6 }}>司机正在赶来，请前往路边等待</Text>
+        <Text style={{ color: '#777', fontSize: TextFont.TextSize(13), marginLeft: 6 }}>司机正在赶来，请前往路边等待</Text>
       </View>
     )
   }
@@ -261,18 +261,18 @@ class DriverStatusPanel extends Component {
           <View style={{ backgroundColor: '#eee', height: 64, width: 64, borderRadius: 32 }}>
             { avatars && (<Image style={{ width: 64, height: 64, borderRadius: 32 }} source={{ uri: avatars[0].url }} />) }
           </View>
-          <Text style={{ color: '#666', fontSize: 15, fontWeight: '400', marginTop: 6 }}>{ fullName }</Text>
+          <Text style={{ color: '#666', fontSize: TextFont.TextSize(15), fontWeight: '400', marginTop: 6 }}>{ fullName }</Text>
         </View>
         <View style={{ height: .8, backgroundColor: '#eee' }} />
         <View style={{ flexDirection: 'row', height: Define.system.ios.x ? 64 : 44, paddingBottom: Define.system.ios.x ? 24 : 0 }}>
           <TouchableOpacity onPress={() => Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)} style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             { Icons.Generator.Material('phone', 16, '#999', { style: { top: 1 } }) }
-            <Text style={{ color: '#444', fontWeight: '400', fontSize: 15, marginLeft: 6 }}>打电话</Text>
+            <Text style={{ color: '#444', fontWeight: '400', fontSize: TextFont.TextSize(15), marginLeft: 6 }}>打电话</Text>
           </TouchableOpacity>
           <View style={{ width: .8, backgroundColor: '#eee' }} />
           <TouchableOpacity style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             { Icons.Generator.Material('cancel', 16, '#999', { style: { top: 1 } }) }
-            <Text style={{ color: '#444', fontWeight: '400', fontSize: 15, marginLeft: 6 }}>取消订单</Text>
+            <Text style={{ color: '#444', fontWeight: '400', fontSize: TextFont.TextSize(15), marginLeft: 6 }}>取消订单</Text>
           </TouchableOpacity>
           {/* <View style={{ width: .8, backgroundColor: '#eee' }} />
           <TouchableOpacity style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: Platform.select({ ios: 4, android: 0 }) }}>

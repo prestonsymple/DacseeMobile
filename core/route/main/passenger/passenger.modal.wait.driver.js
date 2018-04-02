@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { System, Icons, Screen, Session } from '../../../utils'
+import { System, Icons, Screen, Session,TextFont } from '../../../utils'
 import { Button } from '../../../components'
 import { booking, application } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
@@ -67,8 +67,8 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
               {/* <Image style={{ width: 120, height: 120, borderRadius: 60 }} source={require('../resources/images/test.jpg')} /> */}
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777', fontSize: 16, fontWeight: '200' }}>行程确认中，请稍等</Text>) }
-              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777', fontSize: 16, fontWeight: '200' }}>行程确认完毕，等待司机接单</Text>) }
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>行程确认中，请稍等</Text>) }
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>行程确认完毕，等待司机接单</Text>) }
             </View>
             <Button onPress={async () => {
               if (!active) return
@@ -79,7 +79,7 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
                 this.props.dispatch(application.showMessage('无法连接到服务器'))
               }
             }} style={{ backgroundColor: active ? '#e54224' : '#ccc', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
-              <Text style={{ fontSize: 16, color: 'white' }}>取消</Text>
+              <Text style={{ fontSize: TextFont.TextSize(16), color: 'white' }}>取消</Text>
             </Button>
           </View>
         </View>

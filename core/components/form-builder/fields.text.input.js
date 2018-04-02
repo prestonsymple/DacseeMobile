@@ -4,14 +4,12 @@ import React, { Component } from 'react'
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 const { width, height } = Dimensions.get('window')
-
 const fixPlusPixel = width <= 375 ? .5 : 1
-
-import { Icons } from '../../utils'
+import { Icons ,TextFont} from '../../utils'
 
 // 文本输入
 class FieldsTextInput extends Component {
-  
+
   render() {
     const { key, value = '', label, defaultValue, placeholder, onPress, index } = this.props
     // const { value } = this.state
@@ -23,10 +21,10 @@ class FieldsTextInput extends Component {
         index !== 0 && { borderTopWidth: fixPlusPixel, borderColor: '#eee' }
       ]}>
         <View style={{ width: 100 }}>
-          <Text style={{ color: '#333', fontSize: 15, fontWeight: '400' }}>{ label }</Text>
+          <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{ label }</Text>
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
-          <Text style={{ color: (value || defaultValue) ? '#333' : '#999', fontSize: 15, fontWeight: '400' }}>{ value || defaultValue || placeholder }</Text>
+          <Text style={{ color: (value || defaultValue) ? '#333' : '#999', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{ value || defaultValue || placeholder }</Text>
           <View>{ Icons.Generator.Material('chevron-right', 24, '#bbb') }</View>
         </View>
       </TouchableOpacity>
@@ -37,10 +35,10 @@ class FieldsTextInput extends Component {
         index !== 0 && { borderTopWidth: fixPlusPixel, borderColor: '#eee' }
       ]}>
         <View style={{ width: 100 }}>
-          <Text style={{ color: '#333', fontSize: 15, fontWeight: '400' }}>{ label }</Text>
+          <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{ label }</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={{ color: (value || defaultValue) ? '#333' : '#999', fontSize: 15, fontWeight: '400' }}>{ value || defaultValue || placeholder }</Text>
+          <Text style={{ color: (value || defaultValue) ? '#333' : '#999', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{ value || defaultValue || placeholder }</Text>
         </View>
       </View>
     )

@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react'
 import {
   Text, View, Image,ListView,TouchableOpacity
 } from 'react-native'
+import {TextFont} from '../../../utils'
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 export default class UserList extends PureComponent {
   render() {
     const { users } = this.props
     return (
       <View style={{paddingHorizontal:20,flex:1}}>
-        <Text style={{fontSize:15,fontWeight:'bold',color:'#404040',marginVertical:10}}>DownLine Listing</Text>
+        <Text style={{fontSize:TextFont.TextSize(15),fontWeight:'bold',color:'#404040',marginVertical:10}}>DownLine Listing</Text>
         <ListView
           dataSource={dataContrast.cloneWithRows(users)}
           enableEmptySections={true}

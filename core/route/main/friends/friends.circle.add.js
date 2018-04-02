@@ -8,14 +8,14 @@ import ActionSheet from 'react-native-actionsheet'
 import { connect } from 'react-redux'
 
 import { } from '../../../redux/actions'
-import { Icons, Screen, Define, System } from '../../../utils'
+import { Icons, Screen, Define, System ,TextFont} from '../../../utils'
 import ShareUtil from '../../../native/umeng/ShareUtil'
 import { application } from '../../../redux/actions'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
 
-export default connect(state => ({ 
+export default connect(state => ({
   account: state.account,
   i18n: state.intl.messages || {}
 }))(class FriendsCircleAddComponent extends Component {
@@ -45,15 +45,15 @@ export default connect(state => ({
   }
 
   render() {
-    const { dataSource } = this.state  
-    const { i18n } = this.props   
-    return (      
+    const { dataSource } = this.state
+    const { i18n } = this.props
+    return (
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 22, paddingVertical: 22 }} style={{ flex: 1 }}>
           {/* PHONE NO. */}
-          <BlockWrap 
-            iconBackgroundColor={'#4fb2f9'} 
-            icon={Icons.Generator.Awesome('phone', 36, 'white') } 
+          <BlockWrap
+            iconBackgroundColor={'#4fb2f9'}
+            icon={Icons.Generator.Awesome('phone', 36, 'white') }
             title={i18n.phone}
             describer={i18n.search_byphone}
             isPhoneNo={true}
@@ -67,9 +67,9 @@ export default connect(state => ({
           />
 
           {/* EMAIL ADDRESS */}
-          <BlockWrap 
-            iconBackgroundColor={'#4f9029'} 
-            icon={Icons.Generator.Awesome('envelope', 28, 'white')} 
+          <BlockWrap
+            iconBackgroundColor={'#4f9029'}
+            icon={Icons.Generator.Awesome('envelope', 28, 'white')}
             title={i18n.email}
             describer={i18n.search_byemail}
             placeholder={'example@mail.com'}
@@ -81,9 +81,9 @@ export default connect(state => ({
           />
 
           {/* PHONE NO. */}
-          <BlockWrap 
-            iconBackgroundColor={'#f4a951'} 
-            icon={Icons.Generator.Awesome('address-card', 28, 'white')} 
+          <BlockWrap
+            iconBackgroundColor={'#f4a951'}
+            icon={Icons.Generator.Awesome('address-card', 28, 'white')}
             title={i18n.name_or_userid}
             describer={i18n.search_byname_userid}
             placeholder={''}
@@ -96,45 +96,45 @@ export default connect(state => ({
           />
 
           {/* WECHAT SESSION */}
-          <BlockWrap 
-            iconBackgroundColor={'#f4a951'} 
-            icon={Icons.Generator.Awesome('wechat', 28, 'white')} 
+          <BlockWrap
+            iconBackgroundColor={'#f4a951'}
+            icon={Icons.Generator.Awesome('wechat', 28, 'white')}
             title={i18n.wechat_friend}
             describer={i18n.wechat_shareto_friend}
             onPress={async () => {
               await ShareUtil.share(
-                '分享至微信', 
-                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
-                '加入DACSEE', 
-                2, 
+                '分享至微信',
+                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=',
+                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
+                '加入DACSEE',
+                2,
                 (arg) => { console.log(arg) }
               )
             }}
           />
 
           {/* WECHAT CIRCLE */}
-          <BlockWrap 
-            iconBackgroundColor={'#f4a951'} 
-            icon={<Image source={require('../../../resources/images/wechat_moments.png')} />} 
+          <BlockWrap
+            iconBackgroundColor={'#f4a951'}
+            icon={<Image source={require('../../../resources/images/wechat_moments.png')} />}
             title={i18n.wechat_moment}
             describer={i18n.wechat_shareto_moment}
             onPress={async () => {
               await ShareUtil.share(
-                '分享至微信', 
-                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=', 
-                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`, 
-                '加入DACSEE', 
-                3, 
+                '分享至微信',
+                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=',
+                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
+                '加入DACSEE',
+                3,
                 (arg) => { console.log(arg) }
               )
             }}
           />
 
           {/* WECHAT CIRCLE */}
-          <BlockWrap 
-            iconBackgroundColor={'#f4a951'} 
-            icon={Icons.Generator.Awesome('weibo', 32, 'white')} 
+          <BlockWrap
+            iconBackgroundColor={'#f4a951'}
+            icon={Icons.Generator.Awesome('weibo', 32, 'white')}
             title={i18n.weibo}
             describer={i18n.wechat_shareto_weibo}
           />
@@ -166,9 +166,9 @@ class BlockWrap extends Component {
       ]}>
         <IconWrap backgroundColor={iconBackgroundColor}>{ icon }</IconWrap>
         <View style={{ justifyContent: 'center', marginLeft: 12, flex: 1 }}>
-          <Text style={{ fontSize: 16, color: 'black', marginBottom: canInput ? 2 : 6 }}>{ title }</Text>
-          <Text style={{ fontSize: 11, color: '#969696' }}>{ describer }</Text>
-          { 
+          <Text style={{ fontSize: TextFont.TextSize(16), color: 'black', marginBottom: canInput ? 2 : 6 }}>{ title }</Text>
+          <Text style={{ fontSize: TextFont.TextSize(11), color: '#969696' }}>{ describer }</Text>
+          {
             canInput && (
               <View style={{ marginTop: 6 }}>
                 <View style={{ flexDirection: 'row', height: 36, borderRadius: 6, backgroundColor: '#e8e8e8', paddingHorizontal: 6, alignItems: 'center' }}>
@@ -180,12 +180,12 @@ class BlockWrap extends Component {
                         { shadowOffset: { width: 0, height: 1 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
                         { marginRight: 5, flexDirection: 'row', height: 26, borderRadius: 15, backgroundColor: '#3b90f7', width: 58, justifyContent: 'center', alignItems: 'center' }
                       ]}>
-                        <Text style={{ color: 'white', fontSize: 13, fontWeight: '400' }}>{countryCode}</Text>
+                        <Text style={{ color: 'white', fontSize: TextFont.TextSize(13), fontWeight: '400' }}>{countryCode}</Text>
                         { Icons.Generator.Material('arrow-drop-down', 14, 'white') }
                       </TouchableOpacity>
                     )
                   }
-                  <TextInput {...Define.TextInputArgs} onChangeText={ value => this.setState({ value: (value || '').trim() }) } keyboardType={isPhoneNo ? 'number-pad' : 'default'} placeholder={placeholder} style={{ flex: 1, fontSize: 13 }} />
+                  <TextInput {...Define.TextInputArgs} onChangeText={ value => this.setState({ value: (value || '').trim() }) } keyboardType={isPhoneNo ? 'number-pad' : 'default'} placeholder={placeholder} style={{ flex: 1, fontSize: TextFont.TextSize(13) }} />
                   <TouchableOpacity onPress={() => onPress(value, countryCode)} activeOpacity={.7} style={[
                     { shadowOffset: { width: 0, height: 1 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
                     { backgroundColor: '#F5A623', width: 26, height: 26, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }
@@ -225,8 +225,8 @@ class ItemPerson extends Component {
           {icon}
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 2 }}>{ label }</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>{ describer }</Text>
+          <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 2 }}>{ label }</Text>
+          <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>{ describer }</Text>
         </View>
       </TouchableOpacity>
     )

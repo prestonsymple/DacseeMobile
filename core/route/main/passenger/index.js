@@ -14,7 +14,7 @@ import CircleBar from '../components/circle.bar'
 
 import { MapView as AMapView, Marker, Utils, Polyline } from '../../../native/AMap'
 // import GoogleMap from 'react-native-maps'
-import { Screen, Icons, Define, Session, UtilMath } from '../../../utils'
+import { Screen, Icons, Define, Session, UtilMath,TextFont } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
@@ -233,8 +233,8 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
     // TODO: FIX
-    let { from_coords, destination_coords } = { 
-      from_coords: DEFAULT_COORDS, 
+    let { from_coords, destination_coords } = {
+      from_coords: DEFAULT_COORDS,
       destination_coords: DEFAULT_COORDS,
       // driver_coords: DEFAULT_COORDS
     }
@@ -310,17 +310,17 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
           <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
             <TouchableOpacity onPress={() => this.props.showSelcetPay()}
               activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
+              <Text style={{ color: 'white', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>现金</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.showTimerPicker()}
               activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现在</Text>
+              <Text style={{ color: 'white', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>现在</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => {
             this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
           }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            <Text style={{ color: 'white', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
         <TimePicker visible={this.props.showTP}
@@ -360,7 +360,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
             !drag && this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'from' } }))
           }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#FEA81C', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: 14, fontWeight: '600' }}>{from.name}</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: '#333', fontSize: TextFont.TextSize(14), fontWeight: '600' }}>{from.name}</Text>
             <View style={{ position: 'absolute', top: 0, bottom: 0, left: (Screen.window.width - 46 - 44) / 2, alignItems: 'center', justifyContent: 'center' }}>
               {
                 (!from.name || drag) && (<Lottie progress={this.animated} style={{ width: 44, height: 44 }} source={Resources.animation.simpleLoader} />)
@@ -373,7 +373,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
             this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'destination' } }))
           }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#7ED321', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: TextFont.TextSize(14), fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -396,8 +396,8 @@ class MapPinTip extends PureComponent {
           {Icons.Generator.Material('network-wifi', 20, 'white')}
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={{ fontSize: 13, color: '#666', fontWeight: '600' }}>Board after </Text>
-          <Text style={{ fontSize: 13, color: '#ffa81d', fontWeight: '600' }}>1 min(s)</Text>
+          <Text style={{ fontSize: TextFont.TextSize(13), color: '#666', fontWeight: '600' }}>Board after </Text>
+          <Text style={{ fontSize: TextFont.TextSize(13), color: '#ffa81d', fontWeight: '600' }}>1 min(s)</Text>
         </View>
       </Animated.View>
     )

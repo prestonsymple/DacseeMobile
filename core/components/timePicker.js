@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from 'react'
 import { Text, View, TouchableOpacity, Modal,PixelRatio } from 'react-native'
 import {
-  Screen, Icons, Define
+  Screen, Icons, Define,TextFont
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
@@ -176,10 +176,10 @@ export default class TimePicker extends PureComponent {
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelCancel('now')} >
-                <Text style={{ color: '#1ab2fd', fontSize: 15 }}>取消</Text>
+                <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>取消</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelSubmit(this.date+this.hour+'点'+this.minute+'分')} >
-                <Text style={{ color: '#ffa03c', fontSize: 15 }}>确定</Text>
+                <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>确定</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height: weelHeight }}>

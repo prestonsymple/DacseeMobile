@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import {
   Text, View
 } from 'react-native'
+import {TextFont} from '../../../utils'
 export default class UserDetail extends PureComponent {
   render() {
     const {data} = this.props
@@ -24,8 +25,8 @@ class InfoCell extends PureComponent {
     }
     return(
       <View style={{flexDirection:'row',justifyContent:'space-between',height:40}}>
-        <Text style={{color:'#ccc',fontSize:15}}>{cellname}</Text>
-        <Text style={{color:'#000',fontSize:15}}>{value}</Text>
+        <Text style={{color:'#ccc',fontSize:TextFont.TextSize(15)}}>{cellname}</Text>
+        <Text style={{color:'#000',fontSize:TextFont.TextSize(15)}}>{value}</Text>
       </View>
     )
   }
