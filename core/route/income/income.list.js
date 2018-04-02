@@ -3,12 +3,11 @@ import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native'
 import * as Progress from 'react-native-progress'
 import { connect } from 'react-redux'
 
-import { Screen, Icons, Define, Session } from '../../utils'
+import { Screen, Icons, Define, Session,TextFont } from '../../utils'
 import resources from '../../resources'
 const { height, width } = Screen.window
 import { application, booking } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
-
 export default connect(state => ({ }))(class IncomeList extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -36,22 +35,22 @@ export default connect(state => ({ }))(class IncomeList extends Component {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image resizeMode={'cover'} style={{ width:50, height: 50 }} source={resources.image.floating_driver} />
               <View style={{ marginLeft: 30 }}>
-                <Text style={{ fontSize: 26, color: '#333', fontWeight: '600' }}>{ float_driver.toFixed(2) }</Text>
-                <Text style={{ marginTop: 10, color: '#999' }}>
+                <Text style={{ fontSize: TextFont.TextSize(26), color: '#333', fontWeight: '600' }}>{ float_driver.toFixed(2) }</Text>
+                <Text style={{ marginTop: 10, color: '#999' ,fontSize:TextFont.TextSize(14)}}>
                   <FormattedMessage id={'floating_amount_driver'}/>
                 </Text>
                 {/* <Text style={{ fontSize: 14, color: '#666', fontWeight: '400', top: -2.5 }}>TOKEN</Text> */}
               </View>
-              
-              <View style={{ height: .8, backgroundColor: '#f2f2f2', marginVertical: 20 }} />  
-            </View>            
-            
+
+              <View style={{ height: .8, backgroundColor: '#f2f2f2', marginVertical: 20 }} />
+            </View>
+
             {/* <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 10 }}>
               <Text style={{ fontSize: 14, color: '#666', fontWeight: '400' }}>TRIP</Text>
               <Text style={{ right: -5, fontSize: 14, color: '#333', fontWeight: '400', marginRight: 10 }}>1/2</Text>
             </View> */}
             {/* <View style={{ alignItems: 'center', marginBottom: 10 }}>
-              <Progress.Bar 
+              <Progress.Bar
                 width={width - 70}
                 height={2}
                 borderRadius={1}
@@ -69,16 +68,16 @@ export default connect(state => ({ }))(class IncomeList extends Component {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image resizeMode={'cover'} style={{ width:50, height: 50 }} source={resources.image.floating_passenger} />
               <View style={{ marginLeft: 30 }}>
-                <Text style={{ fontSize: 26, color: '#333', fontWeight: '600' }}>{ float_passenger.toFixed(2) }</Text>
-                <Text style={{ marginTop: 10, color: '#999' }}>
+                <Text style={{ fontSize: TextFont.TextSize(26), color: '#333', fontWeight: '600' }}>{ float_passenger.toFixed(2) }</Text>
+                <Text style={{ marginTop: 10, color: '#999' ,fontSize:TextFont.TextSize(14)}}>
                   <FormattedMessage id={'floating_amount_passenger'}/>
                 </Text>
                 {/* <Text style={{ fontSize: 14, color: '#666', fontWeight: '400', top: -2.5 }}>TOKEN</Text> */}
               </View>
-              
-              <View style={{ height: .8, backgroundColor: '#f2f2f2', marginVertical: 20 }} />  
+
+              <View style={{ height: .8, backgroundColor: '#f2f2f2', marginVertical: 20 }} />
             </View>
-          
+
             {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{  }}>
                 <Text style={{ fontSize: 13, color: '#666', fontWeight: '400', marginRight: 10 }}>Level 1</Text>
@@ -95,7 +94,7 @@ export default connect(state => ({ }))(class IncomeList extends Component {
                 <Text style={{ fontSize: 20, color: '#333', fontWeight: '400', marginRight: 10 }}>350</Text>
               </View>
             </View> */}
-          </IncomeCardContent>                      
+          </IncomeCardContent>
           {/* <IncomeCardContent>
             <Text style={{ color: '#333', fontSize: 18, fontWeight: '400' }}>Total Downline</Text>
             <View style={{ height: .8, backgroundColor: '#f2f2f2', marginVertical: 20 }} />

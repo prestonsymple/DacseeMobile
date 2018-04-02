@@ -7,7 +7,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
-import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, wallet as Wallet } from '../../redux/actions'
@@ -17,7 +17,7 @@ const {height, width} = Screen.window
 const styles = StyleSheet.create({
   pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
   itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: 14, fontWeight: '100', marginBottom: 8 },
+  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
   itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
@@ -120,12 +120,12 @@ class DetailItem extends Component {
           }
         </View>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 14, color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ type }</Text>
+          <Text style={{ fontSize: TextFont.TextSize(14), color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ type }</Text>
           <View style={{ flexDirection: 'row' }}>
             {/* <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text> */}
-            <Text style={{ fontSize: 12, color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ `${timestamp.substr(0, 10)} ${ timestamp.substr(11, 8) }` }</Text>
+            <Text style={{ fontSize: TextFont.TextSize(13), color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ `${timestamp.substr(0, 10)} ${ timestamp.substr(11, 8) }` }</Text>
           </View>
-          <Text style={{ marginTop: 10, fontSize: 13 }}>{ yourRef }</Text>
+          <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(13) }}>{ yourRef }</Text>
         </View>
         <View style={{ width: 80, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
           {/* {
@@ -133,7 +133,7 @@ class DetailItem extends Component {
               <Text style={{ fontSize: 18, textAlign: 'right', color: '#e74a6e', fontWeight: '400', fontFamily: 'Cochin', top: System.Platform.Android ? 0 : -2.5, marginRight: 5 }}>+</Text> :
               <Text style={{ fontSize: 18, textAlign: 'right', color: '#6bd19e', fontWeight: '400', fontFamily: 'Cochin', top: System.Platform.Android ? 0 : -2.5, marginRight: 5 }}>-</Text>
           } */}
-          <Text style={{ fontSize: 18, textAlign: 'right', color: '#555', fontWeight: System.Platform.Android ? '200' : '400', fontFamily: 'Cochin' }}>{ amount.toFixed(2) }</Text>
+          <Text style={{ fontSize: TextFont.TextSize(18), textAlign: 'right', color: '#555', fontWeight: System.Platform.Android ? '200' : '400', fontFamily: 'Cochin' }}>{ amount.toFixed(2) }</Text>
         </View>
         {/* </View> */}
       </View>

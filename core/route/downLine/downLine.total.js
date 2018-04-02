@@ -19,7 +19,7 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      title: '下线列表',
+      title: 'DOWNLINE LISTING',
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
@@ -73,7 +73,7 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingLeft: 20 }}>
           <Text style={{ fontSize: 15, color: '#fff', marginBottom: 10 }}>Total Downline</Text>
-          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.level1 + data.level2 + data.level3}</Text>
+          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.total}</Text>
         </View>
         <ScrollView refreshControl={
           <RefreshControl

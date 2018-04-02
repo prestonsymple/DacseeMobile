@@ -10,18 +10,17 @@ import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calen
 import moment from 'moment'
 import { injectIntl } from 'react-intl'
 
-import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session ,TextFont} from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
-import font from '../../utils/util.textSize'
-const TextSize = font.TextSize
+
 const {height, width} = Screen.window
 
 const styles = StyleSheet.create({
   pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
   itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: TextSize(14), fontWeight: '100', marginBottom: 8 },
+  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
   itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
@@ -98,20 +97,20 @@ export default connect( state => ({
         <View style={{ position: 'absolute', top:100, left: 20, right: 20, bottom: 20, borderRadius: 10, backgroundColor: 'white' }}>
           <ScrollView style={{}}>
             <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
-              <Text style={{ fontSize: TextSize(13), color: '#999' }}>{i18n.driver_info}</Text>
+              <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>{i18n.driver_info}</Text>
 
               {
                 driver_info == undefined ?
                   (
                     <View style={{ marginVertical: 10 }}>
-                      <Text style={{}}>{i18n.no_driver_info}</Text>
+                      <Text style={{fontSize:TextFont.TextSize(15)}}>{i18n.no_driver_info}</Text>
                     </View>
                   ) :
                   (
                     <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center'}}>
                       <Image source={{ uri: driver_info.avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : driver_info.avatars[driver_info.avatars.length - 1].url }} style={{ width: 60, height: 60 , borderRadius: 30 }} />
-                      <Text style={{ marginLeft: 20, fontSize: TextSize(21), color: '#333'}}>{ driver_info.fullName }</Text>
-                      <Text style={{ fontSize: TextSize(15), color: '#666'}}></Text>
+                      <Text style={{ marginLeft: 20, fontSize: TextFont.TextSize(18), color: '#333'}}>{ driver_info.fullName }</Text>
+                      <Text style={{ fontSize: TextFont.TextSize(15), color: '#666'}}></Text>
                     </View>)
               }
             </View>
@@ -119,25 +118,25 @@ export default connect( state => ({
 
             <View style={{ padding: 20 }}>
               <View style={{ }}>
-                <Text style={{ fontSize: TextSize(13), color: '#999' }}>{i18n.book_time}</Text>
-                <Text style={{ marginTop: 10, fontSize: TextSize(17), color: '#555' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm:ss') }</Text>
+                <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>{i18n.book_time}</Text>
+                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#555' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm:ss') }</Text>
               </View>
               <View style={{ marginTop: 20 }}>
-                <Text style={{ fontSize: TextSize(13), color: '#999' }}>{i18n.from}</Text>
-                <Text style={{ marginTop: 10, fontSize: TextSize(17), color: '#555' }}>{ from.name }</Text>
+                <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>{i18n.from}</Text>
+                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#555' }}>{ from.name }</Text>
               </View>
               <View style={{ marginTop: 20 }}>
-                <Text style={{ fontSize: TextSize(13), color: '#999' }}>{i18n.destination}</Text>
-                <Text style={{ marginTop: 10, fontSize: TextSize(17), color: '#555' }}>{ destination.name }</Text>
+                <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>{i18n.destination}</Text>
+                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#555' }}>{ destination.name }</Text>
               </View>
               <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
             </View>
 
             <View style={{ paddingHorizontal: 20 }}>
-              <Text style={{ fontSize: TextSize(17), color:'#333'}}>{i18n.fare_total}</Text>
+              <Text style={{ fontSize: TextFont.TextSize(15), color:'#555'}}>{i18n.fare_total}</Text>
               <View stye={{ marginTop: 10, flex: 1, flexDirection: 'row'}}>
                 {/* <Text style={{ width: 60, fontSize: 14, color: '#555', backgroundColor: 'red' }}>总费用</Text> */}
-                <Text style={{ marginTop: 10, fontSize: TextSize(14), color: '#555', fontWeight: 'bold' }}>{ fare }</Text>
+                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#555' }}>{ fare }</Text>
               </View>
             </View>
 

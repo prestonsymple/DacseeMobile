@@ -16,7 +16,7 @@ export default class UserList extends PureComponent {
           renderRow={(row,key,index) => {
             return (
               <TouchableOpacity key={key}  activeOpacity={.7}
-                onPress={() =>this.props.goUserDetails(row._id)}>
+                onPress={this.props.goUserDetails.bind(this,row._id)}>
                 {index==0?<View/>:<View style={{height:0.5,backgroundColor:'#ccc'}}/>}
                 <UserCell itemData={row} />
               </TouchableOpacity>
