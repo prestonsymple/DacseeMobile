@@ -23,7 +23,7 @@ import {CalendarList} from 'react-native-calendars';
 import ListItem from '../list.item'
 import styleConstructor from './style';
 import { VelocityTracker } from './input';
-
+import {TextFont} from '../../../../utils'
 const HEADER_HEIGHT =104;
 const KNOB_HEIGHT = 24;
 
@@ -319,7 +319,7 @@ export default class AgendaView extends Component {
     if(working){
       return (
         <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#333' }}>
+          <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
             <FormattedMessage id={'online'}/>
           </Text>
           <Switch value={working} onValueChange={(working) => this.props.workingChange(working)} />
@@ -330,7 +330,7 @@ export default class AgendaView extends Component {
       <View onLayout={this.onLayout} style={[this.props.style, {flex: 1, overflow: 'hidden'}]}>
         <View style={{flex:1,marginTop:104}}>
           <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#333' }}>
+            <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
               <FormattedMessage id={'online'}/>
             </Text>
             <Switch value={working} onValueChange={(working) => this.props.workingChange(working)} />
@@ -340,7 +340,7 @@ export default class AgendaView extends Component {
             (<ScrollView refreshControl={refreshControl} contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
               <View style={{ marginTop: working ? 108 + 100 : 108, alignItems: 'center' }}>
                 <Image source={Resources.image.joblist_empty} style={{ marginBottom: 18 }} />
-                <Text style={{ color: '#999', fontSize: 18, fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
+                <Text style={{ color: '#999', fontSize: TextFont.TextSize(18), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
                   {/*  <FormattedMessage id={'already_online'}/> */}
                   <FormattedMessage id={'no_job'}/>
                 </Text>

@@ -6,15 +6,14 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 
 import { MapView, Marker, Utils } from '../../native/AMap'
-import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 import WalletTransactionListScreen from '../wallet/wallet.transaction.list'
 import IncomeList from '../income/income.list'
 import { FormattedMessage } from 'react-intl';
-import font from '../../utils/util.textSize'
-const TextSize=font.TextSize
+
 const { height, width } = Screen.window
 
 const MAP_DEFINE = {
@@ -248,46 +247,46 @@ export default connect(state => ({
             <ScrollView style={{ marginTop: 50, marginBottom: 70 }} >
               <View style={{ paddingHorizontal: 20 }}>
                 <View style={{ flexDirection: 'row', width: width - 40, justifyContent: 'space-between' }}>
-                  <Text style={{ fontSize: TextSize(17), color:'#868686', width: 120 }}>
+                  <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
                     <FormattedMessage id={'from'} />
                   </Text>
-                  <Text style={{ flex: 1, fontSize: TextSize(16), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ from.address }</Text>
+                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ from.address }</Text>
                 </View>
 
                 <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ fontSize: TextSize(17), color:'#868686', width: 120 }}>
+                  <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
                     <FormattedMessage id={'destination'}/>
                   </Text>
-                  <Text style={{ flex: 1, fontSize: TextSize(16), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ destination.address }</Text>
+                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ destination.address }</Text>
                 </View>
 
                 <View style={{ marginTop: 20, flexDirection: 'row' }}>
-                  <Text style={{ fontSize: TextSize(17), color:'#868686', width: 120 }}>
+                  <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
                     <FormattedMessage id={'book_time'}/>
                   </Text>
-                  <Text style={{ flex: 1, fontSize: TextSize(16), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm') }</Text>
+                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm') }</Text>
                 </View>
 
                 <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
               </View>
               <View style={{ marginHorizontal: 20, marginVertical: 12, flexDirection: 'row', justifyContent: 'center' }}>
                 <View style={{flex: 1, alignItems:'center', }}>
-                  <Image source={ Resources.image.joblist_car} resizeMethod={'scale'} style={{ width:36, height:36}} />
-                  <Text style={{ marginTop: 10, fontSize: TextSize(15), fontWeight: 'bold', color: '#3a3a3a' }}>
+                  <Image source={ Resources.image.joblist_car} resizeMode='contain' style={{ width:36, height:36}} />
+                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#3a3a3a' }}>
                     <FormattedMessage id={'car_standard'}/>
                   </Text>
                 </View>
                 <View style={{ flex: 1, alignItems:'center'}}>
-                  <Image source={ Resources.image.joblist_payment} resizeMethod={'scale'} style={{ height: 40}} />
-                  <Text style={{ marginTop: 10, fontSize: TextSize(15),fontWeight: 'bold',  color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
+                  <Image source={ Resources.image.joblist_payment} resizeMode='contain' style={{ height: 36}} />
+                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14),fontWeight: 'bold',  color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
                 </View>
               </View>
               <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>
               <View style={{ marginHorizontal: 20, marginVertical: 12 }}>
-                <Text style={{ fontSize: TextSize(17), fontWeight: 'bold', color: '#3a3a3a' }}>
+                <Text style={{ fontSize: TextFont.TextSize(15), fontWeight: 'bold', color: '#3a3a3a' }}>
                   <FormattedMessage id={'note_to_driver'}/>
                 </Text>
-                <Text style={{ marginTop: 10, fontSize: TextSize(17), color: '#868686' }}>
+                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#868686' }}>
                   <FormattedMessage id={'no_content'}/>
                 </Text>
               </View>
@@ -296,18 +295,18 @@ export default connect(state => ({
             <View style={[styles.JobDetailWrap, { height: 70 }]}>
               <View style={{ height: 1, backgroundColor: '#d5d5d5' }}></View>
               <View style={{marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 70 }}>
-                <Text style={{ fontWeight: 'bold', color: '#333', fontSize: TextSize(27) }}>{ fare.toFixed(2) }</Text>
+                <Text style={{ fontWeight: 'bold', color: '#333', fontSize: TextFont.TextSize(20) }}>{ fare.toFixed(2) }</Text>
                 {
                   this._getOptionable(status) ?
                     <View style={{ flexDirection: 'row' }}>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ optionObject.leftAction }>
-                        <Text style={{ fontSize: TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
+                        <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
                       </Button>
                       <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                        <Text style={{ fontSize: TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
+                        <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
                       </Button>
                     </View> :
-                    <Text style={{ fontSize: TextSize(17) }}>{ this._statusInChinese(status) }</Text>
+                    <Text style={{ fontSize: TextFont.TextSize(15) ,fontWeight: 'bold',  }}>{ this._statusInChinese(status) }</Text>
                 }
               </View>
             </View>
@@ -318,7 +317,7 @@ export default connect(state => ({
               <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }} style={{ width: 70, height: 70 , borderRadius: 35 }} />
             </View>
             <View style={{ position: 'absolute', top:25, left: 75, right: 116, height: 50, backgroundColor: 'white' }}>
-              <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextSize(17), color: '#3a3a3a', fontWeight: 'bold' }}>{ fullName }</Text>
+              <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(18), color: '#3a3a3a', fontWeight: 'bold' }}>{ fullName }</Text>
             </View>
             <View style={{ flexDirection: 'row', position: 'absolute', right: 0}}>
               <View style={{ marginRight: 10, width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>

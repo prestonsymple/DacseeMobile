@@ -18,7 +18,7 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      title: '一级列表',
+      title: 'DOWNLINE LISTING',
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
@@ -34,7 +34,7 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
     super(props)
     this.state = {
       loading: false,
-      data: {users:[]},
+      data: { users: [] },
       total: 1
     }
   }
@@ -50,10 +50,10 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
     try {
       const { state } = this.props.navigation
       const { params } = state
-      const data = await Session.User.Get('v1/downline/level/'+params.level)
+      const data = await Session.User.Get('v1/downline/level/' + params.level)
       this.setState({
         loading: false,
-        data:data
+        data: data
       })
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))
@@ -65,7 +65,10 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
   goUserDetails(_id) {
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'DownLineDetail',
-      params: { _id: _id }
+      params: {
+        _id: _id,
+        level: this.state.data.level
+      }
     }))
   }
   render() {
@@ -75,7 +78,7 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL '+params.level}</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL ' + params.level}</Text>
           <Text style={{ fontSize: 15, color: '#fff', marginBottom: 5 }}>Total Downline</Text>
           <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 15 }}>{data.users.length}</Text>
         </View>
