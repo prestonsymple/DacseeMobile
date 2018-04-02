@@ -31,7 +31,7 @@ const SettingMenuScreen = connect(state => ({
         [{
           title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingAccount')
         }, {
-          title: '隐私设置', type: 'text', onPress: () => navigation.navigate('SettingPrivate')
+          title: i18n.privacy_setting, type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
         [{
           title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
@@ -163,16 +163,17 @@ const SettingPrivateScreen = connect(state => ({
   static navigationOptions = { title: '新消息通知' }
 
   render() {
+    const { i18n } = this.props
     return (
       <Settings producer={[
         [{
-          title: '允许来自司机的好友请求', type: 'switch', value: false, editable: false, onPress: () => {}
+          title: i18n.allow_request_from_driver, type: 'switch', value: false, editable: false, onPress: () => {}
         }, {
-          title: '允许通过电话号码搜索', type: 'switch', value: false, editable: false, onPress: () => {}
+          title: i18n.allow_search_by_phone, type: 'switch', value: false, editable: false, onPress: () => {}
         }, {
-          title: '允许通过邮箱搜索', type: 'switch', value: false, editable: false, onPress: () => {}
+          title: i18n.allow_search_by_email, type: 'switch', value: false, editable: false, onPress: () => {}
         }, {
-          title: '允许通过名字搜索', type: 'switch', value: false, editable: false, onPress: () => {}
+          title: i18n.allow_search_by_name, type: 'switch', value: false, editable: false, onPress: () => {}
         }]
       ]} />
     )

@@ -27,8 +27,8 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 },{
   key: '4',
-  name: 'settings',
-  icon: Icons.Generator.Material('settings', 24, ICONS_COLOR, { style: { left: 1.5 } }),
+  name: 'downline',
+  icon: Icons.Generator.Material('people', 24, ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('DownLineTotal')
 }
 // {

@@ -52,6 +52,12 @@ export default connect(state => ({
     this._fetchData()
   }
 
+  componentWillReceiveProps(props) {    
+    if (this.props.walletList !== props.walletList) {
+      this.setState({ detail: dataContrast.cloneWithRows(props.walletList) })
+    }
+  }
+
   async _fetchData() {
     this.setState({
       loading: true
