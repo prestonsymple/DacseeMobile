@@ -49,9 +49,9 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
       const { state } = this.props.navigation
       const { params } = state
       const data = await Session.User.Get('v1/downline/user/' + params._id)
-      if(params.level==2){
-        data.users=[]
-      }
+      // if(params.level==2){
+      //   data.users=[]
+      // }
       this.setState({
         loading: false,
         data: data

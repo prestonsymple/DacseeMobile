@@ -250,21 +250,21 @@ export default connect(state => ({
                   <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
                     <FormattedMessage id={'from'} />
                   </Text>
-                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: '500', textAlign: 'right' }}>{ from.address }</Text>
+                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ from.address }</Text>
                 </View>
 
                 <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
                     <FormattedMessage id={'destination'}/>
                   </Text>
-                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: '500', textAlign: 'right' }}>{ destination.address }</Text>
+                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ destination.address }</Text>
                 </View>
 
                 <View style={{ marginTop: 20, flexDirection: 'row' }}>
                   <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
                     <FormattedMessage id={'book_time'}/>
                   </Text>
-                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: '500', textAlign: 'right' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm') }</Text>
+                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm') }</Text>
                 </View>
 
                 <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
@@ -272,18 +272,18 @@ export default connect(state => ({
               <View style={{ marginHorizontal: 20, marginVertical: 12, flexDirection: 'row', justifyContent: 'center' }}>
                 <View style={{flex: 1, alignItems:'center', }}>
                   <Image source={ Resources.image.joblist_car} resizeMode='contain' style={{ width:36, height:36}} />
-                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14), fontWeight: '500', color: '#3a3a3a' }}>
+                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#3a3a3a' }}>
                     <FormattedMessage id={'car_standard'}/>
                   </Text>
                 </View>
                 <View style={{ flex: 1, alignItems:'center'}}>
                   <Image source={ Resources.image.joblist_payment} resizeMode='contain' style={{ height: 36}} />
-                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14),fontWeight: '500',  color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
+                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14),fontWeight: 'bold',  color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
                 </View>
               </View>
               <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>
               <View style={{ marginHorizontal: 20, marginVertical: 12 }}>
-                <Text style={{ fontSize: TextFont.TextSize(15), fontWeight: '500', color: '#3a3a3a' }}>
+                <Text style={{ fontSize: TextFont.TextSize(15), fontWeight: 'bold', color: '#3a3a3a' }}>
                   <FormattedMessage id={'note_to_driver'}/>
                 </Text>
                 <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#868686' }}>

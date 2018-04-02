@@ -103,7 +103,7 @@ export default connect( state => ({
                 driver_info == undefined ?
                   (
                     <View style={{ marginVertical: 10 }}>
-                      <Text style={{fontSize:TextFont.TextSize(15)}}>{i18n.no_driver_info}</Text>
+                      <Text style={{fontSize:TextFont.TextSize(15),color: '#868686'}}>{i18n.no_driver_info}</Text>
                     </View>
                   ) :
                   (

@@ -50,12 +50,12 @@ export default {
         // Catch other smaller android height sizings
       }
       if (height < 667) {
-        return size * 1.15;
+        return size * 1.12;
         // catch in-between size Androids and scale font up
         // a tad but not too much
       }
       if (height >= 667 && height <= 735) {
-        return size * 1.20;
+        return size * 1.16;
       }
       // catch larger phablet devices
       return size * 1.30;
