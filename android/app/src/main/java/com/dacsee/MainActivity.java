@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.dacsee.nativeBridge.UMeng.ShareModule;
 import com.facebook.react.ReactActivity;
 import com.mehcode.reactnative.splashscreen.SplashScreen;
-import com.umeng.socialize.UMShareAPI;
 
 public class MainActivity extends ReactActivity {
 

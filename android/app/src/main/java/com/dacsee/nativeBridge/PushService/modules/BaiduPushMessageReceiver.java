@@ -86,7 +86,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
                 // Construct and load our normal React JS code bundle
                 if (applicationContext instanceof ReactApplication) {
                     ReactInstanceManager mReactInstanceManager = ((ReactApplication) applicationContext).getReactNativeHost().getReactInstanceManager();
-                    com.facebook.react.bridge.ReactContext context = mReactInstanceManager.getCurrentReactContext();
+                    ReactContext context = mReactInstanceManager.getCurrentReactContext();
                     // If it's constructed, send a notification
                     if (context != null) {
                         reactContextInitListener.contextInitialized((ReactApplicationContext) context);

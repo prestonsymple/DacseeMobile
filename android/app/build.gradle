@@ -1,11 +1,5 @@
 apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
-//apply plugin: 'bugly'
-//
-//bugly {
-//    appId = '71b843ec39' // 注册时分配的App ID
-//    appKey = 'e08ca2fc-25e0-4f9b-bb10-09b6bfcb3453' // 注册时分配的App Key
-//}
 
 import com.android.build.OutputFile
 
@@ -80,7 +74,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-        entryFile: "index.js"
+    entryFile: "index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -144,10 +138,11 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
+            def versionCodes = ["armeabi-v7a":1, "x86":2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
-                output.versionCodeOverride = versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+                output.versionCodeOverride =
+                        versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
     }
@@ -159,43 +154,41 @@ configurations.all {
             details.useVersion('9.8.0')
         }
     }
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'com.facebook.react' && details.requested.name == 'react-native') {
-            details.useVersion "0.52.3"
-        }
-    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-
-    compile project(':react-native-app-settings')
-    compile project(':lottie-react-native')
-    compile project(':react-native-camera')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-picker')
+    compile project(':react-native-code-push')
     compile project(':rn-splash-screen')
-    //    implementation project(':react-native-push-notification')
-    compile project(':react-native-maps')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-picker')
+    compile project(':react-native-image-picker')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-code-push')
+    compile project(':react-native-camera')
+    compile project(':react-native-app-settings')
+    compile project(':lottie-react-native')
+    compile project(':react-native-maps')
 
-//    implementation 'com.android.support:multidex:1.0.1'
-    compile 'com.facebook.soloader:soloader:+'
-    compile 'com.facebook.react:react-native:+'
+
+    compile fileTree(dir: "libs", include: ["*.jar"])
+
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile "com.android.support:appcompat-v7:26.1.0"
+
+    compile "com.facebook.react:react-native:+"
+
     compile 'com.android.support:support-v4:26.1.0'
     compile 'me.leolin:ShortcutBadger:1.1.8@aar'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.1.0'
-    compile 'com.google.android.gms:play-services-location:10.0.1'
-    compile 'com.google.android.gms:play-services-base:10.0.1'
-    compile 'com.google.android.gms:play-services-maps:10.0.1'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"  // From node_modules
+
+    compile 'com.google.android.gms:play-services-location:10.2.4'
+    compile 'com.google.android.gms:play-services-base:10.2.4'
+    compile 'com.google.android.gms:play-services-maps:10.2.4'
 }
 
 // Run this once to be able to run the application with BUCK
@@ -207,14 +200,3 @@ task copyDownloadableDepsToLibs(type: Copy) {
 repositories {
     mavenCentral()
 }
-
-//configurations.all {
-//    resolutionStrategy {
-//        force 'com.android.support:design:23.4.0'
-//        force 'com.android.support:support-v4:23.4.0'
-//        force 'com.android.support:appcompat-v7:23.4.0'
-//    }
-//}
-
-
-apply plugin: 'kotlin-android-extensions'
