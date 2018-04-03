@@ -7,6 +7,7 @@ import {
 import InteractionManager from 'InteractionManager'
 import * as Progress from 'react-native-progress'
 import CodePush from 'react-native-code-push'
+import Axios from 'axios'
 import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
@@ -22,7 +23,8 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 
 export default connect(state => ({
   location: state.account.location,
-  i18n: state.intl.messages
+  i18n: state.intl.messages,
+  map_mode: state.application.map_mode
 }))(class SelectAddressModal extends Component {
 
   constructor(props) {
@@ -41,10 +43,27 @@ export default connect(state => ({
     this.timer = setTimeout(async () => {
       if (keywords.length === 0) return this.setState({ source: dataContrast.cloneWithRows([]) })
       try {
-        const { lat, lng } = this.props.location
-        const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-        const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
-        this.setState({ source: dataContrast.cloneWithRows(data) })
+        const { map_mode, location } = this.props
+        const { lat, lng } = location
+        
+        if (map_mode === 'GOOGLEMAP') {
+          const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
+          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+          this.setState({ source: dataContrast.cloneWithRows(data) }) 
+        } else {
+          const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keywords.replace(' ', '+')}&key=AIzaSyALLnpXjwuJyfuq884msD20gIGDdYxKdX0`)
+          const { results } = data
+          const resultMap = results.map(pipe => ({
+            placeId: pipe.place_id,
+            coords: {
+              lng: pipe.geometry.location.lng,
+              lat: pipe.geometry.location.lat
+            },
+            name: pipe.name,
+            address: pipe.formatted_address
+          }))
+          this.setState({ source: dataContrast.cloneWithRows(resultMap) }) 
+        }
       } catch (e) {
         console.log(e)
       }

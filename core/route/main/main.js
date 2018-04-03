@@ -11,7 +11,7 @@ import DriverComponent from './driver'
 import PassengerComponent from './passenger'
 
 import { Icons, Screen, System } from '../../utils'
-import { booking } from '../../redux/actions'
+import { booking, account } from '../../redux/actions'
 import { BOOKING_STATUS } from '.'
 
 const { width } = Screen.window
@@ -125,13 +125,17 @@ export default connect(state => ({
       this.props.navigation.setParams({ status: booking_status })
     }
 
-    if (this.props.app_status !== props.app_status && props.app_status === 'active') {
+    if (this.props.app_status !== props.app_status) {
       this.checkLocationPermission()
     }
   }
 
   checkLocationPermission() {
-    navigator.geolocation.getCurrentPosition(() => this.setState({ deniedAccessLocation: false }), (e) => {
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const { latitude, longitude } = coords
+      this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
+      this.setState({ deniedAccessLocation: false })
+    }, (e) => {
       if (e.code === 1 || e.code === 2) this.setState({ deniedAccessLocation: true })
     }, { timeout: 1000 })
   }

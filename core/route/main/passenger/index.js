@@ -5,6 +5,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
+import axios from 'axios'
 
 import Resources from '../../../resources'
 import ModalDriverRespond from './passenger.modal.wait.driver'
@@ -13,7 +14,7 @@ import HeaderSection from '../components/navigator.header.selector'
 import CircleBar from '../components/circle.bar'
 
 import { MapView as AMapView, Marker, Utils, Polyline } from '../../../native/AMap'
-// import GoogleMap from 'react-native-maps'
+import GoogleMapView from 'react-native-maps'
 import { Screen, Icons, Define, Session, UtilMath } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
@@ -21,20 +22,15 @@ import TimePicker from '../../../components/timePicker'
 import SelectPay from '../../../components/selectPay'
 const { height, width } = Screen.window
 
-const MAP_DEFINE = {
-  showsCompass: false,
-  showsScale: false,
-  tiltEnabled: false,
-  rotateEnabled: false,
-  showsTraffic: false,
-  showsZoomControls: false, /* android fix */
-}
-
 const DEFAULT_COORDS = { lat: 0, lng: 0, latitude: 0, longitude: 0 }
 
 const PIN_HEIGHT = ((height - 22) / 2)
 
-export default connect(state => ({ ...state.booking, booking_id: state.storage.booking_id }))(class PassengerComponent extends Component {
+export default connect(state => ({ 
+  ...state.booking, 
+  booking_id: state.storage.booking_id,
+  map_mode: state.application.map_mode
+}))(class PassengerComponent extends Component {
 
   constructor(props) {
     super(props)
@@ -141,12 +137,19 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
   }
 
   async onLocationListener({ nativeEvent }) {
-    const { latitude, longitude } = nativeEvent
+    const { 
+      latitude = nativeEvent.coordinate.latitude, 
+      longitude = nativeEvent.coordinate.longitude 
+    } = nativeEvent
 
     if (latitude === 0 || longitude === 0) return
     if (!this.ready) {
       await InteractionManager.runAfterInteractions()
-      this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
+      if (this.map.animateTo) {
+        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
+      } else {
+        this.map.animateToCoordinate({ latitude, longitude }, 500)
+      }
       this.ready = true
     }
     this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
@@ -156,7 +159,11 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
   }
 
   onStatusChangeListener({ nativeEvent }) {
-    const { longitude, latitude, rotation, zoomLevel, tilt } = nativeEvent
+    const { 
+      longitude = nativeEvent.coordinate.longitude, 
+      latitude = nativeEvent.coordinate.latitude, 
+      zoomLevel = 12 
+    } = nativeEvent
     if (this.props.status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) return
     /* Fix Offset */
     const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
@@ -183,10 +190,37 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
 
-      const { data } = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
-      this.props.dispatch(booking.passengerSetValue({ from: data || {} }))
+      let place = {}
+      if (this.props.map_mode === 'GOOGLEMAP') {
+        // TODO: 不要动 - 仅马来西亚测试用，API会上移至服务端
+        const { data: { results } } = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
+        const { formatted_address = '', address_components, place_id, geometry } = results[0]
+
+        const street_number = address_components.find(pipe => pipe.types.find(sub => sub === 'street_number')) || { long_name: '' }
+        const route = address_components.find(pipe => pipe.types.find(sub => sub === 'route')) || { long_name: '' }
+        const short_name = `${street_number.long_name} ${route.long_name}`.trim()
+    
+        if (short_name.length === 0) {
+          throw new Error('UNKNOW_GEO')
+        }
+        place = {
+          placeId: place_id,
+          coords: {
+            lng: geometry.location.lng,
+            lat: geometry.location.lat
+          },
+          name: short_name,
+          address: formatted_address
+        }
+      } else {
+        const resp = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
+        place = resp.data
+      }
+
+      this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
       this.setState({ drag: false })
     } catch (e) {
+      console.log(e)
       this.props.dispatch(booking.passengerSetValue({
         from: {
           address: '自定义位置', name: '当前位置',
@@ -213,21 +247,39 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
   }
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, driver } = this.props
+    const { status, from, destination, map_mode } = this.props
 
     const MAP_SETTER = {
-      style: { flex: 1 },
-      locationEnabled: true,
+      /* A MAP */
+      tiltEnabled: false,
+      showsTraffic: false,
+      showsZoomControls: false, /* android fix */
       mapType: 'standard',
+      locationEnabled: true, // TODO: REDUX
       locationInterval: 1000,
       onLocation: this.onLocationListener.bind(this),
-      ref: (e) => this.map = e
-    }
 
-    const GOOGLE_MAP_SETTER = { followsUserLocation: true }
+      /* GOOGLE MAPS */
+      pitchEnabled: false,
+      cacheEnabled: true,
+      provider: 'google',
+      showsMyLocationButton: false,
+      showsUserLocation: true,
+      onUserLocationChange: this.onLocationListener.bind(this),
+      onPanDrag: ({ nativeEvent }) => {
+      },
+
+      /* GLOBAL */
+      minZoomLevel: 8,
+      showsScale: false,
+      showsCompass: false,
+      rotateEnabled: false,
+      ref: (e) => this.map = e,
+    }
 
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
+      MAP_SETTER.onPanDrag = this.onStatusChangeListener.bind(this)
     }
 
     /** FIX ANDROID LOCATION SERVICE CRASH */
@@ -256,16 +308,26 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
     /* CAR POLYLINE */
 
     return (
-      <View style={{ flex: 1, width }}>
-        <AMapView minZoomLevel={5} {...MAP_DEFINE} {...MAP_SETTER}>
-          <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
-          <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
-          <Marker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
-          <Polyline coordinates={_polyline} width={6} color={'#666'} />
-        </AMapView>
-        {/* <GoogleMap style={{ flex: 1 }}>
+      <View style={{ 
+        flex: 1, width
+      }}>
+        {
+          map_mode === 'AMAP' && (
+            <AMapView style={{ flex: 1 }} {...MAP_SETTER}>
+              <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
+              <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
+              <Marker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
+              <Polyline coordinates={_polyline} width={6} color={'#666'} />
+            </AMapView>
+          )
+        }
+        {
+          map_mode === 'GOOGLEMAP' && (
+            <GoogleMapView style={{ flex: 1 }} {...MAP_SETTER}>
 
-        </GoogleMap> */}
+            </GoogleMapView>
+          )
+        }
 
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />)}
 
@@ -283,11 +345,11 @@ export default connect(state => ({ ...state.booking, booking_id: state.storage.b
           <PickerOptions
             showTP={this.state.showTP}
             showSP={this.state.showSP}
-            payCancel={()=>this.payCancel()}
-            showSelcetPay={()=>this.showSelcetPay()}
-            showTimerPicker={()=>this.showTimerPicker()}
-            wheelSubmit={(time)=>this.wheelSubmit(time)}
-            wheelCancel={(time)=>this.wheelCancel(time)}
+            payCancel={() => this.payCancel()}
+            showSelcetPay={() =>this.showSelcetPay()}
+            showTimerPicker={() => this.showTimerPicker()}
+            wheelSubmit={(time) => this.wheelSubmit(time)}
+            wheelCancel={(time) => this.wheelCancel(time)}
           />
         )}
         <ModalDriverRespond />
@@ -380,29 +442,6 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
     )
   }
 })
-
-class MapPinTip extends PureComponent {
-  render() {
-    const { timing } = this.props
-    return (
-      <Animated.View style={[
-        { position: 'absolute', backgroundColor: 'transparent', top: PIN_HEIGHT - 94, left: (Screen.window.width - 140) / 2 },
-        { justifyContent: 'center', alignItems: 'center', paddingVertical: 6, width: 140 },
-        { shadowOffset: { width: 0, height: 2 }, shadowColor: '#666', shadowOpacity: .3, shadowRadius: 3 },
-        { opacity: timing.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }
-      ]}>
-        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'white', flex: 1, borderRadius: 20 }} />
-        <View style={{ position: 'absolute', bottom: -10 }}>
-          {Icons.Generator.Material('network-wifi', 20, 'white')}
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ fontSize: 13, color: '#666', fontWeight: '600' }}>Board after </Text>
-          <Text style={{ fontSize: 13, color: '#ffa81d', fontWeight: '600' }}>1 min(s)</Text>
-        </View>
-      </Animated.View>
-    )
-  }
-}
 
 class MapPin extends PureComponent {
   render() {

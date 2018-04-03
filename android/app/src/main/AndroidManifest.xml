@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dacsee"
-          android:versionCode="18032901"
-          android:versionName="0.31.0">
+          android:versionCode="18040301"
+          android:versionName="0.32.0">
 
   <uses-sdk
     android:minSdkVersion="16"
@@ -48,17 +48,10 @@
 
 
   <application
-    android:name=".MainApplication"
+    android:name="com.dacsee.MainApplication"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name">
-    <meta-data
-      android:name="com.amap.api.v2.apikey"
-      android:value="766660e4a381b64422f0b0054477aa7c"/>
-    <meta-data
-      android:name="com.google.android.geo.API_KEY"
-      android:value="Your Google maps API Key Here"/>
-
     <activity
       android:name=".MainActivity"
       android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -79,6 +72,12 @@
     </activity>
     <activity android:screenOrientation="portrait" android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
 
+    <meta-data
+      android:name="com.amap.api.v2.apikey"
+      android:value="766660e4a381b64422f0b0054477aa7c" />
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyALLnpXjwuJyfuq884msD20gIGDdYxKdX0" />
     <meta-data
       android:name="UMENG_APPKEY"
       android:value="5a7aa3f2a40fa355a700002a" >

@@ -23,6 +23,7 @@
 
 #import "RNUMConfigure.h"
 #import <UMShare/UMSocialManager.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 
 @implementation AppDelegate
@@ -35,11 +36,11 @@
   
   [UMConfigure setLogEnabled:YES];
   [RNUMConfigure initWithAppkey:@"5a7aa3f2a40fa355a700002a" channel:@"App Store"];
+  [GMSServices provideAPIKey: @"AIzaSyALLnpXjwuJyfuq884msD20gIGDdYxKdX0"];
   // #######################################################
   
   NSURL *jsCodeLocation;
   #ifdef DEBUG
-//    [[RCTBundleURLProvider sharedSettings] setJsLocation: @"192.168.80.100"];
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
     jsCodeLocation = [CodePush bundleURL];

@@ -31,7 +31,8 @@ target 'dacsee' do
 #    pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
     #GOOGLE MAPS
-#    pod 'GoogleMaps'  # Remove this line if you don't want to support Google Maps on iOS
+    pod 'GoogleMaps'  # Remove this line if you don't want to support Google Maps on iOS
+    pod 'Google-Maps-iOS-Utils'
 #    pod 'react-native-google-maps', path: '../node_modules/react-native-maps'
 
 end

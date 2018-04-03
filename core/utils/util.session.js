@@ -19,13 +19,17 @@ instance.interceptors.request.use((config) => {
   const { method, url, headers } = config
   const reducer = store.getState()
   const { agent_enable, agent_server } = reducer.storage
-  const { authToken } = reducer.account
+  const { authToken, location } = reducer.account
 
+  // 全局请求头
+  config.headers['latitude'] = location.latitude
+  config.headers['longitude'] = location.longitude
+
+  // 自动代理模式
   if (
     agent_enable && 
     typeof(FILTER_DOMAIN_MAPS.find(pipe => url.startsWith(pipe))) === 'undefined'
   ) {
-    // 自动代理模式
     config.headers['Origin-Url'] = encodeURI(url)
     config.url = `${agent_server}api/v1/agent`
   }

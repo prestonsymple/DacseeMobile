@@ -30,6 +30,8 @@ const initialState = {
 
   hud_modal_visible: false,
 
+  map_mode: 'GOOGLEMAP',
+
   api_maps: {
     main: [
       'https://user-dev.dacsee.io/',

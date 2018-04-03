@@ -103,14 +103,14 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '25.0.3'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18032901
-        versionName "0.31.0"
+        versionCode 18040301
+        versionName "0.32.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -162,30 +162,37 @@ configurations.all {
 }
 
 dependencies {
-    compile project(':react-native-app-settings')
-    compile project(':lottie-react-native')
-    compile project(':react-native-camera')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-picker')
-    compile project(':rn-splash-screen')
-    //    compile project(':react-native-push-notification')
-    compile project(':react-native-maps')
-    compile project(':react-native-fs')
-    compile project(':react-native-device-info')
-    compile project(':react-native-vector-icons')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.facebook.react:react-native:+'
-    compile 'com.tencent.bugly:crashreport:2.6.6.1'
-    compile 'com.tencent.bugly:nativecrashreport:3.3.1'
-    compile 'me.leolin:ShortcutBadger:1.1.8@aar'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.google.android.gms:play-services-location:9.8.0'
-    compile project(':react-native-code-push')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation(project(':react-native-app-settings'))
+    implementation(project(':lottie-react-native'))
+    implementation(project(':react-native-camera'))
+    implementation(project(':react-native-image-picker'))
+    implementation(project(':react-native-picker'))
+    implementation(project(':rn-splash-screen'))
+    //    implementation project(':react-native-push-notification')
+    implementation(project(':react-native-maps')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-maps'
+    }
+    implementation(project(':react-native-fs'))
+    implementation(project(':react-native-device-info'))
+    implementation(project(':react-native-vector-icons'))
+    implementation(project(':react-native-code-push'))
+
+//    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    implementation 'me.leolin:ShortcutBadger:1.1.8@aar'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.google.android.gms:play-services-location:10.0.1'
+    implementation 'com.google.android.gms:play-services-base:10.0.1'
+    implementation 'com.google.android.gms:play-services-maps:10.0.1'
 }
 
 // Run this once to be able to run the application with BUCK

@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/../node_modules/lottie-react-native/src/android" />
+            <option value="$PROJECT_DIR$/../node_modules/react-native-app-settings/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-camera/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-code-push/android/app" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-device-info/android" />

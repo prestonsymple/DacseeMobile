@@ -10,6 +10,27 @@ PODS:
   - AMapSearch (5.7.0):
     - AMapFoundation (~> 1.4)
   - Bugly (2.5.0)
+  - Google-Maps-iOS-Utils (2.1.0):
+    - Google-Maps-iOS-Utils/Clustering (= 2.1.0)
+    - Google-Maps-iOS-Utils/Geometry (= 2.1.0)
+    - Google-Maps-iOS-Utils/Heatmap (= 2.1.0)
+    - Google-Maps-iOS-Utils/QuadTree (= 2.1.0)
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Clustering (2.1.0):
+    - Google-Maps-iOS-Utils/QuadTree
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Geometry (2.1.0):
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Heatmap (2.1.0):
+    - Google-Maps-iOS-Utils/QuadTree
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/QuadTree (2.1.0):
+    - GoogleMaps
+  - GoogleMaps (2.6.0):
+    - GoogleMaps/Maps (= 2.6.0)
+  - GoogleMaps/Base (2.6.0)
+  - GoogleMaps/Maps (2.6.0):
+    - GoogleMaps/Base
   - UMCCommon (1.4.1)
   - UMCSecurityPlugins (1.0.6)
   - UMCShare/Core (6.8.2):
@@ -56,6 +77,8 @@ DEPENDENCIES:
   - AMapNavi
   - AMapSearch
   - Bugly
+  - Google-Maps-iOS-Utils
+  - GoogleMaps
   - UMCCommon
   - UMCSecurityPlugins
   - UMCShare/Social/Facebook
@@ -74,10 +97,12 @@ SPEC CHECKSUMS:
   AMapNavi: d2759fcd67b82b0a8e07fe7317ef0bfe339de47d
   AMapSearch: 314f75e9ce282b53dbf66455efa416c39f12b5b1
   Bugly: 3ca9f255c01025582df26f9222893b383c7e4b4e
+  Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
+  GoogleMaps: 42f91c68b7fa2f84d5c86597b18ceb99f5414c7f
   UMCCommon: ed0b882a939c45850f6803a5837698572a3e9b96
   UMCSecurityPlugins: 0831a08f3988f3cea9f1d3a7626cd9bee4fef150
   UMCShare: ab74e3c818cd305846609b15b0daf36872213c28
 
-PODFILE CHECKSUM: bd54f8118f07a89f0759096276f3605a6ba60e8c
+PODFILE CHECKSUM: cca06b92cbe29351a7a2795959840215a85e8156
 
 COCOAPODS: 1.4.0
