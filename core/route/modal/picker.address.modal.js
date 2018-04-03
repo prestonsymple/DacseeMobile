@@ -14,7 +14,7 @@ import { application, address as Address } from '../../redux/actions'
 /*****************************************************************************************************/
 import { booking } from '../../redux/actions'
 import { Search } from '../../native/AMap'
-import { System, Icons, Screen, Define, Session } from '../../utils'
+import { System, Icons, Screen, Define, Session ,TextFont } from '../../utils'
 import { Button } from '../../components'
 import { BOOKING_STATUS } from '../main'
 /*****************************************************************************************************/
@@ -42,7 +42,7 @@ export default connect(state => ({
   //   return false
   // }
 
-  componentWillReceiveProps(props) {   
+  componentWillReceiveProps(props) {
     if (props.favorite && props.favorite !== this.props.favorite) {
       this.setState({
         fav: dataContrast.cloneWithRows(props.favorite)
@@ -61,13 +61,13 @@ export default connect(state => ({
   async _fetchFavoriteData() {
     try {
       const resp = await Session.User.Get('v1/favPlaces')
-      this.props.dispatch(Address.setValues({ favorite: resp }))      
+      this.props.dispatch(Address.setValues({ favorite: resp }))
     } catch(e) {
       console.log(e)
-    }    
+    }
   }
 
-  async _addedFavPlace(place) {    
+  async _addedFavPlace(place) {
     try {
       const body = {
         name: place.name,
@@ -86,7 +86,7 @@ export default connect(state => ({
       })
     } catch(e) {
       console.log(e)
-    }     
+    }
   }
 
   async _deleteFavPlace(place) {
@@ -98,7 +98,7 @@ export default connect(state => ({
         address: place.address,
         placeId: place.placeId
       }
-      
+
       const favPlace = this.props.favorite.find(pipe => pipe.placeId == place.placeId)
       const resp = await Session.User.Delete(`v1/favPlaces/${favPlace._id}`, body)
 
@@ -106,13 +106,13 @@ export default connect(state => ({
       this.props.dispatch(Address.setValues({ favorite: favorites }))
     } catch(e) {
       console.log(e)
-    }     
+    }
   }
 
   onEnterKeywords(keywords) {
     this.timer && clearTimeout(this.timer)
     this.timer = setTimeout(async () => {
-      if (keywords.length === 0) return this.setState({ searchRet: undefined })        
+      if (keywords.length === 0) return this.setState({ searchRet: undefined })
       try {
         const { lat, lng } = this.props.location
         const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
@@ -124,7 +124,7 @@ export default connect(state => ({
     }, 350)
   }
 
-  render() {    
+  render() {
     const { type } = this.props.navigation.state.params
     const { searchRet, fav } = this.state
     const onPressCancel = () => this.props.navigation.goBack()
@@ -145,14 +145,14 @@ export default connect(state => ({
                   onChangeText={onChangeWords}
                   placeholder={i18n.please_enter_keywords}
                   style={[
-                    { height: 44, fontWeight: '400', fontSize: 15, color: '#666' }
+                    { height: 44, fontWeight: '400', fontSize: TextFont.TextSize(15), color: '#666' }
                   ]
                 } />
               </View>
               <View style={{ height: 22, width: 1, backgroundColor: '#e2e2e2' }} />
               <View style={{ width: 70 }}>
                 <Button onPress={onPressCancel} style={{ justifyContent: 'center', height: 44 }}>
-                  <Text style={{ fontWeight: '400', fontSize: 15, color: '#888' }}>{i18n.cancel}</Text>
+                  <Text style={{ fontWeight: '400', fontSize: TextFont.TextSize(15), color: '#888' }}>{i18n.cancel}</Text>
                 </Button>
               </View>
             </View>
@@ -166,21 +166,21 @@ export default connect(state => ({
             enableEmptySections={true}
             dataSource={searchRet || fav}
             renderRow={(rowData) => (
-              <PickAddressRowItem 
+              <PickAddressRowItem
                 onPress={() => {
                   this.props.dispatch(booking.passengerSetValue({ [type]: rowData }))
                   this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
                   this.props.navigation.goBack()
                 }}
-                onPressStar={() => {                  
+                onPressStar={() => {
                   if (favorite.find(pipe => pipe.placeId == rowData.placeId)) {
                     this._deleteFavPlace(rowData)
                   } else {
                     this._addedFavPlace(rowData)
                   }
                 }}
-                isAddedFav={favorite.find(pipe => pipe.placeId == rowData.placeId)} 
-                data={rowData} 
+                isAddedFav={favorite.find(pipe => pipe.placeId == rowData.placeId)}
+                data={rowData}
               />
             )}
             renderSeparator={() => <View style={{ marginLeft: 15, borderColor: '#eee', borderBottomWidth: 0.8 }} />}
@@ -197,11 +197,11 @@ class PickAddressRowItem extends PureComponent {
     super(props)
   }
 
-  render() {  
+  render() {
     const { onPress, onPressStar = () => {}, data } = this.props
     const { address, name } = data
     // const { isAddedFav } = this.state
-    
+
     return (
       <Button onPress={onPress} style={{ height: 48, flex: 1, backgroundColor: 'white', alignItems: 'flex-start', paddingRight: 15 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -213,15 +213,15 @@ class PickAddressRowItem extends PureComponent {
                   Icons.Generator.Material('star', 24, '#f3ae3d') :
                   Icons.Generator.Material('star-border', 24, '#e3e3e3')
                 }
-              </View>            
+              </View>
               {/* { type === 'favorite' && Icons.Generator.Material('star', 24, '#f3ae3d') }
               { type === 'history' && Icons.Generator.Material('history', 24, '#999') }
               { type === 'keywords' && Icons.Generator.Material('my-location', 24, '#999') } */}
             </View>
           </TouchableOpacity>
-          
+
           <View style={{ flex: 1 }}>
-            <Text style={{ color: '#666', fontSize: 15, fontWeight: '400' }}>{ name }</Text>
+            <Text style={{ color: '#666', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{ name }</Text>
           </View>
         </View>
       </Button>
