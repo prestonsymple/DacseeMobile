@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import {
   Text, View, Image
 } from 'react-native'
+import {TextFont} from '../../../utils'
 export default class UserDetail extends PureComponent {
   render() {
     const {data}=this.props
@@ -17,8 +18,8 @@ export default class UserDetail extends PureComponent {
             {/* { Icons.Generator.Material('account-circle', 100, '#fad723') } */}
           </View>
           <View style={{justifyContent:'center',marginLeft:15}}>
-            <Text style={{color:'#fff',fontSize:25}}>{fullName}</Text>
-            <Text style={{color:'#ccc',fontSize:14}}>{userId?('User ID：'+userId):''}</Text>
+            <Text style={{color:'#fff',fontSize:TextFont.TextSize(25)}}>{fullName}</Text>
+            <Text style={{color:'#ccc',fontSize:TextFont.TextSize(14)}}>{userId?('User ID：'+userId):''}</Text>
           </View>
         </View>
       </View>

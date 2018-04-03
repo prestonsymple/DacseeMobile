@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Image, Text, TextInput, ScrollView, TouchableOpacity, DeviceEventEmitter } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
-
+import {TextFont} from '../../utils'
 const defaultOption = {
   value: '',
   placeholder: '',
@@ -54,13 +54,13 @@ class StringEditor extends BaseEditor {
 
     return (
       <View style={{ backgroundColor: 'white', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#eee' }}>
-        <TextInput 
-          onChangeText={ val => this.setState({ value: val }) } 
-          placeholder={placeholder} 
-          defaultValue={value} 
+        <TextInput
+          onChangeText={ val => this.setState({ value: val }) }
+          placeholder={placeholder}
+          defaultValue={value}
           keyboardType={keyboardType}
           clearButtonMode={'always'}
-          style={{ height: 44, paddingLeft: 8, paddingRight: 26 }} 
+          style={{ height: 44, paddingLeft: 8, paddingRight: 26 }}
         />
       </View>
     )
@@ -89,17 +89,17 @@ class FormEditorScreen extends Component {
     const { state } = navigation
     const { params } = state
     return Object.assign({}, {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: params.title,
       headerRight: (
-        <TouchableOpacity 
+        <TouchableOpacity
           activeOpacity={0.7}
-          style={{ width: 54, paddingRight: 15, justifyContent: 'center', alignItems: 'flex-end' }} 
+          style={{ width: 54, paddingRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.EDITOR.CHANGE.VALUE')}
         >
-          <Text style={{ fontSize: 16, color: 'white', fontWeight: '600' }}>完成</Text>
+          <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '600' }}>完成</Text>
         </TouchableOpacity>
-      )    
+      )
     }, params.navigationOptions || {})
   }
 

@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 import { application, booking, circle } from '../../../redux/actions'
-import { Icons, Screen, Define, Session } from '../../../utils'
+import { Icons, Screen, Define, Session,TextFont } from '../../../utils'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
@@ -140,10 +140,10 @@ export default connect(state => ({
             } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
               <View style={{ marginTop: 108 }}>
                 <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
-                <Text style={{ color: '#666', fontSize: 22, fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
+                <Text style={{ color: '#666', fontSize: TextFont.TextSize(22), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
                   <FormattedMessage id={'no_friend'}/>
                 </Text>
-                <Text style={{ color: '#999', fontSize: 15, fontWeight: '400', textAlign: 'center' }}>
+                <Text style={{ color: '#999', fontSize: TextFont.TextSize(15), fontWeight: '400', textAlign: 'center' }}>
                   <FormattedMessage id={'clickto_add_friend'}/>
                 </Text>
               </View>
@@ -168,7 +168,7 @@ export default connect(state => ({
                 renderSectionHeader={(data, section) => {
                   return (data.length > 0) && (
                     <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
-                      <Text style={{ fontSize: 12, color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+                      <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
                     </View>
                   )
                 }}
@@ -211,7 +211,7 @@ export default connect(state => ({
                     { width: width - 90, left: 45, borderRadius: 33 },
                     { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
                   ]}>
-                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>
+                    <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
                       <FormattedMessage id={'select_all'}/>
                     </Text>
                   </TouchableOpacity>
@@ -227,7 +227,7 @@ export default connect(state => ({
                     { width: width - 90, left: 45, borderRadius: 33 },
                     { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
                   ]}>
-                    <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>
+                    <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
                       <FormattedMessage id={'confirm'}/>
                     </Text>
                   </TouchableOpacity>
@@ -255,8 +255,8 @@ class HeaderSearchBar extends Component {
                     ios: { height: 42, width: width - 56 }
                   })} />
               )
-            }        
-          </FormattedMessage>          
+            }
+          </FormattedMessage>
         </View>
       </View>
     )
@@ -276,8 +276,8 @@ class ItemPerson extends Component {
           <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }}></View>
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>0次行程</Text>
+          <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
+          <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>0次行程</Text>
         </View>
         {
           checked ? (
@@ -306,8 +306,8 @@ class RequestorPerson extends Component {
           <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[avatars.length - 1].url }} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 5 }}>{ fullName }</Text>
-          <Text style={{ fontSize: 13, color: '#999' }}>0次行程</Text>
+          <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 5 }}>{ fullName }</Text>
+          <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>0次行程</Text>
         </View>
         <View style={{ marginRight: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => onPressReject(_id)} activeOpacity={.7} style={{ marginRight: 15, width: 30, height: 30, borderRadius: 18, backgroundColor: '#eb8d97', justifyContent: 'center', alignItems: 'center' }}>

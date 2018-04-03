@@ -7,7 +7,7 @@ import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 
 import { application } from '../../../redux/actions'
-import { Icons, Screen, Session, Define, System } from '../../../utils'
+import { Icons, Screen, Session, Define, System,TextFont } from '../../../utils'
 
 const { width, height } = Screen.window
 
@@ -82,8 +82,8 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
                       <Image style={{ width: 42, height: 42, borderRadius: 21 }} source={{ uri: avatars[avatars.length - 1].url }} />
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 16, color: '#666', marginBottom: 2 }}>{ fullName }</Text>
-                      <Text style={{ fontSize: 12, color: '#666' }}>{ userId }</Text>
+                      <Text style={{ fontSize: TextFont.TextSize(16), color: '#666', marginBottom: 2 }}>{ fullName }</Text>
+                      <Text style={{ fontSize: TextFont.TextSize(12), color: '#666' }}>{ userId }</Text>
                     </View>
                     <View>
                       { Icons.Generator.Material('chevron-right', 26, '#999') }

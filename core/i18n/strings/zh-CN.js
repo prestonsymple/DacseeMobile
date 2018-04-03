@@ -58,6 +58,8 @@ const zh_CN = {
   clickto_add_friend: '点击“+”进行添加',
   search_name_phone_email: '姓名/手机/邮箱搜索',
   add_mycircle: '添加朋友圈',
+  pls_wait: '请等待...',
+  send_friend_request: '发送好友请求',
 
   driver: '司机',
   passenger: '乘客',
@@ -129,8 +131,19 @@ const zh_CN = {
   transfer_success: '转账成功',
   pls_enter_remarks: '请输入备注',
 
+  downline: '下线',
+  total_downline: '下线总数',
+  level_one: '一级',
+  level_two: '二级',
+  level_three: '三级',
+  downline_list: '下线列表',
+  referrer_name: '推荐人姓名',
+  join_date: '加入时间',
+  downline_level: '下线等级',
+
   settings: '设置',
   profile: '账号与安全',
+  privacy_setting: '隐私设置',
   account: '账号',
   my_avatar: '我的头像',
   fullname: '全名',
@@ -141,6 +154,11 @@ const zh_CN = {
   update_email: '修改邮箱',
   pls_enter_fullname: '请输入您的全名',
   pls_enter_email: '请输入您的邮箱',
+
+  allow_request_from_driver: '允许来自司机的好友请求',
+  allow_search_by_phone: '允许通过电话号码搜索',
+  allow_search_by_email: '允许通过邮箱搜索',
+  allow_search_by_name: '允许通过名字搜索',
   
   language_region: '语言和地区',
   language: '语言',

@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { System, Icons, Screen, Define, Session } from '../utils'
+import { System, Icons, Screen, Define, Session,TextFont } from '../utils'
 import { Button } from '../components'
 import { jobs as Jobs } from '../redux/actions'
 import { MapView, Search, Marker, Polyline, Utils } from '../native/AMap'
@@ -110,7 +110,7 @@ export default connect(state => ({
             { borderColor: '#f2f2f2', borderBottomWidth: .8 }
           ]}>
             <View style={{ marginTop: Define.system.ios.x ? 44 : 20, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', height: 44 }}>
-              <Text style={{ fontWeight: '600', fontSize: 16, color: '#333' }}>行程详情</Text>
+              <Text style={{ fontWeight: '600', fontSize: TextFont.TextSize(16), color: '#333' }}>行程详情</Text>
             </View>
           </View>
           {/* Main */}
@@ -136,30 +136,30 @@ export default connect(state => ({
           ]}>
             <ScrollView contentContainerStyle={{ paddingVertical: 26, paddingHorizontal: 22 }}>
               <View style={{ marginBottom: 12 }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 6 }}>乘客位置</Text>
-                { from && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ from.address }</Text>) }
+                <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 6 }}>乘客位置</Text>
+                { from && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ from.address }</Text>) }
               </View>
               <View style={{ }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 6 }}>目的地</Text>
-                { destination && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ destination.address } {destination.name}</Text>) }
+                <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 6 }}>目的地</Text>
+                { destination && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ destination.address } {destination.name}</Text>) }
               </View>
               <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 12 }}>行程费用</Text>
-                { from && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>￥{ parseInt(fare).toFixed(2) }</Text>) }
+                <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 12 }}>行程费用</Text>
+                { from && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>￥{ parseInt(fare).toFixed(2) }</Text>) }
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>预约车辆</Text>
-                { type && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ type === 'now' ? '否' : '是' }</Text>) }
+                <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400' }}>预约车辆</Text>
+                { type && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ type === 'now' ? '否' : '是' }</Text>) }
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>支付方式</Text>
-                { payment_method && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ payment_method }</Text>) }
+                <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400' }}>支付方式</Text>
+                { payment_method && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ payment_method }</Text>) }
               </View>
               <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
               <View style={{ marginBottom: 12 }}>
-                <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 12 }}>备注信息</Text>
-                { typeof(notes) !== 'undefined' && (<Text style={{ top: -1.5, fontSize: 14, color: '#666', fontWeight: '400' }}>{notes.length === 0 ? '无' : notes}</Text>) }
+                <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 12 }}>备注信息</Text>
+                { typeof(notes) !== 'undefined' && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#666', fontWeight: '400' }}>{notes.length === 0 ? '无' : notes}</Text>) }
               </View>
             </ScrollView>
             <View style={{ flexDirection: 'row', height: Define.system.ios.x ? 52 + 22 : 52 }}>
@@ -176,7 +176,7 @@ export default connect(state => ({
                 } finally {
                 }
               }} activeOpacity={.7} style={{ backgroundColor: '#70c040', paddingBottom: Define.system.ios.x ? 22 : 0, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 16, color: 'white', fontWeight: '400' }}>接受(30s)</Text>
+                <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '400' }}>接受(30s)</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={async () => {
                 try {
@@ -193,7 +193,7 @@ export default connect(state => ({
                   }))
                 }
               }} activeOpacity={.7} style={{ backgroundColor: '#eee', paddingBottom: Define.system.ios.x ? 22 : 0, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 16, color: '#666', fontWeight: '400' }}>拒绝</Text>
+                <Text style={{ fontSize: TextFont.TextSize(16), color: '#666', fontWeight: '400' }}>拒绝</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { StyleSheet, Image,View, Text, Animated, PanResponder, ViewPropTypes ,PixelRatio} from 'react-native'
 
 import WheelItem from './WheelItem'
+import {TextFont} from '../../utils'
 const pixelSize = (function() {
   let pixelRatio = PixelRatio.get()
   if (pixelRatio >= 3) return 0.333
@@ -190,7 +191,7 @@ export default class Wheel extends Component {
     }].concat(style)
     itemStyle = [{
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      fontSize: 15,
+      fontSize: TextFont.TextSize(15),
       color: '#555',
     }].concat(itemStyle)
     holeStyle = [{

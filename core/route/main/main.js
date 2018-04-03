@@ -10,7 +10,7 @@ import NavigatorBarSwitcher from './components/navigator.bar.switcher'
 import DriverComponent from './driver'
 import PassengerComponent from './passenger'
 
-import { Icons, Screen, System } from '../../utils'
+import { Icons, Screen, System,TextFont } from '../../utils'
 import { booking, account } from '../../redux/actions'
 import { BOOKING_STATUS } from '.'
 
@@ -31,42 +31,42 @@ export default connect(state => ({
       style: { top: 1, width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' },
       onPress: () => {
         if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
-          DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN') 
+          DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.DRAWER.OPEN')
         } else if (status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
           // DO NOTHING
         } else {
           navigation.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
         }
       }
-    } 
+    }
 
     let title = 'DACSEE'
     switch(status) {
-    case BOOKING_STATUS.PASSGENER_BOOKING_INIT: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_INIT:
       title = 'DACSEE'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS:
       title = '确认行程'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE:
       title = '发送订单中'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT:
       title = '等待接单'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY:
       title = '接驾中'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED:
       title = '司机已到达'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD:
       title = '行驶中'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_ON_RATING: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_ON_RATING:
       title = '等待评价'
       break
-    case BOOKING_STATUS.PASSGENER_BOOKING_HAVE_COMPLETE: 
+    case BOOKING_STATUS.PASSGENER_BOOKING_HAVE_COMPLETE:
       title = '行程结束'
       break
     default:
@@ -125,15 +125,15 @@ export default connect(state => ({
       this.props.navigation.setParams({ status: booking_status })
     }
 
-    if (this.props.app_status !== props.app_status) {
+    if (this.props.app_status !== props.app_status && props.app_status === 'active') {
       this.checkLocationPermission()
     }
   }
 
   checkLocationPermission() {
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
-      const { latitude, longitude } = coords
-      this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
+    navigator.geolocation.getCurrentPosition(position => {
+      const { coords: { latitude, longitude } } = position
+      this.props.dispatch(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
       this.setState({ deniedAccessLocation: false })
     }, (e) => {
       if (e.code === 1 || e.code === 2) this.setState({ deniedAccessLocation: true })
@@ -146,9 +146,9 @@ export default connect(state => ({
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
-        <Text style={{ color: '#666', fontSize: 14 }}>请确认您的位置权限是否打开</Text>
+        <Text style={{ color: '#666', fontSize: TextFont.TextSize(14) }}>请确认您的位置权限是否打开</Text>
         <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => {OpenAppSettings.open()}}>
-          <Text style={{ fontSize: 20, color: 'white' }}>前往开启</Text>
+          <Text style={{ fontSize: TextFont.TextSize(20), color: 'white' }}>前往开启</Text>
         </TouchableOpacity>
       </View>
     ) : (
@@ -163,14 +163,14 @@ export default connect(state => ({
 
 const BookingContainerSwitcher = connect(state => ({ core_mode: state.application.core_mode }))(class BookingContainerSwitcher extends PureComponent {
 
-  async componentDidMount() { 
+  async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) 
+    this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false })
 
     // 修复Android初始化加载延迟问题, Tab页切换不对
     if (System.Platform.Android) {
       await new Promise((resolve) => setTimeout(() => resolve(), 200))
-      this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false }) 
+      this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false })
     }
   }
 

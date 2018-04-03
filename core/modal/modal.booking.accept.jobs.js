@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { System, Icons, Screen, Define, Session } from '../utils'
+import { System, Icons, Screen, Define, Session ,TextFont} from '../utils'
 import { Button } from '../components'
 import { jobs as Jobs, application } from '../redux/actions'
 import { MapView, Search, Marker, Polyline, Utils } from '../native/AMap'
@@ -180,7 +180,7 @@ export default connect(state => ({
               <View style={{ flex: 1 }}>
 
               </View>
-              <Text style={{ fontWeight: '600', fontSize: 16, color: '#333' }}>{title}</Text>
+              <Text style={{ fontWeight: '600', fontSize: TextFont.TextSize(16), color: '#333' }}>{title}</Text>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -231,7 +231,7 @@ export default connect(state => ({
               (this.props.jobs.status !== 'ON_BOARD') && (
                 <View style={{ marginVertical: 26, paddingHorizontal: 22 }}>
                   <View style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 16 }}>如遇问题，请主动与乘客进行联系</Text>
+                    <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 16 }}>如遇问题，请主动与乘客进行联系</Text>
                     { passenger_info && (
                       <TouchableOpacity onPress={() => {
                         Linking.openURL(`tel:${passenger_info.phoneCountryCode}${passenger_info.phoneNo}`)
@@ -260,7 +260,7 @@ export default connect(state => ({
                       { text: '取消', onPress: () => {} }
                     ])
                   }} activeOpacity={.7} style={{ backgroundColor: '#f1af41', paddingBottom: Define.system.ios.x ? 22 : 0, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 16, color: 'white', fontWeight: '400' }}>已到达上车地点</Text>
+                    <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '400' }}>已到达上车地点</Text>
                   </TouchableOpacity>
                 )
               }
@@ -280,7 +280,7 @@ export default connect(state => ({
                       { text: '否', onPress: () => {} }
                     ])
                   }} activeOpacity={.7} style={{ backgroundColor: '#f1af41', paddingBottom: Define.system.ios.x ? 22 : 0, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 16, color: 'white', fontWeight: '400' }}>乘客已上车</Text>
+                    <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '400' }}>乘客已上车</Text>
                   </TouchableOpacity>
                 )
               }
@@ -300,7 +300,7 @@ export default connect(state => ({
                       { text: '取消', onPress: () => {} }
                     ])
                   }} activeOpacity={.7} style={{ backgroundColor: '#f1af41', paddingBottom: Define.system.ios.x ? 22 : 0, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 16, color: 'white', fontWeight: '400' }}>完成行程</Text>
+                    <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '400' }}>完成行程</Text>
                   </TouchableOpacity>
                 )
               }

@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import lodash from 'lodash'
-
+import {TextFont } from '../../../utils'
 import { booking } from '../../../redux/actions'
 import { FormattedMessage } from 'react-intl'
 
@@ -55,7 +55,7 @@ export default connect(state => ({
           {
             DEFAULT_MENU.map((pipe, index) => (
               <TouchableOpacity activeOpacity={1} onPress={() => this.props.dispatch(booking.passengerSetValue({ type: pipe.key }))} key={index} style={{ paddingHorizontal: 10, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={selected_type === pipe.key ? { color: 'white', fontSize: 13, fontWeight: '600' } : { color: 'white', fontSize: 13, fontWeight: '600', opacity: .7  }}>
+                <Text style={selected_type === pipe.key ? { color: 'white', fontSize: TextFont.TextSize(13), fontWeight: '600' } : { color: 'white', fontSize: TextFont.TextSize(13), fontWeight: '600', opacity: .7  }}>
                   {i18n[`${pipe.title}`]}
                 </Text>
               </TouchableOpacity>

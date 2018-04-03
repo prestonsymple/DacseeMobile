@@ -8,18 +8,17 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import moment from 'moment'
-import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session ,TextFont} from '../../utils'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 
-import font from '../../utils/util.textSize'
-const TextSize = font.TextSize
+
 const { height, width } = Screen.window
 
 const styles = StyleSheet.create({
   pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
   itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: 14, fontWeight: '100', marginBottom: 8 },
+  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
   itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 })
@@ -80,7 +79,7 @@ export default connect(() => ({}))(class TripListScreen extends Component {
   render() {
     const { detail } = this.state
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 ,paddingBottom:20}}>
         {
           (detail.rowIdentities[0].length === 0) ?
             (
@@ -95,7 +94,7 @@ export default connect(() => ({}))(class TripListScreen extends Component {
               } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                   <Image source={Resources.image.joblist_empty} style={{ marginTop: 200, width: 100, height: 100 }} />
-                  <Text style={{ marginTop: 20, color: '#777', fontSize: 18, fontWeight: '400' }}>暂无行程</Text>
+                  <Text style={{ marginTop: 20, color: '#777', fontSize: TextFont.TextSize(18), fontWeight: '400' }}>暂无行程</Text>
                 </View>
               </ScrollView>
             ) :
@@ -178,7 +177,6 @@ class ListItem extends Component {
   render() {
     const { itemData, itemDay } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
-
     return (
       <View style={{ marginTop: 20, marginLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
         <View style={[
@@ -187,21 +185,21 @@ class ListItem extends Component {
         ]}>
           <View style={{ margin: 15 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text numberOfLines={1} style={{ fontSize: TextSize(25), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{from.name}</Text>
+              <Text numberOfLines={1} style={{ fontSize: TextFont.TextSize(18), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#67666c' }}>{from.name}</Text>
             </View>
             <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}>
-              {/* <Text style={{ fontSize: TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
-              <Text style={{ fontSize: TextSize(15), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6' }}>to {destination.name} </Text>
+              {/* <Text style={{ fontSize: TextFont.TextSize(13), fontFamily: 'Helvetica', fontWeight: 'bold', color: '#B2B1B6'}}></Text> */}
+              <Text style={{ fontSize: TextFont.TextSize(13), fontFamily: 'Helvetica', fontWeight: '500', color: '#B2B1B6' }}>to {destination.name} </Text>
             </View>
 
             <View style={{ marginTop: 30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View>{Icons.Generator.Material('access-time', TextSize(15), '#000000')}</View>
-              <Text style={{ marginLeft: 5, fontSize: TextSize(15), color: '#5C5B63' }}>{moment(Date.parse(booking_at)).format('HH:mm')}</Text>
-              <View style={{ marginLeft: 10, }}>{Icons.Generator.Material('payment', TextSize(15), '#000000')}</View>
-              <Text style={{ marginLeft: 5, fontSize: TextSize(15), color: '#5C5B63' }}>{payment_method == 'Cash' ? '现金' : payment_method}</Text>
+              <View>{Icons.Generator.Material('access-time', TextFont.TextSize(14), '#000000')}</View>
+              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{moment(Date.parse(booking_at)).format('HH:mm')}</Text>
+              <View style={{ marginLeft: 10, }}>{Icons.Generator.Material('payment', TextFont.TextSize(14), '#000000')}</View>
+              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{payment_method == 'Cash' ? '现金' : payment_method}</Text>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 15, '#bbb') }</View> */}
-                <Text style={{ fontSize: TextSize(15), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{fare}</Text>
+                <Text style={{ fontSize: TextFont.TextSize(14), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{fare}</Text>
               </View>
             </View>
           </View>

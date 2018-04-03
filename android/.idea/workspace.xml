@@ -61,11 +61,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="proguard-rules.pro" pinned="false" current-in-tab="true">
+      <file leaf-file-name="proguard-rules.pro" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/proguard-rules.pro">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="403">
               <caret line="43" column="60" lean-forward="false" selection-start-line="43" selection-start-column="60" selection-end-line="43" selection-end-column="60" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainApplication.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dacsee/MainApplication.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="260">
+              <caret line="82" column="8" lean-forward="true" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -14268,10 +14278,6 @@
               <item name="dacsee" type="462c0819:PsiDirectoryNode" />
               <item name="wxapi" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="dacsee" type="1abcf292:AndroidViewProjectNode" />
-              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -14417,7 +14423,7 @@
     <property name="DEBUGGABLE_PROCESS" value="com.dacsee" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
     <property name="DEBUGGER_ID" value="Auto" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1522721082678" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1522721100037" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -15244,17 +15250,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dacsee/MainApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="87" column="41" lean-forward="false" selection-start-line="87" selection-start-column="23" selection-end-line="87" selection-end-column="41" />
-          <folding>
-            <element signature="e#2686#2687#0" expanded="false" />
-            <element signature="e#2724#2725#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../node_modules/lottie-react-native/src/android/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -15291,6 +15286,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="403">
           <caret line="43" column="60" lean-forward="false" selection-start-line="43" selection-start-column="60" selection-end-line="43" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dacsee/MainApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="82" column="8" lean-forward="true" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
           <folding />
         </state>
       </provider>

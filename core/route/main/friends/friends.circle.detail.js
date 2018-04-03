@@ -9,7 +9,7 @@ import ActionSheet from 'react-native-actionsheet'
 import { join } from 'redux-saga/effects';
 
 import { application, circle } from '../../../redux/actions'
-import { Icons, Screen, Session } from '../../../utils'
+import { Icons, Screen, Session,TextFont } from '../../../utils'
 
 const { width, height } = Screen.window
 
@@ -101,25 +101,25 @@ export default connect(state => ({
                 <Image style={{ width: 88, height: 88, borderRadius: 44 }} source={{ uri: avatars[avatars.length - 1].url }} />
                 <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 2, right: 2, borderRadius: 9 }} />
               </View>
-              <Text style={{ color: 'white', fontSize: 18, fontWeight: '600' }}>{ fullName }</Text>
+              <Text style={{ color: 'white', fontSize: TextFont.TextSize(18), fontWeight: '600' }}>{ fullName }</Text>
             </View>
           </View>
           <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>
-              { userId && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ userId }</Text>) }
+              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>
+              { userId && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ userId }</Text>) }
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.phone }</Text>
-              { phoneNo && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }
+              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.phone }</Text>
+              { phoneNo && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>
-              <Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ email || '尚未填写' }</Text>
+              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>
+              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ email || '尚未填写' }</Text>
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16, color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>
-              <Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ '尚未填写' }</Text>
+              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>
+              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ '尚未填写' }</Text>
             </View>
           </View>
         </ScrollView>

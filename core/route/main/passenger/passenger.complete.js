@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 
-import { Screen, Icons, Define, Session } from '../../../utils'
+import { Screen, Icons, Define, Session ,TextFont} from '../../../utils'
 import { application } from '../../../redux/actions'
 
 const { height, width } = Screen.window
@@ -88,21 +88,21 @@ export default connect(state => ({ booking: state.booking }))(class BookingCompl
     ) : (
       <ScrollView contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 15 }} style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{ marginBottom: 12 }}>
-          <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 6 }}>乘客位置</Text>
-          { from && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ from.address }</Text>) }
+          <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 6 }}>乘客位置</Text>
+          { from && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ from.address }</Text>) }
         </View>
         <View style={{ }}>
-          <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 6 }}>目的地</Text>
-          { destination && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ destination.address } {destination.name}</Text>) }
+          <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 6 }}>目的地</Text>
+          { destination && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ destination.address } {destination.name}</Text>) }
         </View>
         <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 14, color: '#999', fontWeight: '400', marginBottom: 12 }}>行程费用</Text>
-          { from && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>￥{ parseInt(fare).toFixed(2) }</Text>) }
+          <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400', marginBottom: 12 }}>行程费用</Text>
+          { from && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>￥{ parseInt(fare).toFixed(2) }</Text>) }
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 14, color: '#999', fontWeight: '400' }}>支付方式</Text>
-          { payment_method && (<Text style={{ top: -1.5, fontSize: 14, color: '#333', fontWeight: '400' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>) }
+          <Text style={{ fontSize: TextFont.TextSize(14), color: '#999', fontWeight: '400' }}>支付方式</Text>
+          { payment_method && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>) }
         </View>
         <View style={{ height: Define.system.ios.plus ? 1 : .8, backgroundColor: '#f2f2f2', marginVertical: 12 }} />
       </ScrollView>

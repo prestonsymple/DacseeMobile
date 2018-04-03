@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from 'react'
 import { Text, View, TouchableOpacity, Modal,PixelRatio } from 'react-native'
 import {
-  Screen, Icons, Define
+  Screen, Icons, Define,TextFont
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
@@ -15,7 +15,7 @@ const pixelSize = (function() {
 export default class SelectPay extends PureComponent {
   constructor(props) {
     super(props)
-    this.pays = ['支付宝支付','微信支付','一网通银行卡支付','国际银行卡支付','QQ钱包支付']
+    this.pays = ['支付宝','微信','一网通银行卡','国际银行卡','QQ钱包']
   }
   componentDidMount(){
 
@@ -41,10 +41,10 @@ export default class SelectPay extends PureComponent {
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth:pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payCancel()} >
-                <Text style={{ color: '#1ab2fd', fontSize: 15 }}>取消</Text>
+                <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>取消</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payCancel()} >
-                <Text style={{ color: '#ffa03c', fontSize: 15 }}>确定</Text>
+                <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>确定</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height:weelHeight}}>

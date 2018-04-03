@@ -7,8 +7,7 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import FONT from '../../utils/util.textSize'
-import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
+import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 
@@ -19,7 +18,7 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      title: '下线列表',
+      title: 'DOWNLINE LISTING',
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
@@ -72,8 +71,8 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingLeft: 20 }}>
-          <Text style={{ fontSize: 15, color: '#fff', marginBottom: 10 }}>Total Downline</Text>
-          <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.level1 + data.level2 + data.level3}</Text>
+          <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 10 }}>Total Downline</Text>
+          <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.total}</Text>
         </View>
         <ScrollView refreshControl={
           <RefreshControl
@@ -100,9 +99,9 @@ class DownLineCell extends PureComponent {
     const { cellname, value } = this.props
     return (
       <TouchableOpacity onPress={() => this.props.goDownLineList(cellname)} style={{ paddingTop: 20 }}>
-        <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#404040', paddingBottom: 5 }}>{'LEVEL ' + cellname}</Text>
-        <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#ccc', paddingBottom: 5 }}>TOTAL DOWNLINE</Text>
-        <Text style={{ fontSize: 25, fontWeight: '300', color: '#404040', paddingBottom: 5 }}>{value?value:0}</Text>
+        <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#404040', paddingBottom: 5 }}>{'LEVEL ' + cellname}</Text>
+        <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#ccc', paddingBottom: 5 }}>TOTAL DOWNLINE</Text>
+        <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: '300', color: '#404040', paddingBottom: 5 }}>{value?value:0}</Text>
       </TouchableOpacity>
     )
   }

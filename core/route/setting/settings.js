@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 /*****************************************************************************************************/
 import BaseComponent from '../_base'
 import {
-  Screen, Icons, Define
+  Screen, Icons, Define,TextFont
 } from '../../utils'
 // import {} from '../../components'
 /*****************************************************************************************************/
@@ -155,10 +155,10 @@ const styles = StyleSheet.create({
   sectionBorder: { height: 12, borderTopWidth: Define.FixPlusPixel, borderBottomWidth: Define.FixPlusPixel, borderColor: '#eaeaea' },
   itemTouchable: { paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' },
   itemImageTouchable: { paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 92, backgroundColor: 'white' },
-  itemValue: { color: '#666', fontSize: 15 },
+  itemValue: { color: '#666', fontSize: TextFont.TextSize(15) },
   itemRight: { justifyContent: 'center', flexDirection: 'row', alignItems: 'center' },
-  itemTitle: { color: '#333', fontSize: 15, fontWeight: '400' },
-  buttonText: { color: '#333', fontSize: 15 },
+  itemTitle: { color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' },
+  buttonText: { color: '#333', fontSize: TextFont.TextSize(15) },
   buttonWrap: { justifyContent: 'center', alignItems: 'center', height: 44, backgroundColor: 'white' },
   list: { flex: 1, backgroundColor: '#f2f2f2' },
 })

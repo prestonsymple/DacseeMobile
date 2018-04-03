@@ -7,7 +7,7 @@ import CodePush from 'react-native-code-push'
 import { connect } from 'react-redux'
 
 /*****************************************************************************************************/
-import { System, Icons, Screen } from '../utils'
+import { System, Icons, Screen,TextFont } from '../utils'
 import { application } from '../redux/actions'
 /*****************************************************************************************************/
 
@@ -24,7 +24,7 @@ label, packageHash, packageSize
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
-export default connect(({ application }) => ({ 
+export default connect(({ application }) => ({
   remoteBundle: application.update_remote_bundle
 }))(class _ extends Component {
 
@@ -39,7 +39,7 @@ export default connect(({ application }) => ({
 
   componentWillReceiveProps(props) {
     if (props.remoteBundle === null || this.running) return;
-    
+
     this.downloadBundle(props.remoteBundle)
   }
 
@@ -82,12 +82,12 @@ export default connect(({ application }) => ({
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 
             <View style={{ height: 60, justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ color: '#999', fontSize: 24, fontWeight: '200', backgroundColor: 'transparent' }}>DACSEE</Text>
-              <Text style={{ fontSize: 16, backgroundColor: 'transparent', color: '#333', fontWeight: '600' }}>新的更新包可用</Text>
+              <Text style={{ color: '#999', fontSize: TextFont.TextSize(24), fontWeight: '200', backgroundColor: 'transparent' }}>DACSEE</Text>
+              <Text style={{ fontSize: TextFont.TextSize(16), backgroundColor: 'transparent', color: '#333', fontWeight: '600' }}>新的更新包可用</Text>
             </View>
 
             <View style={{ justifyContent: 'center', height: 120, alignItems: 'center', backgroundColor: 'transparent' }}>
-              <Progress.Bar 
+              <Progress.Bar
                 width={Screen.window.width - 80}
                 height={2}
                 borderRadius={1}
@@ -101,7 +101,7 @@ export default connect(({ application }) => ({
             </View>
 
             <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 60, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: '#999', fontSize: 12, fontWeight: '200', backgroundColor: 'transparent' }}>{ System.Version }</Text>
+              <Text style={{ color: '#999', fontSize: TextFont.TextSize(12), fontWeight: '200', backgroundColor: 'transparent' }}>{ System.Version }</Text>
             </View>
 
           </View>

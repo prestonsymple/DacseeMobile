@@ -7,7 +7,7 @@ import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 
 import { application } from '../../../redux/actions'
-import { Icons, Screen, Session } from '../../../utils'
+import { Icons, Screen, Session,TextFont } from '../../../utils'
 
 const { width, height } = Screen.window
 
@@ -56,8 +56,8 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
             }
           </View>
           <View style={{ marginTop: 12, alignItems: 'center' }}>
-            <Text style={{ color: '#333', fontSize: 15, fontWeight: '400', marginBottom: 2 }}>{ fullName }</Text>
-            <Text style={{ color: '#666', fontSize: 12, fontWeight: '400' }}>{ userId }</Text>
+            <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400', marginBottom: 2 }}>{ fullName }</Text>
+            <Text style={{ color: '#666', fontSize: TextFont.TextSize(12), fontWeight: '400' }}>{ userId }</Text>
           </View>
           {
             fullName && (
@@ -77,7 +77,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
                     }
                   }
                 }} activeOpacity={.7} style={{ backgroundColor: '#70c040', height: 44, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ color: 'white', fontSize: 15, fontWeight: '400' }}>发送好友请求</Text>
+                  <Text style={{ color: 'white', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>发送好友请求</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity onPress={async () => {
                   const response = await Session.circle.put(`v1/requests/${invite_id}`, { 'action': 'reject' })
