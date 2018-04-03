@@ -55,13 +55,14 @@ class UserCell extends PureComponent {
             </FormattedMessage>            
           </View>
         </View>
-        <FormattedMessage id={'downline'}>
+        {/* TODO: FIX BUG */}
+        {/* <FormattedMessage id={'downline'}>
           {
             msg => (
               <Text style={{color:'#000'}}>{totalDownline+' '+msg}</Text>
             )            
           }
-        </FormattedMessage>        
+        </FormattedMessage>         */}
       </View>
     )
   }

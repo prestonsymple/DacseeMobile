@@ -7,10 +7,9 @@ import com.airbnb.android.react.maps.MapsPackage;
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
-import com.dacsee.nativeBridge.UMeng.ShareModule;
 import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.bridge.NativeModule;
+import com.facebook.soloader.SoLoader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.krazylabs.OpenAppSettingsPackage;
@@ -31,35 +30,14 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
   public static Context context;
-
-//  protected boolean checkGooglePlaySevices() {
-//    final int googlePlayServicesCheck = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
-//    switch (googlePlayServicesCheck) {
-//      case ConnectionResult.SUCCESS:
-//        return true;
-//      case ConnectionResult.SERVICE_DISABLED:
-//      case ConnectionResult.SERVICE_INVALID:
-//      case ConnectionResult.SERVICE_MISSING:
-//      case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-//        Dialog dialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesCheck, activity, 0);
-//        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//          @Override
-//          public void onCancel(DialogInterface dialogInterface) {
-//            activity.finish();
-//          }
-//        });
-//        dialog.show();
-//    }
-//    return false;
-//  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
@@ -120,10 +98,8 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     context = this.getApplicationContext();
-
-//    com.tencent.bugly.
-//    CrashReport.initCrashReport(getApplicationContext(), "71b843ec39", false);
-//    SoLoader.init(getApplicationContext(), /* native exopackage */ false);
+    SoLoader.init(getApplicationContext(), /* native exopackage */ false);
+    CrashReport.initCrashReport(getApplicationContext(), "71b843ec39", false);
   }
 
   public static void sendEvent(ReactContext appContext, String eventName, WritableMap map) {

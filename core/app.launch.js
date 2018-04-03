@@ -24,7 +24,38 @@ import i18n from './i18n'
 
 const addListener = createReduxBoundAddListener('AuthLoading');
 
-export default connect(state => ({ nav: state.nav }))(class AppLaunch extends PureComponent {
+class I18nLoadView extends PureComponent {
+  constructor(props) {
+    super(props)
+    console.log(props)
+  }
+
+  componentWillReceiveProps(props) {
+    console.log(props)
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <SwitchNavigation 
+          navigation={addNavigationHelpers({
+            dispatch: this.props.dispatch,
+            state: this.props.nav,
+            addListener
+          })}
+        />
+        <ModalProgress />
+        <Hud />
+        <ModalUpdate />        
+      </View>
+    )
+  }
+} 
+
+export default connect(state => ({ 
+  nav: state.nav,
+  i18n: state.intl
+}))(class AppLaunch extends PureComponent {
 
   componentDidMount() {
     Linking.addEventListener('url', event => this.handleOpenURL(event.url))
@@ -60,30 +91,11 @@ export default connect(state => ({ nav: state.nav }))(class AppLaunch extends Pu
 
   render() {
     const prefix = System.Platform.Android ? 'dacsee://dacsee/' : 'dacsee://'
-    // const defaultLanguage = localization.chooseLocale()
-    // const messages = localization.messages[store.language] === undefined ? 
-    //   localization.messages[defaultLanguage] : 
-    //   localization.messages[store.language]
 
-    // console.log(messages)
     // {/* TODO: 接到推送订单时，禁用自动升级 */}
     return (
       <IntlProvider textComponent={Text}>
-        <View style={{ flex: 1 }}>
-          <SwitchNavigation 
-            // uriPrefix={prefix}
-            navigation={addNavigationHelpers({
-              dispatch: this.props.dispatch,
-              state: this.props.nav,
-              addListener
-            })}
-          />
-          {/* <ModalBookingOrderDetail />
-          <ModalBookingAcceptJobs /> */}
-          <ModalProgress />
-          <Hud />
-          <ModalUpdate />        
-        </View>
+        <I18nLoadView {...this.props} />
       </IntlProvider>
     )
   }
