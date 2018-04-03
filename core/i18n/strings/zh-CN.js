@@ -133,9 +133,7 @@ const zh_CN = {
 
   downline: '下线',
   total_downline: '下线总数',
-  level_one: '一级',
-  level_two: '二级',
-  level_three: '三级',
+  level: '等级',
   downline_list: '下线列表',
   referrer_name: '推荐人姓名',
   join_date: '加入时间',

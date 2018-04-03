@@ -3,6 +3,7 @@ import {
   Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
 } from 'react-native'
+import { FormattedMessage } from 'react-intl'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
@@ -14,7 +15,9 @@ import { application, booking } from '../../redux/actions'
 const { height, width } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(() => ({}))(class DownLineTotalScreen extends Component {
+export default connect(state => ({
+  i18n: state.intl.message || {}
+}))(class DownLineTotalScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
@@ -67,11 +70,14 @@ export default connect(() => ({}))(class DownLineTotalScreen extends Component {
     }))
   }
   render() {
+    const { i18n } = this.props
     const { data } = this.state
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingLeft: 20 }}>
-          <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 10 }}>Total Downline</Text>
+          <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 10 }}>
+            <FormattedMessage id={'total_downline'}/>
+          </Text>
           <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#fff', marginBottom: 10 }}>{data.total}</Text>
         </View>
         <ScrollView refreshControl={
@@ -98,9 +104,18 @@ class DownLineCell extends PureComponent {
   render() {
     const { cellname, value } = this.props
     return (
-      <TouchableOpacity onPress={() => this.props.goDownLineList(cellname)} style={{ paddingTop: 20 }}>
-        <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#404040', paddingBottom: 5 }}>{'LEVEL ' + cellname}</Text>
-        <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#ccc', paddingBottom: 5 }}>TOTAL DOWNLINE</Text>
+      <TouchableOpacity onPress={() => this.props.goDownLineList(cellname)} style={{ paddingTop: 20 }}>        
+        <FormattedMessage id={'level'}>
+          {
+            msg => (
+              <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#404040', paddingBottom: 5 }}>
+                {msg+' ' + cellname}</Text>
+            )
+          }
+        </FormattedMessage>    
+        <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#ccc', paddingBottom: 5 }}>
+          <FormattedMessage id={'total_downline'}/>
+        </Text>
         <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: '300', color: '#404040', paddingBottom: 5 }}>{value?value:0}</Text>
       </TouchableOpacity>
     )

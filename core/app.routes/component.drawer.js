@@ -22,14 +22,14 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('WalletBalance')
 }, {
   key: '3',
-  name: 'settings',
-  icon: Icons.Generator.Material('settings', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
-  onPress: ({ navigation }) => navigation.navigate('SettingMenu')
+  name: 'downline',
+  icon: Icons.Generator.Material('people', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('DownLineTotal')  
 },{
   key: '4',
   name: 'settings',
   icon: Icons.Generator.Material('settings', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
-  onPress: ({ navigation }) => navigation.navigate('DownLineTotal')
+  onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 }
 // {
 //   key: '1',

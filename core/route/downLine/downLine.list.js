@@ -11,9 +11,12 @@ import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../ut
 
 import { application, booking } from '../../redux/actions'
 import UserList from './components/user.list'
+import { FormattedMessage } from 'react-intl';
 const { height, width } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-export default connect(() => ({}))(class DownLineListScreen extends Component {
+export default connect(state => ({
+  i18n: state.intl.message || {}
+}))(class DownLineListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
@@ -71,14 +74,22 @@ export default connect(() => ({}))(class DownLineListScreen extends Component {
     }))
   }
   render() {
+    const { i18n } = this.props
     const { data } = this.state
     const { state } = this.props.navigation
     const { params } = state
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
-        <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>{'LEVEL ' + params.level}</Text>
-          <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 5 }}>Total Downline</Text>
+        <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>          
+          <FormattedMessage id={'level'}>
+            {
+              msg => (
+                <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>
+                  {msg+' ' + params.level}</Text>
+              )
+            }
+          </FormattedMessage>          
+          <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 5 }}>{i18n.total_downline}</Text>
           <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#fff', marginBottom: 15 }}>{data.users.length}</Text>
         </View>
         <ScrollView refreshControl={

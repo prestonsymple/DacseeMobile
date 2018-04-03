@@ -90,6 +90,14 @@ class ListViewItem extends Component {
     this.state = { value: props.data.value }
   }
 
+  componentWillReceiveProps(props) {
+    if (props.data.value && this.props.data.value !== props.data.value) {
+      this.setState({
+        value: props.data.value
+      })
+    }
+  }
+
   _onSwitchValueChange(value) {
     const { onPress = () => {} } = this.props.data
     onPress(value)

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import {
   Text, View, Image,ListView,TouchableOpacity
 } from 'react-native'
+import { FormattedMessage } from 'react-intl'
 import {TextFont} from '../../../utils'
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 export default class UserList extends PureComponent {
@@ -9,7 +10,9 @@ export default class UserList extends PureComponent {
     const { users } = this.props
     return (
       <View style={{paddingHorizontal:20,flex:1}}>
-        <Text style={{fontSize:TextFont.TextSize(15),fontWeight:'bold',color:'#404040',marginVertical:10}}>DownLine Listing</Text>
+        <Text style={{fontSize:TextFont.TextSize(15),fontWeight:'bold',color:'#404040',marginVertical:10}}>
+          <FormattedMessage id={'downline_list'}/>
+        </Text>
         <ListView
           dataSource={dataContrast.cloneWithRows(users)}
           enableEmptySections={true}
@@ -42,11 +45,23 @@ class UserCell extends PureComponent {
             <Image style={{ width: 50, height: 50 }} source={{uri:avatars?avatars[avatars.length - 1].url:'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'}} />
           </View>
           <View style={{justifyContent:'center',}}>
-            <Text style={{color:'#000'}}>{fullName}</Text>
-            <Text style={{color:'#ccc'}}>{userId?('User ID：'+userId):''}</Text>
+            <Text style={{color:'#000'}}>{fullName}</Text>            
+            <FormattedMessage id={'userid'}>
+              {
+                msg => (
+                  <Text style={{color:'#ccc'}}>{userId?(msg+'：'+userId):''}</Text>
+                )
+              }
+            </FormattedMessage>            
           </View>
         </View>
-        <Text style={{color:'#000'}}>{totalDownline+' Downlines'}</Text>
+        <FormattedMessage id={'downline'}>
+          {
+            msg => (
+              <Text style={{color:'#000'}}>{totalDownline+' '+msg}</Text>
+            )            
+          }
+        </FormattedMessage>        
       </View>
     )
   }

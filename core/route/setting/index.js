@@ -187,17 +187,6 @@ const SettingLanguageRegionScreen = connect(state => ({
 }))(class SettingLanguageRegionScreen extends PureComponent {
   static navigationOptions = { title: '语言及地区' }
 
-  languageName(language) {
-    switch (language) {
-    case 'zh':
-      return '中文(简体)'
-    case 'mas':
-      return 'Bahasa Malaysia'
-    case 'en':
-      return 'English'
-    }
-  }
-
   render() {
     const { navigation, i18n } = this.props
 

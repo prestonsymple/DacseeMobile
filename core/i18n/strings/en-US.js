@@ -133,9 +133,7 @@ const en_US = {
 
   downline: 'Downline',
   total_downline: 'Total Downline',
-  level_one: 'LEVEL 1',
-  level_two: 'LEVEL 2',
-  level_three: 'LEVEL 3',
+  level: 'LEVEL',
   downline_list: 'DownLine Listing',
   referrer_name: 'Referer Name',
   join_date: 'Join Date',

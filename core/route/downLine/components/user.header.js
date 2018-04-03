@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import {
   Text, View, Image
 } from 'react-native'
+import { FormattedMessage } from 'react-intl'
 import {TextFont} from '../../../utils'
 export default class UserDetail extends PureComponent {
   render() {
@@ -19,7 +20,13 @@ export default class UserDetail extends PureComponent {
           </View>
           <View style={{justifyContent:'center',marginLeft:15}}>
             <Text style={{color:'#fff',fontSize:TextFont.TextSize(25)}}>{fullName}</Text>
-            <Text style={{color:'#ccc',fontSize:TextFont.TextSize(14)}}>{userId?('User ID：'+userId):''}</Text>
+            <FormattedMessage id={'userid'}>
+              {
+                msg => (
+                  <Text style={{color:'#ccc',fontSize:TextFont.TextSize(14)}}>{userId?(msg+'：'+userId):''}</Text>
+                )
+              }
+            </FormattedMessage>            
           </View>
         </View>
       </View>
