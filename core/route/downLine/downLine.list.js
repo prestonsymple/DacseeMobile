@@ -15,7 +15,7 @@ import { FormattedMessage } from 'react-intl';
 const { height, width } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 export default connect(state => ({
-  i18n: state.intl.message || {}
+  i18n: state.intl.messages || {}
 }))(class DownLineListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {

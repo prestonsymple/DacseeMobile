@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
-import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
+import { connect } from 'react-redux'
 import { Icons } from '../../../../utils'
 import Resources from '../../../../resources'
 import {parseDate, xdateToData,sameMonth,weekDayNames} from './interface';
@@ -34,7 +34,9 @@ const theme={
   agendaTodayColor: 'red',
   agendaKnobColor: 'blue'
 }
-export default class AgendaView extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class AgendaView extends Component {
   static propTypes = {
     workingChange: PropTypes.func,
     dataSource:PropTypes.object,
@@ -72,6 +74,7 @@ export default class AgendaView extends Component {
     this.generateMarkings = this.generateMarkings.bind(this);
     this.knobTracker = new VelocityTracker();
     this.state.scrollY.addListener(({value}) => this.knobTracker.add(value));
+    console.log(this.props.i18n)
   }
 
   calendarOffset() {
@@ -256,7 +259,7 @@ export default class AgendaView extends Component {
   }
 
   render() {
-    const {working,dataSource}=this.props
+    const {working,dataSource, i18n}=this.props
     const {loading} =this.state
     const agendaHeight = Math.max(0, this.viewHeight - HEADER_HEIGHT);
     const weekDaysNames = weekDayNames(this.props.firstDay);
@@ -320,7 +323,7 @@ export default class AgendaView extends Component {
       return (
         <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
-            <FormattedMessage id={'online'}/>
+            {i18n.online}
           </Text>
           <Switch value={working} onValueChange={(working) => this.props.workingChange(working)} />
         </View>
@@ -331,7 +334,7 @@ export default class AgendaView extends Component {
         <View style={{flex:1,marginTop:104}}>
           <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
-              <FormattedMessage id={'online'}/>
+              {i18n.online}
             </Text>
             <Switch value={working} onValueChange={(working) => this.props.workingChange(working)} />
           </View>
@@ -342,7 +345,7 @@ export default class AgendaView extends Component {
                 <Image source={Resources.image.joblist_empty} style={{ marginBottom: 18 }} />
                 <Text style={{ color: '#999', fontSize: TextFont.TextSize(18), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
                   {/*  <FormattedMessage id={'already_online'}/> */}
-                  <FormattedMessage id={'no_job'}/>
+                  {i18n.no_job}
                 </Text>
               </View>
             </ScrollView>)
@@ -414,4 +417,4 @@ export default class AgendaView extends Component {
       </View>
     );
   }
-}
+})
