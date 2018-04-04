@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 const {width,height}=Dimensions.get('window')
-
+import { Screen, Icons, Session, TextFont } from '../../../utils'
 export default class OrderSlider extends Component {
   constructor(props) {
     super(props)
@@ -72,6 +72,9 @@ export default class OrderSlider extends Component {
     let offset=this.prevTouches[0].pageX- this.firstTouche[0].pageX
     let mdwidth=this.width/3-25
     let status=offset<-mdwidth?-1:offset>mdwidth?1:0
+    if(status!=0){
+      this.props.sliderChange(status)
+    }
     if(offset>-mdwidth&&offset<mdwidth){
       Animated.spring(this.state.translateX, {
         useNativeDriver: true,
@@ -91,8 +94,8 @@ export default class OrderSlider extends Component {
           <Text style={{ fontSize: 15, color: '#fff',marginRight:10 }}>接受</Text>
         </View>
         <Animated.View
-          style={[{transform: [{ translateX: this.state.translateX }],backgroundColor:status==-1?'red':status==1?'green':'blue'},styles.circle]}>
-          <Text style={{ fontSize: 15, color: '#fff' }}>{status==-1?'×':status==1?'√':'+'}</Text>
+          style={[{transform: [{ translateX: this.state.translateX }]},styles.circle]}>
+          {Icons.Generator.Material('code', 24, '#fff') }
         </Animated.View>
       </View>
     )
@@ -106,6 +109,6 @@ const styles = StyleSheet.create({
     height: 40, width:width-40, position: 'absolute', top: 5, left: 0, backgroundColor: '#ccc',flexDirection:'row', borderRadius: 20, justifyContent: 'space-between', alignItems: 'center'
   },
   circle:{
-    height: 50, width: height/13, borderRadius:25, justifyContent: 'center', alignItems: 'center',
+    height: 50, width: height/13, borderRadius:25, justifyContent: 'center',flexDirection:'row', alignItems: 'center',backgroundColor:'#fdb21a'
   }
 })

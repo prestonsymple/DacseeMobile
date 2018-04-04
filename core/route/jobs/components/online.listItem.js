@@ -14,26 +14,24 @@ export default class OfflineListItem extends PureComponent {
     const { from, destination, booking_at, payment_method, fare, status } = itemData
 
     return (
-      <TouchableOpacity activeOpacity={.7} onPress={onPress}>
-        <View style={styles.container}>
-          <View style={[styles.text_cell,{justifyContent:'space-between'}]}>
-            <View style={{flexDirection:'row'}}>
-              <Text  style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
-              <Text  style={styles.status}>{'~ 15km'}</Text>
-            </View>
-            <Text  style={styles.fare}>{fare}</Text>
+      <View style={styles.container}>
+        <View style={[styles.text_cell,{justifyContent:'space-between'}]}>
+          <View style={{flexDirection:'row'}}>
+            <Text  style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
+            <Text  style={styles.status}>{'~ 15km'}</Text>
           </View>
-          <View style={styles.text_cell}>
-            <View style={[styles.dot,{backgroundColor:'#FEA81C'}]}/>
-            <Text  style={styles.adress}>{from.name}</Text>
-          </View>
-          <View style={styles.text_cell}>
-            <View style={[styles.dot,{backgroundColor:'#7ED321'}]}/>
-            <Text  style={styles.adress}>{destination.name}</Text>
-          </View>
-          <OrderSlider />
+          <Text  style={styles.fare}>{fare}</Text>
         </View>
-      </TouchableOpacity>
+        <View style={styles.text_cell}>
+          <View style={[styles.dot,{backgroundColor:'#FEA81C'}]}/>
+          <Text  style={styles.adress}>{from.name}</Text>
+        </View>
+        <View style={styles.text_cell}>
+          <View style={[styles.dot,{backgroundColor:'#7ED321'}]}/>
+          <Text  style={styles.adress}>{destination.name}</Text>
+        </View>
+        <OrderSlider  sliderChange={this.props.sliderChange}/>
+      </View>
     )
   }
 }

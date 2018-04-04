@@ -33,7 +33,6 @@ export default connect(state => ({
   constructor(props) {
     super(props)
     const todayUtc = new Date().toISOString()
-
     this.state = {
       // dateDic: null,
       loading: false,
@@ -47,9 +46,7 @@ export default connect(state => ({
     this._fetchData()
   }
 
-
   async _fetchData(dateStr) {
-    // console.log(dateStr)
     const resultDate = dateStr == null ? this.state.selectedDate : dateStr
     const dateFrom = this._getFormatterDate(resultDate).dateFrom
     const dateTo = this._getFormatterDate(resultDate).dateTo
@@ -75,7 +72,6 @@ export default connect(state => ({
     this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))
   }
   render() {
-    const { loading } = this.state
     return (
       <View style={{ flex: 1 }}>
         <Schedule
@@ -86,9 +82,9 @@ export default connect(state => ({
             })
             this._fetchData(dateStr)
           }}
-
           selected={this.state.selectedDate}
           _onRefresh={(date) => this._fetchData(date)}>
+          {/* 渲染job列表 */}
           {this.rederJobsList()}
         </Schedule>
       </View>
