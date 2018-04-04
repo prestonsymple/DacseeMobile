@@ -25,8 +25,8 @@ function* initializationFlow(action) {
       put(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
     ])
   } catch (e) {
-    console.log('发生错误', e)
     if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
+    // TODO: 增加默认位置坐标
   }
 
   try {

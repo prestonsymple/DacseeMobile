@@ -33,7 +33,7 @@ export default connect(state => ({
   country: state.account.country,
   booking_id: state.storage.booking_id,
   map_mode: state.application.map_mode,
-  vehicleGroups: state.account.vehicleGroups
+  vehicleGroups: state.booking.vehicleGroups
 }))(class PassengerComponent extends Component {
 
   constructor(props) {
@@ -100,9 +100,8 @@ export default connect(state => ({
       }
 
       const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
-      console.log(vehicleGroupsId)
       const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}&vehicle_group_id=${vehicleGroupsId}`)
-      this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
+      this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle || fare['朋友圈'] }))
       this.setState({ polyline: [] })
     }
 
