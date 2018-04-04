@@ -222,23 +222,23 @@ class Core extends PureComponent {
   }
 
   initializationMomentConfig() {
-    moment.defineLocale('CUSTOM_TIME_LOCALE', {
-      relativeTime: {
-        future: '%s后',
-        past: '%s前',
-        s: '%d秒',
-        m: '1分钟',
-        mm: '%d分钟',
-        h: '1小时',
-        hh: '%d小时',
-        d: '1天',
-        dd: '%d天',
-        M: '1个月',
-        MM: '%d个月',
-        y: '1年',
-        yy: '%d年'
-      }
-    })
+    // moment.defineLocale('CUSTOM_TIME_LOCALE', {
+    //   relativeTime: {
+    //     future: '%s后',
+    //     past: '%s前',
+    //     s: '%d秒',
+    //     m: '1分钟',
+    //     mm: '%d分钟',
+    //     h: '1小时',
+    //     hh: '%d小时',
+    //     d: '1天',
+    //     dd: '%d天',
+    //     M: '1个月',
+    //     MM: '%d个月',
+    //     y: '1年',
+    //     yy: '%d年'
+    //   }
+    // })
   }
 
   // initializationStorePersist() {

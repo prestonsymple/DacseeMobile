@@ -1,5 +1,7 @@
+/* global navigator */
+
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, Modal } from 'react-native'
+import { Text, View, Animated, TouchableOpacity, ActivityIndicator } from 'react-native'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
@@ -13,8 +15,8 @@ import ModalDriverRespond from './passenger.modal.wait.driver'
 import HeaderSection from '../components/navigator.header.selector'
 import CircleBar from '../components/circle.bar'
 
-import { MapView as AMapView, Marker, Utils, Polyline } from '../../../native/AMap'
-import GoogleMapView from 'react-native-maps'
+import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
+import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Screen, Icons, Define, Session, UtilMath } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
@@ -28,8 +30,10 @@ const PIN_HEIGHT = ((height - 22) / 2)
 
 export default connect(state => ({ 
   ...state.booking, 
+  country: state.account.country,
   booking_id: state.storage.booking_id,
-  map_mode: state.application.map_mode
+  map_mode: state.application.map_mode,
+  vehicleGroups: state.account.vehicleGroups
 }))(class PassengerComponent extends Component {
 
   constructor(props) {
@@ -51,25 +55,53 @@ export default connect(state => ({
     this.count = 0
 
     this.ready = false
+    this.geoWatch = undefined
   }
 
   async componentWillReceiveProps(props) {
+    const { map_mode } = props
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode !== map_mode && map_mode === 'GOOGLEMAP') {
+      this.geoWatch = navigator.geolocation.watchPosition(position => {
+        const { coords: { latitude, longitude } } = position
+        this.props.dispatch(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
+        this.setState({ deniedAccessLocation: false })
+      }, (e) => console.log(e), { timeout: 1000 })
+    }
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode !== map_mode && map_mode === 'AMAP') {
+      this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
+      this.geoWatch = undefined
+    }
+
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.status !== props.status) {
-      this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
-      this.setState({ ready: true, polyline: [] })
+      if (this.map.animateTo) {
+        this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
+      } else {
+        let region = Object.assign({}, this.state.current, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
+        this.map.animateToRegion(region, 500)
+      }
+      this.setState({ polyline: [] })
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && this.props.status !== props.status) {
       const { destination, from } = props
-
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
       const mLng = ((from.coords.lng + destination.coords.lng) / 2)
 
-      const distance = await Utils.distance(from.coords.lat, from.coords.lng, destination.coords.lat, destination.coords.lng)
-      const zoom = this.mathDistanceZoom(distance)
-      this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
+      const distance = UtilMath.distance(from.coords.lng, from.coords.lat, destination.coords.lng, destination.coords.lat)
 
-      const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
+      if (this.map.animateTo) {
+        const zoom = this.mathDistanceZoom(distance)
+        this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
+      } else {
+        let region = Object.assign({}, { latitude: mLat, longitude: mLng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
+        this.map.animateToRegion(region, 500)
+      }
+
+      const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+      console.log(vehicleGroupsId)
+      const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}&vehicle_group_id=${vehicleGroupsId}`)
       this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
       this.setState({ polyline: [] })
     }
@@ -94,7 +126,6 @@ export default connect(state => ({
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD && props.driver !== this.props.driver && ('latitude' in props.driver)) {
       const { driver, destination } = props
-      console.log(driver, destination)
       const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
       const destinationCoords = [destination.coords.lng, destination.coords.lat]
 
@@ -114,9 +145,22 @@ export default connect(state => ({
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
+
     if (!this.props.booking_id) {
       this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
     }
+
+    if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode === 'GOOGLEMAP') {
+      this.geoWatch = navigator.geolocation.watchPosition(position => {
+        const { coords: { latitude, longitude } } = position
+        this.props.dispatch(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
+        this.onLocationListener({ nativeEvent: { latitude, longitude } })
+      }, (e) => console.log(e), { timeout: 1000 })
+    }
+  }
+
+  componentWillUnmount() {
+    this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
   }
 
   mathDistanceZoom(distance) {
@@ -143,12 +187,13 @@ export default connect(state => ({
     } = nativeEvent
 
     if (latitude === 0 || longitude === 0) return
-    if (!this.ready) {
+    if (!this.ready && this.props.map_mode.length > 0) {
       await InteractionManager.runAfterInteractions()
       if (this.map.animateTo) {
         this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
       } else {
-        this.map.animateToCoordinate({ latitude, longitude }, 500)
+        let region = Object.assign({}, { latitude, longitude }, { latitudeDelta: 0.003, longitudeDelta: 0.003 * (width / height) })
+        this.map.animateToRegion(region, 500)
       }
       this.ready = true
     }
@@ -265,12 +310,9 @@ export default connect(state => ({
       provider: 'google',
       showsMyLocationButton: false,
       showsUserLocation: true,
-      onUserLocationChange: this.onLocationListener.bind(this),
-      onPanDrag: ({ nativeEvent }) => {
-      },
 
       /* GLOBAL */
-      minZoomLevel: 8,
+      minZoomLevel: 4,
       showsScale: false,
       showsCompass: false,
       rotateEnabled: false,
@@ -312,26 +354,41 @@ export default connect(state => ({
         flex: 1, width
       }}>
         {
+          map_mode === '' && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="small" color="#333" />
+            </View>
+          )
+        }
+        {
           map_mode === 'AMAP' && (
             <AMapView style={{ flex: 1 }} {...MAP_SETTER}>
-              <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
-              <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
-              <Marker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
-              <Polyline coordinates={_polyline} width={6} color={'#666'} />
+              <AMarker image={'rn_amap_startpoint'} coordinate={from_coords} />
+              <AMarker image={'rn_amap_endpoint'} coordinate={destination_coords} />
+              <AMarker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
+              <APolyline coordinates={_polyline} width={6} color={'#666'} />
             </AMapView>
           )
         }
         {
           map_mode === 'GOOGLEMAP' && (
             <GoogleMapView style={{ flex: 1 }} {...MAP_SETTER}>
-
+              <GoogleMarker style={{ height: 20, width: 20 }} image={'rn_amap_startpoint'} coordinate={from_coords} />
+              <GoogleMarker image={'rn_amap_endpoint'} coordinate={destination_coords} />
+              <GoogleMarker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
+              <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
             </GoogleMapView>
           )
         }
 
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />)}
 
-        {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<MapPin timing={this.pin} />)}
+        {
+          (
+            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
+            map_mode.length > 0
+          ) && (<MapPin timing={this.pin} />)
+        }
 
         {
           (
