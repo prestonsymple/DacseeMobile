@@ -4,6 +4,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import { SafeAreaView } from 'react-navigation';
 
 import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
@@ -32,6 +33,142 @@ const MAP_DEFINE = {
 //   itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
 //   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 // })
+
+const BookingDetailButton = (props) => {
+  const { onPress, iconName, style } = props;
+  return(
+    <TouchableOpacity onPress={onPress}
+                      style={[{ backgroundColor: '#eee', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center'}, style]}>
+      { Icons.Generator.Material(iconName, 30, '#555') }
+    </TouchableOpacity>
+  )
+}
+const BookingDetailHeaderView = (props) => {
+  const { avatars, fullName, userId, phoneCountryCode, phoneNo } = props.passenger_info;
+  return(
+    <View style={{height:80, flexDirection: 'row', alignItems:'center', justifyContent:'space-between', borderTopLeftRadius:20, borderTopRightRadius: 20,
+      backgroundColor: 'white'
+    }}>
+      <View style={{flexDirection: 'row'}}>
+        <Image source={{ uri: avatars === undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
+               style={{ width: 54, height: 54 , borderRadius: 27, marginLeft: 14 }} />
+        <View>
+          <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{ fullName }</Text>
+          <Text style={{ marginLeft: 10, marginTop: 2, fontSize: TextFont.TextSize(14), color: 'rgba(0, 0, 0, 0.5)' }}>{ `User ID: ${userId}` }</Text>
+        </View>
+      </View>
+      <View style={{ flexDirection: 'row'}}>
+        <BookingDetailButton iconName={'textsms'} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}/>
+        <BookingDetailButton iconName={'phone'} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)}/>
+      </View>
+    </View>
+  )
+}
+const BookingDetailListItem = (props) => {
+  const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props;
+  return(
+    <View>
+    <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 38, width, backgroundColor:'white'}, style]}>
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:8,marginBottom: 8}}>
+        <View style={{width:40, alignItems:'flex-end'}}>
+        {icon}
+        </View>
+        <Text style={[{fontSize: TextFont.TextSize(17), marginLeft: 12, width: width - 105, fontWeight:'bold'}, titleStyle]}>{title}</Text>
+      </View>
+      {
+        linkingIconName
+          ?
+          <TouchableOpacity style={[{width: 40}, rightViewStyle]} onPress={onPress}>
+            <Image style={[{height: 30, width: 30, marginTop: 4}, linkingIconStyle]} source={linkingIconName}/>
+          </TouchableOpacity>
+          :
+          null
+      }
+    </View>
+      <View style={{backgroundColor: '#d7d7d7', width, height: 0.5}}/>
+
+    </View>
+  )
+}
+
+const BookingDetailView = (props) => {
+  const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail;
+  const time = moment(booking_at).format('YYYY-MM-D HH:mm');
+  return(
+    <View style={{backgroundColor: 'transparent', height: height / 3 * 2 }}>
+      <BookingDetailHeaderView passenger_info={passenger_info}/>
+      <ScrollView>
+        <BookingDetailListItem title={time}
+                               titleStyle={{color:'#fff'}}
+                               icon={<Image style={{height:30,width:30}}
+                                            source={Resources.image.booking_detail_bell}/>}
+                               style={{backgroundColor:'#ff2239'}}
+        />
+        <BookingDetailListItem title={from.address}
+                               icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#1ab2fd'}}/>}
+                               linkingIconName={Resources.image.booking_detail_linking}
+                               onPress={_ => alert('from')}
+        />
+        <BookingDetailListItem title={destination.address}
+                               icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#ffb539'}}/>}
+                               linkingIconName={Resources.image.booking_detail_linking}
+                               onPress={_ => alert('destination')}
+        />
+        <BookingDetailListItem title={<FormattedMessage id={'car_standard'}/>}
+                               icon={<Image style={{height:14,width:14, marginRight:8}}
+                                            source={Resources.image.joblist_car}/>}
+        />
+        <BookingDetailListItem title={payment_method == 'Cash' ? '现金' : payment_method}
+                               icon={<Image style={{height:14,width:14, marginRight:8}}
+                                            source={Resources.image.joblist_payment}/>}
+        />
+        <BookingDetailListItem title={ <FormattedMessage id={'note_to_driver'}/>}
+                               icon={<Image style={{height:14,width:14, marginRight:8}}
+                                            source={Resources.image.booking_detail_info}/>}
+        />
+      </ScrollView>
+    </View>
+  )
+}
+
+const BookingDetailBottomView = (props) => {
+  const fare  = props.fare;
+
+  const getOption = props.getOption;
+
+  const i18n = props.i18n;
+  const optionObject = props.optionObject;
+  const chineseStatus = props.chineseStatus;
+
+  return(
+    <View style={[styles.JobDetailWrap,{ height: 61, width, backgroundColor:'white' }]}>
+      <View style={{ height: 1, backgroundColor: '#d7d7d7' }} />
+      <View style={{flexDirection: 'row', flex:1, justifyContent: 'space-between'}}>
+        <View style={{ justifyContent:'center'}}>
+          <Text style={{fontSize: 15, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
+            RM
+            <Text style={{fontSize: 27, fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
+          </Text>
+        </View>
+
+        {
+          !getOption ?
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
+              <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 10 }} onPress={ optionObject.leftAction }>
+                <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
+              </Button>
+              <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
+                <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
+              </Button>
+            </View> :
+            <View style={{justifyContent:'center', alignItems: 'center', marginRight:20 }}>
+              <Text style={{ fontSize: TextFont.TextSize(15) ,fontWeight: 'bold',  }}>{ chineseStatus}</Text>
+            </View>
+        }
+      </View>
+    </View>
+  )
+}
 
 export default connect(state => ({
   i18n: state.intl.messages || {},
@@ -219,7 +356,43 @@ export default connect(state => ({
       }
     }
   }
+
+  componentDidMount() {
+    // console.log(this.props.navigation.state.params.jobDetail);
+  }
+
   render() {
+    const { destination, from, fare } = this.props.navigation.state.params.jobDetail;
+    const { i18n } = this.props;
+    const { status } = this.state.detail
+    const optionObject = this._getStatus(status);
+    const getOption = this._getOptionable(status);
+    const chineseStatus = this._statusInChinese(status);
+
+    return(
+      <SafeAreaView style={{flex:1}}>
+        <MapView
+          {...MAP_DEFINE}
+          style={{ height: height / 3  - 64 }}
+          mapType={'standard'}
+          coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }}
+          zoomLevel={ 10 }
+          // region={{ latitude: from.coords.lat, longitude: from.coords.lng, latitudeDelta: destination.coords.lat, longitudeDelta: destination.coords.lng }}
+          ref={e => this.map = e}
+        >
+          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} />
+          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} />
+        </MapView>
+
+        <BookingDetailView jobDetail={this.props.navigation.state.params.jobDetail} i18n={i18n} detail={this.state.detail} optionObject={optionObject}/>
+
+        <BookingDetailBottomView fare={fare} getOption={getOption} i18n={i18n} optionObject={optionObject} chineseStatus={chineseStatus}/>
+
+      </SafeAreaView>
+    )
+  }
+
+  render1() {
     const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = this.props.navigation.state.params.jobDetail
     const { status } = this.state.detail
     const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
