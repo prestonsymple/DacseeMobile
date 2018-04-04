@@ -13,6 +13,12 @@ function* initializationFlow(action) {
     status: state.account.status, 
     foreground: state.application.application_status === 'active'
   }))
+
+  try {
+    yield call(oncePosition)
+  } catch (e) {
+    navigator.geolocation.requestAuthorization()
+  }
   
   if (!status || !foreground) return;
 
