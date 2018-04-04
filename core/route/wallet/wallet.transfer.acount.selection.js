@@ -26,12 +26,13 @@ const styles = StyleSheet.create({
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default connect( state=>({
-  // ...state.wallet
+  i18n: state.intl.messages || {}
 }))(class WalletTransferSelectionScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '转账-选择账户'
+      title: reducer.intl.messages.transfer_account_select
     }
   }
 

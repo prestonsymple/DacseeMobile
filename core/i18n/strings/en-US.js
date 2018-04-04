@@ -192,6 +192,8 @@ const en_US = {
 
   logout: 'Logout',
 
+  myjob: 'My Job',
+
   retry: 'Retry',
   album: 'Album',
   pull_refresh: 'Pull to refresh',

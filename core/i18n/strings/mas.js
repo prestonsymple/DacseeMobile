@@ -191,6 +191,8 @@ const mas = {
 
   logout: 'Tukar akaun',
 
+  myjob: 'Senarai Tugasan',
+
   retry: 'Cuba semula',
   album: 'Album',
   pull_refresh: 'Tarik untuk menyegarkan semula',

@@ -26,13 +26,15 @@ const styles = StyleSheet.create({
 })
 
 export default connect(state => ({
-  ...state.wallet
+  ...state.wallet,
+  i18n: state.intl.messages || {}
 }))(class WalletDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '钱包详情'
+      title: reducer.intl.messages.wallet_detail
     }
   }
 
@@ -46,7 +48,7 @@ export default connect(state => ({
   // }
 
   render() {
-    const { selected_wallet } = this.props
+    const { selected_wallet,i18n } = this.props
     const { name, country, countryFlag, availableAmount } = selected_wallet
     let countryName=name.split(' ')[0];
     let walletName=name.split(' ')[1];

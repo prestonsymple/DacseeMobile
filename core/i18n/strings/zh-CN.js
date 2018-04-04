@@ -71,8 +71,8 @@ const zh_CN = {
   special: '专车',
   please_enter_keywords: '请输入关键词以检索',
   cancel: '取消',
-  del_friend_confirm:'确认解除朋友关系吗？该操作不可恢复', //TODO
-  already_del_friend:'朋友身份已解除',  //TODO
+  del_friend_confirm:'确认解除朋友关系吗？该操作不可恢复',
+  already_del_friend:'朋友身份已解除',
   online: '上线',
   no_job: '暂无行程',
   to: '到',   
@@ -82,7 +82,7 @@ const zh_CN = {
   book_time: '日期时间',
   fare: '支付金额',
   order_detail: '行程详情',
-  pay_comment:'支付及评价', //TODO
+  pay_comment:'支付及评价',
   car_standard: '标准车型',
   cash: '现金',
   note_to_driver: '提示信息',
@@ -201,11 +201,21 @@ const zh_CN = {
   login_select_account: '选择您的账号',
   social_register: '第三方账号注册',
 
+  myjob: '我的工作',
+
+
+  //TODO
   unable_connect_server:'无法连接到服务器',
   active:'激活',
   inactive:'未激活',
   enter_correct_email_phone:'请输入正确的邮箱或手机号',
   full_name_two_chart:'全名最小为2个字符',
+  wallet_detail:'钱包详情',
+  lack_balance:'余额不足',
+  transfer_account_select:'转账-选择账户',
+  pls_enter_correct_amount:'请输入正确的金额',
+  pls_enter_correct_account:'请输入收款账号',
+  transfer_confirm:'转账确认'
 }
 
 export default zh_CN

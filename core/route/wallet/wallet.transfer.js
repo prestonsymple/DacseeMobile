@@ -28,9 +28,10 @@ export default connect(state => ({
 }))(class WalletTransferScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '转账'
+      title: reducer.intl.messages.transfer
     }
   }
 
@@ -174,7 +175,13 @@ export default connect(state => ({
             <Text style={{ fontSize: TextFont.TextSize(12), opacity: 0.5 ,marginBottom:5}}>
               <FormattedMessage id={'remarks'} />
             </Text>
-            <Input style={{ paddingVertical: 10, fontSize: TextFont.TextSize(14), height: 70 ,textAlignVertical: 'top'}} multiline={true} placeholder={'请输入备注'} returnKeyType={'done'} onChangeText={ (value) => this.setState({ remark: value}) }/>
+            <FormattedMessage id={'pls_enter_remarks'}>
+              {
+                msg => (
+                  <Input style={{ paddingVertical: 10, fontSize: TextFont.TextSize(14), height: 70 ,textAlignVertical: 'top'}} multiline={true} placeholder={msg} returnKeyType={'done'} onChangeText={ (value) => this.setState({ remark: value}) }/>
+                )
+              }
+            </FormattedMessage>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>

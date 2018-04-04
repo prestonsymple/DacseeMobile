@@ -17,8 +17,8 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('TripList')
 }, {
   key: '2',
-  name: 'mytrip',
-  icon: Icons.Generator.Material('data-usage', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
+  name: 'myjob',
+  icon: Icons.Generator.Material('directions-car', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('JobsList')
 }, {
   key: '3',
