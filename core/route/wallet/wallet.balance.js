@@ -39,6 +39,7 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
+    console.log('重载路由')
     // await InteractionManager.runAfterInteractions()
     this._fetchData()
   }

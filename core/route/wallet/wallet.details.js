@@ -36,18 +36,22 @@ export default connect(state => ({
     }
   }
 
-  constructor(props) {
-    super(props)
+  // constructor(props) {
+  //   super(props)
 
-    this.state = {
-      walletInfo: this.props.selected_wallet
-    }
-  }
+  //   this.state = {
+  //     walletInfo: this.props.selected_wallet
+  //   }
+  //   console.log('选中的钱包', props.selected_wallet)
+  // }
 
   render() {
-    const { name, country, countryFlag } = this.state.walletInfo;
+    const { selected_wallet } = this.props
+    const { name, country, countryFlag, availableAmount } = selected_wallet
     let countryName=name.split(' ')[0];
     let walletName=name.split(' ')[1];
+
+    console.log(availableAmount)
     return (
       <View style={{ backgroundColor: '#f8f8f8', flex: 1  }}>
         <View style={{ width: width, height: 150, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
@@ -58,8 +62,7 @@ export default connect(state => ({
           <Text style={{ fontSize:TextFont.TextSize(13), paddingTop: 10 }}>{ countryName }</Text>
           <Text style={{ fontSize:TextFont.TextSize(13), color: '#a5a5a5' }}>{ walletName }</Text>
         </View>
-        <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer')} walletInfo={ this.state.walletInfo }/>
-        {/* <ScrollTabView onNavigate={ () => this.props.navigation.navigate('WalletTransfer', { walletInfo: this.state.walletInfo})} walletInfo={ this.state.walletInfo }/> */}
+        <ScrollTabView onNavigate={ () => availableAmount == 0 ? this.props.dispatch(application.showMessage('余额不足')) : this.props.navigation.navigate('WalletTransfer')} walletInfo={ selected_wallet }/>        
       </View>
     )
   }
@@ -75,18 +78,6 @@ class ScrollTabView extends Component {
     }
   }
 
-  // 获取页面
-  // _onMomentumScrollBeginAndEnd = (e) => {
-  //   let offsetX = e.nativeEvent.contentOffset.x;
-  //   let page = Math.round(offsetX / width);
-  //   if (this.state.currentPage !== page) {
-  //     console.log('当前页面-->'+page);
-  //     this.setState({
-  //       currentPage: page,
-  //     });
-  //   }
-  // }
-
   _goToPage(pageNum, scrollAnimation = true) {
     if (this._scrollView && this._scrollView.scrollTo) {
       this._scrollView.scrollTo({x: pageNum * width, scrollAnimation});
@@ -96,10 +87,12 @@ class ScrollTabView extends Component {
     }
   }
   _renderTabView() {
+    let array = ['overView', 'transaction']
+    if(this.props.walletInfo.type == 'DS-US') array.push('floating_comm')
     return (
       <View style={{ width: width, height: 50, flexDirection: 'row', backgroundColor: 'white'}} >
         {
-          ['overView', 'transaction', 'floating_comm'].map((item, index) => {
+          array.map((item, index) => {
             return (
               <Button key={ index }
                 style={ [{ flex: 1, justifyContent: 'center', alignItems:'center' }, index == this.state.currentPage ? { borderBottomWidth: 3, borderColor: '#FFB639' } : {}]}
@@ -121,6 +114,10 @@ class ScrollTabView extends Component {
   }
 
   _renderScrollContent() {
+    console.log(this.props.walletInfo)
+    let array = [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>,
+      <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>]
+    if(this.props.walletInfo.type == 'DS-US') array.push(<IncomeList key={3} walletInfo={ this.props.walletInfo }/>)
     return (
       <ScrollView
         ref={ (ref) => {
@@ -136,9 +133,7 @@ class ScrollTabView extends Component {
 
       >
         {
-          [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>,
-            <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>,
-            <IncomeList key={3} walletInfo={ this.props.walletInfo }/>].map((item, index) => {
+          array.map((item, index) => {
             return (
               item
             )
@@ -161,11 +156,6 @@ class ScrollTabView extends Component {
 
 // OverView
 class OverView extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
   _renderItem(obj) {
     return (
       <View key={obj.name} style={{ marginHorizontal: 20, height: 44, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -179,7 +169,7 @@ class OverView extends Component {
 
   render() {
     const { availableAmount, floatingDriverAmount, floatingPassengerAmount } = this.props.walletInfo
-    console.log(availableAmount, floatingDriverAmount, floatingPassengerAmount)
+    // console.log(availableAmount, floatingDriverAmount, floatingPassengerAmount)
     return (
       <View style={{ flex: 1, width: width, marginTop: 20 }}>
         {
