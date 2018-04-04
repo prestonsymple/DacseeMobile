@@ -19,7 +19,8 @@ const { width } = Screen.window
 export default connect(state => ({
   booking_status: state.booking.status,
   jobs_status: state.driver.status,
-  app_status: state.application.application_status
+  app_status: state.application.application_status,
+  gps_access: state.application.gps_access
 }))(class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -87,7 +88,7 @@ export default connect(state => ({
       headerLeft: (
         <TouchableOpacity {...SETTER}>
           {
-            (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (Icons.Generator.Octicons('three-bars', 23, 'white', { style: { left: 8 } }))
+            (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (Icons.Generator.Material('apps', 23, 'white', { style: { left: 8 } }))
           }
           {
             (
@@ -102,17 +103,9 @@ export default connect(state => ({
     return maps
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      deniedAccessLocation: false
-    }
-  }
-
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
-    this.checkLocationPermission()
   }
 
   componentWillUnmount() {
@@ -124,25 +117,11 @@ export default connect(state => ({
     if (this.props.booking_status !== booking_status) {
       this.props.navigation.setParams({ status: booking_status })
     }
-
-    if (this.props.app_status !== props.app_status && props.app_status === 'active') {
-      this.checkLocationPermission()
-    }
-  }
-
-  checkLocationPermission() {
-    navigator.geolocation.getCurrentPosition(position => {
-      const { coords: { latitude, longitude } } = position
-      this.props.dispatch(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
-      this.setState({ deniedAccessLocation: false })
-    }, (e) => {
-      if (e.code === 1 || e.code === 2) this.setState({ deniedAccessLocation: true })
-    }, { timeout: 1000 })
   }
 
   render() {
-    const { deniedAccessLocation } = this.state
-    return deniedAccessLocation ? (
+    const { gps_access } = this.props
+    return !gps_access ? (
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />

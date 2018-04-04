@@ -16,6 +16,10 @@ export default {
     booking_detail_bell: require('./images/booking_detail_bell.png'),
     booking_detail_linking: require('./images/booking_detail_linking.png'),
     booking_detail_info: require('./images/booking_detail_info.png'),
+
+    map_from_pin: require('./images/rn_amap_startpoint.png'),
+    map_destination_pin: require('./images/rn_amap_endpoint.png'),
+    map_car_pin: require('./images/rn_car.png')
   },
   
   animation: {

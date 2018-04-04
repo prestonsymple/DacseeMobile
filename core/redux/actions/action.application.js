@@ -34,5 +34,8 @@ export default {
   hideHUD: createAction('APPLICATION_HIDE_HUD'),
 
   setAgentSvr: createAction('APPLICATION_SET_AGENT_SVR'),
-  setMapMode: createAction('APPLICATION_SET_MAP_MODE')
+  setMapMode: createAction('APPLICATION_SET_MAP_MODE'),
+
+
+  setValues: createAction('!!APPLICATION_SET_VALUES!!')
 }

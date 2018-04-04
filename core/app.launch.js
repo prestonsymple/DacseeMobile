@@ -30,10 +30,6 @@ class I18nLoadView extends PureComponent {
     console.log(props)
   }
 
-  componentWillReceiveProps(props) {
-    console.log(props)
-  }
-
   render() {
     return (
       <View style={{ flex: 1 }}>

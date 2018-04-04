@@ -26,13 +26,13 @@ const initialState = {
 
   login_stage: 0,
 
-  core_mode: 'passenger',
-
   hud_modal_visible: false,
 
-  map_mode: 'AMAP',
+  core_mode: 'passenger', // 首页TAB
+  map_mode: '', // 地图模块
+  gps_access: true, // gps权限
 
-  api_maps: {
+  api_maps: { // API代理映射
     main: [
       'https://user-dev.dacsee.io/',
       'https://circle-dev.dacsee.io/',
@@ -74,14 +74,11 @@ export default handleActions({
   [driver.cancelJobs]: (state) => Object.assign({}, state, { show_driver_order: false }),
 
   [application.setCoreMode]: (state, { payload }) => Object.assign({}, state, { core_mode: payload }),
-  // [application.throwErrorMessage]: (state, { payload }) => {
-  //   const clone = state.throw_error
-  //   clone.push(payload)
-  //   // Object.assign({}, state, { })
-  //   // throw_error: _.cloneDeep(state.throw_error)
-  // },
+  [application.setMapMode]: (state, { payload }) => Object.assign({}, state, { map_mode: payload }),
 
   [application.showHUD]: (state) => Object.assign({}, state, { hud_modal_visible: true }),
   [application.hideHUD]: (state) => Object.assign({}, state, { hud_modal_visible: false }),
+
+  [application.setValues]: (state, { payload }) => Object.assign({}, state, payload),
 
 }, initialState)

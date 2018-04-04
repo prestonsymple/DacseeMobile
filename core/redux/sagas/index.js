@@ -6,12 +6,13 @@ import CodePush from 'react-native-code-push'
 import Toast from 'react-native-root-toast'
 
 import { application, account } from '../actions'
-import { System } from '../../utils'
+import { System, Session } from '../../utils'
 import loginSaga from './saga.login'
 import passengerSaga from './saga.passenger'
 import driverSaga from './saga.driver'
 import circleSaga from './saga.circle'
 import networkSaga from './saga.network'
+import initSaga from './saga.init'
 
 
 /******************************************************************************/
@@ -86,6 +87,7 @@ export default function* sagaService() {
   yield all([
     // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
     // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
+    fork(initSaga),
     fork(watchAndroidBackButton),
     fork(watchShowMessage),
 
