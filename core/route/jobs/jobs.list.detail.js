@@ -371,7 +371,7 @@ export default connect(state => ({
       }
     }
   }
-  
+
   render() {
     const { destination, from, fare } = this.props.navigation.state.params.jobDetail;
     const { i18n } = this.props;

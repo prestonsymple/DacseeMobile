@@ -10,7 +10,9 @@ const initialState = {
   status: false,
   authToken: '',
   user: {},
-  location: { lat: 0, lng: 0, latitude: 0, longitude: 0 }
+  location: { lat: 0, lng: 0, latitude: 0, longitude: 0 },
+  country: '',
+  language: ''
 }
 
 export default handleActions({

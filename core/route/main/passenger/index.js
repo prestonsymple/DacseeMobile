@@ -1,5 +1,7 @@
+/* global navigator */
+
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, Modal } from 'react-native'
+import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
@@ -13,8 +15,8 @@ import ModalDriverRespond from './passenger.modal.wait.driver'
 import HeaderSection from '../components/navigator.header.selector'
 import CircleBar from '../components/circle.bar'
 
-import { MapView as AMapView, Marker, Utils, Polyline } from '../../../native/AMap'
-import GoogleMapView from 'react-native-maps'
+import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
+import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Screen, Icons, Define, Session, UtilMath } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
@@ -22,14 +24,17 @@ import TimePicker from '../../../components/timePicker'
 import SelectPay from '../../../components/selectPay'
 const { height, width } = Screen.window
 
-const DEFAULT_COORDS = { lat: 0, lng: 0, latitude: 0, longitude: 0 }
+const DEFAULT_COORDS = { lat: 84.764846, lng: 44.138130, latitude: 84.764846, longitude: 44.138130 }
 
 const PIN_HEIGHT = ((height - 22) / 2)
 
 export default connect(state => ({ 
   ...state.booking, 
+  country: state.account.country,
   booking_id: state.storage.booking_id,
-  map_mode: state.application.map_mode
+  map_mode: state.application.map_mode,
+  vehicleGroups: state.booking.vehicleGroups,
+  location: state.account.location,
 }))(class PassengerComponent extends Component {
 
   constructor(props) {
@@ -41,7 +46,6 @@ export default connect(state => ({
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
       polyline: []
     }
-    this.currentLoc = {}
     this.timer = null
     this.pin = new Animated.Value(0)
     this.board = new Animated.Value(0)
@@ -51,26 +55,49 @@ export default connect(state => ({
     this.count = 0
 
     this.ready = false
+    this.geoWatch = undefined
   }
 
   async componentWillReceiveProps(props) {
+    const { map_mode } = props
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode !== map_mode && map_mode === 'GOOGLEMAP') {
+      this.geoWatch = navigator.geolocation.watchPosition(this.geoWatchFunction.bind(this), (e) => console.log(e), { timeout: 1000 })
+    }
+
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode !== map_mode && map_mode === 'AMAP') {
+      this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
+      this.geoWatch = undefined
+    }
+
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.status !== props.status) {
-      this.map.animateTo({ zoomLevel: 16, coordinate: this.state.current }, 500)
-      this.setState({ ready: true, polyline: [] })
+      if (this.map.animateTo) {
+        this.map.animateTo({ zoomLevel: 16, coordinate: props.location }, 500)
+      } else {
+        let region = Object.assign({}, props.location, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
+        this.map.animateToCoordinate(region, 500)
+      }
+      this.setState({ polyline: [] })
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && this.props.status !== props.status) {
       const { destination, from } = props
-
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
       const mLng = ((from.coords.lng + destination.coords.lng) / 2)
 
-      const distance = await Utils.distance(from.coords.lat, from.coords.lng, destination.coords.lat, destination.coords.lng)
-      const zoom = this.mathDistanceZoom(distance)
-      this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
+      const distance = UtilMath.distance(from.coords.lng, from.coords.lat, destination.coords.lng, destination.coords.lat)
 
-      const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}`)
-      this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle }))
+      if (this.map.animateTo) {
+        const zoom = this.mathDistanceZoom(distance)
+        this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
+      } else {
+        let region = Object.assign({}, { latitude: mLat, longitude: mLng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
+        this.map.animateToCoordinate(region, 500)
+      }
+
+      const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+      const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}&vehicle_group_id=${vehicleGroupsId}`)
+      this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle || fare['朋友圈'] }))
       this.setState({ polyline: [] })
     }
 
@@ -79,13 +106,17 @@ export default connect(state => ({
       const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
       const passengerCoords = [from.coords.lng, from.coords.lat]
 
-      const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${passengerCoords.join(',')}`)
-      const lnglat = data.map(pipe => {
-        const coords = pipe.split(',')
-        return { longitude: parseFloat(coords[0]), latitude: parseFloat(coords[1]) }
-      })
-      this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
-      this.map.animateTo({ zoomLevel: 15, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
+      if (this.map.animateTo) {
+        const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${passengerCoords.join(',')}`)
+        const lnglat = data.map(pipe => {
+          const coords = pipe.split(',')
+          return { longitude: parseFloat(coords[0]), latitude: parseFloat(coords[1]) }
+        })
+        this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
+        this.map.animateTo({ zoomLevel: 15, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
+      } else {
+        this.map.animateToCoordinate({ latitude: driverCoords[1], longitude: driverCoords[0] }, 500)
+      }
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED && this.props.status !== props.status) {
@@ -94,17 +125,20 @@ export default connect(state => ({
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD && props.driver !== this.props.driver && ('latitude' in props.driver)) {
       const { driver, destination } = props
-      console.log(driver, destination)
       const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
       const destinationCoords = [destination.coords.lng, destination.coords.lat]
 
-      const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${destinationCoords.join(',')}`)
-      const lnglat = data.map(pipe => {
-        const coords = pipe.split(',')
-        return { longitude: parseFloat(coords[0]), latitude: parseFloat(coords[1]) }
-      })
-      this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
-      this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
+      if (this.map.animateTo) {
+        const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${destinationCoords.join(',')}`)
+        const lnglat = data.map(pipe => {
+          const coords = pipe.split(',')
+          return { longitude: parseFloat(coords[0]), latitude: parseFloat(coords[1]) }
+        })
+        this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
+        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
+      } else {
+        this.map.animateToCoordinate({ latitude: driverCoords[1], longitude: driverCoords[0] }, 500)
+      }
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_HAVE_COMPLETE && this.props.status !== props.status) {
@@ -114,9 +148,24 @@ export default connect(state => ({
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
+
     if (!this.props.booking_id) {
       this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
     }
+
+    if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode === 'GOOGLEMAP') {
+      this.geoWatch = navigator.geolocation.watchPosition(this.geoWatchFunction.bind(this), (e) => console.log(e), { timeout: 1000 })
+    }
+  }
+
+  geoWatchFunction(position) {
+    const { coords: { latitude, longitude } } = position
+    this.props.dispatch(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
+    this.onLocationListener({ nativeEvent: { latitude, longitude } })
+  }
+
+  componentWillUnmount() {
+    this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
   }
 
   mathDistanceZoom(distance) {
@@ -142,13 +191,14 @@ export default connect(state => ({
       longitude = nativeEvent.coordinate.longitude 
     } = nativeEvent
 
+
     if (latitude === 0 || longitude === 0) return
-    if (!this.ready) {
+    if (!this.ready && this.props.map_mode.length > 0) {
       await InteractionManager.runAfterInteractions()
       if (this.map.animateTo) {
         this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
       } else {
-        this.map.animateToCoordinate({ latitude, longitude }, 500)
+        this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
       }
       this.ready = true
     }
@@ -164,6 +214,7 @@ export default connect(state => ({
       latitude = nativeEvent.coordinate.latitude, 
       zoomLevel = 12 
     } = nativeEvent
+
     if (this.props.status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) return
     /* Fix Offset */
     const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
@@ -247,7 +298,7 @@ export default connect(state => ({
   }
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode } = this.props
+    const { status, from, destination, map_mode, location } = this.props
 
     const MAP_SETTER = {
       /* A MAP */
@@ -264,13 +315,13 @@ export default connect(state => ({
       cacheEnabled: true,
       provider: 'google',
       showsMyLocationButton: false,
-      showsUserLocation: true,
-      onUserLocationChange: this.onLocationListener.bind(this),
-      onPanDrag: ({ nativeEvent }) => {
+      initialRegion: {
+        latitude: location.lat, longitude: location.lng, 
+        latitudeDelta: 0.005, longitudeDelta: 0.005 * (width / height)
       },
 
       /* GLOBAL */
-      minZoomLevel: 8,
+      minZoomLevel: 4,
       showsScale: false,
       showsCompass: false,
       rotateEnabled: false,
@@ -278,6 +329,7 @@ export default connect(state => ({
     }
 
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
+      MAP_SETTER.showsUserLocation = true
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
       MAP_SETTER.onPanDrag = this.onStatusChangeListener.bind(this)
     }
@@ -302,7 +354,7 @@ export default connect(state => ({
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
     /* CAR POLYLINE */
-    let _polyline = polyline.length === 0 ? [{ latitude: 0, longitude: 0 }, { latitude: 0, longitude: 0 }] : polyline
+    let _polyline = polyline.length === 0 ? [DEFAULT_COORDS, DEFAULT_COORDS] : polyline
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
@@ -312,26 +364,47 @@ export default connect(state => ({
         flex: 1, width
       }}>
         {
+          map_mode === '' && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="small" color="#333" style={{ top: -64 }} />
+            </View>
+          )
+        }
+        {
           map_mode === 'AMAP' && (
             <AMapView style={{ flex: 1 }} {...MAP_SETTER}>
-              <Marker image={'rn_amap_startpoint'} coordinate={from_coords} />
-              <Marker image={'rn_amap_endpoint'} coordinate={destination_coords} />
-              <Marker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
-              <Polyline coordinates={_polyline} width={6} color={'#666'} />
+              <AMarker image={'rn_amap_startpoint'} coordinate={from_coords} />
+              <AMarker image={'rn_amap_endpoint'} coordinate={destination_coords} />
+              <AMarker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
+              <APolyline coordinates={_polyline} width={6} color={'#666'} />
             </AMapView>
           )
         }
         {
           map_mode === 'GOOGLEMAP' && (
             <GoogleMapView style={{ flex: 1 }} {...MAP_SETTER}>
-
+              <GoogleMarker coordinate={from_coords}>
+                <Image source={Resources.image.map_from_pin} />
+              </GoogleMarker>
+              <GoogleMarker coordinate={destination_coords}>
+                <Image source={Resources.image.map_destination_pin} />
+              </GoogleMarker>
+              <GoogleMarker coordinate={_polyline[0]}>
+                <Image source={Resources.image.map_car_pin} />
+              </GoogleMarker>
+              {/* <GooglePolyline coordinates={_polyline} width={6} color={'#666'} /> */}
             </GoogleMapView>
           )
         }
 
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />)}
 
-        {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<MapPin timing={this.pin} />)}
+        {
+          (
+            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
+            map_mode.length > 0
+          ) && (<MapPin timing={this.pin} />)
+        }
 
         {
           (

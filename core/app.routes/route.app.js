@@ -21,6 +21,7 @@ import {
 
 import {
   JobsListScreen,
+  JobsOnlineScreen,
   JobsListDetailScreen
 } from '../route/jobs'
 
@@ -94,6 +95,7 @@ const HomeScreen = {
 
   JobsList: { screen: JobsListScreen },
   JobsListDetail: { screen: JobsListDetailScreen },
+  JobsOnline: { screen: JobsOnlineScreen },
 
   TripList: { screen: TripListScreen },
   TripListDetail: { screen: TripListDetailScreen },

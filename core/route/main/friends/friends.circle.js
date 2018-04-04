@@ -269,7 +269,7 @@ class ItemPerson extends Component {
   render() {
     const { onPressDetail = () => {}, onPressCheck = () => {}, data } = this.props
     const { _id, friend_id, friend_info, checked } = data
-    const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
+    const { avatars = [{ url: '' }], email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
 
     return (
       <TouchableOpacity onPress={() => onPressDetail()} activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
@@ -300,7 +300,7 @@ class RequestorPerson extends Component {
   render() {
     const { onPressAccept = () => {}, onPressReject = () => {}, data } = this.props
     const { _id, requestor_id, requestor_info } = data
-    const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = requestor_info
+    const { avatars = [{ url: '' }], email, fullName, phoneCountryCode, phoneNo, userId } = requestor_info
 
     return (
       <View activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>

@@ -20,7 +20,9 @@ export default {
     booking_detail_payment: require('./images/booking_detail_payment.png'),
     booking_detail_phone: require('./images/booking_detail_phone.png'),
     booking_detail_message: require('./images/booking_detail_message.png'),
-
+    map_from_pin: require('./images/rn_amap_startpoint.png'),
+    map_destination_pin: require('./images/rn_amap_endpoint.png'),
+    map_car_pin: require('./images/rn_car.png')
   },
   
   animation: {
