@@ -75,7 +75,7 @@ export default connect(state => ({
         this.map.animateTo({ zoomLevel: 16, coordinate: props.location }, 500)
       } else {
         let region = Object.assign({}, props.location, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
-        this.map.animateToRegion(region, 500)
+        this.map.animateToCoordinate(region, 500)
       }
       this.setState({ polyline: [] })
     }
@@ -91,8 +91,8 @@ export default connect(state => ({
         const zoom = this.mathDistanceZoom(distance)
         this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
       } else {
-        let region = Object.assign({}, { latitude: mLat, longitude: mLng }, { latitudeDelta: 1, longitudeDelta: 1 * (width / height) })
-        this.map.animateToRegion(region, 500)
+        let region = Object.assign({}, { latitude: mLat, longitude: mLng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
+        this.map.animateToCoordinate(region, 500)
       }
 
       const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
@@ -198,8 +198,6 @@ export default connect(state => ({
       if (this.map.animateTo) {
         this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
       } else {
-        let region = Object.assign({}, { latitude, longitude }, { latitudeDelta: 0.003, longitudeDelta: 0.003 * (width / height) })
-        this.map.animateToRegion(region, 500)
         this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
       }
       this.ready = true
@@ -216,6 +214,7 @@ export default connect(state => ({
       latitude = nativeEvent.coordinate.latitude, 
       zoomLevel = 12 
     } = nativeEvent
+
     if (this.props.status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) return
     /* Fix Offset */
     const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
@@ -299,7 +298,7 @@ export default connect(state => ({
   }
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode } = this.props
+    const { status, from, destination, map_mode, location } = this.props
 
     const MAP_SETTER = {
       /* A MAP */
@@ -316,7 +315,10 @@ export default connect(state => ({
       cacheEnabled: true,
       provider: 'google',
       showsMyLocationButton: false,
-      showsUserLocation: true,
+      initialRegion: {
+        latitude: location.lat, longitude: location.lng, 
+        latitudeDelta: 0.005, longitudeDelta: 0.005 * (width / height)
+      },
 
       /* GLOBAL */
       minZoomLevel: 4,
@@ -327,6 +329,7 @@ export default connect(state => ({
     }
 
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
+      MAP_SETTER.showsUserLocation = true
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
       MAP_SETTER.onPanDrag = this.onStatusChangeListener.bind(this)
     }
@@ -355,10 +358,6 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
-
-    console.log(from_coords)
-    console.log(destination_coords)
-    console.log(_polyline)
 
     return (
       <View style={{ 
