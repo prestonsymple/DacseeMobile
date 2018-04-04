@@ -12,7 +12,11 @@ export default {
     floating_passenger: require('./images/passenger.png'),
     joblist_car: require('./images/joblist_car.png'),
     joblist_payment: require('./images/joblist_payment.png'),
-    joblist_empty: require('./images/joblist_empty.png')
+    joblist_empty: require('./images/joblist_empty.png'),
+
+    map_from_pin: require('./images/rn_amap_startpoint.png'),
+    map_destination_pin: require('./images/rn_amap_endpoint.png'),
+    map_car_pin: require('./images/rn_car.png')
   },
   
   animation: {
