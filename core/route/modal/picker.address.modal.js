@@ -120,7 +120,7 @@ export default connect(state => ({
         const { lat, lng } = location
         
         if (map_mode === 'GOOGLEMAP') {
-          const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keywords.replace(' ', '+')}&key=AIzaSyALLnpXjwuJyfuq884msD20gIGDdYxKdX0`)
+          const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${1000 * 100}&keyword=${keywords}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
           const { results } = data
           const resultMap = results.map(pipe => ({
             placeId: pipe.place_id,
@@ -129,7 +129,7 @@ export default connect(state => ({
               lat: pipe.geometry.location.lat
             },
             name: pipe.name,
-            address: pipe.formatted_address
+            address: pipe.vicinity
           }))
           this.setState({ searchRet: dataContrast.cloneWithRows(resultMap) }) 
         } else {

@@ -133,8 +133,6 @@ class Core extends PureComponent {
           if (_status === 'PENDING_ACCEPTANCE') { // 等待接受的订单
             store.dispatch(jobs.newJobs(booking_id))
           } else if (_status === 'CANCELLED_BY_PASSENGER') { // 由乘客取消
-            store.dispatch(jobs.cancelJobs())
-            store.dispatch(application.showMessage('订单已由乘客取消'))
           } else if (_status === 'COMPLETED') { // 完成订单
           }
 

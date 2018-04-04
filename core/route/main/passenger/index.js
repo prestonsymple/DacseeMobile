@@ -75,13 +75,14 @@ export default connect(state => ({
         this.map.animateTo({ zoomLevel: 16, coordinate: props.location }, 500)
       } else {
         let region = Object.assign({}, props.location, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
-        this.map.animateToCoordinate(region, 500)
+        this.map.animateToRegion(region, 500)
       }
       this.setState({ polyline: [] })
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && this.props.status !== props.status) {
       const { destination, from } = props
+
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
       const mLng = ((from.coords.lng + destination.coords.lng) / 2)
 
@@ -92,7 +93,7 @@ export default connect(state => ({
         this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
       } else {
         let region = Object.assign({}, { latitude: mLat, longitude: mLng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
-        this.map.animateToCoordinate(region, 500)
+        this.map.animateToRegion(region, 500)
       }
 
       const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
@@ -312,7 +313,6 @@ export default connect(state => ({
 
       /* GOOGLE MAPS */
       pitchEnabled: false,
-      cacheEnabled: true,
       provider: 'google',
       showsMyLocationButton: false,
       initialRegion: {
@@ -325,7 +325,7 @@ export default connect(state => ({
       showsScale: false,
       showsCompass: false,
       rotateEnabled: false,
-      ref: (e) => this.map = e,
+      ref: (e) => this.map = e
     }
 
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
@@ -358,6 +358,8 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
+
+    console.log((destination_coords !== DEFAULT_COORDS), (from_coords !== DEFAULT_COORDS))
 
     return (
       <View style={{ 
@@ -392,7 +394,7 @@ export default connect(state => ({
               <GoogleMarker coordinate={_polyline[0]}>
                 <Image source={Resources.image.map_car_pin} />
               </GoogleMarker>
-              {/* <GooglePolyline coordinates={_polyline} width={6} color={'#666'} /> */}
+              <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
             </GoogleMapView>
           )
         }
