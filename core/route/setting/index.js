@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent } from 'react'
+import React, { PureComponent} from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
@@ -11,18 +11,24 @@ import SettingWetViewScreen from './setting.web.view'
 
 import ProfileChangeAvatarScreen from './profile.change.avatars'
 
-import { Session } from '../../utils'
+import {Icons, Session} from '../../utils'
 
 import {
   account, application, intl
 } from '../../redux/actions'
+import {DeviceEventEmitter} from "react-native";
 
 // 主菜单
 const SettingMenuScreen = connect(state => ({
   i18n: state.intl.messages || {}
 }))(class SettingScreen extends PureComponent {
-  static navigationOptions = { title: '设置' }
-
+  // static navigationOptions = { title: '设置' }
+  static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    return {
+      title: reducer.intl.messages.settings,
+    }
+  }
   render() {
     const { navigation, dispatch, i18n } = this.props
 
@@ -34,7 +40,10 @@ const SettingMenuScreen = connect(state => ({
           title: i18n.privacy_setting, type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
         [{
-          title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion')
+          title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion',{
+            refresh: (data)=>{
+              this.props.navigation.setParams({});
+            }})
         }],
         [{
           title: i18n.feedback, type: 'text', onPress: async () => navigation.navigate('SettingWetView', {
@@ -47,7 +56,9 @@ const SettingMenuScreen = connect(state => ({
             source: { uri: 'https://m.aliyun.com/doc/index.html' }
           })
         }, {
-          title: i18n.about, type: 'text', onPress: () => navigation.navigate('SettingAbout')
+          title: i18n.about, type: 'text', onPress: () => navigation.navigate('SettingAbout',{
+            i18n
+          })
         }],
         [{
           title: i18n.logout, type: 'button', onPress: () => {
@@ -64,8 +75,11 @@ const SettingAccountScreen = connect(state => ({
   user: state.account.user,
   i18n: state.intl.messages || {}
 }))(class SettingProfileScreen extends PureComponent {
-  static navigationOptions = { title: '账号与安全' }
-
+  static navigationOptions = ({ navigation }) => {const reducer = global.store.getState()
+    return {
+      title: reducer.intl.messages.profile,
+    }
+  }
   async _changeFullName(value) {
     try {
       const resp = await Session.User.Put('v1/profile', { fullName: value })
@@ -106,7 +120,7 @@ const SettingAccountScreen = connect(state => ({
           type: 'text',
           value: `${user.fullName}`,
           onPress: () => navigation.navigate('FormEditor', {
-            title: '修改全名',
+            title: i18n.update_fullname,
             editorName: 'String',
             option: {
               placeholder: i18n.pls_enter_fullname,
@@ -119,7 +133,7 @@ const SettingAccountScreen = connect(state => ({
           type: 'text',
           value: user.email || i18n.no_content,
           onPress: () => navigation.navigate('FormEditor', {
-            title: '修改邮箱',
+            title: i18n.update_email,
             editorName: 'String',
             option: {
               placeholder: i18n.pls_enter_email,
@@ -143,8 +157,13 @@ const SettingAccountScreen = connect(state => ({
 const SettingMessageNotificationScreen = connect(state => ({
   i18n: state.intl.messages || {}
 }))(class PushNotificationScreen extends PureComponent {
-  static navigationOptions = { title: '新消息通知' }
-
+  // static navigationOptions = { title: '新消息通知' }
+  static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    return {
+      title: reducer.intl.messages.new_message_notification,
+    }
+  }
   render() {
     return (
       <Settings producer={[
@@ -160,8 +179,12 @@ const SettingMessageNotificationScreen = connect(state => ({
 const SettingPrivateScreen = connect(state => ({
   i18n: state.intl.messages || {}
 }))(class PushNotificationScreen extends PureComponent {
-  static navigationOptions = { title: '新消息通知' }
-
+  static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    return {
+      title: reducer.intl.messages.privacy_setting,
+    }
+  }
   render() {
     const { i18n } = this.props
     return (
@@ -184,16 +207,27 @@ const SettingPrivateScreen = connect(state => ({
 const SettingLanguageRegionScreen = connect(state => ({
   i18n: state.intl.messages || {},
   language: state.intl.locale
-}))(class SettingLanguageRegionScreen extends PureComponent {
-  static navigationOptions = { title: '语言及地区' }
-
+}))(class SettingLanguageRegionScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    return {
+      title: reducer.intl.messages.language_region,
+    }
+  }
+  componentWillUnmount() {
+    this.props.navigation.state.params.refresh()
+  }
   render() {
     const { navigation, i18n } = this.props
 
     return (
       <Settings producer={[
         [{
-          title: i18n.language, type: 'text', value: i18n.current_language, editable: true, onPress: () => navigation.navigate('SettingLanguageChoose')
+          title: i18n.language, type: 'text', value: i18n.current_language, editable: true, onPress: () => navigation.navigate('SettingLanguageChoose', {
+            refresh: (data)=>{
+              this.props.navigation.setParams({});
+            }
+          })
         }, {
           title: i18n.region, type: 'text', value: '中国大陆', editable: true, onPress: () => {}
         }]
@@ -207,10 +241,18 @@ const SettingLanguageChooseScreen = connect(state => ({
   i18n: state.intl.messages || {},
   language: state.intl.locale
 }))(class SettingLanguageChooseScreen extends PureComponent {
-  static navigationOptions = { title: '语言选择' }
-
+  // static navigationOptions = { title: '语言选择' }
+  static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    return {
+      title: reducer.intl.messages.language_select,
+    }
+  }
   render() {
     const { navigation, dispatch, language, i18n } = this.props
+
+    const {refresh}  = navigation.state.params;
+
 
     return (
       <Settings producer={[
@@ -218,18 +260,21 @@ const SettingLanguageChooseScreen = connect(state => ({
           title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false,
           onPress: () => {
             dispatch(intl.update('zh'))
+            refresh()
             navigation.goBack()
           }
         }, {
-          title: i18n.mas, type: 'radio', value: language == 'mas', editable: false,
+          title: i18n.mas, type: 'radio', value: language === 'mas', editable: false,
           onPress: () => {
-            dispatch(intl.update('mas'))
+            dispatch(intl.update('mas'));
+            refresh('refresh')
             navigation.goBack()
           }
         }, {
           title: i18n.en, type: 'radio', value: language == 'en', editable: false,
           onPress: () => {
             dispatch(intl.update('en'))
+            refresh('refresh')
             navigation.goBack()
           }
         }]

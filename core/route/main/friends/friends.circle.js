@@ -2,7 +2,6 @@ import React, { PureComponent, Component } from 'react'
 import {
   Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView
 } from 'react-native'
-
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -11,7 +10,7 @@ import { application, booking, circle } from '../../../redux/actions'
 import { Icons, Screen, Define, Session,TextFont } from '../../../utils'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-const { width, height } = Screen.window
+const { width, height } = Screen.window;
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
@@ -23,6 +22,7 @@ export default connect(state => ({
 }))(class FriendsCircleComponent extends PureComponent {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
       headerRight: (
@@ -42,13 +42,12 @@ export default connect(state => ({
         borderBottomColor: 'transparent',
         elevation: 0,
       },
-      title: '朋友圈'
+      title: reducer.intl.messages.mycircle,
     }
   }
 
   constructor(props) {
-    super(props)
-
+    super(props);
     const { selected_friends } = props.booking
     const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
       checked: typeof(selected_friends) === 'string' ? false : selected_friends.find(sub => sub._id === pipe._id) !== undefined
@@ -65,7 +64,10 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
-    await InteractionManager.runAfterInteractions()
+    const {mycircle} = this.props.i18n;
+    const {setParams} = this.props.navigation;
+    setParams({mycircle});
+    await InteractionManager.runAfterInteractions();
     this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd'))
   }
 

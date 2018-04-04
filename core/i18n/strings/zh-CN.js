@@ -149,15 +149,18 @@ const zh_CN = {
   bind_weibo: '绑定至微博',
   bind_qq: '绑定至QQ',
   update_fullname: '修改全名',
+  update_avatar:'修改头像',
   update_email: '修改邮箱',
   pls_enter_fullname: '请输入您的全名',
   pls_enter_email: '请输入您的邮箱',
 
+  new_message_notification: '新消息通知',
   allow_request_from_driver: '允许来自司机的好友请求',
   allow_search_by_phone: '允许通过电话号码搜索',
   allow_search_by_email: '允许通过邮箱搜索',
   allow_search_by_name: '允许通过名字搜索',
-  
+
+  language_select:'语言选择',
   language_region: '语言和地区',
   language: '语言',
   region: '地区',

@@ -86,6 +86,7 @@ class DateTimeEditor extends Component {
 class FormEditorScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     const { state } = navigation
     const { params } = state
     return Object.assign({}, {
@@ -94,10 +95,10 @@ class FormEditorScreen extends Component {
       headerRight: (
         <TouchableOpacity
           activeOpacity={0.7}
-          style={{ width: 54, paddingRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}
+          style={{paddingRight: 15, justifyContent: 'center', alignItems: 'flex-end' }}
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.EDITOR.CHANGE.VALUE')}
         >
-          <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '600' }}>完成</Text>
+          <Text style={{ fontSize: TextFont.TextSize(16), color: 'white', fontWeight: '600' }}>{reducer.intl.messages.finish}</Text>
         </TouchableOpacity>
       )
     }, params.navigationOptions || {})

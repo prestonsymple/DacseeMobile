@@ -30,7 +30,7 @@ const initialState = {
 
   hud_modal_visible: false,
 
-  map_mode: 'GOOGLEMAP',
+  map_mode: 'AMAP',
 
   api_maps: {
     main: [

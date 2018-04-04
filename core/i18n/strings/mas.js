@@ -149,15 +149,18 @@ const mas = {
   bind_weibo: 'Terikat dengan Weibo',
   bind_qq: 'Terikat dengan QQ',
   update_fullname: 'Ubah suai nama penuh',
+  update_avatar:'Tukar Gambar Profil',
   update_email: 'Ubah suai e-mel',
   pls_enter_fullname: 'Sila masukkan Nama',
   pls_enter_email: 'Sila masukkan E-mel',
 
+  new_message_notification: 'Pemberitahuan mesej baru',
   allow_request_from_driver: 'Benarkan permintaan rakan dari pemandu',
   allow_search_by_phone: 'Benarkan carian melalui nombor telefon',
   allow_search_by_email: 'Benarkan carian melalui e-mel',
   allow_search_by_name: 'Benarkan carian melalui nama',
 
+  language_select:'Pilihan bahasa',
   language_region: 'Bahasa dan Wilayah',
   language: 'Bahasa',
   region: 'Rantau',

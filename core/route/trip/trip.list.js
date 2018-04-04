@@ -27,9 +27,10 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 
 export default connect(() => ({}))(class TripListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '我的行程'
+      title: reducer.intl.messages.mytrip
     }
   }
 

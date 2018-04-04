@@ -36,8 +36,9 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
 
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
-      title: '修改头像',
+      title: reducer.intl.messages.update_avatar,
       drawerLockMode: 'locked-closed',
       headerRight: (
         <TouchableOpacity
