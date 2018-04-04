@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { Screen, Icons, Redux, Define, System, Session ,TextFont} from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
-import { application, booking } from '../../redux/actions'
+import { application, booking, wallet as Wallet } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
 
 const {height, width} = Screen.window
@@ -66,13 +66,22 @@ export default connect(state => ({
       })
       await Session.Wallet.Post('v1/transferTransactions', body)
 
+      this.props.dispatch(Wallet.setBalanceValue({amount: amount}))
       this.props.dispatch(application.showMessage('转账成功'))
       this.props.navigation.dispatch(NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Main' })]
+        index: 2,
+        actions: [NavigationActions.navigate({ routeName: 'Main' }),
+          NavigationActions.navigate({ routeName: 'WalletBalance' }),
+          NavigationActions.navigate({ routeName: 'WalletDetail' })]
       }))
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法请求到服务器'))
+      console.log(e)
+      if (e.response && e.response.data.message) {
+        this.props.dispatch(application.showMessage(e.response.data.message))  
+      } else {
+        this.props.dispatch(application.showMessage('无法请求到服务器'))
+      }
+      
       this.setState({
         transfering: false
       })

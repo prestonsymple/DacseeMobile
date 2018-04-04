@@ -1,45 +1,33 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
   Dimensions,
   Animated,
   ViewPropTypes,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  ListView,
-  RefreshControl,
-  Switch
 } from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 import moment from 'moment'
-import { connect } from 'react-redux'
 import { Icons } from '../../../../utils'
-import Resources from '../../../../resources'
-import {parseDate, xdateToData,sameMonth,weekDayNames} from './interface';
-import {CalendarList} from 'react-native-calendars';
-import ListItem from '../list.item'
-import styleConstructor from './style';
-import { VelocityTracker } from './input';
-import {TextFont} from '../../../../utils'
-const HEADER_HEIGHT =104;
+import { parseDate, xdateToData, sameMonth, weekDayNames } from './utils/interface';
+import { CalendarList } from 'react-native-calendars';
+import styleConstructor from './styles/style';
+import { VelocityTracker } from './utils/input';
+const HEADER_HEIGHT = 104;
 const KNOB_HEIGHT = 24;
-
+const { width, height } = Dimensions.get('window')
 const viewPropTypes = ViewPropTypes || View.propTypes;
-const theme={
+const theme = {
   agendaDayTextColor: 'yellow',
   agendaDayNumColor: 'green',
   agendaTodayColor: 'red',
   agendaKnobColor: 'blue'
 }
-export default connect(state => ({
-  i18n: state.intl.messages || {}
-}))(class AgendaView extends Component {
+export default class AgendaView extends Component {
   static propTypes = {
     workingChange: PropTypes.func,
-    dataSource:PropTypes.object,
+    dataSource: PropTypes.object,
     _onRefresh: PropTypes.func,
     goJobsListDetail: PropTypes.func,
     //working: PropTypes.any
@@ -58,10 +46,10 @@ export default connect(state => ({
       calendarIsReady: false,
       calendarScrollable: false,
       firstResevationLoad: false,
-      selectedDay: parseDate(new Date().toISOString()) || XDate(true),
-      topDay: parseDate(new Date().toISOString()) || XDate(true),
-      showReservations:false,
-      loading:false,
+      selectedDay: parseDate(this.props.selected) || XDate(true),
+      topDay: parseDate(this.props.selected) || XDate(true),
+      showReservations: false,
+      loading: false,
 
     };
     this.currentMonth = this.state.selectedDay.clone();
@@ -73,8 +61,7 @@ export default connect(state => ({
     this.onSnapAfterDrag = this.onSnapAfterDrag.bind(this);
     this.generateMarkings = this.generateMarkings.bind(this);
     this.knobTracker = new VelocityTracker();
-    this.state.scrollY.addListener(({value}) => this.knobTracker.add(value));
-    console.log(this.props.i18n)
+    this.state.scrollY.addListener(({ value }) => this.knobTracker.add(value));
   }
 
   calendarOffset() {
@@ -86,7 +73,7 @@ export default connect(state => ({
   }
 
   setScrollPadPosition(y, animated) {
-    this.scrollPad._component.scrollTo({x: 0, y, animated});
+    this.scrollPad._component.scrollTo({ x: 0, y, animated });
   }
 
   onScrollPadLayout() {
@@ -95,7 +82,7 @@ export default connect(state => ({
     // scroll position actually changes (it would stay at 0, when scrolled to the top).
     this.setScrollPadPosition(this.initialScrollPadPosition(), false);
     // delay rendering calendar in full height because otherwise it still flickers sometimes
-    setTimeout(() => this.setState({calendarIsReady: true}), 0);
+    setTimeout(() => this.setState({ calendarIsReady: true }), 0);
   }
 
   onLayout(event) {
@@ -108,13 +95,13 @@ export default connect(state => ({
   onTouchStart() {
     this.headerState = 'touched';
     if (this.knob) {
-      this.knob.setNativeProps({style: { opacity: 0.5 }});
+      this.knob.setNativeProps({ style: { opacity: 0.5 } });
     }
   }
 
   onTouchEnd() {
     if (this.knob) {
-      this.knob.setNativeProps({style: { opacity: 1 }});
+      this.knob.setNativeProps({ style: { opacity: 1 } });
     }
 
     if (this.headerState === 'touched') {
@@ -227,8 +214,9 @@ export default connect(state => ({
     if (this.props.loadItemsForMonth) {
       this.props.loadItemsForMonth(xdateToData(day));
     }
-    const dateStr = moment(xdateToData(day).timestamp).toISOString()
-    this.props._onRefresh(dateStr)
+    if (this.props.onDayPress) {
+      this.props.onDayPress(xdateToData(day));
+    }
   }
 
   onDayChange(day) {
@@ -248,19 +236,17 @@ export default connect(state => ({
     let markings = this.props.markedDates;
     if (!markings) {
       markings = {};
-      Object.keys(this.props.items  || {}).forEach(key => {
+      Object.keys(this.props.items || {}).forEach(key => {
         if (this.props.items[key] && this.props.items[key].length) {
-          markings[key] = {marked: true};
+          markings[key] = { marked: true };
         }
       });
     }
     const key = this.state.selectedDay.toString('yyyy-MM-dd');
-    return {...markings, [key]: {...(markings[key] || {}), ...{selected: true}}};
+    return { ...markings, [key]: { ...(markings[key] || {}), ...{ selected: true } } };
   }
 
   render() {
-    const {working,dataSource, i18n}=this.props
-    const {loading} =this.state
     const agendaHeight = Math.max(0, this.viewHeight - HEADER_HEIGHT);
     const weekDaysNames = weekDayNames(this.props.firstDay);
     const weekdaysStyle = [this.styles.weekdays, {
@@ -269,11 +255,13 @@ export default connect(state => ({
         outputRange: [0, 1],
         extrapolate: 'clamp',
       }),
-      transform: [{ translateY: this.state.scrollY.interpolate({
-        inputRange: [Math.max(0, agendaHeight - HEADER_HEIGHT), agendaHeight],
-        outputRange: [-HEADER_HEIGHT, 0],
-        extrapolate: 'clamp',
-      })}]
+      transform: [{
+        translateY: this.state.scrollY.interpolate({
+          inputRange: [Math.max(0, agendaHeight - HEADER_HEIGHT), agendaHeight],
+          outputRange: [-HEADER_HEIGHT, 0],
+          extrapolate: 'clamp',
+        })
+      }]
     }];
 
     const headerTranslate = this.state.scrollY.interpolate({
@@ -284,7 +272,7 @@ export default connect(state => ({
 
     const contentTranslate = this.state.scrollY.interpolate({
       inputRange: [0, agendaHeight],
-      outputRange: [0, agendaHeight/2],
+      outputRange: [0, agendaHeight / 2],
       extrapolate: 'clamp',
     });
 
@@ -295,13 +283,13 @@ export default connect(state => ({
 
     if (!this.state.calendarIsReady) {
       // limit header height until everything is setup for calendar dragging
-      headerStyle.push({height: 0});
+      headerStyle.push({ height: 0 });
       // fill header with appStyle.calendarBackground background to reduce flickering
-      weekdaysStyle.push({height: HEADER_HEIGHT});
+      weekdaysStyle.push({ height: HEADER_HEIGHT });
     }
 
     const shouldAllowDragging = !this.props.hideKnob && !this.state.calendarScrollable;
-    const scrollPadPosition = (shouldAllowDragging ? HEADER_HEIGHT  : 0) - KNOB_HEIGHT;
+    const scrollPadPosition = (shouldAllowDragging ? HEADER_HEIGHT : 0) - KNOB_HEIGHT;
 
     const scrollPadStyle = {
       position: 'absolute',
@@ -310,65 +298,12 @@ export default connect(state => ({
       top: scrollPadPosition,
       left: (this.viewWidth - 80) / 2,
     };
-    const refreshControl = working ? (undefined) : (
-      <RefreshControl
-        refreshing={loading}
-        onRefresh={()=>this.props._onRefresh()}
-        title={'下拉进行刷新'}
-        colors={['#ffffff']}
-        progressBackgroundColor={'#1c99fb'}
-      />
-    )
-    if(working){
-      return (
-        <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
-            {i18n.online}
-          </Text>
-          <Switch value={working} onValueChange={(working) => this.props.workingChange(working)} />
-        </View>
-      )
-    }
+
     return (
-      <View onLayout={this.onLayout} style={[this.props.style, {flex: 1, overflow: 'hidden'}]}>
-        <View style={{flex:1,marginTop:104}}>
-          <View style={{ paddingHorizontal: 20, paddingTop: 20,  flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
-              {i18n.online}
-            </Text>
-            <Switch value={working} onValueChange={(working) => this.props.workingChange(working)} />
-          </View>
-          {
-            (dataSource.rowIdentities[0].length === 0 && !working)&&
-            (<ScrollView refreshControl={refreshControl} contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
-              <View style={{ marginTop: working ? 108 + 100 : 108, alignItems: 'center' }}>
-                <Image source={Resources.image.joblist_empty} style={{ marginBottom: 18 }} />
-                <Text style={{ color: '#999', fontSize: TextFont.TextSize(18), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
-                  {/*  <FormattedMessage id={'already_online'}/> */}
-                  {i18n.no_job}
-                </Text>
-              </View>
-            </ScrollView>)
-          }
-          {
-            (dataSource.rowIdentities[0].length !== 0 && !working) && (
-              <ListView
-                refreshControl={refreshControl}
-                dataSource={dataSource}
-                enableEmptySections={true}
-                renderRow={(row) => (
-                  <ListItem
-                    itemData={row}
-                    onPress={() => this.props.goJobsListDetail(row)}
-                  />
-                )}
-                style={{ flex: 1, marginTop: 15 }}
-              />
-            )
-          }
-        </View>
+      <View onLayout={this.onLayout} style={[this.props.style, { flex: 1, overflow: 'hidden' }]}>
+        {this.props.children}
         <Animated.View style={headerStyle}>
-          <Animated.View style={{flex:1, transform: [{ translateY: contentTranslate }]}}>
+          <Animated.View style={{ flex: 1, transform: [{ translateY: contentTranslate }] }}>
             <CalendarList
               theme={theme}
               onVisibleMonthsChange={this.onVisibleMonthsChange.bind(this)}
@@ -388,7 +323,7 @@ export default connect(state => ({
             />
           </Animated.View>
           <View style={this.styles.knobContainer} >
-            <View ref={(c) => this.knob = c} >{ Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb') }</View>
+            <View ref={(c) => this.knob = c} >{Icons.Generator.Material('keyboard-arrow-down', 30, '#bbb')}</View>
           </View>
         </Animated.View>
         <Animated.View style={weekdaysStyle}>
@@ -412,9 +347,9 @@ export default connect(state => ({
             { useNativeDriver: true },
           )}
         >
-          <View style={{height: agendaHeight + KNOB_HEIGHT}} onLayout={this.onScrollPadLayout} />
+          <View style={{ height: agendaHeight + KNOB_HEIGHT }} onLayout={this.onScrollPadLayout} />
         </Animated.ScrollView>
       </View>
     );
   }
-})
+}

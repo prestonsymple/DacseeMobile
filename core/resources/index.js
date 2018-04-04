@@ -12,7 +12,17 @@ export default {
     floating_passenger: require('./images/passenger.png'),
     joblist_car: require('./images/joblist_car.png'),
     joblist_payment: require('./images/joblist_payment.png'),
-    joblist_empty: require('./images/joblist_empty.png')
+    joblist_empty: require('./images/joblist_empty.png'),
+    booking_detail_bell: require('./images/booking_detail_bell.png'),
+    booking_detail_linking: require('./images/booking_detail_linking.png'),
+    booking_detail_info: require('./images/booking_detail_info.png'),
+    booking_detail_car: require('./images/booking_detail_car.png'),
+    booking_detail_payment: require('./images/booking_detail_payment.png'),
+    booking_detail_phone: require('./images/booking_detail_phone.png'),
+    booking_detail_message: require('./images/booking_detail_message.png'),
+    map_from_pin: require('./images/rn_amap_startpoint.png'),
+    map_destination_pin: require('./images/rn_amap_endpoint.png'),
+    map_car_pin: require('./images/rn_car.png')
   },
   
   animation: {

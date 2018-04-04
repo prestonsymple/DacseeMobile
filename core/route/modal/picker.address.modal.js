@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { booking } from '../../redux/actions'
+import { booking, address } from '../../redux/actions'
 import { Search } from '../../native/AMap'
 import { System, Icons, Screen, Define, Session ,TextFont } from '../../utils'
 import { Button } from '../../components'
@@ -24,7 +24,8 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !==
 export default connect(state => ({
   location: state.account.location,
   i18n: state.intl.messages,
-  map_mode: state.application.map_mode
+  map_mode: state.application.map_mode,
+  favorite: state.address.favorite,
 }))(class SelectAddressModal extends Component {
 
   constructor(props) {
@@ -57,7 +58,7 @@ export default connect(state => ({
   async _fetchFavoriteData() {
     try {
       const resp = await Session.User.Get('v1/favPlaces')
-      this.props.dispatch(Address.setValues({ favorite: resp }))
+      this.props.dispatch(address.setValues({ favorite: resp }))
     } catch(e) {
       console.log(e)
     }
@@ -119,10 +120,6 @@ export default connect(state => ({
         const { lat, lng } = location
         
         if (map_mode === 'GOOGLEMAP') {
-          const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
-          this.setState({ source: dataContrast.cloneWithRows(data) }) 
-        } else {
           const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keywords.replace(' ', '+')}&key=AIzaSyALLnpXjwuJyfuq884msD20gIGDdYxKdX0`)
           const { results } = data
           const resultMap = results.map(pipe => ({
@@ -134,7 +131,11 @@ export default connect(state => ({
             name: pipe.name,
             address: pipe.formatted_address
           }))
-          this.setState({ source: dataContrast.cloneWithRows(resultMap) }) 
+          this.setState({ searchRet: dataContrast.cloneWithRows(resultMap) }) 
+        } else {
+          const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
+          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+          this.setState({ searchRet: dataContrast.cloneWithRows(data) }) 
         }
       } catch (e) {
         console.log(e)
@@ -144,10 +145,11 @@ export default connect(state => ({
 
   render() {
     const { type } = this.props.navigation.state.params
-    const { source } = this.state
+    const { searchRet, fav } = this.state
+    const { favorite, i18n } = this.props
     const onPressCancel = () => this.props.navigation.goBack()
     const onChangeWords = (words) => this.onEnterKeywords(words)
-    const { i18n } = this.props
+
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'dark-content'} />

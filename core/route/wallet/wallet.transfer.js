@@ -124,7 +124,7 @@ export default connect(state => ({
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
               {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
-              <Input  style={{ flex: 1, fontSize: TextFont.TextSize(14)}} placeholder={'0.00'} keyboardType={ 'number-pad' } onChangeText={ (value) => this.setState({ amount: value}) } />
+              <Input  style={{ flex: 1, fontSize: TextFont.TextSize(14)}} placeholder={'0.00'} keyboardType={ 'numeric' } onChangeText={ (value) => this.setState({ amount: value}) } />
             </View>
           </View>
 
@@ -179,8 +179,11 @@ export default connect(state => ({
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button disabled={ searching } onPress={ () => {
-              if (this.state.searchContent == '' | this.state.amount == 0 ) {
-                this.props.dispatch(application.showMessage('请输入 转账金额、收款账号'))
+              let reg= /(^(([0-9]+\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$)/
+              if (this.state.amount <= 0 | !reg.test(this.state.amount)) {
+                this.props.dispatch(application.showMessage('请输入正确的金额'))
+              } else if (this.state.searchContent == '') {
+                this.props.dispatch(application.showMessage('请输入收款账号'))
               } else {
                 this._fetchData()
               }

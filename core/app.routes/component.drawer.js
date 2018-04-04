@@ -17,20 +17,26 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('TripList')
 }, {
   key: '2',
+  name: 'mytrip',
+  icon: Icons.Generator.Material('data-usage', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('JobsList')
+}, {
+  key: '3',
   name: 'wallet',
   icon: Icons.Generator.Material('account-balance-wallet', TextFont.TextSize(24), ICONS_COLOR, { style: { left: .5 } }),
   onPress: ({ navigation }) => navigation.navigate('WalletBalance')
 }, {
-  key: '3',
+  key: '4',
   name: 'downline',
   icon: Icons.Generator.Material('people', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
-  onPress: ({ navigation }) => navigation.navigate('DownLineTotal')  
-},{
-  key: '4',
+  onPress: ({ navigation }) => navigation.navigate('DownLineTotal')
+}, {
+  key: '5',
   name: 'settings',
   icon: Icons.Generator.Material('settings', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 }
+
 // {
 //   key: '1',
 //   name: '开始接单',

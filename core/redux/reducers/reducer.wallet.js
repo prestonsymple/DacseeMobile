@@ -13,6 +13,11 @@ const initialState = {
 
 export default handleActions({
   
-  [wallet.setValues]: (state, { payload }) => Object.assign({}, state, payload)
+  [wallet.setValues]: (state, { payload }) => Object.assign({}, state, payload),
+  [wallet.setBalanceValue]: (state, { payload }) => {    
+    let lastState = state.selected_wallet
+    lastState.availableAmount = lastState.availableAmount - payload.amount    
+    return Object.assign({}, state, {selected_wallet: lastState})
+  }
 
 }, initialState)
