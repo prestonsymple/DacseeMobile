@@ -60,7 +60,8 @@ const zh_CN = {
   add_mycircle: '添加朋友圈',
   pls_wait: '请等待...',
   send_friend_request: '发送好友请求',
-
+  more:'更多',
+  search_friend:'搜索好友' ,
   driver: '司机',
   passenger: '乘客',
   taxi: '出租车',
@@ -70,7 +71,8 @@ const zh_CN = {
   special: '专车',
   please_enter_keywords: '请输入关键词以检索',
   cancel: '取消',
-
+  del_friend_confirm:'确认解除朋友关系吗？该操作不可恢复', //TODO
+  already_del_friend:'朋友身份已解除',  //TODO
   online: '上线',
   no_job: '暂无行程',
   to: '到',   
@@ -80,7 +82,7 @@ const zh_CN = {
   book_time: '日期时间',
   fare: '支付金额',
   order_detail: '行程详情',
-
+  pay_comment:'支付及评价', //TODO
   car_standard: '标准车型',
   cash: '现金',
   note_to_driver: '提示信息',
@@ -105,6 +107,7 @@ const zh_CN = {
   driver_info: '司机信息',
   no_driver_info: '暂无司机信息',
   fare_total: '总费用',
+  pull_refresh:'下拉进行刷新',
 
   wallet: '钱包',
   credit_wallet: '信用钱包',
@@ -138,6 +141,7 @@ const zh_CN = {
   referrer_name: '推荐人姓名',
   join_date: '加入时间',
   downline_level: '下线等级',
+  downline_detail:'下线详情',
 
   settings: '设置',
   profile: '账号与安全',
@@ -176,13 +180,32 @@ const zh_CN = {
   privacy_policy: '隐私协议及使用条款',
   version: '版本',
 
+  take_photo: '拍照',
+  select_from_album: '从手机相册中选择',
+  photo: '照片',
+  camera: '相机',
+  pls_auth_fore: '请在iPhone的“设置-隐私-',
+  pls_auth_back: '”选项中，允许Dacsee访问你的',
+  pls_auth: '请前往 设置 - Dacsee 中开启相机及相册权限',
+  refuse_visit: '无法访问',
+  okay: '好的',
+  wait_for_order: '已上线，等待订单中',
+  already_online: '已上线',
+  retry:'重试',
+  album:'相册',
+
   logout: '切换账号',
 
   job_detail: '订单详情',
   job_list: '订单列表',
   login_select_account: '选择您的账号',
-  social_register: '第三方账号注册'
+  social_register: '第三方账号注册',
 
+  unable_connect_server:'无法连接到服务器',
+  active:'激活',
+  inactive:'未激活',
+  enter_correct_email_phone:'请输入正确的邮箱或手机号',
+  full_name_two_chart:'全名最小为2个字符',
 }
 
 export default zh_CN

@@ -16,10 +16,10 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id
 export default connect(state => ({ }))(class FriendsSearchBase extends Component {
 
   static navigationOptions = ({ navigation }) => {
-    const { search } = navigation.state.params
+    const { search,i18n} = navigation.state.params
     return {
       drawerLockMode: 'locked-closed',
-      title: '搜索好友'
+      title: i18n.search_friend
     }
   }
 
@@ -61,14 +61,14 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
   }
 
   render() {
-
+    const {i18n} = this.props.navigation.state.params
     return (
       <View style={{ flex: 1 }}>
         {
           (this.state.dataSource.rowIdentities[0].length === 0) ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: -44 }}>
               <ActivityIndicator size='large' color='#999' />
-              <Text style={{ color: '#666', fontWeight: '600', marginTop: 12 }}>请等待...</Text>
+              <Text style={{ color: '#666', fontWeight: '600', marginTop: 12 }}>{i18n.pls_wait}</Text>
             </View>
           ) : (
             <ListView
@@ -76,7 +76,7 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
               enableEmptySections={true}
               renderSeparator={() => (<View style={{ paddingLeft: 15 }}><View style={{ height: .8, backgroundColor: '#f2f2f2' }} /></View>)}
               renderRow={({ _id, avatars, fullName, userId }) => (
-                <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('FriendsRequest', { referrer: userId, id: _id })} style={{ height: 58, backgroundColor: 'white', paddingHorizontal: 15 }}>
+                <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('FriendsRequest', { referrer: userId, id: _id, i18n})} style={{ height: 58, backgroundColor: 'white', paddingHorizontal: 15 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
                     <View style={{ justifyContent: 'center', marginRight: 12 }}>
                       <Image style={{ width: 42, height: 42, borderRadius: 21 }} source={{ uri: avatars[avatars.length - 1].url }} />

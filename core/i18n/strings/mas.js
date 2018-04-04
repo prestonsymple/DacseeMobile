@@ -138,6 +138,7 @@ const mas = {
   referrer_name: 'Nama Rujukan',
   join_date: 'Sertai masa',
   downline_level: 'Tahap Armada',
+  downline_detail:'Butiran armada',
 
   settings: 'Penetapan',
   profile: 'Akaun dan Keselamatan',
@@ -176,7 +177,29 @@ const mas = {
   privacy_policy: 'Perjanjian Privasi dan Syarat Penggunaan',
   version: 'Versi',
 
-  logout: 'Tukar akaun'
+  take_photo: 'Ambil gambar',
+  select_from_album: 'Pilih dari album telefon',
+  photo: 'Gambar',
+  camera: 'Kamera',
+  pls_auth_fore: 'Dari tetapan iPhone "-Privasi-',
+  pls_auth_back: '",Sila membenarkan DACSEE mengakses anda',
+  pls_auth: 'Sila membenarkan kegunaan kamera anda dari tetapan telefon',
+  refuse_visit: 'Tidak dapat mengakses',
+  okay: 'OK',
+  wait_for_order: 'Dalam talian, menunggu pesanan',
+  already_online: 'Dalam talian',
+
+  logout: 'Tukar akaun',
+
+  retry: 'Cuba semula',
+  album: 'Album',
+  pull_refresh: 'Tarik untuk menyegarkan semula',
+  more: 'Lebih',
+  search_friend: 'Cari kawan',
+  del_friend_confirm: 'Adakah anda ingin mengesahkan hubungan rakan? Operasi ini tidak dapat dipulihkan',
+  already_del_friend: 'Status kawan telah diangkat',
+  pay_comment: 'Pembayaran dan penilaian',
+
 }
 
 export default mas

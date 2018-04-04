@@ -13,9 +13,10 @@ const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id
 export default connect(state => ({ account: state.account }))(class LoginSelectAccountScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '激活您的账号'
+      title: reducer.intl.messages.active_account
     }
   }
 

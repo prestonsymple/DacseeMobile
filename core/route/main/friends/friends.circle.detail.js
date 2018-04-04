@@ -21,7 +21,7 @@ export default connect(state => ({
 }))(class FriendsCircleDetailComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
-    const { _id, checked, friend_id, friend_info } = navigation.state.params
+    const { _id, checked, friend_id, friend_info,i18n} = navigation.state.params
     const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
 
     return {
@@ -35,7 +35,7 @@ export default connect(state => ({
           {Icons.Generator.Material('more-horiz', 28, 'white', { style: { left: 8 } })}
         </TouchableOpacity>
       ),
-      title: '朋友详情',
+      title: i18n.friend_detail,
       headerStyle: {
         backgroundColor: '#1ab2fd',
         shadowColor: 'transparent',
@@ -65,24 +65,25 @@ export default connect(state => ({
   }
 
   _pressActionSheet(index) {
+    const {i18n} = this.props.navigation.state.params
     if (index === 0) {
       this.props.dispatch(application.showMessage('已将您的反馈提交至服务器，我们将会严格审查'))
     }
     if (index === 1) {
-      Alert.alert('解除朋友关系', '确认解除朋友关系吗？该操作不可恢复', [{
-        text: '确认',
+      Alert.alert(i18n.friend_delete, '确认解除朋友关系吗？该操作不可恢复', [{
+        text: i18n.confirm,
         onPress: async () => {
           try {
             const { _id } = this.props.navigation.state.params
             await Session.Circle.Delete(`v1/circle/${_id}`)
             this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-            Alert.alert('完成', '朋友身份已解除', [{ text: '确定', onPress: () => this.props.navigation.goBack() }])
+            Alert.alert(i18n.finish, '朋友身份已解除', [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
           } catch (e) {
             console.log(e)
             this.props.dispatch(application.showMessage('请求超时，请稍后再试'))
           }
         }
-      }, { text: '取消' }])
+      }, { text: i18n.cancel}])
     }
   }
 
@@ -115,18 +116,18 @@ export default connect(state => ({
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>
-              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ email || '尚未填写' }</Text>
+              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ email || i18n.no_content}</Text>
             </View>
             <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>
-              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ '尚未填写' }</Text>
+              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ i18n.no_content }</Text>
             </View>
           </View>
         </ScrollView>
         <ActionSheet
           ref={e => this.ActionSheet = e}
-          title={'更多'}
-          options={['举报违规', '解除朋友关系', '取消']}
+          title={i18n.more}
+          options={[i18n.friend_report, i18n.friend_delete, i18n.cancel]}
           cancelButtonIndex={2}
           destructiveButtonIndex={0}
           onPress={this._pressActionSheet.bind(this)}

@@ -25,7 +25,9 @@ const styles = StyleSheet.create({
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default connect(() => ({}))(class TripListScreen extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class TripListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const reducer = global.store.getState()
     return {
@@ -79,6 +81,7 @@ export default connect(() => ({}))(class TripListScreen extends Component {
 
   render() {
     const { detail } = this.state
+    const {i18n} = this.props
     return (
       <View style={{ flex: 1 ,paddingBottom:20}}>
         {
@@ -95,7 +98,7 @@ export default connect(() => ({}))(class TripListScreen extends Component {
               } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                   <Image source={Resources.image.joblist_empty} style={{ marginTop: 200, width: 100, height: 100 }} />
-                  <Text style={{ marginTop: 20, color: '#777', fontSize: TextFont.TextSize(18), fontWeight: '400' }}>暂无行程</Text>
+                  <Text style={{ marginTop: 20, color: '#777', fontSize: TextFont.TextSize(18), fontWeight: '400' }}>{i18n.no_job}</Text>
                 </View>
               </ScrollView>
             ) :
@@ -145,33 +148,34 @@ class ListItem extends Component {
   }
 
   _statusInChinese(str) {
+    const {i18n} =this.props;
     switch (str) {
     // case 'Pending_Passenger':
     //   return '等待乘客'
     // case 'Pending_Assignment':
     //   return ''
     case 'Pending_Acceptance':
-      return '等待接单'
+      return i18n.Pending_Acceptance
     // case 'Confirmed':
     //   return ''
     case 'On_The_Way':
-      return '司机即将到达'
+      return i18n.On_The_Way
     case 'Arrived':
-      return '司机已到达'
+      return i18n.Arrived
     case 'No_Show':
-      return '乘客未抵达'
+      return i18n.No_Show
     case 'On_Board':
-      return '乘客已上车'
+      return i18n.On_Board
     case 'Completed':
-      return '订单完成'
+      return i18n.Completed
     case 'Cancelled_by_Passenger':
-      return '乘客已取消'
+      return i18n.Cancelled_by_Passenger
     case 'Cancelled_by_Driver':
-      return '司机已取消'
+      return i18n.Cancelled_by_Driver
     case 'Rejected_by_Driver':
-      return '司机已拒绝'
+      return i18n.Rejected_by_Driver
     case 'No_Taker':
-      return '订单无人应答'
+      return i18n.No_Taker
     }
   }
 
@@ -195,7 +199,7 @@ class ListItem extends Component {
 
             <View style={{ marginTop: 30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
               <View>{Icons.Generator.Material('access-time', TextFont.TextSize(14), '#000000')}</View>
-              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{moment(Date.parse(booking_at)).format('HH:mm')}</Text>
+              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{moment(booking_at).format('HH:mm')}</Text>
               <View style={{ marginLeft: 10, }}>{Icons.Generator.Material('payment', TextFont.TextSize(14), '#000000')}</View>
               <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{payment_method == 'Cash' ? '现金' : payment_method}</Text>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>

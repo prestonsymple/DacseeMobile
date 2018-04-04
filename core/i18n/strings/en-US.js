@@ -138,6 +138,7 @@ const en_US = {
   referrer_name: 'Referer Name',
   join_date: 'Join Date',
   downline_level: 'Downline Level',
+  downline_detail:'Downline details',
 
   settings: 'Settings',
   profile: 'Account & Safety',
@@ -176,7 +177,31 @@ const en_US = {
   privacy_policy: 'Privacy Agreement and Terms of Use',
   version: 'Version',
 
-  logout: 'Logout'
+  take_photo: 'Take photo',
+  select_from_album: 'Select from Album',
+  photo: 'Photo',
+  camera: 'Camera',
+  pls_auth_fore: 'From iPhone settings "-Privacy-',
+  pls_auth_back: '",Please allow DACSEE to access your',
+  pls_auth: 'Please allow the usage of camera and Album for DACSEE from your phone settings',
+  refuse_visit: 'Access denial',
+  okay: 'OK',
+  wait_for_order: 'Online，Waiting for orders',
+  already_online: 'Online',
+
+
+  logout: 'Logout',
+
+  retry: 'Retry',
+  album: 'Album',
+  pull_refresh: 'Pull to refresh',
+  more: 'More',
+  search_friend: 'Search friends',
+  del_friend_confirm: 'Are you sure you want to remove friend?',
+  already_del_friend: 'Friend removed',
+  pay_comment: 'Payment and comments',
+
+
 }
 
 export default en_US

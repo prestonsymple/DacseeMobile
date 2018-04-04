@@ -110,7 +110,7 @@ const SettingAccountScreen = connect(state => ({
     return (
       <Settings producer={[
         [{
-          title: i18n.my_avatar, type: 'image', value: { uri: user.avatars[user.avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar')
+          title: i18n.my_avatar, type: 'image', value: { uri: user.avatars[user.avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar',{i18n})
         }],[{
           title: i18n.phone, type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, editable: false
         }, {

@@ -29,9 +29,10 @@ export default connect( state => ({
   i18n: state.intl.messages
 }))(class TripListDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '行程详情',
+      title: reducer.intl.messages.trip_detail,
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',

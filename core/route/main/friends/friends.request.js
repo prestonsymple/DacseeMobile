@@ -14,9 +14,10 @@ const { width, height } = Screen.window
 export default connect(state => ({ account: state.account }))(class FriendsCircleComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const {i18n} = navigation.state.params
     return {
       drawerLockMode: 'locked-closed',
-      title: '发送好友请求'
+      title: i18n.send_friend_request
     }
   }
 
@@ -41,7 +42,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
 
   render() {
     const { invite_id, id, avatars = { url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }, fullName, userId } = this.state
-
+    const {i18n} = this.props.navigation.state.params
     return (
       <ScrollView contentContainerStyle={{ flex: 1 }} style={{ flex: 1 }}>
         <View style={{ backgroundColor: 'white', paddingTop: 45, justifyContent: 'center', alignItems: 'center' }}>
@@ -77,7 +78,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
                     }
                   }
                 }} activeOpacity={.7} style={{ backgroundColor: '#70c040', height: 44, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ color: 'white', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>发送好友请求</Text>
+                  <Text style={{ color: 'white', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{i18n.send_friend_request}</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity onPress={async () => {
                   const response = await Session.circle.put(`v1/requests/${invite_id}`, { 'action': 'reject' })

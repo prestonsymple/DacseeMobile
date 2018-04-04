@@ -16,9 +16,10 @@ const { height, width } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 export default connect(() => ({}))(class DownLineDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const {i18n} =  navigation.state.params
     return {
       drawerLockMode: 'locked-closed',
-      title: 'DOWNLINE DETAILS',
+      title: i18n.downline_detail,
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
@@ -64,16 +65,19 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
     }
   }
   goUserDetails(_id) {
+    const {i18n} = this.props.navigation.state.params
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'DownLineDetail',
       params: {
         _id: _id,
-        level: this.state.data.level
+        level: this.state.data.level,
+        i18n
       }
     }))
   }
   render() {
     const { data } = this.state
+    const {i18n} = this.props.navigation.state.params
     return (
       <View style={{ flex: 1, backgroundColor: data.users && data.users.length > 0 ?'#f7f7f7':'#fff' }}>
         <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>
@@ -83,7 +87,7 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
           <RefreshControl
             refreshing={this.state.loading}
             onRefresh={this._fetchData.bind(this)}
-            title={'下拉进行刷新'}
+            title={i18n.pull_refresh}
             colors={['#ffffff']}
             progressBackgroundColor={'#1c99fb'}
           />

@@ -21,9 +21,10 @@ export default connect(state => ({
 }))(class FriendsCircleAddComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const {params} = navigation.state
     return {
       drawerLockMode: 'locked-closed',
-      title: '添加好友'
+      title: params.i18n.friend_add
     }
   }
 
@@ -62,7 +63,7 @@ export default connect(state => ({
             navigation={this.props.navigation}
             onPress={(value, countryCode) => {
               if (value.length === 0) return this.props.dispatch(application.showMessage('请输入正确的手机号码'))
-              this.props.navigation.navigate('FriendsSearchBase', { value, countryCode })
+              this.props.navigation.navigate('FriendsSearchBase', {i18n, value, countryCode })
             }}
           />
 

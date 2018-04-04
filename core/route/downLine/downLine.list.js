@@ -18,9 +18,10 @@ export default connect(state => ({
   i18n: state.intl.messages || {}
 }))(class DownLineListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: 'DOWNLINE LISTING',
+      title: reducer.intl.messages.downline_list,
       headerStyle: {
         backgroundColor: '#1AB2FD',
         shadowColor: 'transparent',
@@ -65,11 +66,13 @@ export default connect(state => ({
     }
   }
   goUserDetails(_id) {
+    const {i18n} = this.props;
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'DownLineDetail',
       params: {
         _id: _id,
-        level: this.state.data.level
+        level: this.state.data.level,
+        i18n
       }
     }))
   }
@@ -96,7 +99,7 @@ export default connect(state => ({
           <RefreshControl
             refreshing={this.state.loading}
             onRefresh={this._fetchData.bind(this)}
-            title={'下拉进行刷新'}
+            title={i18n.pull_refresh}
             colors={['#ffffff']}
             progressBackgroundColor={'#1c99fb'}
           />

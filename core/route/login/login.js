@@ -99,7 +99,7 @@ export default connect(state => ({
   }
 
   stageHandle() {
-    const { stage } = this.props
+    const { stage,i18n} = this.props
     const { value, countryCode } = this.state
 
     this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
@@ -109,7 +109,7 @@ export default connect(state => ({
       this.props.dispatch(account.loginNext({ stage: 1 }))
     } else if
     (stage === 1) {
-      if (!value.length) return this.props.dispatch(app.showMessage('请输入正确的邮箱或手机号'))
+      if (!value.length) return this.props.dispatch(app.showMessage(i18n.enter_correct_email_phone))
       const isMail = this.isEmail(value)
       const body = isMail ? { id: value, isMail: true } : { phoneCountryCode: countryCode, phoneNo: value }
       this.props.dispatch(account.loginNext({ stage: isMail ? 3 : 2, value: body }))
@@ -121,9 +121,10 @@ export default connect(state => ({
   }
 
   onPressComplate() {
+    const {i18n} = this.props
     const { value, countryCode, fullName, referralUserId, v1, v2 ,v3, v4, value_extend, verify_code_extend } = this.state
     if (fullName.length < 2) {
-      return this.props.dispatch(app.showMessage('全名最小为2个字符'))
+      return this.props.dispatch(app.showMessage(i18n.full_name_two_chart))
     }
     const vCode = `${v1}${v2}${v3}${v4}`
     const data = {

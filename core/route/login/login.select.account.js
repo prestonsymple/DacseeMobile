@@ -10,12 +10,13 @@ import { account, application } from '../../redux/actions'
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ account: state.account }))(class LoginSelectAccountScreen extends Component {
+export default connect(state => ({ account: state.account,i18n: state.intl.messages }))(class LoginSelectAccountScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '选择您的账号'
+      title: reducer.intl.messages.login_select_account
     }
   }
 
@@ -34,6 +35,7 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
 
   render() {
     const { value } = this.props.navigation.state.params
+    const {i18n} = this.props;
     const { isMail } = value
 
     return (
@@ -56,7 +58,7 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
               }) }))
             }
             this.props.navigation.goBack()
-          }} data={row} />)}
+          }} data={row} i18n={i18n}/>)}
           renderSeparator={() => (
             <View style={{ backgroundColor: '#f2f2f2', height: .8 }}></View>
           )}
@@ -69,7 +71,7 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
 
 class RowItem extends Component {
   render() {
-    const { onPress = () => {}, isMail } = this.props
+    const { onPress = () => {}, isMail ,i18n} = this.props
     const { _id, avatars, fullName, phoneNo } = this.props.data
     // console.log(rights)
     // const role = rights.reduce((prev, next) => prev + `, ${next}`)
@@ -82,7 +84,7 @@ class RowItem extends Component {
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
-            { isMail && <Text style={{ fontSize: TextFont.TextSize(12), color: '#666', fontWeight: '400' }}>{ phoneNo ? '已激活' : '未激活' }</Text> }
+            { isMail && <Text style={{ fontSize: TextFont.TextSize(12), color: '#666', fontWeight: '400' }}>{ phoneNo ? i18n.active : i18n.inactive }</Text> }
           </View>
           <View style={{ width: 45, alignItems: 'flex-end' }}>
             { Icons.Generator.Material('keyboard-arrow-right', 26, '#999') }

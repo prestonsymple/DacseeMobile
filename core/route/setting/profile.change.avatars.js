@@ -14,6 +14,8 @@ import { Icons, Screen, Session, Define } from '../../utils'
 
 const { width } = Screen.window
 
+/**
+ *  多语言原因，此处先注释
 const PICKER_OPTIONS = {
   title: '相册',
   storageOptions: { skipBackup: true, path: 'images' },
@@ -31,7 +33,7 @@ const PICKER_OPTIONS = {
     reTryTitle: '重试', okTitle: '好的'
   }
 }
-
+**/
 export default connect(state => ({ account: state.account }))(class ProfileChangeAvatarsScreen extends PureComponent {
 
 
@@ -77,14 +79,38 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
     this.subscription && this.subscription.remove()
   }
 
+  _getOptions=()=>{
+    const {state} = this.props.navigation
+    const {i18n} = state.params
+    return {
+      title: '相册',
+      storageOptions: {skipBackup: true, path: 'images'},
+      quality: 0.8,
+      mediaType: 'photo',
+      cancelButtonTitle: i18n.cancel,
+      takePhotoButtonTitle: i18n.take_photo,
+      chooseFromLibraryButtonTitle: i18n.select_from_album,
+      allowsEditing: true,
+      noData: false,
+      maxWidth: 1000,
+      maxHeight: 1000,
+      permissionDenied: {
+        title: i18n.refuse_visit, text: i18n.pls_auth,
+        reTryTitle: i18n.retry, okTitle: i18n.okay
+      }
+    }
+  }
+
   _pressActionSheet(index) {
+    const {state} = this.props.navigation
+    const {i18n} = state.params
     if (index === 0) {
-      ImagePicker.launchCamera(PICKER_OPTIONS, (response) => {
+      ImagePicker.launchCamera(this._getOptions(), (response) => {
         if (response.didCancel) { 
           return 
         } else if (response.error) {
-          let label = response.error.startsWith('Photo') ? '照片' : '相机'
-          return Alert.alert(`请在iPhone的“设置-隐私-${label}”选项中，允许小苍兰访问你的${label}。`)
+          let label = response.error.startsWith('Photo') ? i18n.photo : i18n.camera
+          return Alert.alert(`${i18n.pls_auth_fore} ${label} ${i18n.pls_auth_back} ${label}。`)
         } else {
           this.setState({ media: {
             id: `${(new Date).getTime()}`,
@@ -97,12 +123,12 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
     }
 
     if (index === 1) {
-      ImagePicker.launchImageLibrary(PICKER_OPTIONS, (response) => {
+      ImagePicker.launchImageLibrary(this._getOptions(), (response) => {
         if (response.didCancel) { 
           return 
         } else if (response.error) {
-          let label = response.error.startsWith('Photo') ? '照片' : '相机'
-          return Alert.alert(`请在iPhone的“设置-隐私-${label}”选项中，允许小苍兰访问你的${label}。`)
+          let label = response.error.startsWith('Photo') ? i18n.photo : i18n.camera
+          return Alert.alert(`${i18n.pls_auth_fore} ${label} ${i18n.pls_auth_back} ${label}。`)
         } else {
           this.setState({ media: { 
             id: `${(new Date).getTime()}`,
@@ -137,7 +163,7 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
     // const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
     const { avatars } = this.props.account.user
     const { media, uploading = false } = this.state
-
+    const {state} = this.props.navigation
     return ( 
       <View style={{ flex: 1, backgroundColor: '#000' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#151416'} barStyle={'light-content'} />
@@ -157,11 +183,11 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
         }
         <ActionSheet
           ref={e => this.ActionSheet = e}
-          options={['拍照', '从手机相册中选择', '取消']}
+          options={[state.params.i18n.take_photo, state.params.i18n.select_from_album, state.params.i18n.cancel]}
           cancelButtonIndex={2}
           onPress={this._pressActionSheet.bind(this)}
         />
       </View>
     )
-  }yaen
+  }
 })

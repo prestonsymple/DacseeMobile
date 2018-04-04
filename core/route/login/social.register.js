@@ -19,9 +19,11 @@ export default connect(state => ({
   i18n: state.intl.messages
 }))(class SocialRegisterScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    const {message} = reducer.intl
     return {
       drawerLockMode: 'locked-closed', 
-      title: '第三方账号注册'
+      title: message.social_register
     }
   }
 
@@ -80,7 +82,7 @@ export default connect(state => ({
         </View>
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>姓名</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>{i18n.name}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 50}}>
               {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
               <TextInput style={{ flex: 1, fontSize: 14}} placeholder={i18n.enter_name} onChangeText={ (value) => this.setState({ fullName: value}) } value={ fullName } />
@@ -88,7 +90,7 @@ export default connect(state => ({
           </View>          
           
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>手机号</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>{i18n.phone}</Text>
             <View style={{ flex: 1, flexDirection: 'row' }}>              
               <Button style={{ marginRight: 10, height: 50, width: 60, justifyContent: 'center' }}
                 onPress={() => this.props.navigation.navigate('PickerCountry', {
@@ -126,7 +128,7 @@ export default connect(state => ({
                     }
                   }                  
                 }}>
-                <Text style={{ color: 'white' }}>获取验证码</Text>
+                <Text style={{ color: 'white' }}>{i18n.send_code}</Text>
               </Button>
             </View>            
           </View>

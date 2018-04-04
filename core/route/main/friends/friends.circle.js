@@ -64,11 +64,12 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
-    const {mycircle} = this.props.i18n;
+    const {i18n} = this.props
+    const {mycircle} = i18n;
     const {setParams} = this.props.navigation;
     setParams({mycircle});
     await InteractionManager.runAfterInteractions();
-    this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd'))
+    this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd',{i18n}))
   }
 
   componentWillReceiveProps(props) {
@@ -199,7 +200,7 @@ export default connect(state => ({
                     (<ItemPerson
                       data={data}
                       onPressCheck={() => this.onPressCheck(data)}
-                      onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { ...data })}
+                      onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data })}
                     />)
                 }
                 renderSeparator={() => (
