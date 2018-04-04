@@ -16,6 +16,11 @@ export default {
     booking_detail_bell: require('./images/booking_detail_bell.png'),
     booking_detail_linking: require('./images/booking_detail_linking.png'),
     booking_detail_info: require('./images/booking_detail_info.png'),
+    booking_detail_car: require('./images/booking_detail_car.png'),
+    booking_detail_payment: require('./images/booking_detail_payment.png'),
+    booking_detail_phone: require('./images/booking_detail_phone.png'),
+    booking_detail_message: require('./images/booking_detail_message.png'),
+
   },
   
   animation: {

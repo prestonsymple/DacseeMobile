@@ -34,15 +34,21 @@ const MAP_DEFINE = {
 //   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
 // })
 
+/**
+ * @desc bookingDetailButton 按钮
+ */
 const BookingDetailButton = (props) => {
   const { onPress, iconName, style } = props;
   return(
     <TouchableOpacity onPress={onPress}
                       style={[{ backgroundColor: '#eee', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center'}, style]}>
-      { Icons.Generator.Material(iconName, 30, '#555') }
+      <Image source={iconName} style={{width:58, height:58}}/>
     </TouchableOpacity>
   )
-}
+};
+/**
+ * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
+ */
 const BookingDetailHeaderView = (props) => {
   const { avatars, fullName, userId, phoneCountryCode, phoneNo } = props.passenger_info;
   return(
@@ -58,12 +64,15 @@ const BookingDetailHeaderView = (props) => {
         </View>
       </View>
       <View style={{ flexDirection: 'row'}}>
-        <BookingDetailButton iconName={'textsms'} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}/>
-        <BookingDetailButton iconName={'phone'} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)}/>
+        <BookingDetailButton iconName={Resources.image.booking_detail_message} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}/>
+        <BookingDetailButton iconName={Resources.image.booking_detail_phone} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)}/>
       </View>
     </View>
   )
-}
+};
+/**
+ * @desc bookingDetail listItem
+ */
 const BookingDetailListItem = (props) => {
   const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props;
   return(
@@ -89,8 +98,11 @@ const BookingDetailListItem = (props) => {
 
     </View>
   )
-}
+};
 
+/**
+ * @desc bookingDetail 详情View
+ */
 const BookingDetailView = (props) => {
   const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail;
   const time = moment(booking_at).format('YYYY-MM-D HH:mm');
@@ -116,11 +128,11 @@ const BookingDetailView = (props) => {
         />
         <BookingDetailListItem title={<FormattedMessage id={'car_standard'}/>}
                                icon={<Image style={{height:14,width:14, marginRight:8}}
-                                            source={Resources.image.joblist_car}/>}
+                                            source={Resources.image.booking_detail_car}/>}
         />
         <BookingDetailListItem title={payment_method == 'Cash' ? '现金' : payment_method}
                                icon={<Image style={{height:14,width:14, marginRight:8}}
-                                            source={Resources.image.joblist_payment}/>}
+                                            source={Resources.image.booking_detail_payment}/>}
         />
         <BookingDetailListItem title={ <FormattedMessage id={'note_to_driver'}/>}
                                icon={<Image style={{height:14,width:14, marginRight:8}}
@@ -129,8 +141,11 @@ const BookingDetailView = (props) => {
       </ScrollView>
     </View>
   )
-}
+};
 
+/**
+ * @desc bookingDetail 底部处理View
+ */
 const BookingDetailBottomView = (props) => {
   const fare  = props.fare;
 
@@ -168,7 +183,7 @@ const BookingDetailBottomView = (props) => {
       </View>
     </View>
   )
-}
+};
 
 export default connect(state => ({
   i18n: state.intl.messages || {},
@@ -356,11 +371,7 @@ export default connect(state => ({
       }
     }
   }
-
-  componentDidMount() {
-    // console.log(this.props.navigation.state.params.jobDetail);
-  }
-
+  
   render() {
     const { destination, from, fare } = this.props.navigation.state.params.jobDetail;
     const { i18n } = this.props;
@@ -380,137 +391,12 @@ export default connect(state => ({
           // region={{ latitude: from.coords.lat, longitude: from.coords.lng, latitudeDelta: destination.coords.lat, longitudeDelta: destination.coords.lng }}
           ref={e => this.map = e}
         >
-          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} />
-          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} />
+          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} title={from.name}/>
+          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} title={destination.name}/>
         </MapView>
-
         <BookingDetailView jobDetail={this.props.navigation.state.params.jobDetail} i18n={i18n} detail={this.state.detail} optionObject={optionObject}/>
-
         <BookingDetailBottomView fare={fare} getOption={getOption} i18n={i18n} optionObject={optionObject} chineseStatus={chineseStatus}/>
-
       </SafeAreaView>
-    )
-  }
-
-  render1() {
-    const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = this.props.navigation.state.params.jobDetail
-    const { status } = this.state.detail
-    const { avatars, fullName, phoneCountryCode, phoneNo } = passenger_info
-    const { i18n } = this.props
-    const optionObject = this._getStatus(status)
-
-    return (
-      <View style={{ flex: 1 }}>
-        <MapView
-          {...MAP_DEFINE}
-          style={{ height: 210 }}
-          mapType={'standard'}
-          coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }}
-          zoomLevel={ 10 }
-          // region={{ latitude: from.coords.lat, longitude: from.coords.lng, latitudeDelta: destination.coords.lat, longitudeDelta: destination.coords.lng }}
-          ref={e => this.map = e}
-        >
-          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} />
-          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} />
-        </MapView>
-
-        <View style={{ position: 'absolute', top: 160, bottom:0, left: 0, right: 0, opacity: 1}}>
-
-          <View style={{ marginTop: 40, flex: 1, backgroundColor: 'white', borderTopRightRadius: 20, borderTopLeftRadius: 20, shadowOffset: {width: 0, height: 5}, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 20 }}>
-            <ScrollView style={{ marginTop: 50, marginBottom: 70 }} >
-              <View style={{ paddingHorizontal: 20 }}>
-                <View style={{ flexDirection: 'row', width: width - 40, justifyContent: 'space-between' }}>
-                  <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
-                    <FormattedMessage id={'from'} />
-                  </Text>
-                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ from.address }</Text>
-                </View>
-
-                <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
-                    <FormattedMessage id={'destination'}/>
-                  </Text>
-                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ destination.address }</Text>
-                </View>
-
-                <View style={{ marginTop: 20, flexDirection: 'row' }}>
-                  <Text style={{ fontSize: TextFont.TextSize(15), color:'#868686', width: 120 }}>
-                    <FormattedMessage id={'book_time'}/>
-                  </Text>
-                  <Text style={{ flex: 1, fontSize: TextFont.TextSize(14), color: '#3a3a3a', fontWeight: 'bold', textAlign: 'right' }}>{ moment(booking_at).format('YYYY-MM-D HH:mm') }</Text>
-                </View>
-
-                <View style={{ marginTop: 20, height: 1, backgroundColor: '#e5e5e5' }}></View>
-              </View>
-              <View style={{ marginHorizontal: 20, marginVertical: 12, flexDirection: 'row', justifyContent: 'center' }}>
-                <View style={{flex: 1, alignItems:'center', }}>
-                  <Image source={ Resources.image.joblist_car} resizeMode='contain' style={{ width:36, height:36}} />
-                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#3a3a3a' }}>
-                    <FormattedMessage id={'car_standard'}/>
-                  </Text>
-                </View>
-                <View style={{ flex: 1, alignItems:'center'}}>
-                  <Image source={ Resources.image.joblist_payment} resizeMode='contain' style={{ height: 36}} />
-                  <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(14),fontWeight: 'bold',  color: '#3a3a3a' }}>{ payment_method == 'Cash' ? '现金' : payment_method }</Text>
-                </View>
-              </View>
-              <View style={{ marginHorizontal: 20, height: .5, backgroundColor: '#e5e5e5' }}></View>
-              <View style={{ marginHorizontal: 20, marginVertical: 12 }}>
-                <Text style={{ fontSize: TextFont.TextSize(15), fontWeight: 'bold', color: '#3a3a3a' }}>
-                  <FormattedMessage id={'note_to_driver'}/>
-                </Text>
-                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#868686' }}>
-                  <FormattedMessage id={'no_content'}/>
-                </Text>
-              </View>
-            </ScrollView>
-
-            <View style={[styles.JobDetailWrap, { height: 70 }]}>
-              <View style={{ height: 1, backgroundColor: '#d5d5d5' }}></View>
-              <View style={{marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 70 }}>
-                <Text style={{ fontWeight: 'bold', color: '#333', fontSize: TextFont.TextSize(20) }}>{ fare.toFixed(2) }</Text>
-                {
-                  this._getOptionable(status) ?
-                    <View style={{ flexDirection: 'row' }}>
-                      <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 20 }} onPress={ optionObject.leftAction }>
-                        <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
-                      </Button>
-                      <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                        <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
-                      </Button>
-                    </View> :
-                    <Text style={{ fontSize: TextFont.TextSize(15) ,fontWeight: 'bold',  }}>{ this._statusInChinese(status) }</Text>
-                }
-              </View>
-            </View>
-          </View>
-
-          <View style={{ position: 'absolute', top: 10, left:30, right: 30, height: 80, flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-              <Image source={{ uri: avatars == undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }} style={{ width: 70, height: 70 , borderRadius: 35 }} />
-            </View>
-            <View style={{ position: 'absolute', top:25, left: 75, right: 116, height: 50, backgroundColor: 'white' }}>
-              <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(18), color: '#3a3a3a', fontWeight: 'bold' }}>{ fullName }</Text>
-            </View>
-            <View style={{ flexDirection: 'row', position: 'absolute', right: 0}}>
-              <View style={{ marginRight: 10, width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => {
-                  Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)
-                }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center'}}>
-                  { Icons.Generator.Material('textsms', 24, '#555') }
-                </TouchableOpacity>
-              </View>
-              <View style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => {
-                  Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)
-                }} style={{ backgroundColor: '#eee', width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center' }}>
-                  { Icons.Generator.Material('phone', 24, '#555') }
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
     )
   }
 })
@@ -520,8 +406,4 @@ const styles = StyleSheet.create({
     ios: { position: 'absolute', bottom: Define.system.ios.x ? 20 : 0, left: 0, right: 0},
     android: { position: 'absolute', bottom: 0, left: 0, right: 0 }
   }),
-  // PickAddressWrap: Platform.select({
-  //   ios: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3 },
-  //   android: { position: 'absolute', bottom: 30, left: 15, right: 15, height: 89, backgroundColor: 'white', borderRadius: 3, borderColor: '#ccc', borderWidth: .6 }
-  // })
 })
