@@ -32,7 +32,7 @@ function* initializationFlow(action) {
   try {
     const { code, language } = yield call(Session.Lookup.Get, 'v1/lookup/country')
     // TODO: GET DEFAULT LANGUAGE SET
-    const map_mode = code === 'CN' ? 'GOOGLEMAP' : 'GOOGLEMAP'
+    const map_mode = code === 'CN' ? 'AMAP' : 'GOOGLEMAP'
     yield all([
       put(application.setValues({ map_mode })),
       put(account.setAccountValue({ country: code, language }))
