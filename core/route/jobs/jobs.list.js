@@ -53,7 +53,6 @@ export default connect(state => ({
     const resultDate = dateStr == null ? this.state.selectedDate : dateStr
     const dateFrom = this._getFormatterDate(resultDate).dateFrom
     const dateTo = this._getFormatterDate(resultDate).dateTo
-
     try {
       this.setState({ loading: true })
       const resp = await Session.Booking.Get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
@@ -80,6 +79,15 @@ export default connect(state => ({
     return (
       <View style={{ flex: 1 }}>
         <Schedule
+          onDayPress={(day)=>{
+            const dateStr = moment(day.timestamp).toISOString()
+            this.setState({
+              selectedDate: dateStr
+            })
+            this._fetchData(dateStr)
+          }}
+
+          selected={this.state.selectedDate}
           _onRefresh={(date) => this._fetchData(date)}>
           {this.rederJobsList()}
         </Schedule>

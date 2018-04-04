@@ -46,8 +46,8 @@ export default class AgendaView extends Component {
       calendarIsReady: false,
       calendarScrollable: false,
       firstResevationLoad: false,
-      selectedDay: parseDate(new Date().toISOString()) || XDate(true),
-      topDay: parseDate(new Date().toISOString()) || XDate(true),
+      selectedDay: parseDate(this.props.selected) || XDate(true),
+      topDay: parseDate(this.props.selected) || XDate(true),
       showReservations: false,
       loading: false,
 
@@ -214,8 +214,9 @@ export default class AgendaView extends Component {
     if (this.props.loadItemsForMonth) {
       this.props.loadItemsForMonth(xdateToData(day));
     }
-    const dateStr = moment(xdateToData(day).timestamp).toISOString()
-    this.props._onRefresh(dateStr)
+    if (this.props.onDayPress) {
+      this.props.onDayPress(xdateToData(day));
+    }
   }
 
   onDayChange(day) {
