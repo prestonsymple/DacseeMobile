@@ -47,14 +47,19 @@ export default connect(state => ({
       this.setState({ jobs: dataContrast.cloneWithRows(props.jobs) })
     }
   }
-  _fetchData() {
-
+  sliderChange(status) {
+    if(status===-1){
+      console.log('reject')
+    }else{
+      console.log('accept')
+    }
+  }
+  goJobsListDetail(row) {
+    this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))
   }
   render() {
     const { working } = this.props
     const { loading, jobs } = this.state
-
-
     return (
       <View style={{ flex: 1, backgroundColor: '#f8f8f8', }}>
         <View style={{ paddingHorizontal: 20, paddingTop: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width }}>
@@ -83,7 +88,9 @@ export default connect(state => ({
                 dataSource={jobs}
                 enableEmptySections={true}
                 renderRow={(row) => (
-                  <OnlineListItem itemData={row} onPress={() => this.props.goJobsListDetail(row)} />
+                  <TouchableOpacity activeOpacity={.7} onPress={this.goJobsListDetail.bind(this,row)}>
+                    <OnlineListItem itemData={row}  sliderChange={(status)=>this.sliderChange(status)}/>
+                  </TouchableOpacity>
                 )}
                 style={{ marginBottom: 15 }}
               />

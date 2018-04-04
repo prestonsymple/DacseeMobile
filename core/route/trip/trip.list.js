@@ -91,7 +91,7 @@ export default connect(state => ({
                 <RefreshControl
                   refreshing={this.state.loading}
                   onRefresh={this._fetchData.bind(this)}
-                  title={'下拉进行刷新'}
+                  title={i18n.pull_refresh}
                   colors={['#ffffff']}
                   progressBackgroundColor={'#1c99fb'}
                 />
@@ -107,7 +107,7 @@ export default connect(state => ({
                 <RefreshControl
                   refreshing={this.state.loading}
                   onRefresh={() => { this._fetchData.bind(this) }}
-                  title={'下拉进行刷新'}
+                  title={i18n.pull_refresh}
                   colors={['#ffffff']}
                   progressBackgroundColor={'#1c99fb'}
                 />

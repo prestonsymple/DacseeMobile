@@ -25,13 +25,15 @@ const styles = StyleSheet.create({
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default connect(state => ({
-  ...state.wallet
+  ...state.wallet,
+  i18n: state.intl.messages || {}
 }))(class WalletTransactionListScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '钱包'
+      title: reducer.intl.messages.wallet
     }
   }
 
@@ -78,6 +80,7 @@ export default connect(state => ({
 
   render() {
     const { detail } = this.state
+    const {i18n} = this.props
     const wrapWidth = width
 
     return (
@@ -88,7 +91,7 @@ export default connect(state => ({
             <RefreshControl
               refreshing={this.state.loading}
               onRefresh={this._fetchData.bind(this)}
-              title={'下拉进行刷新'}
+              title={i18n.pull_refresh}
               colors={['#ffffff']}
               progressBackgroundColor={'#1c99fb'}
             />

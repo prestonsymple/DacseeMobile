@@ -27,9 +27,10 @@ export default connect(state => ({
   ...state.wallet
 })) (class WalletTransferSummaryScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '转账确认'
+      title: reducer.intl.messages.transfer_confirm
     }
   }
 
