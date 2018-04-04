@@ -1,4 +1,4 @@
-import { Dimensions, PixelRatio } from 'react-native'
+import { Dimensions, PixelRatio, Platform } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
 const dpr = PixelRatio.get()
@@ -7,6 +7,9 @@ const dpr = PixelRatio.get()
  */
 export default {
   TextSize: (size) => {
+    if( Platform.OS === 'ios'){
+      return size
+    }
     //size=size/1.10;
     if (dpr === 2) {
       // iphone 5s和老安卓机
