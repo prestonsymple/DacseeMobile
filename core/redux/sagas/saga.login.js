@@ -182,13 +182,13 @@ function* logoutFlow() {
     const payload = yield take(account.asyncLogout().type)
     try {
       yield call(session.Push.Put, 'v1/unsubscribe', { uuid: System.UUID })
+    } catch (e) {
+      /*  */
+    } finally {
       yield put(account.saveLogout())
       yield put(booking.passengerSetValue({ type: 'circle', name: '优选', payment: '现金支付', book: false, time: 'now', selected_friends: [] }))
       yield put(account.loginPutValue(0))
       yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
-    } catch (e) {
-      console.log(e)
-      yield put(application.showMessage('无法连接到服务器，请确认您的网络是否正常'))
     }
   }
 }
