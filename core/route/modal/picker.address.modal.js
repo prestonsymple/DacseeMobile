@@ -8,6 +8,7 @@ import InteractionManager from 'InteractionManager'
 import * as Progress from 'react-native-progress'
 import CodePush from 'react-native-code-push'
 import Axios from 'axios'
+import lodash from 'lodash'
 import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
@@ -31,24 +32,24 @@ export default connect(state => ({
 
   constructor(props) {
     super(props)
+    const favorite = props.favorite.map(pipe => Object.assign({}, pipe, { star: true }))
     this.state = {
-      searchRet: undefined,
-      fav: dataContrast.cloneWithRows(props.favorite)
+      data: [],
+      dataSource: dataContrast.cloneWithRows(favorite)
     }
+    this._keywords = ''
   }
 
-  // shouldComponentUpdate(props) {
-  //   if (props.i18n !== this.props.i18n || props.favorite !== this.props.favorite) {
-  //     return true
-  //   }
-  //   return false
-  // }
-
   componentWillReceiveProps(props) {
-    if (props.favorite && props.favorite !== this.props.favorite) {
-      this.setState({
-        fav: dataContrast.cloneWithRows(props.favorite)
-      })
+    if (props.favorite && props.favorite !== this.props.favorite && this._keywords.length === 0) {
+      this.setState({ dataSource: dataContrast.cloneWithRows(props.favorite) })
+    }
+
+    if (props.favorite && props.favorite !== this.props.favorite && this._keywords.length !== 0) {
+      const data = this.state.data.map(pipe => Object.assign({}, pipe, { 
+        star: props.favorite.find(sub => pipe.placeId === sub.placeId) !== undefined
+      }))
+      this.setState({ dataSource: dataContrast.cloneWithRows(data) })
     }
   }
 
@@ -56,99 +57,87 @@ export default connect(state => ({
     this.timer && clearTimeout(this.timer)
   }
 
-  async _fetchFavoriteData() {
+  async componentDidMount() {
+    await InteractionManager.runAfterInteractions()
+    if (this.props.favorite.length === 0) this._fetchData()
+  }
+
+  async _fetchData() {
     try {
       const resp = await Session.User.Get('v1/favPlaces')
-      this.props.dispatch(Address.setValues({ favorite: resp }))
+      const favorite = resp.map(pipe => Object.assign({}, pipe, { star: true }))
+      this.props.dispatch(Address.setValues({ favorite }))
     } catch(e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
+      /*  */
     }
   }
 
-  async _deleteFavPlace(place) {
+  async onPressStar(row) {
     try {
-      const body = {
-        name: place.name,
-        latitude: place.coords.lat,
-        longitude: place.coords.lng,
-        address: place.address,
-        placeId: place.placeId
+      const { 
+        _id = (this.props.favorite.find(pipe => pipe.placeId === row.placeId) || {})._id,
+        coords
+      } = row
+      const { lat, lng } = coords
+      const body = Object.assign({}, row, { latitude: lat, longitude: lng })
+
+      let favorite = lodash.cloneDeep(this.props.favorite)
+      if (_id) { 
+        // ROMOVE
+        const resp = await Session.User.Delete(`v1/favPlaces/${_id}`, body)
+        favorite = favorite.filter(pipe => pipe.placeId !== row.placeId)
+      } else {
+        // APPEND
+        const resp = await Session.User.Post('v1/favPlaces/user', body)
+        favorite.push(resp)
       }
-
-      const favPlace = this.props.favorite.find(pipe => pipe.placeId == place.placeId)
-      const resp = await Session.User.Delete(`v1/favPlaces/${favPlace._id}`, body)
-
-      const favorites = this.props.favorite.filter(pipe => pipe.placeId !== resp.placeId)
-      this.props.dispatch(Address.setValues({ favorite: favorites }))
+      
+      favorite = favorite.map(pipe => Object.assign(pipe, { star: true }))
+      this.props.dispatch(Address.setValues({ favorite }))
     } catch(e) {
-      console.log(e)
+      /*  */
     }
   }
-
-  async _addedFavPlace(place) {
-    try {
-      const body = {
-        name: place.name,
-        latitude: place.coords.lat,
-        longitude: place.coords.lng,
-        address: place.address,
-        placeId: place.placeId
-      }
-      const resp = await Session.User.Post('v1/favPlaces/user', body)
-
-      let favorites = this.props.favorite
-      favorites.push(resp)
-      this.props.dispatch(Address.setValues({ favorite: favorites }))
-      this.setState({
-        fav: dataContrast.cloneWithRows(favorites)
-      })
-    } catch(e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
-    }
-  }
-
-  componentDidMount() {
-    this._fetchFavoriteData()
-  }
-
 
   onEnterKeywords(keywords) {
-    this.timer && clearTimeout(this.timer)
-    this.timer = setTimeout(async () => {
-      if (keywords.length === 0) return this.setState({ searchRet: undefined })
-      try {
-        const { map_mode, from = { coords: {} }, location } = this.props
-        const { lat = location.lat, lng = location.lng } = from.coords
-        console.log('查询', this.props)
-        console.log(lat, lng)
-        
-        if (map_mode === 'GOOGLEMAP') {
-          const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${1000 * 100}&keyword=${keywords}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
-          const { results } = data
-          const resultMap = results.map(pipe => ({
-            placeId: pipe.place_id,
-            coords: {
-              lng: pipe.geometry.location.lng,
-              lat: pipe.geometry.location.lat
-            },
-            name: pipe.name,
-            address: pipe.vicinity
-          }))
-          this.setState({ searchRet: dataContrast.cloneWithRows(resultMap) }) 
-        } else {
-          const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
-          const { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
-          this.setState({ searchRet: dataContrast.cloneWithRows(data) }) 
-        }
-      } catch (e) {
-        this.props.dispatch(application.showMessage('无法连接到服务器'))
-      }
-    }, 350)
+    this._keywords = keywords
+    if (keywords.length === 0) {
+      this.setState({ dataSource: dataContrast.cloneWithRows(this.props.favorite) })
+    } else {
+      this.setState({ dataSource: dataContrast.cloneWithRows([]) })
+      this.timer && clearTimeout(this.timer)
+      this.timer = setTimeout(async () => {
+        try {
+          const { map_mode, from = { coords: {} }, location, favorite } = this.props
+          const { lat = location.lat, lng = location.lng } = from.coords
+          
+          if (map_mode === 'GOOGLEMAP') {
+            const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${1000 * 100}&keyword=${keywords}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
+            const { results } = data
+            const resultMap = results.map(pipe => ({
+              star: favorite.find(sub => pipe.place_id === sub.placeId),
+              placeId: pipe.place_id, name: pipe.name, address: pipe.vicinity,
+              coords: {
+                lng: pipe.geometry.location.lng, lat: pipe.geometry.location.lat
+              }
+            }))
+            this.setState({ dataSource: dataContrast.cloneWithRows(resultMap), data: resultMap }) 
+          } else {
+            const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
+            let { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
+            data = data.map(pipe => Object.assign({}, pipe, { 
+              star: favorite.find(sub => pipe.placeId === sub.placeId) 
+            }))
+            this.setState({ dataSource: dataContrast.cloneWithRows(data), data }) 
+          }
+        } catch (e) { /*  */ }
+      }, 400)
+    }
   }
 
   render() {
     const { type } = this.props.navigation.state.params
-    const { searchRet, fav } = this.state
+    const { dataSource } = this.state
     const { favorite, i18n } = this.props
     const onPressCancel = () => this.props.navigation.goBack()
     const onChangeWords = (words) => this.onEnterKeywords(words)
@@ -186,7 +175,7 @@ export default connect(state => ({
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <ListView
             enableEmptySections={true}
-            dataSource={searchRet || fav}
+            dataSource={dataSource}
             renderRow={(rowData) => (
               <PickAddressRowItem
                 onPress={() => {
@@ -194,15 +183,8 @@ export default connect(state => ({
                   this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
                   this.props.navigation.goBack()
                 }}
-                onPressStar={() => {
-                  if (favorite.find(pipe => pipe.placeId == rowData.placeId)) {
-                    this._deleteFavPlace(rowData)
-                  } else {
-                    this._addedFavPlace(rowData)
-                  }
-                }}
-                isAddedFav={favorite.find(pipe => pipe.placeId == rowData.placeId)}
-                data={rowData}
+                onPressStar={() => this.onPressStar(rowData)}
+                data={ rowData }
               />
             )}
             renderSeparator={() => <View style={{ marginLeft: 15, borderColor: '#eee', borderBottomWidth: 0.8 }} />}
@@ -215,13 +197,10 @@ export default connect(state => ({
 })
 
 class PickAddressRowItem extends PureComponent {
-  constructor(props) {
-    super(props)
-  }
 
   render() {
     const { onPress, onPressStar = () => {}, data } = this.props
-    const { address, name } = data
+    const { address, name, star } = data
     // const { isAddedFav } = this.state
 
     return (
@@ -231,7 +210,7 @@ class PickAddressRowItem extends PureComponent {
             <View style={{ width: 48, height: 48 }}>
               <View style={{ marginTop: 12, marginLeft: 10 }}>
                 {
-                  this.props.isAddedFav ?
+                  star ?
                   Icons.Generator.Material('star', 24, '#f3ae3d') :
                   Icons.Generator.Material('star-border', 24, '#e3e3e3')
                 }
