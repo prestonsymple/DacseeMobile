@@ -26,7 +26,12 @@ function* updateDriverLocation() {
       const working = yield select(state => state.driver.working)
       if (working) {
         const { location } = yield select(state => ({ location: state.account.location }))
-        yield call(Session.Location.Put, 'v1', location)
+        yield call(Session.Location.Put, 'v1', Object.assign(location, {
+          lat: undefined,
+          lng: undefined,
+          // TODO: 选择车型信息
+          vehicle_id: '5a7843962dd97f23dc6a070c'
+        }))
       }
     } catch (e) {
       // DO NOTHING
