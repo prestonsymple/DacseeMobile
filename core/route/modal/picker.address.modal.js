@@ -26,6 +26,7 @@ export default connect(state => ({
   i18n: state.intl.messages,
   map_mode: state.application.map_mode,
   favorite: state.address.favorite,
+  from: state.booking.from
 }))(class SelectAddressModal extends Component {
 
   constructor(props) {
@@ -116,8 +117,9 @@ export default connect(state => ({
     this.timer = setTimeout(async () => {
       if (keywords.length === 0) return this.setState({ searchRet: undefined })
       try {
-        const { map_mode, location } = this.props
-        const { lat, lng } = location
+        const { map_mode, from = { coords: {} }, location } = this.props
+        const { lat = location.lat, lng = location.lng } = from.coords
+        console.log(lat, lng)
         
         if (map_mode === 'GOOGLEMAP') {
           const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${1000 * 100}&keyword=${keywords}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)

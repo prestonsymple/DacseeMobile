@@ -127,7 +127,6 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - rn-splash-screen (5.2.0)
   - RNDeviceInfo (0.21.4)
   - RNFS (2.9.7):
     - React
@@ -207,7 +206,6 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
-  - rn-splash-screen (from `../node_modules/rn-splash-screen`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNOpenAppSettings (from `../node_modules/react-native-app-settings/ios`)
@@ -247,8 +245,6 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native-image-picker
   react-native-maps:
     :path: ../node_modules/react-native-maps
-  rn-splash-screen:
-    :path: ../node_modules/rn-splash-screen
   RNDeviceInfo:
     :path: ../node_modules/react-native-device-info
   RNFS:
@@ -281,16 +277,15 @@ SPEC CHECKSUMS:
   react-native-google-maps: 963fc78a5ac32dad3a726e4fa08b5307faa5cab2
   react-native-image-picker: 42cfe2c8435d893414f8714a81e480313cb1412b
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
-  rn-splash-screen: e796063f5c9b843d1e7d9d8e86a7c2d0ee268f72
   RNDeviceInfo: 06a9f93956871270fe4a07785e6fa4dea82eef74
   RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
-  RNOpenAppSettings: a551717bcafddb785862084a34673667fd91f112
+  RNOpenAppSettings: 60a145f95df5ef2fac318f46d3d90103c0e20189
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   UMCCommon: ed0b882a939c45850f6803a5837698572a3e9b96
   UMCSecurityPlugins: 0831a08f3988f3cea9f1d3a7626cd9bee4fef150
   UMCShare: ab74e3c818cd305846609b15b0daf36872213c28
   yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: 02a9fde16d5eaef4bddbe1746f6071ec0422eae9
+PODFILE CHECKSUM: 96250c47cc837c8ad00e96f5403129cf1da6ff48
 
 COCOAPODS: 1.4.0

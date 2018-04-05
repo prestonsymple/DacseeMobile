@@ -17,14 +17,17 @@ function* ping(server, agent = false) {
   } catch (e) { /* DO NOTHING */ }
   const div = (new Date()).getTime() - start.getTime()
   if (agent && response && response.data) {
-    return { average: response.data.average, server }
+    return { average: response.data.average + div, server }
   }
   return div
 }
 
 function* networkObserver() {
   while (true) {
-    yield take(application.changeNetworkStatus().type)
+    yield take(action => (
+      action.type === application.changeNetworkStatus().type || 
+      action.type === application.checkNetworkMapServer().type
+    ))
     const apiMaps = yield select(state => state.application.api_maps)
     
     // 获取主服务器响应时间

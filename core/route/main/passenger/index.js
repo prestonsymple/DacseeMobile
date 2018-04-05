@@ -71,10 +71,11 @@ export default connect(state => ({
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.status !== props.status) {
+      const { lat, lng } = props.from.coords
       if (this.map.animateTo) {
-        this.map.animateTo({ zoomLevel: 16, coordinate: props.location }, 500)
+        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: lat, longitude: lng } }, 500)
       } else {
-        let region = Object.assign({}, props.location, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
+        let region = Object.assign({}, { latitude: lat, longitude: lng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
         this.map.animateToRegion(region, 500)
       }
       this.setState({ polyline: [] })
@@ -97,8 +98,9 @@ export default connect(state => ({
       }
 
       const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
-      const { fare = {} } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}&vehicle_group_id=${vehicleGroupsId}`)
-      this.props.dispatch(booking.passengerSetValue({ fare: fare.Circle || fare['朋友圈'] }))
+      const { fare } = await Session.Booking.Get(`v1/fares?from_lat=${from.coords.lat}&from_lng=${from.coords.lng}&destination_lat=${destination.coords.lat}&destination_lng=${destination.coords.lng}&vehicle_group_id=${vehicleGroupsId}`)
+      const amount = fare.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈').amount
+      this.props.dispatch(booking.passengerSetValue({ fare: amount }))
       this.setState({ polyline: [] })
     }
 
@@ -358,8 +360,6 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
-
-    console.log((destination_coords !== DEFAULT_COORDS), (from_coords !== DEFAULT_COORDS))
 
     return (
       <View style={{ 

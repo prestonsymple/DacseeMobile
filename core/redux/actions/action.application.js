@@ -2,6 +2,8 @@ import { createAction } from 'redux-actions'
 
 export default {
   changeApplicationStatus: createAction('CHANGE_APPLICATION_STATUS'),
+
+  checkNetworkMapServer: createAction('CHCEK_NETWORK_MAP_SERVER'),
   changeNetworkStatus: createAction('CHANGE_NETWORK_STATUS'),
 
   setReferrerValue: createAction('APPLICATION_SET_REFERRER_VALUE'),

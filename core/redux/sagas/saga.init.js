@@ -49,7 +49,7 @@ function* initializationFlow(action) {
 
   try {
     const country = yield select(state => state.account.country)
-    const vehicleGroups = yield call(Session.Lookup.Get, `v1/lookup/vehicleGroups?country=${country}`)
+    const vehicleGroups = yield call(Session.Lookup.Get, `v1/lookup/vehicleGroups?country=${country || 'MY'}`)
     yield put(booking.passengerSetValue({ vehicleGroups }))
   } catch (e) {
     console.log(e)

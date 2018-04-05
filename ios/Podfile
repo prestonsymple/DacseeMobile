@@ -73,7 +73,6 @@ target 'dacsee' do
     pod 'RNFS', :path => '../node_modules/react-native-fs'
     pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings/ios'
     pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
-    pod 'rn-splash-screen', :path => '../node_modules/rn-splash-screen'
 
 end
 

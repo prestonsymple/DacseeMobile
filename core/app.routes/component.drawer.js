@@ -1,8 +1,8 @@
 /* global store */
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
+import { ScrollView, StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
-import { SafeAreaView } from 'react-navigation'
+import { SafeAreaView, NavigationActions } from 'react-navigation'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { Icons, System,TextFont } from '../utils'
@@ -51,7 +51,10 @@ const MENUS_OPTIONS = [{
 // },
 ]
 
-export default connect(state => ({ user: state.account.user }))(class DrawerContentComponent extends Component {
+export default connect(state => ({ 
+  user: state.account.user,
+  i18n: state.intl.messages || {}
+}))(class DrawerContentComponent extends Component {
 
   constructor(props) {
     super(props)
@@ -66,13 +69,13 @@ export default connect(state => ({ user: state.account.user }))(class DrawerCont
           {/* Profile */}
           <View style={{ marginVertical: 25, alignItems: 'center' }}>
             {/* TODO: LOAD USER DATA */}
-            <View style={[
+            <TouchableOpacity onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'ProfileChangeAvatar', params: { i18n: this.props.i18n } }))} style={[
               { backgroundColor: '#eee', overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
               { borderRadius: 50, width: 100, height: 100, justifyContent: 'center', alignItems: 'center' }
             ]}>
               <Image style={{ width: 100, height: 100 }} source={{ uri: avatars[avatars.length - 1].url }} />
               {/* { Icons.Generator.Material('account-circle', 100, '#fad723') } */}
-            </View>
+            </TouchableOpacity>
             <Text style={[
               { marginTop: 10 },
               { color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: TextFont.TextSize(18) }
