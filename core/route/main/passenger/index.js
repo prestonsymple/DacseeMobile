@@ -85,6 +85,8 @@ export default connect(state => ({
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && this.props.status !== props.status) {
       const { destination, from } = props
 
+      console.log(destination, from)
+
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
       const mLng = ((from.coords.lng + destination.coords.lng) / 2)
 
@@ -244,7 +246,7 @@ export default connect(state => ({
       Animated.timing(this.board, { toValue: 1, duration: 100 }).start()
     }
     this.timer && clearTimeout(this.timer)
-    this.timer = setTimeout(this.onLocationSearch.bind(this, _longitude, _latitude), 1000)
+    this.timer = setTimeout(() => this.onLocationSearch(_longitude, _latitude), 1000)
   }
 
   async onLocationSearch(longitude, latitude) {
@@ -349,8 +351,7 @@ export default connect(state => ({
     // TODO: FIX
     let { from_coords, destination_coords } = { 
       from_coords: DEFAULT_COORDS, 
-      destination_coords: DEFAULT_COORDS,
-      // driver_coords: DEFAULT_COORDS
+      destination_coords: DEFAULT_COORDS
     }
     if (from.coords && destination.coords) {
       from_coords = from.coords
@@ -368,9 +369,6 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
-
-    console.log(from_coords)
-    console.log(destination_coords)
 
     return (
       <View style={{ 
