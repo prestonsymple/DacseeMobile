@@ -69,7 +69,7 @@ export default connect(state => ({
           {/* Profile */}
           <View style={{ marginVertical: 25, alignItems: 'center' }}>
             {/* TODO: LOAD USER DATA */}
-            <TouchableOpacity onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'ProfileChangeAvatar', params: { i18n: this.props.i18n } }))} style={[
+            <TouchableOpacity activeOpacity={.7} onPress={() => this.props.dispatch(NavigationActions.navigate({ routeName: 'ProfileChangeAvatar', params: { i18n: this.props.i18n } }))} style={[
               { backgroundColor: '#eee', overflow: 'hidden', borderColor: '#e8e8e8', borderWidth: 1 },
               { borderRadius: 50, width: 100, height: 100, justifyContent: 'center', alignItems: 'center' }
             ]}>

@@ -78,17 +78,26 @@ function* bookingFlow() {
       const body = {
         from,
         destination,
-
         fare: fare,
-
         type: 'now',
         notes : '', 
         booking_at: Methods.timeZone(time),
         payment_method: Methods.payment(payment),
       }
 
+      const vehicleGroups = yield select(state => state.booking.vehicleGroups)
       if (type === 'circle') {
+        const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+        body.vehicle_category_id = vehicleGroupsId
         body.assign_type = typeof(selected_friends) === 'string' ? 'circle' : 'selected_circle'
+      } else if (type === 'taxi') {
+        const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'Taxi' || pipe.name === '出租车')._id
+        body.vehicle_category_id = vehicleGroupsId
+        body.assign_type = 'any'
+      } else {
+        const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'Private Car' || pipe.name === '专车')._id
+        body.vehicle_category_id = vehicleGroupsId
+        body.assign_type = 'any'
       }
 
       if (type === 'circle' && Array.isArray(selected_friends)) {
@@ -121,6 +130,7 @@ function* bookingFlow() {
         } else if (code === 'NO_AVAILABLE_DRIVER') {
           yield put(application.showMessage('当前没有可接单的司机'))
         } else {
+          // yield put(application.showMessage(`${code}${message}`))
           yield put(application.showMessage('无法连接到服务器，请检查网络'))
         }
         yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))

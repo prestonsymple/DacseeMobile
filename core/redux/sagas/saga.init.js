@@ -15,27 +15,15 @@ function* initializationFlow(action) {
   }))
 
   try {
-    yield call(oncePosition)
-  } catch (e) {
-    navigator.geolocation.requestAuthorization()
-  }
-  
-  if (!status || !foreground) return;
-
-  try {
+    // 请求位置
     const { coords } = yield call(oncePosition)
     const { latitude, longitude } = coords 
-    
     yield all([
       put(application.setValues({ gps_access: true })),
       put(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
     ])
-  } catch (e) {
-    if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
-    // TODO: 增加默认位置坐标
-  }
 
-  try {
+    // 配置当前所在国家和语言
     const { code, language } = yield call(Session.Lookup.Get, 'v1/lookup/country')
     // TODO: GET DEFAULT LANGUAGE SET
     const map_mode = code === 'CN' ? 'AMAP' : 'GOOGLEMAP'
@@ -44,8 +32,14 @@ function* initializationFlow(action) {
       put(account.setAccountValue({ country: code, language }))
     ])
   } catch (e) {
-    console.log(e)
+    try {
+      navigator.geolocation.requestAuthorization()
+    } catch (e) { /* DO NOTHING */ }
+    if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
+    // TODO: 增加默认位置坐标
   }
+
+  if (!status || !foreground) return;
 
   try {
     const country = yield select(state => state.account.country)
@@ -62,7 +56,8 @@ export default function* initializationSaga() {
     return (
       (type === 'persist/REHYDRATE') || 
       (type === application.changeApplicationStatus().type) ||
-      (type === application.updatePushToken())
+      (type === application.updatePushToken().type) || 
+      (type === account.saveLogin().type)
     )
   }, initializationFlow)
 }

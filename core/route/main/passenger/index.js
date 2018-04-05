@@ -44,7 +44,8 @@ export default connect(state => ({
       showTP:false,
       showSP:false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
-      polyline: []
+      polyline: [],
+
     }
     this.timer = null
     this.pin = new Animated.Value(0)
@@ -211,24 +212,31 @@ export default connect(state => ({
     // } catch (e) { /**/ }
   }
 
-  onStatusChangeListener({ nativeEvent }) {
+  onStatusChangeListener(region) {
+    const { nativeEvent = {} } = region
     const { 
-      longitude = nativeEvent.coordinate.longitude, 
-      latitude = nativeEvent.coordinate.latitude, 
-      zoomLevel = 12 
+      longitude = region.longitude, 
+      latitude = region.latitude, 
+      longitudeDelta = region.longitudeDelta,
+      latitudeDelta = region.latitudeDelta,
+      zoomLevel
     } = nativeEvent
 
     if (this.props.status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) return
-    /* Fix Offset */
-    const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
-    const maxValue = OFFSET_RANGE[Math.floor(zoomLevel) - 5]
-    const minValue = OFFSET_RANGE[Math.ceil(zoomLevel) - 5]
+    let _longitude = longitude
+    let _latitude = latitude
+    if (zoomLevel) {
+      /* Fix Offset */
+      const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
+      const maxValue = OFFSET_RANGE[Math.floor(zoomLevel) - 5]
+      const minValue = OFFSET_RANGE[Math.ceil(zoomLevel) - 5]
 
-    const dValue = maxValue - (maxValue - minValue) * (zoomLevel % 1)
-    const _longitude = longitude
-    const _latitude = latitude + dValue
-    /* Fix Offset */
-
+      const dValue = maxValue - (maxValue - minValue) * (zoomLevel % 1)
+      _latitude = latitude + dValue
+      /* Fix Offset */
+    } else {
+      _latitude = _latitude + latitudeDelta * 0.04
+    }
     if (!this.state.drag) {
       this.setState({ drag: true })
       this.props.dispatch(booking.passengerSetValue({ from: {} }))
@@ -333,7 +341,7 @@ export default connect(state => ({
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
       MAP_SETTER.showsUserLocation = true
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
-      MAP_SETTER.onPanDrag = this.onStatusChangeListener.bind(this)
+      MAP_SETTER.onRegionChange = this.onStatusChangeListener.bind(this)
     }
 
     /** FIX ANDROID LOCATION SERVICE CRASH */
@@ -360,6 +368,9 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
+
+    console.log(from_coords)
+    console.log(destination_coords)
 
     return (
       <View style={{ 
