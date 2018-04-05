@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
-import { booking, address } from '../../redux/actions'
+import { application, booking, address as Address } from '../../redux/actions'
 import { Search } from '../../native/AMap'
 import { System, Icons, Screen, Define, Session ,TextFont } from '../../utils'
 import { Button } from '../../components'
@@ -59,9 +59,9 @@ export default connect(state => ({
   async _fetchFavoriteData() {
     try {
       const resp = await Session.User.Get('v1/favPlaces')
-      this.props.dispatch(address.setValues({ favorite: resp }))
+      this.props.dispatch(Address.setValues({ favorite: resp }))
     } catch(e) {
-      console.log(e)
+      this.props.dispatch(application.showMessage('无法连接到服务器'))
     }
   }
 
@@ -103,7 +103,7 @@ export default connect(state => ({
         fav: dataContrast.cloneWithRows(favorites)
       })
     } catch(e) {
-      console.log(e)
+      this.props.dispatch(application.showMessage('无法连接到服务器'))
     }
   }
 
@@ -119,6 +119,7 @@ export default connect(state => ({
       try {
         const { map_mode, from = { coords: {} }, location } = this.props
         const { lat = location.lat, lng = location.lng } = from.coords
+        console.log('查询', this.props)
         console.log(lat, lng)
         
         if (map_mode === 'GOOGLEMAP') {
@@ -140,7 +141,7 @@ export default connect(state => ({
           this.setState({ searchRet: dataContrast.cloneWithRows(data) }) 
         }
       } catch (e) {
-        console.log(e)
+        this.props.dispatch(application.showMessage('无法连接到服务器'))
       }
     }, 350)
   }
@@ -162,6 +163,7 @@ export default connect(state => ({
               <View style={{ flex: 1, paddingHorizontal: 12 }}>
                 <TextInput
                   {...Define.TextInputArgs}
+                  clearTextOnFocus={false}
                   onChangeText={onChangeWords}
                   placeholder={i18n.please_enter_keywords}
                   style={[
