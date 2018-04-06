@@ -105,7 +105,7 @@ export default connect(state => ({
             onPress={async () => {
               await ShareUtil.share(
                 '分享至微信',
-                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=',
+                'http://clientstaging.incredible-qr.com/clients/dacsee/dacsee-logo.png',
                 `http://clientstaging.incredible-qr.com/clients/dacsee/redirect-page/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
                 '加入DACSEE',
                 2,
@@ -123,7 +123,7 @@ export default connect(state => ({
             onPress={async () => {
               await ShareUtil.share(
                 '分享至微信',
-                'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=',
+                'http://clientstaging.incredible-qr.com/clients/dacsee/dacsee-logo.png',
                 `http://clientstaging.incredible-qr.com/clients/dacsee/redirect-page/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
                 '加入DACSEE',
                 3,

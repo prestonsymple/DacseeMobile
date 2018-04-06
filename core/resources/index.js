@@ -22,9 +22,10 @@ export default {
     booking_detail_message: require('./images/booking_detail_message.png'),
     map_from_pin: require('./images/rn_amap_startpoint.png'),
     map_destination_pin: require('./images/rn_amap_endpoint.png'),
-    map_car_pin: require('./images/rn_car.png')
+    map_car_pin: require('./images/rn_car.png'),
+    distance:require ('./images/distance.png')
   },
-  
+
   animation: {
     round_cap_loading: require('./animation/round_cap_material_loading.json'),
     LineProgressLoading: require('./animation/LineProgressLoading.json'),
@@ -35,7 +36,7 @@ export default {
     loader_infinity_white: require('./animation/loader_infinity_white.json'),
     loader_world: require('./animation/world_locations.json'),
     loader_fall_ball: require('./animation/loader_animation.json'),
-    
+
     loader_multi_line: require('./animation/loader_multi_line.json'),
     loader_radar: require('./animation/loader_radar.json'),
     loader_star: require('./animation/loader_star.json')
