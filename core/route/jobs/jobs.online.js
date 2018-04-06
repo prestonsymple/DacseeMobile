@@ -47,11 +47,20 @@ export default connect(state => ({
       this.setState({ jobs: dataContrast.cloneWithRows(props.jobs) })
     }
   }
-  sliderChange(status) {
+  async sliderChange(status,_id) {
     if(status===-1){
-      console.log('reject')
+      try {
+        await Session.Booking.Put(`v1/${_id}`, { action: 'reject' })
+        this.props.navigation.goBack()
+      } catch (e) {
+        this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+      }
     }else{
-      console.log('accept')
+      try {
+        await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
+      } catch (e) {
+        this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+      }
     }
   }
   goJobsListDetail(row) {
@@ -89,7 +98,7 @@ export default connect(state => ({
                 enableEmptySections={true}
                 renderRow={(row) => (
                   <TouchableOpacity activeOpacity={.7} onPress={this.goJobsListDetail.bind(this,row)}>
-                    <OnlineListItem itemData={row}  sliderChange={(status)=>this.sliderChange(status)}/>
+                    <OnlineListItem itemData={row}  sliderChange={(status)=>this.sliderChange(status,row._id)}/>
                   </TouchableOpacity>
                 )}
                 style={{ marginBottom: 15 }}
