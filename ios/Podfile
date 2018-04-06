@@ -65,6 +65,8 @@ target 'dacsee' do
     
     pod 'lottie-ios', :path => '../node_modules/lottie-ios'
     pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+    
+    pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
     pod 'Picker', :path => '../node_modules/react-native-picker'
     pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
