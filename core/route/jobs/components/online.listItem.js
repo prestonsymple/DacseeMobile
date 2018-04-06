@@ -11,7 +11,7 @@ export default class OfflineListItem extends Component {
   constructor(props) {
     super(props)
     this.sliderWidth = 0
-    this.currentPosition=new Animated.Value(0)
+    this.currentPosition = new Animated.Value(0)
     this.createPanResponder()
     this.minX=0
     this.maxX=0
@@ -142,10 +142,11 @@ export default class OfflineListItem extends Component {
           <Text style={styles.adress}>{destination.name}</Text>
         </View>
         {
-          status === 'Pending_Acceptance' ?
+          status === 'Pending_Acceptance' && (
             <View onLayout={e => this.onLayout(e)} {...this.panResponder.panHandlers}>
               <OrderSlider currentPosition={this.currentPosition} sliderChange={this.props.sliderChange} />
-            </View> : null
+            </View>
+          )
         }
       </View>
     )

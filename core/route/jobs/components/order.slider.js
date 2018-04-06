@@ -15,38 +15,39 @@ export default class OrderSlider extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      translateX: new Animated.Value(0),
+      // translateX: new Animated.Value(0),
       status:0
     }
   }
-  componentWillMount() {
-    if (!this.positionListenerId) {
-      this.positionListenerId = this.props.currentPosition.addListener(e => {
-        this.handlePositionChange(e.value)
-      })
-      this.handlePositionChange(this.props.currentPosition._value)
-    }
-  }
+  // componentWillMount() {
+  //   if (!this.positionListenerId) {
+  //     this.positionListenerId = this.props.currentPosition.addListener(e => {
+  //       this.handlePositionChange(e.value)
+  //     })
+  //     this.handlePositionChange(this.props.currentPosition._value)
+  //   }
+  // }
 
-  componentWillUnmount() {
-    if (this.positionListenerId) {
-      this.props.currentPosition.removeListener(this.positionListenerId)
-      this.positionListenerId = null
-    }
-  }
+  // componentWillUnmount() {
+  //   if (this.positionListenerId) {
+  //     this.props.currentPosition.removeListener(this.positionListenerId)
+  //     this.positionListenerId = null
+  //   }
+  // }
 
-  componentWillReceiveProps(nextProps) {
-    let {currentPosition} = this.props
-    if (currentPosition!==nextProps.currentPosition._value) {
-      this.handlePositionChange(nextProps.currentPosition._value)
-    }
-  }
-  handlePositionChange(value) {
-    let {translateX} = this.state
-    translateX.setValue(value)
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   let {currentPosition} = this.props
+  //   if (currentPosition!==nextProps.currentPosition._value) {
+  //     this.handlePositionChange(nextProps.currentPosition._value)
+  //   }
+  // }
+  // handlePositionChange(value) {
+  //   let {translateX} = this.state
+  //   translateX.setValue(value)
+  // }
   render() {
-    let {translateX, scaleX, scaleY} = this.state
+    const { currentPosition } = this.props
+
     return (
       <View style={styles.container}>
         <View style={styles.content}>
@@ -54,7 +55,7 @@ export default class OrderSlider extends Component {
           <Text style={{ fontSize: 15, color: '#fff',marginRight:10 }}>接受</Text>
         </View>
         <Animated.View
-          style={[{ transform: [ {translateX}],},styles.circle]}>
+          style={[{ transform: [ { translateX: currentPosition }],},styles.circle]}>
           {Icons.Generator.Material('code', 24, '#fff') }
         </Animated.View>
       </View>
