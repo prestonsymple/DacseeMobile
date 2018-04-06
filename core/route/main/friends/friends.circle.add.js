@@ -77,7 +77,7 @@ export default connect(state => ({
             canInput={true}
             onPress={(value) => {
               if (value.length === 0 || !System.Rules.isMail(value)) return this.props.dispatch(application.showMessage('请输入正确的邮箱地址'))
-              this.props.navigation.navigate('FriendsSearchBase', { value })
+              this.props.navigation.navigate('FriendsSearchBase', { value,i18n})
             }}
           />
 
@@ -92,7 +92,7 @@ export default connect(state => ({
             navigation={this.props.navigation}
             onPress={(value) => {
               if (value.length < 2) return this.props.dispatch(application.showMessage('请输入至少2个字符'))
-              this.props.navigation.navigate('FriendsSearchBase', { value })
+              this.props.navigation.navigate('FriendsSearchBase', { value,i18n})
             }}
           />
 
