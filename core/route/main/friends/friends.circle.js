@@ -122,6 +122,20 @@ export default connect(state => ({
     ])
     this.setState({ dataSource: _dataSource, selected: _selected })
   }
+  renderFooter = ()=>{
+    const {  selected,dataSource } = this.state
+    return <View style={{height:Define.system.ios.x ?100:78}}/>
+  }
+
+  _handleClick=()=>{
+    const {  selected } = this.state
+    if(selected.length === 0){
+      this.onPressCheckAll()
+    }else {
+      this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
+      this.props.navigation.goBack()
+    }
+  }
 
   render() {
     const { dataSource, selected } = this.state
@@ -206,39 +220,21 @@ export default connect(state => ({
                 renderSeparator={() => (
                   <View style={{ height: .8, backgroundColor: '#e8e8e8' }} />
                 )}
+                renderFooter={this.renderFooter}
               />
-              {
-                (selected.length === 0) && (
-                  <TouchableOpacity onPress={() => this.onPressCheckAll()} activeOpacity={.7} style={[
-                    { height: 56, bottom: Define.system.ios.x ? 27 + 22 : 27 },
-                    { width: width - 90, left: 45, borderRadius: 33 },
-                    { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
-                  ]}>
-                    <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
-                      <FormattedMessage id={'select_all'}/>
-                    </Text>
-                  </TouchableOpacity>
-                )
-              }
-              {
-                (selected.length !== 0) && (
-                  <TouchableOpacity onPress={() => {
-                    this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
-                    this.props.navigation.goBack()
-                  }} activeOpacity={.7} style={[
-                    { height: 56, bottom: Define.system.ios.x ? 27 + 22 : 27 },
-                    { width: width - 90, left: 45, borderRadius: 33 },
-                    { backgroundColor: '#FFB639', justifyContent: 'center', alignItems: 'center' }
-                  ]}>
-                    <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
-                      <FormattedMessage id={'confirm'}/>
-                    </Text>
-                  </TouchableOpacity>
-                )
-              }
             </View>
           )
         }
+        <View style={{
+          position:'absolute',justifyContent: 'center', alignItems: 'center',
+          backgroundColor:'#fff',bottom:0,left:0,right:0,height:Define.system.ios.x ?100:78,
+        }}>
+          <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
+            <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
+              <FormattedMessage id={selected.length === 0?'select_all':'confirm'}/>
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
