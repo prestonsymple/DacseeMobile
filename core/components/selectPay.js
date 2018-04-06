@@ -16,12 +16,17 @@ export default class SelectPay extends PureComponent {
   constructor(props) {
     super(props)
     this.pays = ['支付宝','微信','一网通银行卡','国际银行卡','QQ钱包']
+    this.state={
+      pay:'支付宝'
+    }
   }
   componentDidMount(){
 
   }
-  onPayChange(){
-
+  onPayChange(index){
+    this.setState({
+      pay:this.pays[index]
+    })
   }
 
 
@@ -34,16 +39,16 @@ export default class SelectPay extends PureComponent {
         animationType='fade'           //渐变
         transparent={true}             // 不透明
         visible={this.props.visible}    // 根据isModal决定是否显示
-        onRequestClose={() => this.props.payCancel()}  // android必须实现 安卓返回键调用
+        onRequestClose={() => this.props.payChange()}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-          <TouchableOpacity style={{ width: width, height:height-modalHeight }} onPress={() => this.props.payCancel()} ></TouchableOpacity>
+          <TouchableOpacity style={{ width: width, height:height-modalHeight }} onPress={() => this.props.payChange()} ></TouchableOpacity>
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth:pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payCancel()} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payChange()} >
                 <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>取消</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payCancel()} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payChange(this.state.pay)} >
                 <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>确定</Text>
               </TouchableOpacity>
             </View>
@@ -51,6 +56,7 @@ export default class SelectPay extends PureComponent {
               <Wheel
                 style={{ height: weelHeight, width: width  }}
                 itemStyle={{ textAlign: 'center' }}
+                index={this.pays.indexOf(this.state.pay)}
                 items={this.pays}
                 onChange={index => this.onPayChange(index)}
               />

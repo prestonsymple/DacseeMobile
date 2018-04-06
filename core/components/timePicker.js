@@ -15,18 +15,18 @@ const pixelSize = (function() {
 export default class TimePicker extends PureComponent {
   constructor(props) {
     super(props)
-    this.dates = [this.getDateStr(0), this.getDateStr(1), this.getDateStr(2)]
+    this.days = [this.getDateStr(0), this.getDateStr(1), this.getDateStr(2)]
     // this.hours = ['0点', '1点', '2点', '3点','4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点','13点','14点','15点','16点','17点','18点','19点','20点','21点','22点','23点']
     // this.minutes = ['0分','10分','20分','30分','40分','50分']
     this.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     this.minutes = [0, 10, 20, 30, 40, 50]
-    this.date = this.getDateStr(0)
-    this.hour = this.getDafultHours()[0]
-    this.minute = this.getDafultMinutes()[0]
+
     this.state = {
       hours: this.hours,
       minutes: this.minutes,
-      date: '',
+      day: this.getDateStr(0),
+      hour: this.getDafultHours()[0],
+      minute: this.getDafultMinutes()[0],
     }
   }
   componentDidMount(){
@@ -75,9 +75,6 @@ export default class TimePicker extends PureComponent {
     let HM = this.getNowHM()
     let nowHour = HM.hour
     // let nowMinute = HM.minute
-    let index = _.findIndex(this.hours, function (chr) {
-      return chr == nowHour
-    })
     return this.getDropedDate(this.hours,nowHour)
   }
   getDafultMinutes() {
@@ -110,54 +107,43 @@ export default class TimePicker extends PureComponent {
     })
     return _.drop(data, index)
   }
-  onDateChange(index) {
-
-    let date = this.dates[index]
+  onDayChange(index) {
+    let day = this.days[index]
     let HM = this.getNowHM()
     let nowHour = HM.hour
     let nowMinute = HM.minute
-    if (date == this.dates[0]&&this.date!=date) {
-      setTimeout(()=>{
-        this.setState({ hours: this.getDropedDate(this.hours,nowHour) },()=>{
-          this.hour=this.state.hours[0]
-        })
-        if (this.hour == nowHour) {
-          this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
-            this.minute=this.state.minutes[0]
-          })
-        }
-      },0)
-
-    }
-    if (this.date == this.dates[0]&&date!= this.dates[0]){
+    if (this.state.day == this.days[0]&&day!= this.days[0]){
       this.setState({ hours: this.hours })
       if (this.hour == nowHour) {
         this.setState({ minutes: this.minutes })
       }
     }
-    this.date = date
+    if (day == this.days[0]&&this.state.day!=day) {
+      let hours=this.getDropedDate(this.hours,nowHour)
+      this.setState({hours:hours,hour:hours[0]})
+      if (this.state.hour == nowHour) {
+        let minutes=this.getDropedDate(this.minutes,nowMinute)
+        this.setState({minutes:minutes,minute:minutes[0]})
+      }
+    }
+    this.setState({day:day})
   }
   onHourChange(index) {
-    this.hindex=index
     let hour = this.state.hours[index]
     let HM = this.getNowHM()
     let nowHour = HM.hour
     let nowMinute = HM.minute
-    if (this.date == this.dates[0] && hour == nowHour) {
-      this.hour = hour
-      this.setState({ minutes:this.getDropedDate(this.minutes,nowMinute) },()=>{
-        this.minute=this.state.minutes[0]
-      })
+    if (this.state.day == this.days[0] && hour == nowHour) {
+      let minutes=this.getDropedDate(this.minutes,nowMinute)
+      this.setState({minutes:minutes,hour:hour,minute:minutes[0]})
     }
-    if (this.date == this.dates[0] && this.hour == nowHour&&hour!=nowHour) {
-      this.hour = hour
-      this.setState({ minutes: this.minutes })
+    if (this.state.day == this.days[0] && this.hour == nowHour&&hour!=nowHour) {
+      this.setState({hour:hour, minutes: this.minutes })
     }
-    this.hour = hour
+    this.setState({hour:hour})
   }
   onMinuteChange(index) {
-    this.mindex=index
-    this.minute = this.state.minutes[index]
+    this.setState({minute:this.state.minutes[index]})
   }
   //
 
@@ -169,16 +155,16 @@ export default class TimePicker extends PureComponent {
         animationType='fade'           //渐变
         transparent={true}             // 不透明
         visible={this.props.visible}    // 根据isModal决定是否显示
-        onRequestClose={() => this.props.wheelCancel('now')}  // android必须实现 安卓返回键调用
+        onRequestClose={() => this.props.dateChange('now')}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-          <TouchableOpacity style={{ width: width, height: height -modalHeight }} onPress={() => this.props.wheelCancel('now')} ></TouchableOpacity>
+          <TouchableOpacity style={{ width: width, height: height -modalHeight }} onPress={() => this.props.dateChange('now')} ></TouchableOpacity>
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelCancel('now')} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange('now')} >
                 <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>取消</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.wheelSubmit(this.date+this.hour+'点'+this.minute+'分')} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange(this.day+this.hour+'点'+this.minute+'分')} >
                 <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>确定</Text>
               </TouchableOpacity>
             </View>
@@ -186,13 +172,13 @@ export default class TimePicker extends PureComponent {
               <Wheel
                 style={{ height: weelHeight, width: width / 2 }}
                 itemStyle={{ textAlign: 'center' }}
-                items={this.dates}
-                onChange={index => this.onDateChange(index)}
+                items={this.days}
+                onChange={index => this.onDayChange(index)}
               />
               <Wheel
                 style={{ height: weelHeight, width: width / 4 }}
                 itemStyle={{ textAlign: 'center' }}
-                index={this.state.hours.indexOf(this.hour)}
+                index={this.state.hours.indexOf(this.state.hour)}
                 type={'h'}
                 items={this.state.hours}
                 onChange={index => this.onHourChange(index)}
@@ -201,7 +187,7 @@ export default class TimePicker extends PureComponent {
                 style={{ height: weelHeight, width: width / 4 }}
                 itemStyle={{ textAlign: 'center' }}
                 type={'m'}
-                index={this.state.minutes.indexOf(this.minute)}
+                index={this.state.minutes.indexOf(this.state.minute)}
                 items={this.state.minutes}
                 onChange={index => this.onMinuteChange(index)}
               />

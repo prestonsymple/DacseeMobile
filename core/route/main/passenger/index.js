@@ -28,8 +28,8 @@ const DEFAULT_COORDS = { lat: 84.764846, lng: 44.138130, latitude: 84.764846, lo
 
 const PIN_HEIGHT = ((height - 22) / 2)
 
-export default connect(state => ({ 
-  ...state.booking, 
+export default connect(state => ({
+  ...state.booking,
   country: state.account.country,
   booking_id: state.storage.booking_id,
   map_mode: state.application.map_mode,
@@ -41,8 +41,8 @@ export default connect(state => ({
     super(props)
     this.state = {
       drag: false,
-      showTP:false,
-      showSP:false,
+      timePickerShow:false,
+      selectPayShow:false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
       polyline: [],
 
@@ -192,9 +192,9 @@ export default connect(state => ({
   }
 
   async onLocationListener({ nativeEvent }) {
-    const { 
-      latitude = nativeEvent.coordinate.latitude, 
-      longitude = nativeEvent.coordinate.longitude 
+    const {
+      latitude = nativeEvent.coordinate.latitude,
+      longitude = nativeEvent.coordinate.longitude
     } = nativeEvent
 
 
@@ -216,9 +216,9 @@ export default connect(state => ({
 
   onStatusChangeListener(region) {
     const { nativeEvent = {} } = region
-    const { 
-      longitude = region.longitude, 
-      latitude = region.latitude, 
+    const {
+      longitude = region.longitude,
+      latitude = region.latitude,
       longitudeDelta = region.longitudeDelta,
       latitudeDelta = region.latitudeDelta,
       zoomLevel
@@ -263,7 +263,7 @@ export default connect(state => ({
         const street_number = address_components.find(pipe => pipe.types.find(sub => sub === 'street_number')) || { long_name: '' }
         const route = address_components.find(pipe => pipe.types.find(sub => sub === 'route')) || { long_name: '' }
         const short_name = `${street_number.long_name} ${route.long_name}`.trim()
-    
+
         if (short_name.length === 0) {
           throw new Error('UNKNOW_GEO')
         }
@@ -294,20 +294,14 @@ export default connect(state => ({
       this.setState({ drag: false })
     }
   }
-  wheelSubmit(time){
-    this.setState({showTP:false})
+
+  dateChange(time){
+    this.setState({timePickerShow:false})
+    console.log(time)
   }
-  wheelCancel(time){
-    this.setState({showTP:false})
-  }
-  showTimerPicker(){
-    this.setState({showTP:true})
-  }
-  showSelcetPay(){
-    this.setState({showSP:true})
-  }
-  payCancel(){
-    this.setState({showSP:false})
+  payChange(pay){
+    this.setState({selectPayShow:false})
+    console.log(pay)
   }
   render() {
     const { drag, polyline } = this.state
@@ -328,7 +322,7 @@ export default connect(state => ({
       provider: 'google',
       showsMyLocationButton: false,
       initialRegion: {
-        latitude: location.lat, longitude: location.lng, 
+        latitude: location.lat, longitude: location.lng,
         latitudeDelta: 0.005, longitudeDelta: 0.005 * (width / height)
       },
 
@@ -349,8 +343,8 @@ export default connect(state => ({
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
     // TODO: FIX
-    let { from_coords, destination_coords } = { 
-      from_coords: DEFAULT_COORDS, 
+    let { from_coords, destination_coords } = {
+      from_coords: DEFAULT_COORDS,
       destination_coords: DEFAULT_COORDS
     }
     if (from.coords && destination.coords) {
@@ -371,7 +365,7 @@ export default connect(state => ({
     /* CAR POLYLINE */
 
     return (
-      <View style={{ 
+      <View style={{
         flex: 1, width
       }}>
         {
@@ -427,13 +421,12 @@ export default connect(state => ({
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />)}
         {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (
           <PickerOptions
-            showTP={this.state.showTP}
-            showSP={this.state.showSP}
-            payCancel={() => this.payCancel()}
-            showSelcetPay={() =>this.showSelcetPay()}
-            showTimerPicker={() => this.showTimerPicker()}
-            wheelSubmit={(time) => this.wheelSubmit(time)}
-            wheelCancel={(time) => this.wheelCancel(time)}
+            selectPayShow={this.state.selectPayShow}
+            timePickerShow={this.state.timePickerShow}
+            showSelcetPay={()=>this.setState({selectPayShow:true})}
+            showTimerPicker={()=>this.setState({timePickerShow:true})}
+            payChange={(pay) =>this.payChange(pay)}
+            dateChange={(time) => this.dateChange(time)}
           />
         )}
         <ModalDriverRespond />
@@ -469,10 +462,9 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
-        <TimePicker visible={this.props.showTP}
-          wheelSubmit={(time)=>this.props.wheelSubmit(time)}
-          wheelCancel={(time)=>this.props.wheelCancel(time)}/>
-        <SelectPay visible={this.props.showSP} payCancel={()=>this.props.payCancel()}/>
+        <TimePicker visible={this.props.timePickerShow}
+          dateChange={(time)=>this.props.dateChange(time)}/>
+        <SelectPay visible={this.props.selectPayShow} payChange={(pay)=>this.props.payChange(pay)}/>
       </Animated.View>
     )
   }

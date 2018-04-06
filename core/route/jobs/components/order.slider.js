@@ -53,18 +53,15 @@ export default class OrderSlider extends Component {
     if (touches.length != 1 || touches[0].identifier != prevTouches[0].identifier) {
       return
     }
-    this.translateX = touches[0].pageX - this.firstTouche[0].pageX
-    let outwidth=this.width/3-25
-    let halfwidth=this.width/2-25
-    let value=this.translateX<-outwidth?-halfwidth:this.translateX>outwidth?halfwidth:this.translateX
-    let status=value==-outwidth?-1:value==outwidth?1:0
+    let value = touches[0].pageX - this.firstTouche[0].pageX
+    value=value>this.width/2?this.width/2:value<-this.width/2?-this.width/2:value
     Animated.timing(this.state.translateX, {
       toValue: value,
       duration: 500,
       easing: Easing.linear ,
       useNativeDriver: true,
     }).start(() => {
-      this.setState({status})
+
     });
 
   }
@@ -80,7 +77,7 @@ export default class OrderSlider extends Component {
         useNativeDriver: true,
         toValue: 0
       }).start(() => {
-        this.setState({status})
+
       });
     }
   }
