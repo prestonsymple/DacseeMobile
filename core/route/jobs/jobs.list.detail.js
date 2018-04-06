@@ -166,7 +166,7 @@ const BookingDetailBottomView = (props) => {
         </View>
 
         {
-          !getOption ?
+          getOption ?
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
               <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 10 }} onPress={ optionObject.leftAction }>
                 <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
