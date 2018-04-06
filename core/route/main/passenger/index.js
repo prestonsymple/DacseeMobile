@@ -2,7 +2,6 @@
 
 import React, { Component, PureComponent } from 'react'
 import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'

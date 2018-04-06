@@ -1,13 +1,14 @@
 import React, { Component, PureComponent } from 'react'
 import {
-  Text, View, Animated, StyleSheet, Platform, alert, Image, TouchableOpacity, ScrollView, Linking, Alert
+  Text, View, ActivityIndicator, StyleSheet, Platform, alert, Image, TouchableOpacity, ScrollView, Linking, Alert
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { SafeAreaView } from 'react-navigation';
 
-import { MapView, Marker, Utils } from '../../native/AMap'
 import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
+import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
+import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
@@ -187,7 +188,8 @@ const BookingDetailBottomView = (props) => {
 export default connect(state => ({
   i18n: state.intl.messages || {},
   working: state.driver.working,
-  jobs: state.driver.jobs
+  jobs: state.driver.jobs,
+  map_mode: state.application.map_mode
 }))(class JobsListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -373,27 +375,42 @@ export default connect(state => ({
   }
 
   render() {
-    const { destination, from, fare } = this.props.navigation.state.params.jobDetail;
-    const { i18n } = this.props;
+    const { i18n, map_mode, navigation } = this.props
+    const { destination, from, fare } = navigation.state.params.jobDetail
     const { status } = this.state.detail
-    const optionObject = this._getStatus(status);
-    const getOption = this._getOptionable(status);
-    const chineseStatus = this._statusInChinese(status);
+    const optionObject = this._getStatus(status)
+    const getOption = this._getOptionable(status)
+    const chineseStatus = this._statusInChinese(status)
 
     return(
       <SafeAreaView style={{flex:1}}>
-        <MapView
-          {...MAP_DEFINE}
-          style={{ height: height / 3  - 64 }}
-          mapType={'standard'}
-          coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }}
-          zoomLevel={ 10 }
-          // region={{ latitude: from.coords.lat, longitude: from.coords.lng, latitudeDelta: destination.coords.lat, longitudeDelta: destination.coords.lng }}
-          ref={e => this.map = e}
-        >
-          <Marker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} title={from.name}/>
-          <Marker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} title={destination.name}/>
-        </MapView>
+        {
+          map_mode === '' && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="small" color="#333" style={{ top: -64 }} />
+            </View>
+          )
+        }
+        {
+          map_mode === 'AMAP' && (
+            <AMapView mapType={'standard'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} zoomLevel={ 10 } ref={e => this.map = e} style={{ height: height / 3  - 64 }} {...MAP_DEFINE}>
+              <AMarker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} title={from.name}/>
+              <AMarker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} title={destination.name}/>
+            </AMapView>
+          )
+        }
+        {
+          map_mode === 'GOOGLEMAP' && (
+            <GoogleMapView initialRegion={{ latitude: from.coords.lat, longitude: from.coords.lng, latitudeDelta: 0.05, longitudeDelta: 0.05 }} ref={e => this.map = e} style={{ height: height / 3  - 64 }} {...MAP_DEFINE}>
+              <GoogleMarker coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }}>
+                <Image source={Resources.image.map_from_pin} />
+              </GoogleMarker>
+              <GoogleMarker coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }}>
+                <Image source={Resources.image.map_destination_pin} />
+              </GoogleMarker>
+            </GoogleMapView>
+          )
+        }
         <BookingDetailView jobDetail={this.props.navigation.state.params.jobDetail} i18n={i18n} detail={this.state.detail} optionObject={optionObject}/>
         <BookingDetailBottomView fare={fare} getOption={getOption} i18n={i18n} optionObject={optionObject} chineseStatus={chineseStatus}/>
       </SafeAreaView>
