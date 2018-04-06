@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView,StyleSheet
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
@@ -276,21 +276,16 @@ class ItemPerson extends Component {
       <TouchableOpacity onPress={() => onPressDetail()} activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
         <View style={{ justifyContent: 'center', marginRight: 10 }}>
           <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[avatars.length - 1].url }} />
-          <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }}></View>
+          <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }} />
         </View>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
           <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>0次行程</Text>
         </View>
         {
-          checked ? (
-            <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.7} style={{ width: 30, height: 30, borderRadius: 18, backgroundColor: '#7ed321', justifyContent: 'center', alignItems: 'center' }}>
-              { Icons.Generator.Material('check', 18, 'white') }
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => onPressCheck()} activeOpacity={.7} style={{ width: 30, height: 30, borderRadius: 18, backgroundColor: '#e7e7e7', justifyContent: 'center', alignItems: 'center' }}>
-            </TouchableOpacity>
-          )
+          <TouchableOpacity onPress={() => onPressCheck()} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
+            { checked ?Icons.Generator.Material('check', 18, 'white'):null }
+          </TouchableOpacity>
         }
       </TouchableOpacity>
     )
@@ -324,3 +319,13 @@ class RequestorPerson extends Component {
     )
   }
 }
+
+const styles=StyleSheet.create({
+  circle:{
+    width: 30,
+    height: 30,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
