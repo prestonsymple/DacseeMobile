@@ -125,7 +125,7 @@ export default connect(state => ({
           } else {
             const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
             let { data } = await Session.Lookup_CN.Get(`v1/map/search/address/${city.data}/${keywords}`)
-            data = data.map(pipe => Object.assign({}, pipe, { 
+            data = data.map(pipe =>Object.assign({}, pipe, {
               star: favorite.find(sub => pipe.placeId === sub.placeId) 
             }))
             this.setState({ dataSource: dataContrast.cloneWithRows(data), data }) 

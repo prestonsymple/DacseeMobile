@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
 })
 
 export default connect(state => ({
-  ...state.wallet
+  ...state.wallet,
+  i18n: state.intl.messages || {}
 }))(class WalletTransferScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -188,9 +189,9 @@ export default connect(state => ({
             <Button disabled={ searching } onPress={ () => {
               let reg= /(^(([0-9]+\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$)/
               if (this.state.amount <= 0 | !reg.test(this.state.amount)) {
-                this.props.dispatch(application.showMessage('请输入正确的金额'))
+                this.props.dispatch(application.showMessage(this.props.i18n.pls_enter_correct_amount))
               } else if (this.state.searchContent == '') {
-                this.props.dispatch(application.showMessage('请输入收款账号'))
+                this.props.dispatch(application.showMessage(this.props.i18n.pls_enter_correct_account))
               } else {
                 this._fetchData()
               }

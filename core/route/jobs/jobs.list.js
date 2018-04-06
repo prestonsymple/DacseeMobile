@@ -24,9 +24,10 @@ export default connect(state => ({
   i18n: state.intl.messages || {}
 }))(class JobsListScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '订单列表'
+      title: reducer.intl.messages.job_list
     }
   }
 
@@ -96,7 +97,7 @@ export default connect(state => ({
       <RefreshControl
         refreshing={loading}
         onRefresh={this._fetchData.bind(this)}
-        title={'下拉进行刷新'}
+        title={this.props.i18n.pull_refresh}
         colors={['#ffffff']}
         progressBackgroundColor={'#1c99fb'}
       />
@@ -107,7 +108,7 @@ export default connect(state => ({
           style={{ flex: 1, marginTop: 104 }}>
           <View style={{ flex: 1, justifyContent: 'center',marginTop: 20, alignItems: 'center' }}>
             <Image source={Resources.image.joblist_empty} style={{ marginTop: 200, width: 100, height: 100 }} />
-            <Text style={{ marginTop: 20, color: '#777', fontSize: TextFont.TextSize(18), fontWeight: '400' }}>暂无行程</Text>
+            <Text style={{ marginTop: 20, color: '#777', fontSize: TextFont.TextSize(18), fontWeight: '400' }}>{this.props.i18n.no_job}</Text>
           </View>
         </ScrollView>
       )

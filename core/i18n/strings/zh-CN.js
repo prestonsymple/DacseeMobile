@@ -203,8 +203,6 @@ const zh_CN = {
 
   myjob: '我的工作',
 
-
-  //TODO
   unable_connect_server:'无法连接到服务器',
   active:'激活',
   inactive:'未激活',
@@ -215,7 +213,38 @@ const zh_CN = {
   transfer_account_select:'转账-选择账户',
   pls_enter_correct_amount:'请输入正确的金额',
   pls_enter_correct_account:'请输入收款账号',
-  transfer_confirm:'转账确认'
+  transfer_confirm:'转账确认',
+
+  unable_connect_server_pls_retry_later:'无法连接到服务器，请稍后重试',
+  cancel_trip:'取消行程',
+  start_trip:'开始行程',
+  finish_trip:'结束行程',
+  continue_:'继续',
+  reject_order:'拒绝该订单',
+  confirm_reject_order:'确认拒绝该订单吗?',
+  arrive_place:'已到达上车地点',
+  cancel_order:'取消订单',
+  arrive_touch_finish:'已到达乘客目的地，点击确认完成行程',
+  cancel_order_punish:'取消订单后，您将会受到处罚',
+  touch_continue_start_trip:'点击继续将开始行程',
+  touch_continue_notice_passengers:'点击继续将通知乘客已到达',
+  unable_find_move_customer_service:'无法找到乘客?该订单将转至人工处理',
+  waiting_cancel_punish:'乘客正等待接驾中，取消订单将会影响您的信用，继续吗?',
+
+  //TODO
+
+  confirm_trip:'确认行程',
+  order_sending:'发送订单中',
+  drive_in:'接驾中',
+  driving:'行驶中',
+  wait_comments:'等待评价',
+  trip_finish:'行程结束',
+
+  pls_verify_location_open:'请确认您的位置权限是否打开',
+  go_open:'前往开启',
+  now:'现在',
+  start_trip_costs:'开始 - 行程费用',
+  pls_enter_destination:'',
 }
 
 export default zh_CN

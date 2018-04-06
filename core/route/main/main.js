@@ -20,10 +20,12 @@ export default connect(state => ({
   booking_status: state.booking.status,
   jobs_status: state.driver.status,
   app_status: state.application.application_status,
-  gps_access: state.application.gps_access
+  gps_access: state.application.gps_access,
+  i18n:state.intl.messages
 }))(class MainScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     const { params = {} } = navigation.state
     const { status = BOOKING_STATUS.PASSGENER_BOOKING_INIT } = params
 
@@ -47,28 +49,28 @@ export default connect(state => ({
       title = 'DACSEE'
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS:
-      title = '确认行程'
+      title = reducer.intl.messages.confirm_trip
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE:
-      title = '发送订单中'
+      title = reducer.intl.messages.order_sending
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT:
-      title = '等待接单'
+      title = reducer.intl.messages.Pending_Acceptance
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY:
-      title = '接驾中'
+      title = reducer.intl.messages.drive_in
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED:
-      title = '司机已到达'
+      title = reducer.intl.messages.Arrived
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD:
-      title = '行驶中'
+      title = reducer.intl.messages.driving
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_ON_RATING:
-      title = '等待评价'
+      title = reducer.intl.messages.wait_comments
       break
     case BOOKING_STATUS.PASSGENER_BOOKING_HAVE_COMPLETE:
-      title = '行程结束'
+      title = reducer.intl.messages.trip_finish
       break
     default:
       title = 'DACSEE'
@@ -120,14 +122,14 @@ export default connect(state => ({
   }
 
   render() {
-    const { gps_access } = this.props
+    const { gps_access,i18n} = this.props
     return !gps_access ? (
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
-        <Text style={{ color: '#666', fontSize: TextFont.TextSize(14) }}>请确认您的位置权限是否打开</Text>
+        <Text style={{ color: '#666', fontSize: TextFont.TextSize(14) }}>{i18n.pls_verify_location_open}</Text>
         <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => {OpenAppSettings.open()}}>
-          <Text style={{ fontSize: TextFont.TextSize(20), color: 'white' }}>前往开启</Text>
+          <Text style={{ fontSize: TextFont.TextSize(20), color: 'white' }}>{i18n.go_open}</Text>
         </TouchableOpacity>
       </View>
     ) : (

@@ -203,6 +203,34 @@ const en_US = {
   already_del_friend: 'Friend removed',
   pay_comment: 'Payment and comments',
 
+  active:'Active',
+  inactive:'Inactive',
+  enter_correct_email_phone:'Please enter a valid email or phone number',
+  full_name_two_chart:'Full name require minumum 2 letters',
+  wallet_detail:'Wallet details',
+  lack_balance:'Insufficient Balance',
+  transfer_account_select:'Transfer-Account selection',
+  pls_enter_correct_amount:'Please enter a valid amount',
+  pls_enter_correct_account:'Please enter the reciepient account',
+  transfer_confirm:'Transfer confirmation',
+
+  unable_connect_server:'Unable to connect to server',
+  unable_connect_server_pls_retry_later:'Unable to connect to server. Please try again later',
+  cancel_trip:'Cancel Trip',
+  start_trip:'Start Trip',
+  finish_trip:'Complete Trip',
+  continue_:'Continue',
+  reject_order:'Reject Order',
+  confirm_reject_order:'Are you sure you want to reject this order?',
+  arrive_place:'Arrived to pick-up point',
+  cancel_order:'Cancel Booking',
+  arrive_touch_finish:'Arrived to destination,tap on "Complete" to end the trip',
+  cancel_order_punish:'There will be a penalty if you cancel the order.',
+  touch_continue_start_trip:'Tap on "Continue" will start the trip.',
+  touch_continue_notice_passengers:'Tap on "Continue" to let passenger know you are at the pick-up point.',
+  unable_find_move_customer_service:'Unable to locate passenger? This order will be handle by our customer service.',
+  waiting_cancel_punish:'he passengers are waiting for the pickup. Cancelling the order will affect your integrity. Do you want to continue?'
+
 
 }
 

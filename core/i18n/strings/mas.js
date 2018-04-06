@@ -202,6 +202,37 @@ const mas = {
   already_del_friend: 'Status kawan telah diangkat',
   pay_comment: 'Pembayaran dan penilaian',
 
+  active:'Aktif',
+  inactive:'Belum diaktifkan',
+  enter_correct_email_phone:'Sila masukkan nombor e-mel atau nombor telefon yang betul',
+  full_name_two_chart:'Nama penuh adalah minimum 2 aksara',
+  wallet_detail:'Butiran Wallet',
+  lack_balance:'Baki tidak mencukupi',
+  transfer_account_select:'Pemindahan-Pilih akaun',
+  pls_enter_correct_amount:'Sila masukkan jumlah yang betul',
+  pls_enter_correct_account:'Sila masukkan akaun pembayaran',
+  transfer_confirm: 'Pengesahan pemindahan',
+
+  unable_connect_server:'Tidak dapat menyambung ke pelayan',
+  unable_connect_server_pls_retry_later:'Tidak dapat menyambung ke pelayan，sila cuba sebentar lagi',
+  cancel_trip:'Batal',
+  start_trip:'Mula',
+  finish_trip:'Selesai',
+  continue_:'Teruskan',
+  reject_order:'Tolak perintah',
+  confirm_reject_order:'Sahkan penolakan pesanan ini?',
+  arrive_place:'Sudah sampai di lokasi pick-up',
+  cancel_order:'Batalkan pesanan',
+  arrive_touch_finish:'Tiba di destinasi penumpang，klik Sahkan untuk melengkapkan perjalanan',
+  cancel_order_punish: 'Anda akan dihukum selepas membatalkan perintah',
+  touch_continue_start_trip:'Klik Teruskan untuk memulakan perjalanan',
+  touch_continue_notice_passengers:'Klik Teruskan untuk memberitahu penumpang bahawa mereka telah tiba',
+  unable_find_move_customer_service:'Tidak dapat mencari penumpang? Pesanan akan pergi ke pemprosesan manual',
+  waiting_cancel_punish:'Penumpang menunggu untuk pickup. Membatalkan pesanan itu akan menjejaskan kredit anda.'
+
+
+
+
 }
 
 export default mas

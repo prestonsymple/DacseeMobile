@@ -354,7 +354,7 @@ export default connect(state => ({
     // if (driver.latitude && driver.longitude) {
     //   driver_coords = { latitude: driver.latitude + .0002, longitude: driver.longitude }
     // }
-    from_coords = { latitude: from_coords.lat, longitude: from_coords.lng }
+    from_coords = { latitude: parseFloat(from_coords.lat), longitude: parseFloat(from_coords.lng) }
     destination_coords = { latitude: destination_coords.lat, longitude: destination_coords.lng }
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
@@ -435,7 +435,7 @@ export default connect(state => ({
   }
 })
 
-const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare }))(class PickerOptions extends PureComponent {
+const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare,i18n:state.intl.messages}))(class PickerOptions extends PureComponent {
 
   render() {
     return (
@@ -449,17 +449,17 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
           <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
             <TouchableOpacity onPress={() => this.props.showSelcetPay()}
               activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现金</Text>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.showTimerPicker()}
               activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>现在</Text>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.now}</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => {
             this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
           }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? '开始' : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
         <TimePicker visible={this.props.timePickerShow}

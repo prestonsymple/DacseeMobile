@@ -64,7 +64,7 @@ export default connect(state => ({
           <Text style={{ fontSize:TextFont.TextSize(13), paddingTop: 10 }}>{ countryName }</Text>
           <Text style={{ fontSize:TextFont.TextSize(13), color: '#a5a5a5' }}>{ walletName }</Text>
         </View>
-        <ScrollTabView onNavigate={ () => availableAmount == 0 ? this.props.dispatch(application.showMessage('余额不足')) : this.props.navigation.navigate('WalletTransfer')} walletInfo={ selected_wallet }/>        
+        <ScrollTabView onNavigate={ () => availableAmount == 0 ? this.props.dispatch(application.showMessage(this.props.i18n.lack_balance)) : this.props.navigation.navigate('WalletTransfer')} walletInfo={ selected_wallet }/>
       </View>
     )
   }

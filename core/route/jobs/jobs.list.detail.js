@@ -243,7 +243,7 @@ export default connect(state => ({
       } }
     case 'On_The_Way':
       return {left: 'cancel', right: 'on_the_way', leftAction: async () => {
-        Alert.alert(this.props.i18n.cancel_trip, '乘客正等待接驾中，取消订单将会影响您的信用，继续吗?', [
+        Alert.alert(this.props.i18n.cancel_trip, this.props.i18n.waiting_cancel_punish, [
           { text: this.props.i18n.cancel },
           { text: this.props.i18n.confirm, onPress: async () => {
             try {
@@ -255,9 +255,9 @@ export default connect(state => ({
           } }
         ])
       }, rightAction: async () => {
-        Alert.alert('已到达上车地点', '点击继续将通知乘客已到达', [
+        Alert.alert(this.props.i18n.arrive_place, this.props.i18n.touch_continue_notice_passengers, [
           { text: this.props.i18n.cancel  },
-          { text: '继续', onPress: async () => {
+          { text: this.props.i18n.continue_ , onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'arrived' })
             } catch (e) {
@@ -268,7 +268,7 @@ export default connect(state => ({
       } }
     case 'Arrived':
       return {left: 'No_Show', right: 'On_Board', leftAction: () => {
-        Alert.alert('取消订单', '无法找到乘客?该订单将转至人工处理', [
+        Alert.alert(this.props.i18n.cancel_order, this.props.i18n.unable_find_move_customer_service, [
           { text: this.props.i18n.cancel},
           { text: this.props.i18n.confirm, onPress: async () => {
             try {
@@ -280,9 +280,9 @@ export default connect(state => ({
           } }
         ])
       }, rightAction: () => {
-        Alert.alert('开始行程', '点击继续将开始行程', [
+        Alert.alert(this.props.i18n.start_trip, this.props.i18n.touch_continue_start_trip, [
           { text: this.props.i18n.cancel },
-          { text: '继续', onPress: async () => {
+          { text: this.props.i18n.continue_ , onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'on_board' })
             } catch (e) {
@@ -293,7 +293,7 @@ export default connect(state => ({
       } }
     case 'On_Board':
       return { left: 'cancel', right: 'Completed', leftAction: () => {
-        Alert.alert('取消订单', '取消订单后，您将会受到处罚', [
+        Alert.alert(this.props.i18n.cancel_order, this.props.i18n.cancel_order_punish, [
           { text: this.props.i18n.cancel},
           { text: this.props.i18n.confirm, onPress: async () => {
             try {
@@ -305,7 +305,7 @@ export default connect(state => ({
           } }
         ])
       }, rightAction: () => {
-        Alert.alert('结束行程', '已到达乘客目的地，点击确认完成行程', [
+        Alert.alert(this.props.i18n.finish_trip, '已到达乘客目的地，点击确认完成行程', [
           { text: this.props.i18n.cancel},
           { text: '继续', onPress: async () => {
             try {
