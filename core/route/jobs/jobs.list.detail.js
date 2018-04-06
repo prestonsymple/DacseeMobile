@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 import {
-  Text, View, Animated, StyleSheet, Platform, StatusBar, Image, TouchableOpacity, ScrollView, Linking, Alert
+  Text, View, Animated, StyleSheet, Platform, alert, Image, TouchableOpacity, ScrollView, Linking, Alert
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -26,23 +26,16 @@ const MAP_DEFINE = {
   showsZoomControls: false, /* android fix */
 }
 
-// const styles = StyleSheet.create({
-//   pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
-//   itemWrap: { alignItems: 'center', justifyContent: 'center' },
-//   itemTitle: { color: '#666', fontSize: 14, fontWeight: '100', marginBottom: 8 },
-//   itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
-//   itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
-// })
-
 /**
  * @desc bookingDetailButton 按钮
  */
 const BookingDetailButton = (props) => {
-  const { onPress, iconName, style } = props;
+  const { onPress, style,children} = props;
   return(
-    <TouchableOpacity onPress={onPress}
-                      style={[{ backgroundColor: '#eee', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center'}, style]}>
-      <Image source={iconName} style={{width:58, height:58}}/>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[{ backgroundColor: '#eee', width: 46, height: 46, borderRadius: 23, justifyContent: 'center', alignItems: 'center'}, style]}>
+      {children}
     </TouchableOpacity>
   )
 };
@@ -56,16 +49,21 @@ const BookingDetailHeaderView = (props) => {
       backgroundColor: 'white'
     }}>
       <View style={{flexDirection: 'row'}}>
-        <Image source={{ uri: avatars === undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
-               style={{ width: 54, height: 54 , borderRadius: 27, marginLeft: 14 }} />
+        <Image
+          source={{ uri: avatars === undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
+          style={{ width: 54, height: 54 , borderRadius: 27, marginLeft: 14 }} />
         <View>
           <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{ fullName }</Text>
           <Text style={{ marginLeft: 10, marginTop: 2, fontSize: TextFont.TextSize(14), color: 'rgba(0, 0, 0, 0.5)' }}>{ `User ID: ${userId}` }</Text>
         </View>
       </View>
       <View style={{ flexDirection: 'row'}}>
-        <BookingDetailButton iconName={Resources.image.booking_detail_message} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}/>
-        <BookingDetailButton iconName={Resources.image.booking_detail_phone} style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)}/>
+        <BookingDetailButton  style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
+          <View>{ Icons.Generator.Awesome('comment', 24, '#666') }</View>
+        </BookingDetailButton>
+        <BookingDetailButton  style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
+          <View>{ Icons.Generator.Material('phone-in-talk', 24, '#666') }</View>
+        </BookingDetailButton>
       </View>
     </View>
   )
@@ -77,25 +75,24 @@ const BookingDetailListItem = (props) => {
   const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props;
   return(
     <View>
-    <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 38, width, backgroundColor:'white'}, style]}>
-      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:8,marginBottom: 8}}>
-        <View style={{width:40, alignItems:'flex-end'}}>
-        {icon}
+      <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 38, width, backgroundColor:'white'}, style]}>
+        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:8,marginBottom: 8}}>
+          <View style={{width:40, alignItems:'flex-end'}}>
+            {icon}
+          </View>
+          <Text style={[{fontSize: TextFont.TextSize(15), marginLeft: 12, width: width - 105, fontWeight:'bold'}, titleStyle]}>{title}</Text>
         </View>
-        <Text style={[{fontSize: TextFont.TextSize(17), marginLeft: 12, width: width - 105, fontWeight:'bold'}, titleStyle]}>{title}</Text>
+        {
+          linkingIconName
+            ?
+            <TouchableOpacity style={[{width: 40}, rightViewStyle]} onPress={onPress}>
+              <Image style={[{height: 30, width: 30, marginTop: 4}, linkingIconStyle]} source={linkingIconName}/>
+            </TouchableOpacity>
+            :
+            null
+        }
       </View>
-      {
-        linkingIconName
-          ?
-          <TouchableOpacity style={[{width: 40}, rightViewStyle]} onPress={onPress}>
-            <Image style={[{height: 30, width: 30, marginTop: 4}, linkingIconStyle]} source={linkingIconName}/>
-          </TouchableOpacity>
-          :
-          null
-      }
-    </View>
       <View style={{backgroundColor: '#d7d7d7', width, height: 0.5}}/>
-
     </View>
   )
 };
@@ -110,33 +107,35 @@ const BookingDetailView = (props) => {
     <View style={{backgroundColor: 'transparent', height: height / 3 * 2 }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
       <ScrollView>
-        <BookingDetailListItem title={time}
-                               titleStyle={{color:'#fff'}}
-                               icon={<Image style={{height:30,width:30}}
-                                            source={Resources.image.booking_detail_bell}/>}
-                               style={{backgroundColor:'#ff2239'}}
+        <BookingDetailListItem
+          title={time}
+          titleStyle={{color:'#fff'}}
+          icon={<Image style={{height:30,width:30}} source={Resources.image.booking_detail_bell}/>}
+          style={{backgroundColor:'#ff2239'}}
         />
-        <BookingDetailListItem title={from.address}
-                               icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#1ab2fd'}}/>}
-                               linkingIconName={Resources.image.booking_detail_linking}
-                               onPress={_ => alert('from')}
+        <BookingDetailListItem
+          title={from.address}
+          icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#1ab2fd'}}/>}
+          linkingIconName={Resources.image.booking_detail_linking}
+          onPress={() => alert('from')}
         />
-        <BookingDetailListItem title={destination.address}
-                               icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#ffb539'}}/>}
-                               linkingIconName={Resources.image.booking_detail_linking}
-                               onPress={_ => alert('destination')}
+        <BookingDetailListItem
+          title={destination.address}
+          icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#ffb539'}}/>}
+          linkingIconName={Resources.image.booking_detail_linking}
+          onPress={_ => alert('destination')}
         />
-        <BookingDetailListItem title={<FormattedMessage id={'car_standard'}/>}
-                               icon={<Image style={{height:14,width:14, marginRight:8}}
-                                            source={Resources.image.booking_detail_car}/>}
+        <BookingDetailListItem
+          title={<FormattedMessage id={'car_standard'}/>}
+          icon={<Image style={{height:14,width:14, marginRight:8}} source={Resources.image.booking_detail_car}/>}
         />
-        <BookingDetailListItem title={payment_method == 'Cash' ? '现金' : payment_method}
-                               icon={<Image style={{height:14,width:14, marginRight:8}}
-                                            source={Resources.image.booking_detail_payment}/>}
+        <BookingDetailListItem
+          title={payment_method == 'Cash' ? <FormattedMessage id={'cash'}/> : payment_method}
+          icon={<Image style={{height:14,width:14, marginRight:8}} source={Resources.image.booking_detail_payment}/>}
         />
-        <BookingDetailListItem title={ <FormattedMessage id={'note_to_driver'}/>}
-                               icon={<Image style={{height:14,width:14, marginRight:8}}
-                                            source={Resources.image.booking_detail_info}/>}
+        <BookingDetailListItem
+          title={ <FormattedMessage id={'note_to_driver'}/>}
+          icon={<Image style={{height:14,width:14, marginRight:8}} source={Resources.image.booking_detail_info}/>}
         />
       </ScrollView>
     </View>
@@ -160,9 +159,9 @@ const BookingDetailBottomView = (props) => {
       <View style={{ height: 1, backgroundColor: '#d7d7d7' }} />
       <View style={{flexDirection: 'row', flex:1, justifyContent: 'space-between'}}>
         <View style={{ justifyContent:'center'}}>
-          <Text style={{fontSize: 15, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
+          <Text style={{fontSize: 14, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
             RM
-            <Text style={{fontSize: 27, fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
+            <Text style={{fontSize: 25, fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
           </Text>
         </View>
 
@@ -192,9 +191,10 @@ export default connect(state => ({
 }))(class JobsListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: '订单详情'
+      title: reducer.intl.messages.job_detail
     }
   }
 
@@ -223,9 +223,9 @@ export default connect(state => ({
     switch (status) {
     case 'Pending_Acceptance':
       return {left: 'reject', right: 'accept', leftAction: async () => {
-        Alert.alert('拒绝该订单', '确认拒绝该订单吗?', [
-          { text: '取消' },
-          { text: '确认', onPress: async () => {
+        Alert.alert(this.props.i18n.reject_order, this.props.i18n.confirm_reject_order, [
+          { text: this.props.i18n.cancel},
+          { text: this.props.i18n.confirm, onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'reject' })
               this.props.navigation.goBack()
@@ -243,9 +243,9 @@ export default connect(state => ({
       } }
     case 'On_The_Way':
       return {left: 'cancel', right: 'on_the_way', leftAction: async () => {
-        Alert.alert('取消行程', '乘客正等待接驾中，取消订单将会影响您的信用，继续吗?', [
-          { text: '放弃' },
-          { text: '确认取消', onPress: async () => {
+        Alert.alert(this.props.i18n.cancel_trip, '乘客正等待接驾中，取消订单将会影响您的信用，继续吗?', [
+          { text: this.props.i18n.cancel },
+          { text: this.props.i18n.confirm, onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
               this.props.navigation.goBack()
@@ -256,7 +256,7 @@ export default connect(state => ({
         ])
       }, rightAction: async () => {
         Alert.alert('已到达上车地点', '点击继续将通知乘客已到达', [
-          { text: '取消' },
+          { text: this.props.i18n.cancel  },
           { text: '继续', onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'arrived' })
@@ -269,8 +269,8 @@ export default connect(state => ({
     case 'Arrived':
       return {left: 'No_Show', right: 'On_Board', leftAction: () => {
         Alert.alert('取消订单', '无法找到乘客?该订单将转至人工处理', [
-          { text: '放弃' },
-          { text: '确认取消', onPress: async () => {
+          { text: this.props.i18n.cancel},
+          { text: this.props.i18n.confirm, onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
               this.props.navigation.goBack()
@@ -281,7 +281,7 @@ export default connect(state => ({
         ])
       }, rightAction: () => {
         Alert.alert('开始行程', '点击继续将开始行程', [
-          { text: '取消' },
+          { text: this.props.i18n.cancel },
           { text: '继续', onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'on_board' })
@@ -294,8 +294,8 @@ export default connect(state => ({
     case 'On_Board':
       return { left: 'cancel', right: 'Completed', leftAction: () => {
         Alert.alert('取消订单', '取消订单后，您将会受到处罚', [
-          { text: '放弃' },
-          { text: '确认取消', onPress: async () => {
+          { text: this.props.i18n.cancel},
+          { text: this.props.i18n.confirm, onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
               this.props.navigation.goBack()
@@ -306,7 +306,7 @@ export default connect(state => ({
         ])
       }, rightAction: () => {
         Alert.alert('结束行程', '已到达乘客目的地，点击确认完成行程', [
-          { text: '取消' },
+          { text: this.props.i18n.cancel},
           { text: '继续', onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'completed' })
