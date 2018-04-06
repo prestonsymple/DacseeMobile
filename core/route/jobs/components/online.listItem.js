@@ -4,6 +4,7 @@ import {
 } from 'react-native'
 import moment from 'moment'
 import { Screen, Icons, Session, TextFont } from '../../../utils'
+import Resources from '../../../resources'
 import OrderSlider from './order.slider'
 const { height, width } = Screen.window
 
@@ -13,25 +14,10 @@ export default class OfflineListItem extends Component {
     this.sliderWidth = 0
     this.currentPosition = new Animated.Value(0)
     this.createPanResponder()
-    this.minX=0
-    this.maxX=0
-  }
-  componentWillMount() {
-    if (!this.positionListenerId) {
-      this.positionListenerId = this.currentPosition.addListener(e => this.handlePositionChange(e.value))
-    }
   }
 
-  componentWillUnmount() {
-    if (this.positionListenerId) {
-      this.currentPosition.removeListener(this.positionListenerId)
-      this.positionListenerId = null
-    }
-  }
   onLayout(e) {
     this.sliderWidth = e.nativeEvent.layout.width
-    this.minX=width / 2-this.sliderWidth / 2+25
-    this.maxX=width / 2+this.sliderWidth / 2-25
   }
   createPanResponder() {
     this.panResponder = PanResponder.create({
@@ -52,17 +38,20 @@ export default class OfflineListItem extends Component {
     this.prevTouches = e.nativeEvent.touches
     this.firstTouche = e.nativeEvent.touches
   }
-  getIsOut(x){
-    let minX=this.minX
-    let maxX=this.maxX
-    let type=x<=minX?minX:x>=maxX?maxX:0
+  getIsMid(x) {
+    let minX = width / 2 - this.sliderWidth / 4
+    let maxX = width / 2 + this.sliderWidth / 4
+    if (x < minX) return -1
+    if (x > maxX) return 1
+    return 0
+  }
+  getIsOut(x) {
+    let minX = width / 2 - this.sliderWidth / 2 + 25
+    let maxX =  width / 2 + this.sliderWidth / 2 - 25
+    let type = x <= minX ? minX : x >= maxX ? maxX : 0
     return type
   }
-  getIsMid(x){
-    let minX=width / 2-this.sliderWidth / 4
-    let maxX=width / 2+this.sliderWidth  /  4
-    return minX<=x&&x<=maxX
-  }
+
   onPanResponderMove(e, gestureState) {
     let { touches } = e.nativeEvent
     let prevTouches = this.prevTouches
@@ -70,12 +59,12 @@ export default class OfflineListItem extends Component {
     if (touches.length != 1 || touches[0].identifier != prevTouches[0].identifier) {
       return
     }
-    if(this.getIsOut(touches[0].pageX)!==0&&this.getIsOut(prevTouches[0].pageX)===0){
-      let scaleX=this.currentPosition._value<0?-130:130
+    if (this.getIsOut(touches[0].pageX) !== 0 && this.getIsOut(prevTouches[0].pageX) === 0) {
+      let scaleX = this.currentPosition._value < 0 ? -(this.sliderWidth / 2 - 25) : (this.sliderWidth / 2 - 25)
       this.currentPosition.setValue(scaleX)
-      this.prevTouches[0].pageX=this.getIsOut(touches[0].pageX)
+      this.prevTouches[0].pageX = this.getIsOut(touches[0].pageX)
       return
-    }else if(this.getIsOut(touches[0].pageX)!==0&&this.getIsOut(prevTouches[0].pageX!==0)){
+    } else if (this.getIsOut(touches[0].pageX) !== 0 && this.getIsOut(prevTouches[0].pageX !== 0)) {
       return
     }
     let dy = touches[0].pageX - prevTouches[0].pageX
@@ -83,18 +72,19 @@ export default class OfflineListItem extends Component {
     this.currentPosition.setValue(pos)
   }
   onPanResponderRelease(e, gestureState) {
-    let minX =this.minX
-    let maxX =this.maxX
-    let status= this.prevTouches[0].pageX <= minX ? -1 : this.prevTouches[0].pageX >= maxX ? 1 : 0;
-    if (status != 0) {
-
-      this.props.sliderChange(status)
+    let status = this.getIsMid(this.prevTouches[0].pageX)
+    switch (status) {
+    case 0:this.currentPosition.setValue(0)
+      break;
+    case -1:this.currentPosition.setValue(-(this.sliderWidth / 2 - 25))
+      break;
+    case 1:this.currentPosition.setValue(this.sliderWidth / 2 - 25)
+      break;
     }
-    if(this.getIsMid(this.prevTouches[0].pageX)){
-      this.currentPosition.setValue(0)
-    }
+    this.props.sliderChange(status)
   }
-  handlePositionChange(value){
+  handlePositionChange(value) {
+
   }
   _statusInChinese(str) {
     switch (str) {
@@ -123,12 +113,13 @@ export default class OfflineListItem extends Component {
   render() {
     const { itemData, itemDay, onPress = () => { } } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
-
+    console.log(itemData)
     return (
       <View style={styles.container}>
         <View style={[styles.text_cell, { justifyContent: 'space-between' }]}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row' ,alignItems:'center'}}>
             <Text style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
+            <Image source={Resources.image.distance} resizeMode='contain' style={{height:18,width:20,marginLeft:10}}/>
             <Text style={styles.order_status}>{'~ 15km'}</Text>
           </View>
           <Text style={styles.fare}>{fare}</Text>
@@ -137,16 +128,15 @@ export default class OfflineListItem extends Component {
           <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
           <Text style={styles.adress}>{from.name}</Text>
         </View>
-        <View style={styles.text_cell}>
+        <View style={[styles.text_cell,{paddingBottom:0}]}>
           <View style={[styles.dot, { backgroundColor: '#7ED321' }]} />
           <Text style={styles.adress}>{destination.name}</Text>
         </View>
         {
-          status === 'Pending_Acceptance' && (
-            <View onLayout={e => this.onLayout(e)} {...this.panResponder.panHandlers}>
+          status === 'Pending_Acceptance' &&
+            <View onLayout={e => this.onLayout(e)} {...this.panResponder.panHandlers} style={{paddingTop:15,paddingBottom:5}}>
               <OrderSlider currentPosition={this.currentPosition} sliderChange={this.props.sliderChange} />
             </View>
-          )
         }
       </View>
     )
@@ -167,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#aaaaaa'
   },
   order_status: {
-    fontSize: TextFont.TextSize(15), fontWeight: 'bold', color: '#2ed37e', marginLeft: 15
+    fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#2ed37e',marginLeft:2
   },
   fare: {
     fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#000',

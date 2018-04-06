@@ -88,16 +88,16 @@ export default connect(state => ({
             </View>
             :
             <View style={{ flex: 1 }}>
-              <View style={{ backgroundColor: '#fff', height: 48, justifyContent: 'center', width: width, marginVertical: 10 }}>
+              <View style={{ backgroundColor: '#fff', height: 48, justifyContent: 'center', width: width, marginTop: 10 }}>
                 <Text style={{ color: '#404040', fontSize: TextFont.TextSize(18), marginLeft: 20 }}>
-                  {'等待接受'}
+                  {'正在进行'}
                 </Text>
               </View>
               <ListView
                 dataSource={jobs}
                 enableEmptySections={true}
-                renderRow={(row) => (
-                  <TouchableOpacity activeOpacity={.7} onPress={this.goJobsListDetail.bind(this,row)}>
+                renderRow={(row,rowid,keyid) => (
+                  <TouchableOpacity activeOpacity={.7} onPress={()=>this.goJobsListDetail(row)} style={{marginTop:keyid==0?10:0}}>
                     <OnlineListItem itemData={row}  sliderChange={(status)=>this.sliderChange(status,row._id)}/>
                   </TouchableOpacity>
                 )}
