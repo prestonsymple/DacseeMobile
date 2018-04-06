@@ -106,7 +106,7 @@ export default connect(state => ({
               await ShareUtil.share(
                 '分享至微信',
                 'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=',
-                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
+                `http://clientstaging.incredible-qr.com/clients/dacsee/redirect-page/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
                 '加入DACSEE',
                 2,
                 (arg) => { console.log(arg) }
@@ -124,7 +124,7 @@ export default connect(state => ({
               await ShareUtil.share(
                 '分享至微信',
                 'http://firicon.fir.im/77b53eac1af234a4aca786fd86e615208bacc0d9?e=1520125806&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:6DhdIraIBadFnepnbf4__RxZz7A=',
-                `http://47.98.40.59/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
+                `http://clientstaging.incredible-qr.com/clients/dacsee/redirect-page/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
                 '加入DACSEE',
                 3,
                 (arg) => { console.log(arg) }
