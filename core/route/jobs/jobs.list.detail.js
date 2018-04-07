@@ -7,7 +7,7 @@ import moment from 'moment'
 import { SafeAreaView } from 'react-navigation';
 
 import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
-import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
+import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../native/AMap'
 import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Button } from '../../components'
 import Resources from '../../resources'

@@ -1,41 +1,45 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import {
   Text, View, Image, TouchableOpacity, ListView, ScrollView, RefreshControl, StyleSheet
 } from 'react-native'
 import moment from 'moment'
 import { Screen, Icons, Session, TextFont } from '../../../utils'
-
+import { connect } from 'react-redux'
 const { height, width } = Screen.window
 
-export default class OfflineListItem extends PureComponent {
-  _statusInChinese(str) {
+export default connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class OfflineListItem extends Component {
+  _getStatus(str) {
+    let json={}
+    let {i18n}=this.props
     switch(str) {
-    case 'Pending_Acceptance':
-      return '等待接单'
-    case 'On_The_Way':
-      return '司机即将到达'
-    case 'Arrived':
-      return '司机已到达'
-    case 'No_Show':
-      return '乘客未抵达'
-    case 'On_Board':
-      return '完成订单'
-    case 'Completed':
-      return '订单完成'
-    case 'Cancelled_by_Passenger':
-      return '乘客已取消'
-    case 'Cancelled_by_Driver':
-      return '司机已取消'
-    case 'Rejected_by_Driver':
-      return '司机已拒绝'
-    case 'No_Taker':
-      return '订单无人应答'
+    case 'Pending_Acceptance':json.text=i18n.Pending_Acceptance;json.color= '#2ed37e'
+      return json
+    case 'On_The_Way':json.text=i18n.On_The_Way;json.color= '#2ed37e'
+      return json
+    case 'Arrived':json.text=i18n.Arrived;json.color= '#2ed37e'
+      return json
+    case 'No_Show':json.text=i18n.No_Show;json.color= '#ccc'
+      return json
+    case 'On_Board':json.text=i18n.On_Board;json.color= '#2ed37e'
+      return json
+    case 'Completed':json.text=i18n.Completed;json.color= '#2ed37e'
+      return json
+    case 'Cancelled_by_Passenger':json.text=i18n.Cancelled_by_Passenger;json.color= '#ccc'
+      return json
+    case 'Cancelled_by_Driver':json.text=i18n.Cancelled_by_Driver;json.color= '#ccc'
+      return json
+    case 'Rejected_by_Driver':json.text=i18n.Rejected_by_Driver;json.color= '#red'
+      return json
+    case 'No_Taker':json.text=i18n.No_Taker;json.color= '#ccc'
+      return json
     }
   }
   render() {
     const { itemData,itemIndex, itemDay, onPress = () => { }, working } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
-    //const optionObject = thiz._getStatus(status)
+    const optionObject = this._getStatus(status)
     console.log(itemIndex,'itemIndex')
     return (
       <TouchableOpacity activeOpacity={.7} onPress={onPress}>
@@ -43,7 +47,7 @@ export default class OfflineListItem extends PureComponent {
           <View style={[styles.text_cell, { justifyContent: 'space-between',paddingTop:15 }]}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
-              <Text style={styles.order_status}>{'正在赶来'}</Text>
+              <Text style={[styles.order_status,{color:optionObject.color}]}>{optionObject.text}</Text>
             </View>
             <Text style={styles.fare}>{working ? '' : fare}</Text>
           </View>
@@ -68,7 +72,7 @@ export default class OfflineListItem extends PureComponent {
       </TouchableOpacity>
     )
   }
-}
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +88,7 @@ const styles = StyleSheet.create({
     fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#aaaaaa'
   },
   order_status: {
-    fontSize: TextFont.TextSize(14), fontWeight: 'bold', color: '#2ed37e', marginLeft: 15
+    fontSize: TextFont.TextSize(14), fontWeight: 'bold', marginLeft: 15
   },
   fare: {
     fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#000',
