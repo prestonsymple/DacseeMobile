@@ -128,7 +128,7 @@ export default class OfflineListItem extends Component {
           <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
           <Text style={styles.adress}>{from.name}</Text>
         </View>
-        <View style={[styles.text_cell,{paddingBottom:0}]}>
+        <View style={[styles.text_cell,{paddingBottom:status === 'Pending_Acceptance'?0:15}]}>
           <View style={[styles.dot, { backgroundColor: '#7ED321' }]} />
           <Text style={styles.adress}>{destination.name}</Text>
         </View>

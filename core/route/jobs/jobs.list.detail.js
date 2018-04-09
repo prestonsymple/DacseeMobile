@@ -76,7 +76,7 @@ const BookingDetailListItem = (props) => {
   const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props;
   return(
     <View>
-      <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 38, width, backgroundColor:'white'}, style]}>
+      <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 44, width, backgroundColor:'white'}, style]}>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:8,marginBottom: 8}}>
           <View style={{width:40, alignItems:'flex-end'}}>
             {icon}
@@ -107,7 +107,7 @@ const BookingDetailView = (props) => {
   return(
     <View style={{backgroundColor: 'transparent', height: height / 3 * 2 }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
-      <ScrollView>
+      <ScrollView style={{marginBottom:Define.system.ios.x ? 90:70}}>
         <BookingDetailListItem
           title={time}
           titleStyle={{color:'#fff'}}
@@ -132,7 +132,7 @@ const BookingDetailView = (props) => {
         />
         <BookingDetailListItem
           title={payment_method == 'Cash' ? <FormattedMessage id={'cash'}/> : payment_method}
-          icon={<Image style={{height:14,width:14, marginRight:8}} source={Resources.image.booking_detail_payment}/>}
+          icon={<Image style={{height:18,width:14, marginRight:8}} resizeMode='contain' source={Resources.image.booking_detail_payment}/>}
         />
         <BookingDetailListItem
           title={ <FormattedMessage id={'note_to_driver'}/>}
