@@ -21,7 +21,7 @@ export default class UserList extends PureComponent {
             return (
               <TouchableOpacity key={key}  activeOpacity={.7}
                 onPress={this.props.goUserDetails.bind(this,row._id)}>
-                {index==0?<View/>:<View style={{height:0.5,backgroundColor:'#ccc'}}/>}
+                {index==0?<View/>:<View style={{height:0.8,backgroundColor:'#ccc'}}/>}
                 <UserCell itemData={row} />
               </TouchableOpacity>
             )}}
@@ -45,14 +45,14 @@ class UserCell extends PureComponent {
             <Image style={{ width: 50, height: 50 }} source={{uri:avatars?avatars[avatars.length - 1].url:'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'}} />
           </View>
           <View style={{justifyContent:'center',}}>
-            <Text style={{color:'#000'}}>{fullName}</Text>            
+            <Text style={{color:'#000'}}>{fullName}</Text>
             <FormattedMessage id={'userid'}>
               {
                 msg => (
                   <Text style={{color:'#ccc'}}>{userId?(msg+'：'+userId):''}</Text>
                 )
               }
-            </FormattedMessage>            
+            </FormattedMessage>
           </View>
         </View>
         {/* TODO: FIX BUG */}
@@ -60,7 +60,7 @@ class UserCell extends PureComponent {
           {
             msg => (
               <Text style={{color:'#000'}}>{totalDownline+' '+msg}</Text>
-            )            
+            )
           }
         </FormattedMessage>         */}
       </View>

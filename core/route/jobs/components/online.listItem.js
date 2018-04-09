@@ -145,7 +145,7 @@ export default class OfflineListItem extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: width - 20, marginLeft: 10, marginBottom: 15, backgroundColor: '#fff', flex: 1, paddingTop: 15, paddingHorizontal: 15
+    width: width - 20,borderRadius:6, marginLeft: 10, marginBottom: 15, backgroundColor: '#fff', flex: 1, paddingTop: 15, paddingHorizontal: 15
   },
   info_cell: {
     flexDirection: 'row', justifyContent: 'space-between', flex: 1

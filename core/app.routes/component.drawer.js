@@ -51,7 +51,7 @@ const MENUS_OPTIONS = [{
 // },
 ]
 
-export default connect(state => ({ 
+export default connect(state => ({
   user: state.account.user,
   i18n: state.intl.messages || {}
 }))(class DrawerContentComponent extends Component {
@@ -81,7 +81,7 @@ export default connect(state => ({
               { color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: TextFont.TextSize(18) }
             ]}>{ fullName }</Text>
             <View style={[
-              { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.5 },
+              { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.8 },
               { backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }
             ]}>
               <Text style={{ color: '#666', fontWeight: '600', fontSize: TextFont.TextSize(12) }}>

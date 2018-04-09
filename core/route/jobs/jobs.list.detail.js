@@ -93,7 +93,7 @@ const BookingDetailListItem = (props) => {
             null
         }
       </View>
-      <View style={{backgroundColor: '#d7d7d7', width, height: 0.5}}/>
+      <View style={{backgroundColor: '#d7d7d7', width, height: 0.8}}/>
     </View>
   )
 };
