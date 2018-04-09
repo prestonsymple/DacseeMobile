@@ -38,7 +38,7 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
-    await InteractionManager.runAfterInteractions()
+    await InteractionManager.runAfterInteractions();
   }
 
   componentWillReceiveProps(props) {
@@ -47,10 +47,10 @@ export default connect(state => ({
       this.setState({ jobs: dataContrast.cloneWithRows(props.jobs) })
     }
   }
-  async sliderChange(status,_id) {
-    if(status!==0){
+  async sliderChange(status, _id) {
+    if (status !== 0) {
       try {
-        await Session.Booking.Put(`v1/${_id}`, { action: status===-1?'reject':'accept' })
+        await Session.Booking.Put(`v1/${_id}`, { action: status === -1 ? 'reject' : 'accept' })
       } catch (e) {
         this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
       }
@@ -66,17 +66,16 @@ export default connect(state => ({
       <View style={{ flex: 1, backgroundColor: '#f8f8f8', }}>
         <View style={{ paddingHorizontal: 20, paddingTop: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width }}>
           <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
-            <FormattedMessage id={'online'} />
+            {this.props.i18n.online}
           </Text>
-          <Switch  value={working} onValueChange={(working) => this.props.dispatch(driver.driverSetValue({ working }))} />
+          <Switch value={working} onValueChange={(working) => this.props.dispatch(driver.driverSetValue({ working }))} />
         </View>
         {
           working && (jobs.rowIdentities[0].length === 0 ?
-
-            <View style={{ justifyContent: 'center', alignItems: 'center',flex:1 }}>
-              <Image source={Resources.image.joblist_empty}  />
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+              <Image source={Resources.image.joblist_empty} />
               <Text style={{ color: '#999', fontSize: TextFont.TextSize(18), fontWeight: '600', textAlign: 'center', marginTop: 20 }}>
-                {'已上线，等待订单中'}
+                {this.props.i18n.wait_for_order}
               </Text>
             </View>
             :
@@ -89,9 +88,9 @@ export default connect(state => ({
               <ListView
                 dataSource={jobs}
                 enableEmptySections={true}
-                renderRow={(row,rowid,keyid) => (
-                  <TouchableOpacity activeOpacity={.7} onPress={()=>this.goJobsListDetail(row)} style={{marginTop:keyid==0?10:0}}>
-                    <OnlineListItem itemData={row}  sliderChange={(status)=>this.sliderChange(status,row._id)}/>
+                renderRow={(row, rowid, keyid) => (
+                  <TouchableOpacity activeOpacity={.7} onPress={() => this.goJobsListDetail(row)} style={{ marginTop: keyid == 0 ? 10 : 0 }}>
+                    <OnlineListItem itemData={row} sliderChange={(status) => this.sliderChange(status, row._id)} i18n={this.props.i18n} />
                   </TouchableOpacity>
                 )}
                 style={{ marginBottom: 15 }}

@@ -1,13 +1,13 @@
 /* global navigator */
 
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
+import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking,StyleSheet, Image } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
 import axios from 'axios'
-
+import moment from 'moment'
 import Resources from '../../../resources'
 import ModalDriverRespond from './passenger.modal.wait.driver'
 
@@ -16,7 +16,7 @@ import CircleBar from '../components/circle.bar'
 
 import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
 import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
-import { Screen, Icons, Define, Session, UtilMath } from '../../../utils'
+import { Screen, Icons, Define, Session, UtilMath, TextFont } from '../../../utils'
 import { booking, account } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
@@ -40,8 +40,8 @@ export default connect(state => ({
     super(props)
     this.state = {
       drag: false,
-      timePickerShow:false,
-      selectPayShow:false,
+      timePickerShow: false,
+      selectPayShow: false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
       polyline: [],
 
@@ -294,12 +294,12 @@ export default connect(state => ({
     }
   }
 
-  dateChange(time){
-    this.setState({timePickerShow:false})
+  dateChange(time) {
+    this.setState({ timePickerShow: false })
     console.log(time)
   }
-  payChange(pay){
-    this.setState({selectPayShow:false})
+  payChange(pay) {
+    this.setState({ selectPayShow: false })
     console.log(pay)
   }
   render() {
@@ -422,9 +422,9 @@ export default connect(state => ({
           <PickerOptions
             selectPayShow={this.state.selectPayShow}
             timePickerShow={this.state.timePickerShow}
-            showSelcetPay={()=>this.setState({selectPayShow:true})}
-            showTimerPicker={()=>this.setState({timePickerShow:true})}
-            payChange={(pay) =>this.payChange(pay)}
+            showSelcetPay={() => this.setState({ selectPayShow: true })}
+            showTimerPicker={() => this.setState({ timePickerShow: true })}
+            payChange={(pay) => this.payChange(pay)}
             dateChange={(time) => this.dateChange(time)}
           />
         )}
@@ -434,7 +434,7 @@ export default connect(state => ({
   }
 })
 
-const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare,i18n:state.intl.messages}))(class PickerOptions extends PureComponent {
+const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare, i18n: state.intl.messages }))(class PickerOptions extends PureComponent {
 
   render() {
     return (
@@ -462,8 +462,8 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
           </TouchableOpacity>
         </View>
         <TimePicker visible={this.props.timePickerShow}
-          dateChange={(time)=>this.props.dateChange(time)}/>
-        <SelectPay visible={this.props.selectPayShow} payChange={(pay)=>this.props.payChange(pay)}/>
+          dateChange={(time) => this.props.dateChange(time)} />
+        <SelectPay visible={this.props.selectPayShow} payChange={(pay) => this.props.payChange(pay)} />
       </Animated.View>
     )
   }
@@ -531,3 +531,87 @@ class MapPin extends PureComponent {
     )
   }
 }
+/**
+ * @desc bookingDetail 详情View
+ */
+const BookingDetailView = (props) => {
+  const { onPress, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail
+  const time = moment(booking_at).format('YYYY-MM-D HH:mm')
+  return (
+    <View style={{ backgroundColor: 'transparent', height: height / 2.3 }}>
+      <BookingDetailHeaderView passenger_info={passenger_info} />
+      <DrvierCarDetail  car_info={''}/>
+      <View style={{ backgroundColor: '#fff', marginBottom: Define.system.ios.x ? 20 : 0, alignItems: 'center', justifyContent: 'center', height: 60 }}>
+        <TouchableOpacity onPress={onPress} style={{ backgroundColor: 'red', borderRadius: 6, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center', }}>
+          <Text style={{ color: '#fff', fontSize: TextFont.TextSize(16) }}>{'取消行程'}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+
+/**
+ * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
+ */
+const BookingDetailHeaderView = (props) => {
+  const { avatars, fullName, userId, phoneCountryCode, phoneNo } = props.passenger_info
+  return (
+    <View style={{
+      height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopLeftRadius: 20, borderTopRightRadius: 20,
+      backgroundColor: 'white'
+    }}>
+      <View style={{ flexDirection: 'row' }}>
+        <Image
+          source={{ uri: avatars === undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
+          style={{ width: 54, height: 54, borderRadius: 27, marginLeft: 14 }} />
+        <View>
+          <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{fullName}</Text>
+          <Text style={{ marginLeft: 10, marginTop: 2, fontSize: TextFont.TextSize(14), color: 'rgba(0, 0, 0, 0.5)' }}>{`User ID: ${userId}`}</Text>
+        </View>
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <BookingDetailButton style={{ marginRight: 10, }} onPress={() => Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
+          <View>{Icons.Generator.Awesome('comment', 24, '#666')}</View>
+        </BookingDetailButton>
+        <BookingDetailButton style={{ marginRight: 10, }} onPress={() => Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
+          <View>{Icons.Generator.Material('phone-in-talk', 24, '#666')}</View>
+        </BookingDetailButton>
+      </View>
+    </View>
+  )
+}
+/**
+ * @desc bookingDetailButton 按钮
+ */
+const BookingDetailButton = (props) => {
+  const { onPress, style, children } = props
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[{ backgroundColor: '#eee', width: 46, height: 46, borderRadius: 23, justifyContent: 'center', alignItems: 'center' }, style]}>
+      {children}
+    </TouchableOpacity>
+  )
+}
+/**
+ * @desc DrvierCarDetail 车详情
+ */
+const DrvierCarDetail = (props) => {
+  const { ...car_info } = props.car_info
+  return (
+    <View style={{ backgroundColor: '#F5F5F5', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'保时捷-911'}</Text>
+        <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
+        <Text style={styles.car_cell}>{'颜色-白色'}</Text>
+        <Text style={styles.car_cell}>{'豪华跑车'}</Text>
+      </View>
+      <Image style={{ flex: 1 }} source={Resources.image.slice_adv_car} />
+    </View>
+  )
+}
+const styles = StyleSheet.create({
+  car_cell:{
+    color: '#9e9e9e', fontSize: TextFont.TextSize(15), marginBottom: 5
+  }
+})

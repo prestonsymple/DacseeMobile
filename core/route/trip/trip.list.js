@@ -72,7 +72,7 @@ export default connect(state => ({
         detail: dataContrast.cloneWithRows(data)
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
+      this.props.dispatch(application.showMessage('无法连接到服务器'));
       this.setState({
         loading: false
       })
@@ -139,45 +139,6 @@ export default connect(state => ({
 })
 
 class ListItem extends Component {
-
-  constructor(props) {
-    super(props)
-    // console.log(this.props.itemData)
-    this.state = {
-    }
-  }
-
-  _statusInChinese(str) {
-    const {i18n} =this.props;
-    switch (str) {
-    // case 'Pending_Passenger':
-    //   return '等待乘客'
-    // case 'Pending_Assignment':
-    //   return ''
-    case 'Pending_Acceptance':
-      return i18n.Pending_Acceptance
-    // case 'Confirmed':
-    //   return ''
-    case 'On_The_Way':
-      return i18n.On_The_Way
-    case 'Arrived':
-      return i18n.Arrived
-    case 'No_Show':
-      return i18n.No_Show
-    case 'On_Board':
-      return i18n.On_Board
-    case 'Completed':
-      return i18n.Completed
-    case 'Cancelled_by_Passenger':
-      return i18n.Cancelled_by_Passenger
-    case 'Cancelled_by_Driver':
-      return i18n.Cancelled_by_Driver
-    case 'Rejected_by_Driver':
-      return i18n.Rejected_by_Driver
-    case 'No_Taker':
-      return i18n.No_Taker
-    }
-  }
 
   render() {
     const { itemData, itemDay } = this.props

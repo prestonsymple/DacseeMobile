@@ -13,13 +13,13 @@ const {width,height}=Dimensions.get('window')
 import { Screen, Icons, Session, TextFont } from '../../../utils'
 export default class OrderSlider extends Component {
   render() {
-    const { currentPosition } = this.props
+    const { currentPosition,i18n } = this.props
 
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={{ fontSize: 15, color: '#fff',marginLeft:10 }}>放弃</Text>
-          <Text style={{ fontSize: 15, color: '#fff',marginRight:10 }}>接受</Text>
+          <Text style={{ fontSize: 15, color: '#fff',marginLeft:10 }}>{i18n.reject}</Text>
+          <Text style={{ fontSize: 15, color: '#fff',marginRight:10 }}>{i18n.accept}</Text>
         </View>
         <Animated.View
           style={[{ transform: [ { translateX: currentPosition }],},styles.circle]}>

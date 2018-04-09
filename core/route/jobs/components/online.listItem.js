@@ -75,41 +75,18 @@ export default class OfflineListItem extends Component {
     let status = this.getIsMid(this.prevTouches[0].pageX)
     switch (status) {
     case 0:this.currentPosition.setValue(0)
-      break;
+      break
     case -1:this.currentPosition.setValue(-(this.sliderWidth / 2 - 25))
-      break;
+      break
     case 1:this.currentPosition.setValue(this.sliderWidth / 2 - 25)
-      break;
+      break
     }
     this.props.sliderChange(status)
   }
   handlePositionChange(value) {
 
   }
-  _statusInChinese(str) {
-    switch (str) {
-    case 'Pending_Acceptance':
-      return '等待接单'
-    case 'On_The_Way':
-      return '司机即将到达'
-    case 'Arrived':
-      return '司机已到达'
-    case 'No_Show':
-      return '乘客未抵达'
-    case 'On_Board':
-      return '完成订单'
-    case 'Completed':
-      return '订单完成'
-    case 'Cancelled_by_Passenger':
-      return '乘客已取消'
-    case 'Cancelled_by_Driver':
-      return '司机已取消'
-    case 'Rejected_by_Driver':
-      return '司机已拒绝'
-    case 'No_Taker':
-      return '订单无人应答'
-    }
-  }
+
   render() {
     const { itemData, itemDay, onPress = () => { } } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
@@ -135,7 +112,7 @@ export default class OfflineListItem extends Component {
         {
           status === 'Pending_Acceptance' &&
             <View onLayout={e => this.onLayout(e)} {...this.panResponder.panHandlers} style={{paddingTop:15,paddingBottom:5}}>
-              <OrderSlider currentPosition={this.currentPosition} sliderChange={this.props.sliderChange} />
+              <OrderSlider currentPosition={this.currentPosition} sliderChange={this.props.sliderChange} i18n={this.props.i18n}/>
             </View>
         }
       </View>
