@@ -8,7 +8,7 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 import { Screen, Icons, Redux, Define,TextFont } from '../../utils'
 import resources from '../../resources'
 import { application as app, account } from '../../redux/actions'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 const { width, height } = Screen.window
 
@@ -94,8 +94,8 @@ export default class PickerCountryComponent extends Component {
                   this.props.navigation.goBack()
                 }} style={{ flex: 1, height: 52, justifyContent: 'center', backgroundColor: 'white' }}>
                   <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>
-                    <Text style={{ color: '#333', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>{ row.name }</Text>
-                    <Text style={{ color: '#333', fontSize: TextFont.TextSize(16), fontWeight: '600' }}> ({ row.code })</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{ row.name }</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({ row.code })</Text>
                   </View>
                 </TouchableOpacity>
               )}
@@ -140,10 +140,10 @@ export default class PickerCountryComponent extends Component {
                   this.props.navigation.goBack()
                 }} style={{ flex: 1, height: 52, justifyContent: 'center', backgroundColor: 'white' }}>
                   <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>
-                    <Text style={{ color: '#333', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>
                       <FormattedMessage id={ row.name } />
                     </Text>
-                    <Text style={{ color: '#333', fontSize: TextFont.TextSize(16), fontWeight: '600' }}> ({ row.code })</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({ row.code })</Text>
                   </View>
                 </TouchableOpacity>
               )}

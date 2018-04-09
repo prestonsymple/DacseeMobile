@@ -35,7 +35,7 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
 
   render() {
     const { value } = this.props.navigation.state.params
-    const {i18n} = this.props;
+    const {i18n} = this.props
     const { isMail } = value
 
     return (
@@ -83,8 +83,8 @@ class RowItem extends Component {
             <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[avatars.length - 1].url }} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
-            { isMail && <Text style={{ fontSize: TextFont.TextSize(12), color: '#666', fontWeight: '400' }}>{ phoneNo ? i18n.active : i18n.inactive }</Text> }
+            <Text style={{ fontSize:16, color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
+            { isMail && <Text style={{ fontSize: 12, color: '#666', fontWeight: '400' }}>{ phoneNo ? i18n.active : i18n.inactive }</Text> }
           </View>
           <View style={{ width: 45, alignItems: 'flex-end' }}>
             { Icons.Generator.Material('keyboard-arrow-right', 26, '#999') }

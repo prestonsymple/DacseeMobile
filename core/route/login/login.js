@@ -14,7 +14,7 @@ import { Button } from '../../components'
 import ShareUtile from '../../native/umeng/ShareUtil'
 import { application as app, account } from '../../redux/actions'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 const codeInputWidth = ((Screen.window.width - 40 * 2) - 35 * 3) / 4
 const codeInputProps = {
@@ -234,14 +234,14 @@ export default connect(state => ({
             ]} source={resources.image.logo}></Animated.Image>
             <Animated.Text style={[
               { position: 'absolute', top: 170 },
-              { fontSize: TextFont.TextSize(35), lineHeight: 40, fontWeight: '400', color: 'white' },
+              { fontSize: 35, lineHeight: 40, fontWeight: '400', color: 'white' },
               { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [35, -200, -200], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, .6, 2], outputRange: [1, 0, 0], extrapolate: 'clamp' }) }
             ]}>
               <FormattedMessage id={'welcome_to_use'} />
             </Animated.Text>
             <Animated.Text style={[
-              { fontSize: TextFont.TextSize(35), top: 205, lineHeight: 40, fontWeight: '400', color: 'white', position: 'absolute' },
+              { fontSize: 35, top: 205, lineHeight: 40, fontWeight: '400', color: 'white', position: 'absolute' },
               { left: stage.interpolate({ inputRange: [0, .5, .9, 1.4, 2], outputRange: [35, 35, -150, width, (width / 2) - 62], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, .8, 1, 1.3, 2], outputRange: [1, 0, 0, 0, 1], extrapolate: 'clamp' }) }
             ]}>DACSEE</Animated.Text>
@@ -344,7 +344,7 @@ export default connect(state => ({
                     {
                       msg => (
                         <Animated.Text style={[
-                          { flex: 1, textAlign: 'center', fontSize: TextFont.TextSize(20), fontWeight: '600', color: 'white' },
+                          { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' },
                           { opacity: stage.interpolate({ inputRange: [0, 1.4, 1.8, 2], outputRange: [1, 1, 0, 0], extrapolate: 'clamp' }) },
                           { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
                         ]}>{msg}</Animated.Text>
@@ -423,7 +423,7 @@ export default connect(state => ({
             flex: 1, paddingHorizontal: 45, marginTop: this.isEmail(this.state.value) ? 110 : 200
           }}>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
-              <Text style={{ fontSize: TextFont.TextSize(26), color: '#f2f2f2', fontWeight: '400' }}>
+              <Text style={{ fontSize:26, color: '#f2f2f2', fontWeight: '400' }}>
                 <FormattedMessage id={'active_account'} />
               </Text>
             </View>
@@ -530,14 +530,14 @@ export default connect(state => ({
                 style={[styles.stdInput, styles.registerTextInput]} />
             </View>
             <View style={{ flexDirection: 'row', marginBottom: 25, justifyContent: 'center' }}>
-              <Text style={{ fontSize: TextFont.TextSize(12), color: '#f2f2f2', fontWeight: '200' }}>
+              <Text style={{ fontSize: 12, color: '#f2f2f2', fontWeight: '200' }}>
                 <FormattedMessage id={'active_account_tip'} />
               </Text>
               <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', {
                 title: '隐私协议及使用条款',
                 source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
               })} style={{  }}>
-                <Text style={{ fontSize: TextFont.TextSize(12), color: '#ffa81d', fontWeight: '200' }}>
+                <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>
                   <FormattedMessage id={'user_protocol'}/>
                 </Text>
               </TouchableOpacity>
@@ -545,7 +545,7 @@ export default connect(state => ({
             <View style={{ height: 44 }}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.onPressComplate.bind(this)}>
                 <View style={{ height: 44, alignItems: 'center', flexDirection: 'row', backgroundColor: '#ffa81d', borderRadius: 22 }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: TextFont.TextSize(20), fontWeight: '400', color: 'white' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>
                     <FormattedMessage id={'finish'} />
                   </Text>
                 </View>
@@ -579,7 +579,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     textAlign: 'center',
-    fontSize: TextFont.TextSize(16),
+    fontSize: 16,
     height: 44,
     width: codeInputWidth,
     borderColor: '#f2f2f2',
@@ -597,6 +597,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     textAlign: 'center',
-    fontSize: TextFont.TextSize(16)
+    fontSize: 16
   },
 })

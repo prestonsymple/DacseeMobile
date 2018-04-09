@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { 
-  Text, View, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight, 
+import {
+  Text, View, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
   DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
@@ -11,7 +11,7 @@ import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, account, booking } from '../../redux/actions'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 const {height, width} = Screen.window
 
@@ -22,7 +22,7 @@ export default connect(state => ({
     const reducer = global.store.getState()
     const {message} = reducer.intl
     return {
-      drawerLockMode: 'locked-closed', 
+      drawerLockMode: 'locked-closed',
       title: message.social_register
     }
   }
@@ -68,7 +68,7 @@ export default connect(state => ({
       this.setState({
         registering: false
       })
-    }    
+    }
   }
 
   render() {
@@ -87,11 +87,11 @@ export default connect(state => ({
               {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
               <TextInput style={{ flex: 1, fontSize: 14}} placeholder={i18n.enter_name} onChangeText={ (value) => this.setState({ fullName: value}) } value={ fullName } />
             </View>
-          </View>          
-          
+          </View>
+
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
             <Text style={{ fontSize: 12, opacity: 0.5 }}>{i18n.phone}</Text>
-            <View style={{ flex: 1, flexDirection: 'row' }}>              
+            <View style={{ flex: 1, flexDirection: 'row' }}>
               <Button style={{ marginRight: 10, height: 50, width: 60, justifyContent: 'center' }}
                 onPress={() => this.props.navigation.navigate('PickerCountry', {
                   onPress: ({ name, code }) => this.setState({ phoneCountryCode: code })
@@ -99,7 +99,7 @@ export default connect(state => ({
                 <Text style={{}}>{ phoneCountryCode }</Text>
               </Button>
               <TextInput style={{ flex: 1, fontSize: 14, height: 50, justifyContent: 'center' }} placeholder={i18n.enter_phone} returnKeyType={'done'} keyboardType={'phone-pad'} onChangeText={ (value) => this.setState({phoneNo: value}) } />
-            </View>                        
+            </View>
           </View>
 
           <View style={{ paddingTop: 20, justifyContent: 'flex-end' }}>
@@ -108,7 +108,7 @@ export default connect(state => ({
             </Text>
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <TextInput style={{ flex: 1, fontSize: 14, height: 50, borderBottomWidth: 1, borderBottomColor: '#a5a5a5' }} placeholder={i18n.enter_code} keyboardType={'numeric'} onChangeText={ (value) => this.setState({phoneVerificationCode: value}) } />
-              <Button style={{ marginLeft: 10, marginTop: 5, borderRadius: 5, width: 110, height: 45, backgroundColor: '#4cb1f7' }} 
+              <Button style={{ marginLeft: 10, marginTop: 5, borderRadius: 5, width: 110, height: 45, backgroundColor: '#4cb1f7' }}
                 onPress={ async () => {
                   const body = {
                     phoneCountryCode: phoneCountryCode,
@@ -126,11 +126,11 @@ export default connect(state => ({
                     } else {
                       this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
                     }
-                  }                  
+                  }
                 }}>
                 <Text style={{ color: 'white' }}>{i18n.send_code}</Text>
               </Button>
-            </View>            
+            </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
@@ -140,17 +140,17 @@ export default connect(state => ({
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
             <Button disabled={ registering } onPress={ () => {
-              if (this.state.fullName == '' | 
-              this.state.phoneNo == '' | 
-              this.state.phoneVerificationCode == '' | 
-              this.state.referralUserId == '') { 
+              if (this.state.fullName == '' |
+              this.state.phoneNo == '' |
+              this.state.phoneVerificationCode == '' |
+              this.state.referralUserId == '') {
                 this.props.dispatch(application.showMessage('请将信息填写完整'))
               } else {
-                this._fetchData()                
-              }                
+                this._fetchData()
+              }
             }} style={[{ width:240, height: 44, borderRadius: 4 }, registering ? {backgroundColor: '#a5a5a5'} : {backgroundColor: '#4cb1f7'}]}>
               {
-                registering ? 
+                registering ?
                   <Text style={{ fontSize: 20, color: 'white' }}>注册中...</Text> :
                   <Text style={{ fontSize: 20, color: 'white' }}>注册</Text>
               }

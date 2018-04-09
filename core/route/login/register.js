@@ -72,7 +72,7 @@ class RowItem extends Component {
             <Image style={{ width: 48, height: 48, borderRadius: 24 }} source={{ uri: avatars[0].url }} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
+            <Text style={{ fontSize: 16, color: '#333', fontWeight: '400', marginBottom: 4 }}>{ fullName }</Text>
             {/* <Text style={{ fontSize: 12, color: '#666', fontWeight: '400' }}>{ role }</Text> */}
           </View>
           <View style={{ width: 45, alignItems: 'flex-end' }}>
