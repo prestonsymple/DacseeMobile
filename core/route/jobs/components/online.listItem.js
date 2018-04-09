@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     height: 10, width: 10, borderRadius: 5,
   },
   adress: {
-    fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: '#404040', marginLeft: 15
+    fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#404040', marginLeft: 15
   },
   content: {
     height: 40, width: width - 40, position: 'absolute', top: 5, left: 0, backgroundColor: '#ccc', flexDirection: 'row', borderRadius: 20, justifyContent: 'space-between', alignItems: 'center'

@@ -48,16 +48,9 @@ export default connect(state => ({
     }
   }
   async sliderChange(status,_id) {
-    if(status===-1){
+    if(status!==0){
       try {
-        await Session.Booking.Put(`v1/${_id}`, { action: 'reject' })
-        this.props.navigation.goBack()
-      } catch (e) {
-        this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
-      }
-    }else{
-      try {
-        await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
+        await Session.Booking.Put(`v1/${_id}`, { action: status===-1?'reject':'accept' })
       } catch (e) {
         this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
       }
