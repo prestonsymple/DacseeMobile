@@ -13,10 +13,13 @@ const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
-export default connect(state => ({ }))(class FriendsSearchBase extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages || {}
+}))(class FriendsSearchBase extends Component {
 
   static navigationOptions = ({ navigation }) => {
-    const { search,i18n} = navigation.state.params
+    const { search } = navigation.state.params
+    const i18n = global.store.getState().intl.messages
     return {
       drawerLockMode: 'locked-closed',
       title: i18n.search_friend
@@ -61,7 +64,7 @@ export default connect(state => ({ }))(class FriendsSearchBase extends Component
   }
 
   render() {
-    const {i18n} = this.props.navigation.state.params
+    const { i18n } = this.props
     return (
       <View style={{ flex: 1 }}>
         {

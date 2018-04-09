@@ -4,14 +4,13 @@ import React, { PureComponent, Component } from 'react'
 import {
   Text, View, TouchableOpacity, DeviceEventEmitter, ScrollView, TextInput, Image, RefreshControl, Alert, TouchableNativeFeedback
 } from 'react-native'
-import ActionSheet from 'react-native-actionsheet'
+// import ActionSheet from 'react-native-actionsheet'
 import { connect } from 'react-redux'
 
 import { } from '../../../redux/actions'
 import { Icons, Screen, Define, System ,TextFont} from '../../../utils'
 import ShareUtil from '../../../native/umeng/ShareUtil'
 import { application } from '../../../redux/actions'
-import { FormattedMessage, injectIntl } from 'react-intl';
 
 const { width, height } = Screen.window
 
@@ -21,10 +20,10 @@ export default connect(state => ({
 }))(class FriendsCircleAddComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
-    const {params} = navigation.state
+    const { i18n } = navigation.state.params
     return {
       drawerLockMode: 'locked-closed',
-      title: params.i18n.friend_add
+      title: i18n.friend_add
     }
   }
 
@@ -63,7 +62,7 @@ export default connect(state => ({
             navigation={this.props.navigation}
             onPress={(value, countryCode) => {
               if (value.length === 0) return this.props.dispatch(application.showMessage('请输入正确的手机号码'))
-              this.props.navigation.navigate('FriendsSearchBase', {i18n, value, countryCode })
+              this.props.navigation.navigate('FriendsSearchBase', { value, countryCode })
             }}
           />
 
@@ -77,7 +76,7 @@ export default connect(state => ({
             canInput={true}
             onPress={(value) => {
               if (value.length === 0 || !System.Rules.isMail(value)) return this.props.dispatch(application.showMessage('请输入正确的邮箱地址'))
-              this.props.navigation.navigate('FriendsSearchBase', { value,i18n})
+              this.props.navigation.navigate('FriendsSearchBase', { value })
             }}
           />
 
@@ -92,7 +91,18 @@ export default connect(state => ({
             navigation={this.props.navigation}
             onPress={(value) => {
               if (value.length < 2) return this.props.dispatch(application.showMessage('请输入至少2个字符'))
-              this.props.navigation.navigate('FriendsSearchBase', { value,i18n})
+              this.props.navigation.navigate('FriendsSearchBase', { value })
+            }}
+          />
+
+          {/* SCAN QRCODE SESSION */}
+          <BlockWrap
+            iconBackgroundColor={'#f4a951'}
+            icon={Icons.Generator.Awesome('qrcode', 32, 'white')}
+            title={'二维码'}
+            describer={'通过扫码添加好友'}
+            onPress={(value) => {
+              this.props.navigation.navigate('CommonScanQRCode', { value })
             }}
           />
 
