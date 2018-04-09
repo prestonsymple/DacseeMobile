@@ -5,6 +5,7 @@ import {
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
+import moment from 'moment'
 const { height, width } = Screen.window
 const pixelSize = (function() {
   let pixelRatio = PixelRatio.get()
@@ -41,35 +42,7 @@ export default class TimePicker extends PureComponent {
   getDateStr(n) {
     let date = new Date()
     date.setDate(date.getDate() + n)//获取n天后的日期
-    let w = ''
-    let day = date.getDay()
-    // let y = date.getFullYear()
-    let m = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)//获取当前月份的日期，不足10补0
-    let d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()//获取当前几号，不足10补0
-    switch (day) {
-    case 0:
-      w = '星期日'
-      break
-    case 1:
-      w = '星期一'
-      break
-    case 2:
-      w = '星期二'
-      break
-    case 3:
-      w = '星期三'
-      break
-    case 4:
-      w = '星期四'
-      break
-    case 5:
-      w = '星期五'
-      break
-    case 6:
-      w = '星期六'
-      break
-    }
-    return m + '月' + d + '日 ' + w
+    return moment(date).format('MMM DD ddd')
   }
   getDafultHours() {
     let HM = this.getNowHM()
@@ -164,7 +137,7 @@ export default class TimePicker extends PureComponent {
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange('now')} >
                 <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>取消</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange(this.day+this.hour+'点'+this.minute+'分')} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange(`${this.state.day}${this.state.hour}点${this.state.minute}分`)} >
                 <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>确定</Text>
               </TouchableOpacity>
             </View>

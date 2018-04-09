@@ -49,7 +49,7 @@ class UserCell extends PureComponent {
             <FormattedMessage id={'userid'}>
               {
                 msg => (
-                  <Text style={{color:'#ccc'}}>{userId?(msg+'：'+userId):''}</Text>
+                  <Text style={{color:'#ccc'}}>{userId?`${msg}：${userId}`:''}</Text>
                 )
               }
             </FormattedMessage>

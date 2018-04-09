@@ -23,10 +23,10 @@ export default class UserDetail extends PureComponent {
             <FormattedMessage id={'userid'}>
               {
                 msg => (
-                  <Text style={{color:'#ccc',fontSize:TextFont.TextSize(14)}}>{userId?(msg+'：'+userId):''}</Text>
+                  <Text style={{color:'#ccc',fontSize:TextFont.TextSize(14)}}>{userId?`${msg}：${userId}`:''}</Text>
                 )
               }
-            </FormattedMessage>            
+            </FormattedMessage>
           </View>
         </View>
       </View>

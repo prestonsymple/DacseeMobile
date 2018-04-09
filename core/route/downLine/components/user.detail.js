@@ -12,7 +12,7 @@ export default class UserDetail extends PureComponent {
       <View style={{paddingHorizontal:20,paddingTop:20,backgroundColor:'#fff'}}>
         <InfoCell cellname='referrer_name' value={referral.fullName?referral.fullName:''} />
         <InfoCell cellname='join_date' value={joinedOn} />
-        <InfoCell cellname='phone' value={phoneCountryCode? (phoneCountryCode+ ' '+phoneNo):'' } />
+        <InfoCell cellname='phone' value={phoneCountryCode?`${phoneCountryCode} ${phoneNo}` :'' } />
         <InfoCell cellname='downline_level' value={level} />
       </View>
     )

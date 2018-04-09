@@ -105,15 +105,15 @@ class DownLineCell extends PureComponent {
   render() {
     const { cellname, value } = this.props
     return (
-      <TouchableOpacity onPress={() => this.props.goDownLineList(cellname)} style={{ paddingTop: 20 }}>        
+      <TouchableOpacity onPress={() => this.props.goDownLineList(cellname)} style={{ paddingTop: 20 }}>
         <FormattedMessage id={'level'}>
           {
             msg => (
               <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#404040', paddingBottom: 5 }}>
-                {msg+' ' + cellname}</Text>
+                {`${msg} ${cellname}`}</Text>
             )
           }
-        </FormattedMessage>    
+        </FormattedMessage>
         <Text style={{ fontSize: TextFont.TextSize(13), fontWeight: 'bold', color: '#ccc', paddingBottom: 5 }}>
           <FormattedMessage id={'total_downline'}/>
         </Text>

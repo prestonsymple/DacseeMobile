@@ -53,11 +53,12 @@ export default connect(state => ({
     try {
       const { state } = this.props.navigation
       const { params } = state
-      const data = await Session.User.Get('v1/downline/level/' + params.level)
+      const data = await Session.User.Get(`v1/downline/level/${params.level}`)
       this.setState({
         loading: false,
         data: data
       })
+      console.log(data)
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
@@ -83,15 +84,15 @@ export default connect(state => ({
     const { params } = state
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
-        <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>          
+        <View style={{ backgroundColor: '#1AB2FD', paddingHorizontal: 20 }}>
           <FormattedMessage id={'level'}>
             {
               msg => (
                 <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: '#fff', paddingBottom: 15 }}>
-                  {msg+' ' + params.level}</Text>
+                  {`${msg} ${params.level}`}</Text>
               )
             }
-          </FormattedMessage>          
+          </FormattedMessage>
           <Text style={{ fontSize: TextFont.TextSize(15), color: '#fff', marginBottom: 5 }}>{i18n.total_downline}</Text>
           <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#fff', marginBottom: 15 }}>{data.users.length}</Text>
         </View>
