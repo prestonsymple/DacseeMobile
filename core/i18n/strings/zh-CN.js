@@ -298,9 +298,10 @@ const zh_CN = {
   drive_age:'驾龄',
   validity_period:'有效期',
   standard_car:'准驾车型',
-  driver_license_info:'驾照信息'
+  driver_license_info:'驾照信息',
 
-
+  refer_account:'推荐人账号',
+  scan:'扫一扫'
 }
 
 export default zh_CN

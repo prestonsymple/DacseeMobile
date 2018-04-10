@@ -302,7 +302,10 @@ const mas = {
   drive_age:'Umur memandu',
   validity_period:'Tempoh sah',
   driver_license_info:'Maklumat lesen pemandu',
-  standard_car:'Kereta standard'
+  standard_car:'Kereta standard',
+
+  refer_account:'Akuan perujuk',
+  scan:'Mengimbas kod QR'
 }
 
 export default mas

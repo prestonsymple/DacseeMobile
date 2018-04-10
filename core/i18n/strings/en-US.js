@@ -302,7 +302,10 @@ const en_US = {
   drive_age:'Age of Driving',
   validity_period:'Validity period',
   driver_license_info:'Driving license information',
-  standard_car:'Standard car'
+  standard_car:'Standard car',
+
+  refer_account:'Referrer account',
+  scan:'Scan Code'
 }
 
 export default en_US
