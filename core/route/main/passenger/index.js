@@ -458,7 +458,7 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
           <TouchableOpacity onPress={() => {
             this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
           }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `${this.props.i18n.start} - ${this.props.i18n.start === 'Start' ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
         <TimePicker visible={this.props.timePickerShow}
