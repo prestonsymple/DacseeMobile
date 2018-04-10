@@ -13,8 +13,6 @@ import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } fro
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
-import WalletTransactionListScreen from '../wallet/wallet.transaction.list'
-import IncomeList from '../income/income.list'
 import { FormattedMessage } from 'react-intl'
 
 const { height, width } = Screen.window
