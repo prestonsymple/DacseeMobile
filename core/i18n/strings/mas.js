@@ -301,7 +301,8 @@ const mas = {
   addr:'Alamat',
   drive_age:'Umur memandu',
   validity_period:'Tempoh sah',
-  driver_license_info:'Maklumat lesen pemandu'
+  driver_license_info:'Maklumat lesen pemandu',
+  standard_car:'Kereta standard'
 }
 
 export default mas

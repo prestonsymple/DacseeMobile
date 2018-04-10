@@ -301,8 +301,8 @@ const en_US = {
   addr:'Address',
   drive_age:'Age of Driving',
   validity_period:'Validity period',
-  driver_license_info:'Driving license information'
-
+  driver_license_info:'Driving license information',
+  standard_car:'Standard car'
 }
 
 export default en_US
