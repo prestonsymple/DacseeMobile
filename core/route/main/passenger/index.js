@@ -217,8 +217,6 @@ export default connect(state => ({
     const {
       longitude = region.longitude,
       latitude = region.latitude,
-      longitudeDelta = region.longitudeDelta,
-      latitudeDelta = region.latitudeDelta,
       zoomLevel
     } = nativeEvent
 
@@ -235,9 +233,8 @@ export default connect(state => ({
       const dValue = maxValue - (maxValue - minValue) * (zoomLevel % 1)
       _latitude = latitude + dValue
       /* Fix Offset */
-    } else {
-      _latitude = latitude + latitudeDelta * 0.04
     }
+
     if (!this.state.drag) {
       this.setState({ drag: true })
       this.props.dispatch(booking.passengerSetValue({ from: {} }))
@@ -249,6 +246,7 @@ export default connect(state => ({
   }
 
   async onLocationSearch(longitude, latitude) {
+    console.log(longitude, latitude)
     try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
