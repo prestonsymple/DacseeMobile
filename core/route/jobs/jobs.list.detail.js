@@ -93,7 +93,7 @@ const BookingDetailListItem = (props) => {
             null
         }
       </View>
-      <View style={{backgroundColor: '#d7d7d7', width, height: 0.8}}/>
+      <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
     </View>
   )
 };
@@ -107,13 +107,14 @@ const BookingDetailView = (props) => {
   return(
     <View style={{backgroundColor: 'transparent', height: height / 3 * 2 }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
-      <ScrollView style={{marginBottom:Define.system.ios.x ? 90:70}}>
-        <BookingDetailListItem
+      <ScrollView style={{ marginBottom: Define.system.ios.x ? 90 : 70}}>
+        <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
+        {/* <BookingDetailListItem
           title={time}
           titleStyle={{color:'#fff'}}
           icon={<Image style={{height:30,width:30}} source={Resources.image.booking_detail_bell}/>}
           style={{backgroundColor:'#ff2239'}}
-        />
+        /> */}
         <BookingDetailListItem
           title={from.address}
           icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#1ab2fd'}}/>}
