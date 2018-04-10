@@ -160,9 +160,9 @@ class ListItem extends Component {
 
             <View style={{ marginTop: 30, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
               <View>{Icons.Generator.Material('access-time', TextFont.TextSize(14), '#000000')}</View>
-              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{moment(booking_at).format('HH:mm')}</Text>
+              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{moment(booking_at).format('YY-MM-DD HH:mm')}</Text>
               <View style={{ marginLeft: 10, }}>{Icons.Generator.Material('payment', TextFont.TextSize(14), '#000000')}</View>
-              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{payment_method == 'Cash' ? '现金' : payment_method}</Text>
+              <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{payment_method }</Text>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 15, '#bbb') }</View> */}
                 <Text style={{ fontSize: TextFont.TextSize(14), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{fare}</Text>

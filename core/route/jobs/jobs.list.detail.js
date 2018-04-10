@@ -348,33 +348,34 @@ export default connect(state => ({
   }
 
   _statusInChinese(str) {
+    const { i18n} = this.props
     switch(str) {
     // case 'Pending_Passenger':
     //   return '等待乘客'
     // case 'Pending_Assignment':
     //   return ''
     case 'Pending_Acceptance':
-      return '等待接单'
+      return i18n.Pending_Acceptance
     // case 'Confirmed':
     //   return ''
     case 'On_The_Way':
-      return '司机即将到达'
+      return i18n.On_The_Way
     case 'Arrived':
-      return '司机已到达'
+      return i18n.Arrived
     case 'No_Show':
-      return '乘客未抵达'
+      return i18n.No_Show
     case 'On_Board':
-      return '完成订单'
+      return i18n.On_Board
     case 'Completed':
-      return '订单完成'
+      return i18n.Completed
     case 'Cancelled_by_Passenger':
-      return '乘客已取消'
+      return i18n.Cancelled_by_Passenger
     case 'Cancelled_by_Driver':
-      return '司机已取消'
+      return i18n.Cancelled_by_Driver
     case 'Rejected_by_Driver':
-      return '司机已拒绝'
+      return i18n.Rejected_by_Driver
     case 'No_Taker':
-      return '订单无人应答'
+      return i18n.No_Taker
     }
   }
 

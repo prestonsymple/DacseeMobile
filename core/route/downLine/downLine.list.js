@@ -58,7 +58,7 @@ export default connect(state => ({
         loading: false,
         data: data
       })
-      console.log(data)
+      // console.log(data)
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
