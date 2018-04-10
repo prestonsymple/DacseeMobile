@@ -67,7 +67,7 @@ export default connect(state => ({
   _pressActionSheet(index) {
     const {i18n} = this.props.navigation.state.params
     if (index === 0) {
-      this.props.dispatch(application.showMessage('已将您的反馈提交至服务器，我们将会严格审查'))
+      this.props.dispatch(application.showMessage(i18n.already_report_check))
     }
     if (index === 1) {
       Alert.alert(i18n.friend_delete, i18n.del_friend_confirm, [{
@@ -80,7 +80,7 @@ export default connect(state => ({
             Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
           } catch (e) {
             console.log(e)
-            this.props.dispatch(application.showMessage('请求超时，请稍后再试'))
+            this.props.dispatch(application.showMessage(i18n.timeout_try_again))
           }
         }
       }, { text: i18n.cancel}])
