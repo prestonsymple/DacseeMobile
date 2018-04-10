@@ -231,6 +231,13 @@ const zh_CN = {
   unable_find_move_customer_service:'无法找到乘客?该订单将转至人工处理',
   waiting_cancel_punish:'乘客正等待接驾中，取消订单将会影响您的信用，继续吗?',
 
+
+  pls_enter_destination:'请输入目的地',
+  location:'当前位置',
+  ongoing:'正在进行',
+  confirm_wait_order:'行程确认完毕，等待司机接单',
+  confirm_pls_wait:'行程确认中，请稍等',
+
   //TODO
 
   confirm_trip:'确认行程',
@@ -244,7 +251,6 @@ const zh_CN = {
   go_open:'前往开启',
   now:'现在',
   start_trip_costs:'开始 - 行程费用',
-  pls_enter_destination:'',
 }
 
 export default zh_CN

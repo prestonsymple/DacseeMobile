@@ -82,7 +82,7 @@ export default connect(state => ({
             <View style={{ flex: 1 }}>
               <View style={{ backgroundColor: '#fff', height: 48, justifyContent: 'center', width: width, marginTop: 10 }}>
                 <Text style={{ color: '#404040', fontSize: TextFont.TextSize(18), marginLeft: 20 }}>
-                  {'正在进行'}
+                  {this.props.i18n.ongoing}
                 </Text>
               </View>
               <ListView

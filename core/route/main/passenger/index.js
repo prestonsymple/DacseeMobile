@@ -458,7 +458,7 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
           <TouchableOpacity onPress={() => {
             this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
           }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `${this.props.i18n.start} - ${this.props.i18n.start === 'start' ? 'RM' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `开始 - 行程费用 ￥${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
         </View>
         <TimePicker visible={this.props.timePickerShow}
@@ -469,7 +469,7 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
   }
 })
 
-const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddress extends PureComponent {
+const PickerAddress = connect(state => ({ ...state.booking,i18n: state.intl.messages}))(class PickerAddress extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -482,7 +482,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
   }
 
   render() {
-    const { drag, from, destination } = this.props
+    const { drag, from, destination,i18n} = this.props
 
     return (
       <Animated.View style={[
@@ -510,7 +510,7 @@ const PickerAddress = connect(state => ({ ...state.booking }))(class PickerAddre
             this.props.dispatch(NavigationActions.navigate({ routeName: 'PickerAddressModal', params: { type: 'destination' } }))
           }} activeOpacity={0.7} style={{ flex: 1, height: 44, justifyContent: 'center' }}>
             <View style={{ backgroundColor: '#7ED321', height: 10, width: 10, borderRadius: 5, position: 'absolute', left: 20 }} />
-            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || '请输入目的地'}</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ marginHorizontal: 48, textAlign: 'center', color: destination.name ? '#333' : '#a2a2a2', fontSize: 14, fontWeight: '600', /* PositionFix */ top: -1 }}>{destination.name || i18n.pls_enter_destination}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -599,16 +599,14 @@ const BookingDetailButton = (props) => {
 const DrvierCarDetail = (props) => {
   const { ...car_info } = props.car_info
   return (
-    <View style={{ backgroundColor: '#F5F5F5', flexDirection: 'row',alignItems: 'center',justifyContent:'space-between', flex: 1, paddingHorizontal: 20, }}>
-      <View style={{flex:2}}>
+    <View style={{ backgroundColor: '#F5F5F5', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+      <View style={{ flex: 1 }}>
         <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'保时捷-911'}</Text>
         <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
         <Text style={styles.car_cell}>{'颜色-白色'}</Text>
         <Text style={styles.car_cell}>{'豪华跑车'}</Text>
       </View>
-      <View style={{justifyContent:'center',alignItems:'center', flex:3}}>
-        <Image style={{width:187, height:80}} resizeMode='contain' source={Resources.image.car_dafult} />
-      </View>
+      <Image style={{ flex: 1 }} source={Resources.image.slice_adv_car} />
     </View>
   )
 }

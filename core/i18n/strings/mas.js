@@ -214,7 +214,7 @@ const mas = {
   transfer_confirm: 'Pengesahan pemindahan',
 
   unable_connect_server:'Tidak dapat menyambung ke pelayan',
-  unable_connect_server_pls_retry_later:'Tidak dapat menyambung ke pelayan，sila cuba sebentar lagi',
+  unable_connect_server_pls_retry_later:'Tidak dapat menyambung ke pelayan,sila cuba sebentar lagi',
   cancel_trip:'Batal',
   start_trip:'Mula',
   finish_trip:'Selesai',
@@ -223,16 +223,35 @@ const mas = {
   confirm_reject_order:'Sahkan penolakan pesanan ini?',
   arrive_place:'Sudah sampai di lokasi pick-up',
   cancel_order:'Batalkan pesanan',
-  arrive_touch_finish:'Tiba di destinasi penumpang，klik Sahkan untuk melengkapkan perjalanan',
+  arrive_touch_finish:'Tiba di destinasi penumpang dan klik OK untuk melengkapkan perjalanan',
   cancel_order_punish: 'Anda akan dihukum selepas membatalkan perintah',
   touch_continue_start_trip:'Klik Teruskan untuk memulakan perjalanan',
   touch_continue_notice_passengers:'Klik Teruskan untuk memberitahu penumpang bahawa mereka telah tiba',
   unable_find_move_customer_service:'Tidak dapat mencari penumpang? Pesanan akan pergi ke pemprosesan manual',
-  waiting_cancel_punish:'Penumpang menunggu untuk pickup. Membatalkan pesanan itu akan menjejaskan kredit anda.'
+  waiting_cancel_punish:'Penumpang menunggu untuk pickup. Membatalkan pesanan itu akan menjejaskan kredit anda.',
 
+  pls_enter_destination:'Sila masukkan destinasi',
+  location:'Lokasi semasa',
+  ongoing:'Sedang berjalan',
+  confirm_wait_order:'Selepas pengesahan perjalanan, tunggu pemandu mengambil pesanan',
+  confirm_pls_wait:'Dalam pengesahan perjalanan, sila tunggu',
 
+  job_detail: 'Butiran pesanan',
+  job_list: 'Senarai pesanan',
+  login_select_account: 'Pilih akaun anda',
+  social_register: 'Pendaftaran akaun pihak ketiga',
 
+  confirm_trip:'sahkan jadual perjalanan anda',
+  order_sending:'Hantar pesanan',
+  drive_in:'Dalam Pengambilan',
+  driving:'Dalam penjalanan',
+  wait_comments:'Menunggu penilaian',
+  trip_finish:'Perjalanan lengkap',
 
+  pls_verify_location_open:'Sila sahkan sama ada kebenaran lokasi anda dihidupkan',
+  go_open:'Pergi ke buka',
+  now:'Sekarang',
+  start_trip_costs:'Mula - Tambang perjalanan',
 }
 
 export default mas

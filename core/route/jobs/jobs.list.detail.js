@@ -307,7 +307,7 @@ export default connect(state => ({
           } }
         ])
       }, rightAction: () => {
-        Alert.alert(this.props.i18n.finish_trip, '已到达乘客目的地，点击确认完成行程', [
+        Alert.alert(this.props.i18n.finish_trip, this.props.i18n.arrive_touch_finish, [
           { text: this.props.i18n.cancel},
           { text: '继续', onPress: async () => {
             try {

@@ -58,8 +58,8 @@ const en_US = {
   clickto_add_friend: 'Click“+”to add new friend',
   search_name_phone_email: 'Search by Name / Phone No. / Email',
   add_mycircle: 'Add circle',
-  pls_wait: '请等待...',
-  send_friend_request: '发送好友请求',
+  pls_wait: 'Please wait...',
+  send_friend_request: 'Send friend request',
 
   driver: 'Driver',
   passenger: 'Passenger',
@@ -186,7 +186,7 @@ const en_US = {
   pls_auth: 'Please allow the usage of camera and Album for DACSEE from your phone settings',
   refuse_visit: 'Access denial',
   okay: 'OK',
-  wait_for_order: 'Online，Waiting for orders',
+  wait_for_order: 'Online,Waiting for orders',
   already_online: 'Online',
 
 
@@ -224,13 +224,35 @@ const en_US = {
   confirm_reject_order:'Are you sure you want to reject this order?',
   arrive_place:'Arrived to pick-up point',
   cancel_order:'Cancel Booking',
-  arrive_touch_finish:'Arrived to destination,tap on "Complete" to end the trip',
+  arrive_touch_finish:'Arrive at the passenger destination and click OK to complete the trip',
   cancel_order_punish:'There will be a penalty if you cancel the order.',
   touch_continue_start_trip:'Tap on "Continue" will start the trip.',
   touch_continue_notice_passengers:'Tap on "Continue" to let passenger know you are at the pick-up point.',
   unable_find_move_customer_service:'Unable to locate passenger? This order will be handle by our customer service.',
-  waiting_cancel_punish:'he passengers are waiting for the pickup. Cancelling the order will affect your integrity. Do you want to continue?'
+  waiting_cancel_punish:'he passengers are waiting for the pickup. Cancelling the order will affect your integrity. Do you want to continue?',
 
+  pls_enter_destination:'Please enter the destination',
+  location:'current location',
+  ongoing:'In progress',
+  confirm_wait_order:'After the confirmation of the trip, wait for the driver to take orders',
+  confirm_pls_wait:'Please wait, the trip is In the confirmation',
+
+  job_detail: 'Job Detail',
+  job_list: 'Job Listing',
+  login_select_account: 'Please select your account',
+  social_register: 'Register with social network',
+
+  confirm_trip:'confirm trip',
+  order_sending:'Sending Order',
+  drive_in:'During Pick-up',
+  driving:'Driving',
+  wait_comments:'Waiting for comments',
+  trip_finish:'Trip complete',
+
+  pls_verify_location_open:'Please make sure your location service is turn on',
+  go_open:'Open',
+  now:'Now',
+  start_trip_costs:'Start - Trip Fare',
 
 }
 

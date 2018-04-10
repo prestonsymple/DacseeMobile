@@ -18,7 +18,7 @@ import { BOOKING_STATUS } from '..'
 /*****************************************************************************************************/
 
 
-export default connect(state => ({ status: state.booking.status, booking_id: state.storage.booking_id }))(class DriverRespondView extends PureComponent {
+export default connect(state => ({ status: state.booking.status, booking_id: state.storage.booking_id,i18n: state.intl.messages }))(class DriverRespondView extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -32,7 +32,7 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
   }
 
   render() {
-    const { status } = this.props
+    const { status ,i18n} = this.props
     const show = (
       status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT ||
       status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE
@@ -67,8 +67,8 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
               {/* <Image style={{ width: 120, height: 120, borderRadius: 60 }} source={require('../resources/images/test.jpg')} /> */}
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>行程确认中，请稍等</Text>) }
-              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>行程确认完毕，等待司机接单</Text>) }
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>{i18n.confirm_pls_wait}</Text>) }
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>{i18n.confirm_wait_order}</Text>) }
             </View>
             <Button onPress={async () => {
               if (!active) return
@@ -79,7 +79,7 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
                 this.props.dispatch(application.showMessage('无法连接到服务器'))
               }
             }} style={{ backgroundColor: active ? '#e54224' : '#ccc', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
-              <Text style={{ fontSize: TextFont.TextSize(16), color: 'white' }}>取消</Text>
+              <Text style={{ fontSize: TextFont.TextSize(16), color: 'white' }}>{i18n.cancel}</Text>
             </Button>
           </View>
         </View>
