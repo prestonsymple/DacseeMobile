@@ -165,7 +165,6 @@ export default connect(state => ({
 
   geoWatchFunction(position) {
     const { coords: { latitude, longitude } } = position
-    this.props.dispatch(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
     this.onLocationListener({ nativeEvent: { latitude, longitude } })
   }
 
@@ -226,6 +225,7 @@ export default connect(state => ({
     if (this.props.status >= BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) return
     let _longitude = longitude
     let _latitude = latitude
+
     if (zoomLevel) {
       /* Fix Offset */
       const OFFSET_RANGE = [1.5, .8, .4, .2, .1, .05, .025, .0125, .00625, .003125, .0015625, .00078125, .000390625, .0001953125, .00009765625]
@@ -236,7 +236,7 @@ export default connect(state => ({
       _latitude = latitude + dValue
       /* Fix Offset */
     } else {
-      _latitude = _latitude + latitudeDelta * 0.04
+      _latitude = latitude + latitudeDelta * 0.04
     }
     if (!this.state.drag) {
       this.setState({ drag: true })
@@ -281,15 +281,12 @@ export default connect(state => ({
       }
 
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
-      this.setState({ drag: false })
     } catch (e) {
       console.log(e)
       this.props.dispatch(booking.passengerSetValue({
-        from: {
-          address: '自定义位置', name: '当前位置',
-          coords: { lng: longitude, lat: latitude },
-        }
+        from: { address: '自定义位置', name: '当前位置', coords: { lng: longitude, lat: latitude } }
       }))
+    } finally {
       this.setState({ drag: false })
     }
   }
