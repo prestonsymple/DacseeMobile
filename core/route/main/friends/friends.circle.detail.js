@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import InteractionManager from 'InteractionManager'
 import ActionSheet from 'react-native-actionsheet'
-import { join } from 'redux-saga/effects';
+import { join } from 'redux-saga/effects'
 
 import { application, circle } from '../../../redux/actions'
 import { Icons, Screen, Session,TextFont } from '../../../utils'
@@ -70,14 +70,14 @@ export default connect(state => ({
       this.props.dispatch(application.showMessage('已将您的反馈提交至服务器，我们将会严格审查'))
     }
     if (index === 1) {
-      Alert.alert(i18n.friend_delete, '确认解除朋友关系吗？该操作不可恢复', [{
+      Alert.alert(i18n.friend_delete, i18n.del_friend_confirm, [{
         text: i18n.confirm,
         onPress: async () => {
           try {
             const { _id } = this.props.navigation.state.params
             await Session.Circle.Delete(`v1/circle/${_id}`)
             this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-            Alert.alert(i18n.finish, '朋友身份已解除', [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
+            Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
           } catch (e) {
             console.log(e)
             this.props.dispatch(application.showMessage('请求超时，请稍后再试'))
