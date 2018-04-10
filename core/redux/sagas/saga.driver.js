@@ -1,3 +1,5 @@
+/* global navigator */
+
 import { Keyboard } from 'react-native'
 import moment from 'moment'
 
@@ -6,6 +8,8 @@ import { delay } from 'redux-saga'
 import { driver } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { System, Session } from '../../utils'
+
+const oncePosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 3000 }))
 
 function* watchBooking() {
   while(true) {
@@ -23,17 +27,31 @@ function* watchBooking() {
 function* updateDriverLocation() {
   while(true) {
     try {
-      const working = yield select(state => state.driver.working)
+      const { working, map_mode } = yield select(state => ({
+        working: state.driver.working,
+        map_mode: state.application.map_mode
+      }))
       if (working) {
-        const { location } = yield select(state => ({ location: state.account.location }))
+        let location = { latitude: undefined, longitude: undefined }
+        if (map_mode === 'AMAP') {
+          location = yield select(state => location: state.account.location)
+          delete location.lat
+          delete location.lng
+        } else if (map_mode === 'GOOGLEMAP') {
+          const position = yield call(oncePosition)
+          location = position.coords
+          delete location.accuracy
+          delete location.altitude
+          delete location.altitudeAccuracy
+          delete location.heading
+          delete location.speed
+        }
         yield call(Session.Location.Put, 'v1', Object.assign(location, {
-          lat: undefined,
-          lng: undefined,
-          // TODO: 选择车型信息
           vehicle_id: '5a7843962dd97f23dc6a070c'
         }))
       }
     } catch (e) {
+      console.log(e)
       // DO NOTHING
     }
     yield delay(5000)

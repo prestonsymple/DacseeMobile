@@ -131,7 +131,7 @@ class SelectButton extends PureComponent {
 
     return (
       <View key={_id} style={{ backgroundColor: '#f2f2f2', marginRight: 4, borderRadius: 23 }}>
-        <Image style={{ height: 46, width: 46, borderRadius: 23 }} source={{ uri: avatars[0].url }} />
+        <Image style={{ height: 46, width: 46, borderRadius: 23 }} source={{ uri: avatars[avatars.length - 1].url }} />
         <View style={{ position: 'absolute', bottom: 2, right: 2, borderRadius: 4, width: 8, height: 8, backgroundColor: '#7ed321' }} />
       </View>
     )
