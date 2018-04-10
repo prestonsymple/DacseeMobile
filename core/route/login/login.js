@@ -172,33 +172,22 @@ export default connect(state => ({
     return reg.test(val)
   }
 
-  // _googlePlus() {
-  //   ShareUtile.auth(0,(code,result,message) =>{
-  //     this.setState({result:message})
-  //     if (code == 0){
-  //       this.setState({result:result.uid})
-  //     }
-  //   })
-  // }
-
   async _facebookAuth(user) {
-    const body = {
-      oAuth: {
-        provider: 'facebook',
-        id: user.uid
-      }}
-
     try {
-      const data = await Session.User.Post('v1/auth/oauth', body)
+      const data = await Session.User.Post('v1/auth/oauth', {
+        oAuth: { provider: 'facebook', id: user.uid }
+      })
+      console.log(data)
 
       this.props.dispatch(account.saveLogin(data))
       this.props.dispatch(app.hideProgress())
       this.props.dispatch(app.updatePushToken())
       // console.log('facebook登录', data)
     } catch(e) {
+      console.log(e)
       // console.log('facebook登录失败', e)
       if (e.response.data.code == 'INVALID_USER') {
-        this.props.navigation.navigate('SocialRegister', { userInfo: user})
+        this.props.navigation.navigate('SocialRegister', { userInfo: user })
       }
     }
   }
@@ -393,14 +382,12 @@ export default connect(state => ({
                   {Icons.Generator.Awesome('google-plus', 24, '#333')}
                 </Button> */}
                 <Button onPress={() => {
-                  ShareUtile.auth(7, (code, result, message) =>{
-                    this.setState({ result: message })
-                    if (code == 200){
-                      this.setState({ result: result.uid })
-                      console.log('facebook用户', result)
+                  ShareUtile.auth(7, (code, result, message) => {
+                    try {
+                      if (message !== 'success') throw new Error('')
                       this._facebookAuth(result)
-                    } else {
-                      console.log('第三方登录' + code)
+                    } catch (e) {
+                      this.props.showMessage(app.showMessage('Error'))
                     }
                   })
                 }} style={styles.socialBtn}>

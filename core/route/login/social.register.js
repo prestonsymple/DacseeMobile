@@ -1,3 +1,4 @@
+/* global store */
 import React, { Component } from 'react'
 import {
   Text, View, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
@@ -19,11 +20,10 @@ export default connect(state => ({
   i18n: state.intl.messages
 }))(class SocialRegisterScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const reducer = global.store.getState()
-    const {message} = reducer.intl
+    const reducer = store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: message.social_register
+      title: reducer.intl.messages.social_register
     }
   }
 

@@ -154,7 +154,7 @@ public class ShareModule extends ReactContextBaseJavaModule {
         }
     }
     @ReactMethod
-    public void auth(final int  sharemedia, final Callback successCallback){
+    public void auth(final int sharemedia, final Callback successCallback){
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
