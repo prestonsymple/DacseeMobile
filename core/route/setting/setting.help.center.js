@@ -20,11 +20,11 @@ import {
 import resources from '../../resources'
 /*****************************************************************************************************/
 
-export default class SettingAboutScreen extends Component {
+export default connect(state => ({ i18n: state.intl.messages || {}}))(class SettingAboutScreen extends Component {
 
   static navigationOptions = () => {
     return {
-      title: '关于',
+      title: this.props.i18n.about,
       drawerLockMode: 'locked-closed'
     }
   }
@@ -62,23 +62,23 @@ export default class SettingAboutScreen extends Component {
   render() {
     const { navigate } = this.props.navigation
     const { rnVersion } = this.state
-
+    const { i18n }=this.props
     return (
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flex: 1 }} style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 30 }}>
             <Image style={{ borderRadius: 11, width: 88, height: 88 }} source={resources.image.logo} />
             <View style={{ alignItems: 'center', marginTop: 25, height: 30, justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: TextFont.TextSize(15), color: '#666' }}>{`版本: ${System.Version}-${ rnVersion.replace('v', '') }`}</Text>
+              <Text style={{ fontSize: TextFont.TextSize(15), color: '#666' }}>{`${i18n.version}: ${System.Version}-${ rnVersion.replace('v', '') }`}</Text>
             </View>
             <View style={{ width: Screen.window.width, marginTop: 35, borderTopWidth: Define.system.ios.plus ? 1 : .5, borderBottomWidth: Define.system.ios.plus ? 1 : .5, borderColor: '#eaeaea' }}>
-              <TouchableOpacity onPress={() => Alert.alert('', '应用上架后才能使用该功能')} activeOpacity={0.7} style={{ paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' }}>
-                <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>去评分</Text>
+              <TouchableOpacity onPress={() => Alert.alert('', i18n.app_not_ready_yet)} activeOpacity={0.7} style={{ paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' }}>
+                <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{i18n.rating_appstore}</Text>
                 { Icons.Generator.Material('chevron-right', 24, '#bbb') }
               </TouchableOpacity>
               <View style={{ paddingLeft: 12, backgroundColor: 'white' }}><View style={{ borderTopWidth: .5, borderColor: '#eaeaea' }} /></View>
-              <TouchableOpacity onPress={() => Alert.alert('', '还没有拿到文案')} activeOpacity={0.7} style={{ paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' }}>
-                <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>隐私协议及使用条款</Text>
+              <TouchableOpacity onPress={() => Alert.alert('', i18n.doc_not_received)} activeOpacity={0.7} style={{ paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, backgroundColor: 'white' }}>
+                <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), fontWeight: '400' }}>{i18n.privacy_policy}</Text>
                 { Icons.Generator.Material('chevron-right', 24, '#bbb') }
               </TouchableOpacity>
             </View>
@@ -90,4 +90,4 @@ export default class SettingAboutScreen extends Component {
       </View>
     )
   }
-}
+})
