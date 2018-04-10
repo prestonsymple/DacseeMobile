@@ -62,7 +62,7 @@ const BookingDetailHeaderView = (props) => {
         <BookingDetailButton  style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
           <View>{ Icons.Generator.Awesome('comment', 24, '#666') }</View>
         </BookingDetailButton>
-        <BookingDetailButton  style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
+        <BookingDetailButton  style={{ marginRight: 10,}} onPress={()=>Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)}>
           <View>{ Icons.Generator.Material('phone-in-talk', 24, '#666') }</View>
         </BookingDetailButton>
       </View>
