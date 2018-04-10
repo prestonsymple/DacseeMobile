@@ -44,8 +44,21 @@ function* fetchFriends() {
   }
 }
 
+function* updateFriendsLocation() {
+  while(true) {
+    const selected_friends = yield select(state => state.booking.selected_friends)
+    if (selected_friends && Array.isArray(selected_friends) && selected_friends.length > 0) {
+      const params = selected_friends.map(pipe => pipe.friend_info.userId).join(',')
+      const friends_location = yield call(Session.Location.Get, `v1/friends?reqUser_id=${params}`)
+      console.log(friends_location)
+    }
+    yield delay(5000)
+  }
+}
+
 export default function* sagas() {
   yield all([
-    fork(fetchFriends)
+    fork(fetchFriends),
+    fork(updateFriendsLocation)
   ])
 }

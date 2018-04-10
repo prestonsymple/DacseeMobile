@@ -10,6 +10,7 @@ const initialState = {
   friend: [],
   requestor: [],
   loading: false,
+  friends_location: [],
   page: 0
 }
 
