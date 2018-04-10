@@ -134,7 +134,7 @@ export default connect(state => ({
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>推荐人账号</Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }}>{i18n.refer_account}</Text>
             <TextInput style={{ fontSize: 14, height: 50}} placeholder={i18n.enter_referee_id} returnKeyType={'done'} onChangeText={ (value) => this.setState({ referralUserId: value}) }/>
           </View>
 

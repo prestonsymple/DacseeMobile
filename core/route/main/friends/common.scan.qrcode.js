@@ -22,7 +22,7 @@ export default connect(state => ({
     // const i18n = global.store.getState().intl.messages
     return {
       drawerLockMode: 'locked-closed',
-      title: '扫一扫',
+      title: this.props.i18n.scan,
       headerStyle: {
         backgroundColor: '#141518',
         shadowColor: 'transparent',

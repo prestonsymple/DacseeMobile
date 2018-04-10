@@ -20,12 +20,12 @@ const MAP_DEFINE = {
   showsZoomControls: false /* android fix */
 }
 
-export default connect(state => ({ booking: state.booking }))(class BookingCompleteScreen extends Component {
+export default connect(state => ({ booking: state.booking ,i18n: state.intl.messages || {}}))(class BookingCompleteScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
       drawerLockMode: 'locked-closed',
-      title: '支付及评价',
+      title: this.prop.i18n.pay_comment,
       headerLeft: (
         <TouchableOpacity
           activeOpacity={0.7}
