@@ -11,7 +11,7 @@ import DriverComponent from './driver'
 import PassengerComponent from './passenger'
 
 import { Icons, Screen, System,TextFont } from '../../utils'
-import { booking, account } from '../../redux/actions'
+import { booking, application } from '../../redux/actions'
 import { BOOKING_STATUS } from '.'
 
 const { width } = Screen.window
@@ -122,16 +122,16 @@ export default connect(state => ({
   }
 
   render() {
-    const { gps_access,i18n} = this.props
+    const { gps_access, i18n } = this.props
     return !gps_access ? (
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
         <Text style={{ color: '#666', fontSize: TextFont.TextSize(14) }}>{i18n.pls_verify_location_open}</Text>
         <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => {
-          // OpenAppSettings.open()
+          this.dispatch(application.updateLocationStatus())
         }}>
-          <Text style={{ fontSize: TextFont.TextSize(20), color: 'white' }}>{i18n.go_open}</Text>
+          <Text style={{ fontSize: TextFont.TextSize(20), color: 'white' }}>{i18n.retry}</Text>
         </TouchableOpacity>
       </View>
     ) : (

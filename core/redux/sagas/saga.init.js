@@ -57,7 +57,8 @@ export default function* initializationSaga() {
       (type === 'persist/REHYDRATE') || 
       (type === application.changeApplicationStatus().type) ||
       (type === application.updatePushToken().type) || 
-      (type === account.saveLogin().type)
+      (type === account.saveLogin().type) ||
+      (type === application.updateLocationStatus().type)
     )
   }, initializationFlow)
 }

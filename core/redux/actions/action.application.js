@@ -38,6 +38,7 @@ export default {
   setAgentSvr: createAction('APPLICATION_SET_AGENT_SVR'),
   setMapMode: createAction('APPLICATION_SET_MAP_MODE'),
 
-
+  updateLocationStatus: createAction('!!APPLICATION_UPDATE_LOCATION_STATUS!!'),
+  
   setValues: createAction('!!APPLICATION_SET_VALUES!!')
 }
