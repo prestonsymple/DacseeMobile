@@ -4,7 +4,8 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-navigation'
+import getDirections from 'react-native-google-maps-directions'
 
 import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../native/AMap'
@@ -14,7 +15,7 @@ import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 import WalletTransactionListScreen from '../wallet/wallet.transaction.list'
 import IncomeList from '../income/income.list'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 const { height, width } = Screen.window
 
@@ -119,13 +120,29 @@ const BookingDetailView = (props) => {
           title={from.address}
           icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#1ab2fd'}}/>}
           linkingIconName={Resources.image.booking_detail_linking}
-          onPress={() => alert('from')}
+          onPress={() => {
+            getDirections({
+              destination: { latitude: from.coords.lat, longitude: from.coords.lng },
+              params: [
+                { key: 'travelmode', value: 'driving' },
+                { key: 'dir_action', value: 'navigate' }
+              ]
+            })
+          }}
         />
         <BookingDetailListItem
           title={destination.address}
           icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#ffb539'}}/>}
           linkingIconName={Resources.image.booking_detail_linking}
-          onPress={_ => alert('destination')}
+          onPress={() => {
+            getDirections({
+              destination: { latitude: destination.coords.lat, longitude: destination.coords.lng },
+              params: [
+                { key: 'travelmode', value: 'driving' },
+                { key: 'dir_action', value: 'navigate' }
+              ]
+            })
+          }}
         />
         <BookingDetailListItem
           title={<FormattedMessage id={'car_standard'}/>}

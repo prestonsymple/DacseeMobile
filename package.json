@@ -36,6 +36,7 @@
     "react-native-datepicker": "^1.6.0",
     "react-native-device-info": "^0.21.4",
     "react-native-fs": "^2.9.7",
+    "react-native-google-maps-directions": "^2.0.0",
     "react-native-image-picker": "^0.26.7",
     "react-native-maps": "^0.20.1",
     "react-native-modal-datetime-picker": "^4.13.0",

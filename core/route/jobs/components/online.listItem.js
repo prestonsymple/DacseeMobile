@@ -90,7 +90,7 @@ export default class OfflineListItem extends Component {
   render() {
     const { itemData, itemDay, onPress = () => { } } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
-    console.log(itemData)
+    
     return (
       <View style={styles.container}>
         <View style={[styles.text_cell, { justifyContent: 'space-between' }]}>
