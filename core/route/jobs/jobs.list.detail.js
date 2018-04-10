@@ -366,9 +366,7 @@ export default connect(state => ({
   componentWillReceiveProps(props) {
     if (props.working && props.jobs !== this.props.jobs) {
       const { _id } = props.navigation.state.params.jobDetail
-      this.setState({
-        detail : props.jobs.find(pipe => pipe._id === _id)
-      })
+      this.setState({ detail : props.jobs.find(pipe => pipe._id === _id) })
       if (!this.state.detail) {
         this.props.navigation.goBack()
       }
@@ -378,7 +376,8 @@ export default connect(state => ({
   render() {
     const { i18n, map_mode, navigation } = this.props
     const { destination, from, fare } = navigation.state.params.jobDetail
-    const { status } = this.state.detail
+    const { detail = {} } = this.state
+    const { status = 'Pending_Acceptance' } = detail
     const optionObject = this._getStatus(status)
     const getOption = this._getOptionable(status)
     const chineseStatus = this._statusInChinese(status)
