@@ -287,7 +287,8 @@ const zh_CN = {
   bank_account:'银行账号',
   pls_sel_bank:'请先选择银行',
   pls_enter_bank_account:'请输入您的银行卡号',
-  sub:'提交'
+  sub:'提交',
+  pls_enter_fullname_certificate:'请填入证件上的全名'
 }
 
 export default zh_CN
