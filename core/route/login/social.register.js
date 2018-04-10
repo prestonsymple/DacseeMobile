@@ -116,13 +116,13 @@ export default connect(state => ({
                   }
                   try {
                     const data = await Session.User.Post('v1/sendVerificationCode/phone', body)
-                    this.props.dispatch(application.showMessage('已将验证码发送至您的手机'))
+                    this.props.dispatch(application.showMessage(i18n.alert_sent_code))
                     // this.setState({
                     //   codeSent: true
                     // })
                   } catch (e) {
                     if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
-                      this.props.dispatch(application.showMessage(`验证码发送过于频繁，请[${e.response.data.data}]秒后再试`))
+                      this.props.dispatch(application.showMessage(`${i18n.server_busy_code}[${e.response.data.data}]${i18n.seconds_later}`))
                     } else {
                       this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
                     }
@@ -144,15 +144,15 @@ export default connect(state => ({
               this.state.phoneNo == '' |
               this.state.phoneVerificationCode == '' |
               this.state.referralUserId == '') {
-                this.props.dispatch(application.showMessage('请将信息填写完整'))
+                this.props.dispatch(application.showMessage(i18n.pls_finish_info))
               } else {
                 this._fetchData()
               }
             }} style={[{ width:240, height: 44, borderRadius: 4 }, registering ? {backgroundColor: '#a5a5a5'} : {backgroundColor: '#4cb1f7'}]}>
               {
                 registering ?
-                  <Text style={{ fontSize: 20, color: 'white' }}>注册中...</Text> :
-                  <Text style={{ fontSize: 20, color: 'white' }}>注册</Text>
+                  <Text style={{ fontSize: 20, color: 'white' }}>{`${i18n.registering}...`}</Text> :
+                  <Text style={{ fontSize: 20, color: 'white' }}>{i18n.register}</Text>
               }
             </Button>
           </View>

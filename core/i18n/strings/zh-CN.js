@@ -1,4 +1,4 @@
-const zh_CN = {	
+const zh_CN = {
   login: '登录',
   welcome_to_use: '欢迎使用',
   name: '姓名',
@@ -6,13 +6,13 @@ const zh_CN = {
   email: '邮箱',
   phone_or_email: '电话号码/邮箱',
   verification_code: '验证码',
-  login_social: '使用社交账号进行登录',	
+  login_social: '使用社交账号进行登录',
   active_account: '激活您的账号',
   please_enter: '请输入',
   enter_phone: '输入手机号',
   enter_code: '输入验证码',
   enter_name: '输入姓名',
-  enter_referee_id: '输入推荐人ID',    
+  enter_referee_id: '输入推荐人ID',
   referee_id: '推荐人ID',
   send_code: '发送验证码',
   choose_account: '选择您的账号',
@@ -74,7 +74,7 @@ const zh_CN = {
   already_del_friend:'朋友身份已解除',
   online: '上线',
   no_job: '暂无行程',
-  to: '到',   
+  to: '到',
   from: '出发地',
   destination: '目的地',
   payment_method: '支付方式',
@@ -90,7 +90,7 @@ const zh_CN = {
   on_the_way: '已到达',
 
   start: '开始',
-  Pending_Acceptance: '等待接单',    
+  Pending_Acceptance: '等待接单',
   On_The_Way: '司机即将到达',
   Arrived: '司机已到达',
   No_Show: '乘客无应答',
@@ -100,7 +100,7 @@ const zh_CN = {
   Cancelled_by_Driver: '司机已取消',
   Rejected_by_Driver: '司机已拒绝',
   No_Taker: '订单无人应答',
-  
+
   mytrip: '我的行程',
   trip_detail: '行程详情',
   driver_info: '司机信息',
@@ -297,6 +297,7 @@ const zh_CN = {
   addr:'地址',
   drive_age:'驾龄',
   validity_period:'有效期',
+  standard_car:'准驾车型',
   driver_license_info:'驾照信息'
 
 
