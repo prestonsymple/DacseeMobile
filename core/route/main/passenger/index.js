@@ -282,7 +282,7 @@ export default connect(state => ({
     } catch (e) {
       console.log(e)
       this.props.dispatch(booking.passengerSetValue({
-        from: { address: '自定义位置', name: '当前位置', coords: { lng: longitude, lat: latitude } }
+        from: { address: '自定义位置', name: this.props.i18n.location, coords: { lng: longitude, lat: latitude } }
       }))
     } finally {
       this.setState({ drag: false })
