@@ -390,6 +390,7 @@ export default connect(state => ({
                       this.props.showMessage(app.showMessage('Error'))
                     }
                   })
+
                 }} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('facebook', 24, '#333')}
                 </Button>
