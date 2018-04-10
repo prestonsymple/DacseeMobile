@@ -4,7 +4,7 @@ import { select, fork, all, take, call, put, takeEvery, takeLatest, race, cancel
 import { delay } from 'redux-saga'
 import Toast from 'react-native-root-toast'
 
-import { application, account, booking, jobs, circle } from '../actions'
+import { application, account, booking, jobs, circle, driver } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { Session as session, System } from '../../utils'
 import PushService from '../../native/push-service'
@@ -187,6 +187,7 @@ function* logoutFlow() {
     } finally {
       yield put(account.saveLogout())
       yield put(circle.setValues({ friend: [], requestor: [], loading: false, page: 0 }))
+      yield put(driver.driverSetValue({ booking_id: '', detail: {}, route: {}, jobs: [], working: false, status: '' }))
       yield put(booking.passengerSetValue({ type: 'circle', name: '优选', payment: '现金支付', book: false, time: 'now', selected_friends: [] }))
       yield put(account.loginPutValue(0))
       yield put(NavigationActions.navigate({ routeName: 'AuthLoading' }))
