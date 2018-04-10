@@ -199,7 +199,7 @@ const zh_CN = {
   job_list: '订单列表',
   login_select_account: '选择您的账号',
   social_register: '第三方账号注册',
-
+  register:'注册',
   myjob: '我的工作',
 
   unable_connect_server:'无法连接到服务器',
@@ -288,7 +288,18 @@ const zh_CN = {
   pls_sel_bank:'请先选择银行',
   pls_enter_bank_account:'请输入您的银行卡号',
   sub:'提交',
-  pls_enter_fullname_certificate:'请填入证件上的全名'
+  pls_enter_fullname_certificate:'请填入证件上的全名',
+
+  max_twenty_friends:'最多只能选择20个朋友',
+  id:'证件号',
+  basic_info:'基本信息',
+  birthday:'出生日期',
+  addr:'地址',
+  drive_age:'驾龄',
+  validity_period:'有效期',
+  driver_license_info:'驾照信息'
+
+
 }
 
 export default zh_CN
