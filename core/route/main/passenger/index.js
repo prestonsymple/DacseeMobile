@@ -599,14 +599,16 @@ const BookingDetailButton = (props) => {
 const DrvierCarDetail = (props) => {
   const { ...car_info } = props.car_info
   return (
-    <View style={{ backgroundColor: '#F5F5F5', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
-      <View style={{ flex: 1 }}>
+    <View style={{ backgroundColor: '#F5F5F5', flexDirection: 'row',alignItems: 'center',justifyContent:'space-between', flex: 1, paddingHorizontal: 20, }}>
+      <View style={{flex:2}}>
         <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'保时捷-911'}</Text>
         <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
         <Text style={styles.car_cell}>{'颜色-白色'}</Text>
         <Text style={styles.car_cell}>{'豪华跑车'}</Text>
       </View>
-      <Image style={{ flex: 1 }} source={Resources.image.slice_adv_car} />
+      <View style={{justifyContent:'center',alignItems:'center', flex:3}}>
+        <Image style={{width:187, height:80}} resizeMode='contain' source={Resources.image.car_dafult} />
+      </View>
     </View>
   )
 }

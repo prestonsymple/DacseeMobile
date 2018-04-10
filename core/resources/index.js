@@ -24,7 +24,8 @@ export default {
     map_destination_pin: require('./images/rn_amap_endpoint.png'),
     map_car_pin: require('./images/rn_car.png'),
     distance:require ('./images/distance.png'),
-    slice_adv_car:require('./images/Slice_Adv_Car.png')
+    slice_adv_car:require('./images/Slice_Adv_Car.png'),
+    car_dafult:require('./images/car_dafult.png')
   },
 
   animation: {
