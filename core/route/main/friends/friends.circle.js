@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView,StyleSheet
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView,StyleSheet,TouchableWithoutFeedback
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
@@ -8,9 +8,9 @@ import _ from 'lodash'
 
 import { application, booking, circle } from '../../../redux/actions'
 import { Icons, Screen, Define, Session,TextFont } from '../../../utils'
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-const { width, height } = Screen.window;
+const { width, height } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
@@ -47,7 +47,7 @@ export default connect(state => ({
   }
 
   constructor(props) {
-    super(props);
+    super(props)
     const { selected_friends } = props.booking
     const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
       checked: typeof(selected_friends) === 'string' ? false : selected_friends.find(sub => sub._id === pipe._id) !== undefined
@@ -65,10 +65,10 @@ export default connect(state => ({
 
   async componentDidMount() {
     const {i18n} = this.props
-    const {mycircle} = i18n;
-    const {setParams} = this.props.navigation;
-    setParams({mycircle});
-    await InteractionManager.runAfterInteractions();
+    const {mycircle} = i18n
+    const {setParams} = this.props.navigation
+    setParams({mycircle})
+    await InteractionManager.runAfterInteractions()
     this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd',{i18n}))
   }
 
@@ -122,11 +122,6 @@ export default connect(state => ({
     ])
     this.setState({ dataSource: _dataSource, selected: _selected })
   }
-  renderFooter = ()=>{
-    const {  selected,dataSource } = this.state
-    return <View style={{height:Define.system.ios.x ?100:78}}/>
-  }
-
   _handleClick=()=>{
     const {  selected } = this.state
     if(selected.length === 0){
@@ -137,6 +132,14 @@ export default connect(state => ({
     }
   }
 
+  _getHeight=()=>{
+    const { dataSource } = this.state
+    const compare = (dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0) ? 0 : Define.system.ios.x?(110+84+62):(78+64+62)
+    console.log(compare)
+    return {height:Define.system.ios.x ?(height-compare):(height-compare)}
+  }
+
+
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
@@ -144,9 +147,9 @@ export default connect(state => ({
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <HeaderSearchBar />
-        {
-          (dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0) ? (
-            <ScrollView refreshControl={
+        <View style={this._getHeight()}>
+          <ListView
+            refreshControl={
               <RefreshControl
                 refreshing={loading}
                 onRefresh={() => this.props.dispatch(circle.asyncFetchFriends({ init: true }))}
@@ -154,81 +157,65 @@ export default connect(state => ({
                 colors={['#ffffff']}
                 progressBackgroundColor={'#1c99fb'}
               />
-            } contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} style={{ flex: 1 }}>
-              <View style={{ marginTop: 108 }}>
-                <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
-                <Text style={{ color: '#666', fontSize: TextFont.TextSize(22), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
-                  <FormattedMessage id={'no_friend'}/>
-                </Text>
-                <Text style={{ color: '#999', fontSize: TextFont.TextSize(15), fontWeight: '400', textAlign: 'center' }}>
-                  <FormattedMessage id={'clickto_add_friend'}/>
-                </Text>
-              </View>
-            </ScrollView>
-          ) : (
-            <View style={{ flex: 1 }}>
-              <ListView
-                refreshControl={
-                  <RefreshControl
-                    refreshing={loading}
-                    onRefresh={() => this.props.dispatch(circle.asyncFetchFriends({ init: true }))}
-                    title={i18n.pull_refresh}
-                    colors={['#ffffff']}
-                    progressBackgroundColor={'#1c99fb'}
-                  />
-                }
-                contentContainerStyle={{
-                  paddingHorizontal: 25
-                }}
-                enableEmptySections={true}
-                dataSource={dataSource}
-                renderSectionHeader={(data, section) => {
-                  return (data.length > 0) && (
-                    <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
-                      <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
-                    </View>
-                  )
-                }}
-                renderRow={(data, section, rowId) =>
-                  section === '0' ?
-                    (<RequestorPerson
-                      onPressAccept={async (requestor_id) => {
-                        try {
-                          const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
-                        } catch (e) {
-                          this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
-                        } finally {
-                          this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-                        }
-                      }}
-                      onPressReject={async (requestor_id) => {
-                        try {
-                          const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
-                        } catch (e) {
-                          this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
-                        } finally {
-                          this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-                        }
-                      }}
-                      data={data} />) :
-                    (<ItemPerson
-                      data={data}
-                      onPressCheck={() => this.onPressCheck(data)}
-                      onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data })}
-                    />)
-                }
-                renderSeparator={() => (
-                  <View style={{ height: .8, backgroundColor: '#e8e8e8' }} />
-                )}
-                renderFooter={this.renderFooter}
-              />
-            </View>
-          )
-        }
-        <View style={{
-          position:'absolute',justifyContent: 'center', alignItems: 'center',
-          backgroundColor:'#fff',bottom:0,left:0,right:0,height:Define.system.ios.x ?100:78,
-        }}>
+            }
+            contentContainerStyle={{
+              paddingHorizontal: 25
+            }}
+            enableEmptySections={true}
+            dataSource={dataSource}
+            renderSectionHeader={(data, section) => {
+              return (data.length > 0) && (
+                <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
+                  <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+                </View>
+              )
+            }}
+            renderFooter={()=>((dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0)?
+              <TouchableWithoutFeedback>
+                <View style={{ marginTop: 108,alignItems:'center',}}>
+                  <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
+                  <Text style={{ color: '#666', fontSize: TextFont.TextSize(22), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
+                    <FormattedMessage id={'no_friend'}/>
+                  </Text>
+                  <Text style={{ color: '#999', fontSize: TextFont.TextSize(15), fontWeight: '400', textAlign: 'center' }}>
+                    <FormattedMessage id={'clickto_add_friend'}/>
+                  </Text>
+                </View></TouchableWithoutFeedback>:null
+            )}
+            renderRow={(data, section, rowId) =>
+              section === '0' ?
+                (<RequestorPerson
+                  onPressAccept={async (requestor_id) => {
+                    try {
+                      const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
+                    } catch (e) {
+                      this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
+                    } finally {
+                      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+                    }
+                  }}
+                  onPressReject={async (requestor_id) => {
+                    try {
+                      const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
+                    } catch (e) {
+                      this.props.dispatch(application.showMessage('遇到错误，请稍后再试'))
+                    } finally {
+                      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+                    }
+                  }}
+                  data={data} />) :
+                (<ItemPerson
+                  data={data}
+                  onPressCheck={() => this.onPressCheck(data)}
+                  onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data })}
+                />)
+            }
+            renderSeparator={() => (
+              <View style={{ height: .8, backgroundColor: '#e8e8e8' }} />
+            )}
+          />
+        </View>
+        <View style={styles.bottomButton}>
           <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
             <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
               <FormattedMessage id={selected.length === 0?'select_all':'confirm'}/>
@@ -325,5 +312,12 @@ const styles=StyleSheet.create({
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  bottomButton:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'#fff',
+    height:Define.system.ios.x ?110:78,
+    width:width
   }
 })
