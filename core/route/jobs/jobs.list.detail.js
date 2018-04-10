@@ -310,7 +310,7 @@ export default connect(state => ({
       }, rightAction: () => {
         Alert.alert(this.props.i18n.finish_trip, this.props.i18n.arrive_touch_finish, [
           { text: this.props.i18n.cancel},
-          { text: '继续', onPress: async () => {
+          { text: this.props.i18n.continue_, onPress: async () => {
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'completed' })
               this.props.navigation.goBack()
