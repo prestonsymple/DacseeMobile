@@ -82,33 +82,33 @@ export default connect(state => ({
         </View>
         <View style={{ padding:20 }}>
           <View style={{ borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>{i18n.name}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', height: 50}}>
+            <Text style={{ fontSize: 12, color: '#666' }}>{i18n.name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', height: 38, marginTop:6}}>
               {/* <Text style={{ fontSize: 14 }}>RM</Text> */}
-              <TextInput style={{ flex: 1, fontSize: 14}} placeholder={i18n.enter_name} onChangeText={ (value) => this.setState({ fullName: value}) } value={ fullName } />
+              <TextInput style={{ flex: 1, fontSize: 14}} placeholder={i18n.enter_name} underlineColorAndroid="transparent" onChangeText={ (value) => this.setState({ fullName: value}) } value={ fullName } />
             </View>
           </View>
 
           <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>{i18n.phone}</Text>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <Button style={{ marginRight: 10, height: 50, width: 60, justifyContent: 'center' }}
+            <Text style={{ fontSize: 12,color: '#666' }}>{i18n.phone}</Text>
+            <View style={{ flex: 1, flexDirection: 'row', marginTop: 12, height: 38, }}>
+              <Button style={{ marginRight: 10, height: 38, width: 60, justifyContent: 'center' }}
                 onPress={() => this.props.navigation.navigate('PickerCountry', {
                   onPress: ({ name, code }) => this.setState({ phoneCountryCode: code })
                 })} >
                 <Text style={{}}>{ phoneCountryCode }</Text>
               </Button>
-              <TextInput style={{ flex: 1, fontSize: 14, height: 50, justifyContent: 'center' }} placeholder={i18n.enter_phone} returnKeyType={'done'} keyboardType={'phone-pad'} onChangeText={ (value) => this.setState({phoneNo: value}) } />
+              <TextInput style={{ flex: 1, fontSize: 14, justifyContent: 'center' }} underlineColorAndroid="transparent" placeholder={i18n.enter_phone} returnKeyType={'done'} keyboardType={'phone-pad'} onChangeText={ (value) => this.setState({phoneNo: value}) } />
             </View>
           </View>
 
           <View style={{ paddingTop: 20, justifyContent: 'flex-end' }}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>
+            <Text style={{ fontSize: 12, color: '#666'}}>
               <FormattedMessage id={'verification_code'} />
             </Text>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <TextInput style={{ flex: 1, fontSize: 14, height: 50, borderBottomWidth: 1, borderBottomColor: '#a5a5a5' }} placeholder={i18n.enter_code} keyboardType={'numeric'} onChangeText={ (value) => this.setState({phoneVerificationCode: value}) } />
-              <Button style={{ marginLeft: 10, marginTop: 5, borderRadius: 5, width: 110, height: 45, backgroundColor: '#4cb1f7' }}
+            <View style={{ flex: 1, flexDirection: 'row',height: 38, }}>
+              <TextInput style={{ flex: 1, fontSize: 14, height: 38, borderBottomWidth: 1, borderBottomColor: '#a5a5a5' }} underlineColorAndroid="transparent" placeholder={i18n.enter_code} keyboardType={'numeric'} onChangeText={ (value) => this.setState({phoneVerificationCode: value}) } />
+              <Button style={{ marginLeft: 10, marginTop: 0, borderRadius: 5, width: 150, height: 38, backgroundColor: '#4cb1f7' }}
                 onPress={ async () => {
                   const body = {
                     phoneCountryCode: phoneCountryCode,
@@ -133,9 +133,9 @@ export default connect(state => ({
             </View>
           </View>
 
-          <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5'}}>
-            <Text style={{ fontSize: 12, opacity: 0.5 }}>推荐人账号</Text>
-            <TextInput style={{ fontSize: 14, height: 50}} placeholder={i18n.enter_referee_id} returnKeyType={'done'} onChangeText={ (value) => this.setState({ referralUserId: value}) }/>
+          <View style={{ paddingTop: 20, borderBottomWidth: 1, borderBottomColor: '#a5a5a5', }}>
+            <Text style={{ fontSize: 12, color: '#666' }}>推荐人账号</Text>
+            <TextInput style={{ fontSize: 14, height: 38, marginTop:6}} placeholder={i18n.enter_referee_id} underlineColorAndroid="transparent" returnKeyType={'done'} onChangeText={ (value) => this.setState({ referralUserId: value}) }/>
           </View>
 
           <View style={{ paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
