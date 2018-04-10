@@ -128,7 +128,9 @@ export default connect(state => ({
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
         <Image style={{ top: -22 }} source={ require('../../resources/images/location-error.png') } />
         <Text style={{ color: '#666', fontSize: TextFont.TextSize(14) }}>{i18n.pls_verify_location_open}</Text>
-        <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => {OpenAppSettings.open()}}>
+        <TouchableOpacity activeOpacity={0.7} style={{ marginTop: 20, height: 44, width: 150, backgroundColor: '#4fb2f9', justifyContent: 'center', alignItems: 'center', borderRadius: 22 }} onPress={ () => {
+          // OpenAppSettings.open()
+        }}>
           <Text style={{ fontSize: TextFont.TextSize(20), color: 'white' }}>{i18n.go_open}</Text>
         </TouchableOpacity>
       </View>
