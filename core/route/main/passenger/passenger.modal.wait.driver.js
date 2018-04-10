@@ -66,9 +66,9 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
               }
               {/* <Image style={{ width: 120, height: 120, borderRadius: 60 }} source={require('../resources/images/test.jpg')} /> */}
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>{i18n.confirm_pls_wait}</Text>) }
-              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>{i18n.confirm_wait_order}</Text>) }
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, paddingHorizontal: 15 }}>
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE) && (<Text style={{ color: '#777',textAlign:'center', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>{i18n.confirm_pls_wait}</Text>) }
+              { (status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) && (<Text style={{ color: '#777',textAlign:'center', fontSize: TextFont.TextSize(16), fontWeight: '200' }}>{i18n.confirm_wait_order}</Text>) }
             </View>
             <Button onPress={async () => {
               if (!active) return
