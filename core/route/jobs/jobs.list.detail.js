@@ -105,9 +105,9 @@ const BookingDetailView = (props) => {
   const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail;
   const time = moment(booking_at).format('YYYY-MM-D HH:mm');
   return(
-    <View style={{backgroundColor: 'transparent', height: height / 3 * 2 }}>
+    <View style={{backgroundColor: 'transparent', height: height / 2  }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
-      <ScrollView style={{ marginBottom: Define.system.ios.x ? 90 : 70}}>
+      <ScrollView style={{ marginBottom: Define.system.ios.x ? 90 : 60}}>
         <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
         {/* <BookingDetailListItem
           title={time}
@@ -163,7 +163,7 @@ const BookingDetailBottomView = (props) => {
         <View style={{ justifyContent:'center'}}>
           <Text style={{fontSize: 14, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
             RM
-            <Text style={{fontSize: 25, fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
+            <Text style={{fontSize: 24 , fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
           </Text>
         </View>
 
@@ -171,10 +171,10 @@ const BookingDetailBottomView = (props) => {
           getOption ?
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
               <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 10 }} onPress={ optionObject.leftAction }>
-                <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
+                <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
               </Button>
               <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#7FCE34' }}>
-                <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
+                <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: 'white'}} onPress={ optionObject.rightAction }>{ i18n[optionObject.right] }</Text>
               </Button>
             </View> :
             <View style={{justifyContent:'center', alignItems: 'center', marginRight:20 }}>
@@ -393,7 +393,7 @@ export default connect(state => ({
         }
         {
           map_mode === 'AMAP' && (
-            <AMapView mapType={'standard'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} zoomLevel={ 10 } ref={e => this.map = e} style={{ height: height / 3  - 64 }} {...MAP_DEFINE}>
+            <AMapView mapType={'standard'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} zoomLevel={ 10 } ref={e => this.map = e} style={{ height: height / 2  - 64 }} {...MAP_DEFINE}>
               <AMarker image={'rn_amap_startpoint'} coordinate={{ latitude: from.coords.lat, longitude: from.coords.lng }} title={from.name}/>
               <AMarker image={'rn_amap_endpoint'} coordinate={{ latitude: destination.coords.lat, longitude: destination.coords.lng }} title={destination.name}/>
             </AMapView>
