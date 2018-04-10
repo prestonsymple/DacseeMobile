@@ -14,25 +14,45 @@ export default connect(state => ({
     let json={}
     let {i18n}=this.props
     switch(str) {
-    case 'Pending_Acceptance':json.text=i18n.Pending_Acceptance;json.color= '#2ed37e'
+    case 'Pending_Acceptance':
+      json.text=i18n.Pending_Acceptance;
+      json.color= '#2ed37e'
       return json
-    case 'On_The_Way':json.text=i18n.On_The_Way;json.color= '#2ed37e'
+    case 'On_The_Way':
+      json.text=i18n.On_The_Way;
+      json.color= '#2ed37e'
       return json
-    case 'Arrived':json.text=i18n.Arrived;json.color= '#2ed37e'
+    case 'Arrived':
+      json.text=i18n.Arrived;
+      json.color= '#2ed37e'
       return json
-    case 'No_Show':json.text=i18n.No_Show;json.color= '#ccc'
+    case 'No_Show':
+      json.text=i18n.No_Show;
+      json.color= '#ccc'
       return json
-    case 'On_Board':json.text=i18n.On_Board;json.color= '#2ed37e'
+    case 'On_Board':
+      json.text=i18n.On_Board;
+      json.color= '#2ed37e'
       return json
-    case 'Completed':json.text=i18n.Completed;json.color= '#2ed37e'
+    case 'Completed':
+      json.text=i18n.Completed;
+      json.color= '#2ed37e'
       return json
-    case 'Cancelled_by_Passenger':json.text=i18n.Cancelled_by_Passenger;json.color= '#ccc'
+    case 'Cancelled_by_Passenger':
+      json.text=i18n.Cancelled_by_Passenger;
+      json.color= '#ccc'
       return json
-    case 'Cancelled_by_Driver':json.text=i18n.Cancelled_by_Driver;json.color= '#ccc'
+    case 'Cancelled_by_Driver':
+      json.text=i18n.Cancelled_by_Driver;
+      json.color= '#ccc'
       return json
-    case 'Rejected_by_Driver':json.text=i18n.Rejected_by_Driver;json.color= '#red'
+    case 'Rejected_by_Driver':
+      json.text=i18n.Rejected_by_Driver;
+      json.color= '#red'
       return json
-    case 'No_Taker':json.text=i18n.No_Taker;json.color= '#ccc'
+    case 'No_Taker':
+      json.text=i18n.No_Taker;
+      json.color= '#ccc'
       return json
     }
   }
