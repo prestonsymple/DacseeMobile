@@ -135,7 +135,6 @@ export default connect(state => ({
   _getHeight=()=>{
     const { dataSource } = this.state
     const compare = (dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0) ? 0 : Define.system.ios.x?(110+84+62):(78+64+62)
-    console.log(compare)
     return {height:Define.system.ios.x ?(height-compare):(height-compare)}
   }
 

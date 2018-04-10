@@ -20,7 +20,6 @@ const zh_CN = {
   user_protocol: '《用户使用协议》',
   finish: '完成',
   alert_sent_code: '已将验证码发送至您的手机',
-  alert_invalid_name: '全名最小为2个字符',
 
   choose_country: '选择国家/地区',
   malaysia: '马来西亚',
@@ -238,8 +237,6 @@ const zh_CN = {
   confirm_wait_order:'行程确认完毕，等待司机接单',
   confirm_pls_wait:'行程确认中，请稍等',
 
-  //TODO
-
   confirm_trip:'确认行程',
   order_sending:'发送订单中',
   drive_in:'接驾中',
@@ -251,6 +248,46 @@ const zh_CN = {
   go_open:'前往开启',
   now:'现在',
   start_trip_costs:'开始 - 行程费用',
+
+  server_busy_code:'验证码发送过于频繁，请',
+  seconds_later:'秒后再试',
+  pls_finish_info:'请将信息填写完整',
+  registering:'注册中',
+  already_send_code:'已将验证码发送至您绑定的手机',
+
+  refuse_visit_camera:'无法访问相机',
+  pls_allow_camera_try:'请打开相机访问权限后重试',
+  pls_enter_correct_email:'请输入正确的邮箱地址',
+  pls_enter_correct_num:'请输入正确的手机号码',
+  pls_enter_two_chars:'请输入至少2个字符',
+  already_report_check:'已将您的反馈提交至服务器，我们将会严格审查',
+  timeout_try_again:'请求超时，请稍后再试',
+  error_try_again:'发生错误，请稍后再试',
+  already_send_wait_confirm:'对方已收到你的好友请求，请等待对方确认',
+  invitation_failure:'该邀请已失效',
+  unable_get_order_pls_check_network:'无法获取订单信息，请检查您的网络环境',
+  order_timeout_try:'订单信息获取超时，正在重试',
+  trip_costs:'行程费用',
+  already_friend:'您已经是对方的好友了',
+  passenger_location:'乘客位置',
+  already_upload_avatar:'头像已上传',
+  driver_arrive_pls_wait:'司机正在赶来，请前往路边等待',
+  app_not_ready_yet:'应用上架后才能使用该功能',
+  doc_not_received:'还没有拿到文案',
+  pls_enter_id:'请填入您的有效证件号',
+  pls_enter_birthday:'请选择您的出生年月',
+  pls_enter_addr:'请输入您的所在地址',
+  pls_enter_phone_num:'请输入您的电话号码',
+  pls_enter_car_type:'请选择您的准驾车型',
+  pls_enter_license_expiry_date:'请选择您的驾照有效期',
+  pls_enter_driving_age:'请输入您的有效驾龄',
+  error_unable_find_account:'账号信息错误，未找到对应的账号',
+  cash_lines:'提现金额',
+  max_cash_lines:'当前最大可提现金额',
+  bank_account:'银行账号',
+  pls_sel_bank:'请先选择银行',
+  pls_enter_bank_account:'请输入您的银行卡号',
+  sub:'提交'
 }
 
 export default zh_CN
