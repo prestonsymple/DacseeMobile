@@ -228,9 +228,11 @@ const SettingLanguageRegionScreen = connect(state => ({
               this.props.navigation.setParams({});
             }
           })
-        }, {
-          title: i18n.region, type: 'text', value: '中国大陆', editable: true, onPress: () => {}
-        }]
+        }
+        // , {
+        //   title: i18n.region, type: 'text', value: '中国大陆', editable: true, onPress: () => {}
+        // }
+        ]
       ]} />
     )
   }

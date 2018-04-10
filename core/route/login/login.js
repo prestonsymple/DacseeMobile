@@ -45,7 +45,7 @@ export default connect(state => ({
       verify_code_extend: '',
       referralUserId: props.referrer_id || '',
       fullName: '',
-      countryCode: '+86',
+      countryCode: '+60',
       selectAccount: []
     }
     this.codeInput = {}

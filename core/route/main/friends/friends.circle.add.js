@@ -96,7 +96,7 @@ export default connect(state => ({
           />
 
           {/* SCAN QRCODE SESSION */}
-          <BlockWrap
+          {/* <BlockWrap
             iconBackgroundColor={'#f4a951'}
             icon={Icons.Generator.Awesome('qrcode', 32, 'white')}
             title={'二维码'}
@@ -104,7 +104,7 @@ export default connect(state => ({
             onPress={(value) => {
               this.props.navigation.navigate('CommonScanQRCode', { value })
             }}
-          />
+          /> */}
 
           {/* WECHAT SESSION */}
           <BlockWrap
@@ -161,7 +161,7 @@ class BlockWrap extends Component {
     super(props)
     this.state = {
       value: '',
-      countryCode: '+86'
+      countryCode: '+60'
     }
   }
 

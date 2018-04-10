@@ -5,8 +5,8 @@ import { zh_cn, en_mas, en_us } from '../../i18n'
 import { handleActions } from 'redux-actions'
 
 const initialState = {
-  locale: 'zh',
-  messages: zh_cn,
+  locale: 'en',
+  messages: en_us,
   formats: undefined
 }
 
