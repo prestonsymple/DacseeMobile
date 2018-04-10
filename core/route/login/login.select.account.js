@@ -51,7 +51,7 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
                 phoneNo: row.phoneNo
               })
               this.props.dispatch(application.setMailModeValue(row._id))
-              this.props.dispatch(application.showMessage('已将验证码发送至您绑定的手机'))
+              this.props.dispatch(application.showMessage(i18n.already_send_code))
             } else {
               this.props.dispatch(account.loginNext({ stage: 3, value: Object.assign({}, value, {
                 _id: row._id

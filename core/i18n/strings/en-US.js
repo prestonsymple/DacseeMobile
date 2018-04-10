@@ -240,7 +240,7 @@ const en_US = {
   job_list: 'Job Listing',
   login_select_account: 'Please select your account',
   social_register: 'Register with social network',
-
+  register:'Register',
   confirm_trip:'confirm trip',
   order_sending:'Sending Order',
   drive_in:'During Pick-up',
@@ -272,7 +272,7 @@ const en_US = {
   unable_get_order_pls_check_network:'Unable to receives job detail, please check your network status',
   order_timeout_try:'Job detail request timeout. Retrying ...',
   trip_costs:'Trip Fare',
-  already_friend:'您已经是对方的好友了',
+  already_friend:' He/she is already in your friends list',
   passenger_location:'Passenger location',
   already_upload_avatar:'Profile picture submitted',
   driver_arrive_pls_wait:'Driver is on the way, please wait by the road side',
@@ -292,8 +292,17 @@ const en_US = {
   pls_sel_bank:'Please select bank',
   pls_enter_bank_account:'Please enter your bank card number',
   sub:'Submit',
-  pls_enter_fullname_certificate:'Please enter your full name'
+  pls_enter_fullname_certificate:'Please enter your full name following your NRIC',
 
+  max_twenty_friends:'20 friends is the maxinum',
+  id:'ID',
+  basic_info:'Basic information',
+  birthday:'Date of Birth',
+  addr:'Address',
+  drive_age:'Age of Driving',
+  validity_period:'Validity period',
+  driver_license_info:'Driving license information',
+  standard_car:'Standard car'
 }
 
 export default en_US

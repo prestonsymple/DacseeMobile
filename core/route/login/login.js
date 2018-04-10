@@ -477,9 +477,9 @@ export default connect(state => ({
                             phoneCountryCode: this.state.countryCode,
                             phoneNo: value_extend
                           })
-                          this.props.dispatch(app.showMessage('已将验证码发送至您的手机'))
+                          this.props.dispatch(app.showMessage(i18n.alert_sent_code))
                         } catch (e) {
-                          this.props.dispatch(app.showMessage('发生错误'))
+                          this.props.dispatch(app.showMessage(i18n.error_try_again))
                         }
                       }}
                       activeOpacity={0.9}
@@ -521,7 +521,7 @@ export default connect(state => ({
                 <FormattedMessage id={'active_account_tip'} />
               </Text>
               <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', {
-                title: '隐私协议及使用条款',
+                title: i18n.privacy_policy,
                 source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
               })} style={{  }}>
                 <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>

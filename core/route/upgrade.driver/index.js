@@ -9,7 +9,7 @@ import BaseScreenComponent from '../_base'
 import { Icons,TextFont } from '../../utils'
 import { application } from '../../redux/actions'
 
-export default connect(state => ({ a: state.application }))(class UpgradeDriver extends BaseScreenComponent {
+export default connect(state => ({ a: state.application, i18n: state.intl.messages || {}, }))(class UpgradeDriver extends BaseScreenComponent {
 
   static navigationOptions = () => {
     return Object.assign({}, {
@@ -21,7 +21,7 @@ export default connect(state => ({ a: state.application }))(class UpgradeDriver 
           style={{ width: 74, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
           onPress={() => DeviceEventEmitter.emit('APPLICATION.LISTEN.EVENT.ON.PRESS.NEXT')}
         >
-          <Text style={{ color: '#333', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>下一步</Text>
+          <Text style={{ color: '#333', fontSize: TextFont.TextSize(16), fontWeight: '600' }}>{this.props.i18n.next}</Text>
         </TouchableOpacity>
       )
     })
@@ -57,56 +57,56 @@ export default connect(state => ({ a: state.application }))(class UpgradeDriver 
     const {
       name, ic_number, mail, birth, address, mobile, licese_years, licese_expire, licese_type
     } = this.state
-
+    const { i18n }=this.props
     const NodeDOM = new FormBuilder()
-      .add('基本信息', [
-        Fileds.TextInput('姓名', name, '请填入证件上的全名',
-          EditorBuilder('姓名', 'String', {
+      .add(i18n.basic_info, [
+        Fileds.TextInput(i18n.name, name, i18n.pls_enter_fullname_certificate,
+          EditorBuilder(i18n.name, 'String', {
             value: name,
             onChangeValue: (name) => this.setState({ name })
           })
         ),
-        Fileds.TextInput('证件号', ic_number, '请填入您的有效证件号',
-          EditorBuilder('证件号', 'String', {
+        Fileds.TextInput(i18n.id, ic_number, i18n.pls_enter_id,
+          EditorBuilder(i18n.id, 'String', {
             value: ic_number,
             onChangeValue: (ic_number) => this.setState({ ic_number })
           })
         ),
-        Fileds.TextInput('邮箱', mail, '请填入您的邮箱地址',
-          EditorBuilder('邮箱', 'String', {
+        Fileds.TextInput(i18n.email, mail, i18n.pls_enter_email,
+          EditorBuilder(i18n.email, 'String', {
             value: mail,
             onChangeValue: (mail) => this.setState({ mail })
           })
         ),
-        Fileds.TextInput('出生日期', birth, '请选择您的出生年月',
-          EditorBuilder('出生日期', 'String', {
+        Fileds.TextInput(i18n.birthday, birth, i18n.pls_enter_birthday,
+          EditorBuilder(i18n.birthday, 'String', {
             value: birth,
             onChangeValue: (birth) => this.setState({ birth })
           })
         ),
-        Fileds.TextInput('地址', address, '请输入您的所在地址',
-          EditorBuilder('地址', 'String', {
+        Fileds.TextInput(i18n.addr, address, i18n.pls_enter_addr,
+          EditorBuilder(i18n.addr, 'String', {
             value: address,
             onChangeValue: (address) => this.setState({ address })
           })
         ),
-        Fileds.TextInput('电话号码', mobile, '请输入您的电话号码',
-          EditorBuilder('电话号码', 'String', {
+        Fileds.TextInput(i18n.phone, mobile, i18n.pls_enter_phone_num,
+          EditorBuilder(i18n.phone, 'String', {
             value: mobile,
             onChangeValue: (mobile) => this.setState({ mobile })
           })
         )
       ])
-      .add('驾照信息', [
-        Fileds.TextInput('准驾车型', licese_type, '请选择您的准驾车型', EditorBuilder('电话号码', 'String', {
+      .add(i18n.driver_license_info, [
+        Fileds.TextInput(i18n.standard_car, licese_type, i18n.pls_enter_car_type, EditorBuilder(i18n.phone, 'String', {
           value: licese_type,
           onChangeValue: (licese_type) => this.setState({ licese_type })
         })),
-        Fileds.TextInput('有效期', licese_expire, '请选择您的驾照有效期', EditorBuilder('电话号码', 'String', {
+        Fileds.TextInput(i18n.validity_period, licese_expire, i18n.pls_enter_license_expiry_date, EditorBuilder(i18n.phone, 'String', {
           value: licese_expire,
           onChangeValue: (licese_expire) => this.setState({ licese_expire })
         })),
-        Fileds.TextInput('驾龄', licese_years, '请输入您的有效驾龄', EditorBuilder('电话号码', 'String', {
+        Fileds.TextInput(i18n.drive_age, licese_years, i18n.pls_enter_driving_age, EditorBuilder(i18n.phone, 'String', {
           value: licese_years,
           onChangeValue: (licese_years) => this.setState({ licese_years })
         }))

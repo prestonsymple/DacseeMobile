@@ -8,7 +8,7 @@ import InteractionManager from 'InteractionManager'
 import ActionSheet from 'react-native-actionsheet'
 
 import { MapView, Marker, Utils, Polyline } from '../../../native/AMap'
-import { Screen, Icons, Define, System, Session ,TextFont } from '../../../utils'
+import { Screen, Icons, Define, System, Session, TextFont } from '../../../utils'
 import { booking, application } from '../../../redux/actions'
 import { Button } from '../../../components'
 import { BOOKING_STATUS } from '..'
@@ -24,7 +24,11 @@ const MAP_DEFINE = {
   showsZoomControls: false /* android fix */
 }
 
-export default connect(state => ({ status: state.booking.status, nav: state.nav }))(class BookingDriverDetailScreen extends Component {
+export default connect(state => ({
+  status: state.booking.status,
+  i18n: state.intl.messages || {},
+  nav: state.nav
+}))(class BookingDriverDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const { title } = navigation.state.params
@@ -119,10 +123,10 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
     } catch (e) {
       this.tick += 1
       if (this.tick >= 4) {
-        this.props.dispatch(application.showMessage('无法获取订单信息，请检查您的网络环境'))
+        this.props.dispatch(application.showMessage(this.props.i18n.unable_get_order_pls_check_network))
         // TODO:
       } else {
-        this.props.dispatch(application.showMessage('订单信息获取超时，正在重试'))
+        this.props.dispatch(application.showMessage(this.props.i18n.order_timeout_try))
         this.fetchOrderDetail()
       }
     }
@@ -200,7 +204,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
           locationEnabled={true}
           ref={e => this.map = e}
           locationInterval={1000}
-          locationStyle={{ }}
+          locationStyle={{}}
           showsTraffic={true}
           onLocation={this.onLocationListener.bind(this)}
         >
@@ -225,7 +229,7 @@ export default connect(state => ({ status: state.booking.status, nav: state.nav 
           }
         </MapView>
 
-        { (status  === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) && (<DriverOnTheWayLabel />) }
+        {(status === BOOKING_STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ON_THE_WAY) && (<DriverOnTheWayLabel />)}
         <DriverStatusPanel {...this.state.driver_info} />
       </View>
     )
@@ -241,7 +245,7 @@ class DriverOnTheWayLabel extends Component {
         { flexDirection: 'row' },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 }
       ]}>
-        { Icons.Generator.Material('volume-up', 16, '#999') }
+        {Icons.Generator.Material('volume-up', 16, '#999')}
         <Text style={{ color: '#777', fontSize: TextFont.TextSize(13), marginLeft: 6 }}>司机正在赶来，请前往路边等待</Text>
       </View>
     )
@@ -259,19 +263,19 @@ class DriverStatusPanel extends Component {
       ]}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={{ backgroundColor: '#eee', height: 64, width: 64, borderRadius: 32 }}>
-            { avatars && (<Image style={{ width: 64, height: 64, borderRadius: 32 }} source={{ uri: avatars[0].url }} />) }
+            {avatars && (<Image style={{ width: 64, height: 64, borderRadius: 32 }} source={{ uri: avatars[0].url }} />)}
           </View>
-          <Text style={{ color: '#666', fontSize: TextFont.TextSize(15), fontWeight: '400', marginTop: 6 }}>{ fullName }</Text>
+          <Text style={{ color: '#666', fontSize: TextFont.TextSize(15), fontWeight: '400', marginTop: 6 }}>{fullName}</Text>
         </View>
         <View style={{ height: .8, backgroundColor: '#eee' }} />
         <View style={{ flexDirection: 'row', height: Define.system.ios.x ? 64 : 44, paddingBottom: Define.system.ios.x ? 24 : 0 }}>
           <TouchableOpacity onPress={() => Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)} style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            { Icons.Generator.Material('phone', 16, '#999', { style: { top: 1 } }) }
+            {Icons.Generator.Material('phone', 16, '#999', { style: { top: 1 } })}
             <Text style={{ color: '#444', fontWeight: '400', fontSize: TextFont.TextSize(15), marginLeft: 6 }}>打电话</Text>
           </TouchableOpacity>
           <View style={{ width: .8, backgroundColor: '#eee' }} />
           <TouchableOpacity style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            { Icons.Generator.Material('cancel', 16, '#999', { style: { top: 1 } }) }
+            {Icons.Generator.Material('cancel', 16, '#999', { style: { top: 1 } })}
             <Text style={{ color: '#444', fontWeight: '400', fontSize: TextFont.TextSize(15), marginLeft: 6 }}>取消订单</Text>
           </TouchableOpacity>
           {/* <View style={{ width: .8, backgroundColor: '#eee' }} />
