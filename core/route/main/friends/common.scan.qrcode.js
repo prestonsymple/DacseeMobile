@@ -22,7 +22,7 @@ export default connect(state => ({
     // const i18n = global.store.getState().intl.messages
     return {
       drawerLockMode: 'locked-closed',
-      title: '扫一扫',
+      title: this.props.i18n.scan,
       headerStyle: {
         backgroundColor: '#141518',
         shadowColor: 'transparent',
@@ -47,8 +47,8 @@ export default connect(state => ({
           BarCodeType={RNCamera.Constants.BarCodeType.qr}
           style={{ flex: 1 }}
           ref={cam => this.camera = cam}
-          permissionDialogTitle={'无法访问相机'}
-          permissionDialogMessage={'请打开相机访问权限后重试'}
+          permissionDialogTitle={this.props.i18n.refuse_visit_camera}
+          permissionDialogMessage={this.props.i18n.pls_allow_camera_try}
           onBarCodeRead={(code) => {
             console.log(code)
           }}

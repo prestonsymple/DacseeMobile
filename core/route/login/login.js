@@ -382,16 +382,15 @@ export default connect(state => ({
                   {Icons.Generator.Awesome('google-plus', 24, '#333')}
                 </Button> */}
                 <Button onPress={() => {
-                  // ShareUtile.auth(7, (code, result, message) => {
-                  //   try {
-                  //     if (message !== 'success') throw new Error('')
-                  //     this._facebookAuth(result)
-                  //   } catch (e) {
-                  //     this.props.showMessage(app.showMessage('Error'))
-                  //   }
-                  // })
+                  ShareUtile.auth(7, (code, result, message) => {
+                    try {
+                      if (message !== 'success') throw new Error('')
+                      this._facebookAuth(result)
+                    } catch (e) {
+                      this.props.showMessage(app.showMessage('Error'))
+                    }
+                  })
 
-                  this.props.navigation.navigate('SocialRegister',{userInfo:{}})
                 }} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('facebook', 24, '#333')}
                 </Button>

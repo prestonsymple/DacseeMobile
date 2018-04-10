@@ -61,7 +61,7 @@ export default connect(state => ({
             canInput={true}
             navigation={this.props.navigation}
             onPress={(value, countryCode) => {
-              if (value.length === 0) return this.props.dispatch(application.showMessage('请输入正确的手机号码'))
+              if (value.length === 0) return this.props.dispatch(application.showMessage(i18n.pls_enter_correct_num))
               this.props.navigation.navigate('FriendsSearchBase', { value, countryCode })
             }}
           />
@@ -75,7 +75,7 @@ export default connect(state => ({
             placeholder={'example@mail.com'}
             canInput={true}
             onPress={(value) => {
-              if (value.length === 0 || !System.Rules.isMail(value)) return this.props.dispatch(application.showMessage('请输入正确的邮箱地址'))
+              if (value.length === 0 || !System.Rules.isMail(value)) return this.props.dispatch(application.showMessage(i18n.pls_enter_correct_email))
               this.props.navigation.navigate('FriendsSearchBase', { value })
             }}
           />
@@ -90,7 +90,7 @@ export default connect(state => ({
             canInput={true}
             navigation={this.props.navigation}
             onPress={(value) => {
-              if (value.length < 2) return this.props.dispatch(application.showMessage('请输入至少2个字符'))
+              if (value.length < 2) return this.props.dispatch(application.showMessage(i18n.pls_enter_two_chars))
               this.props.navigation.navigate('FriendsSearchBase', { value })
             }}
           />
