@@ -307,7 +307,8 @@ const mas = {
   refer_account:'Akuan perujuk',
   scan:'Mengimbas kod QR',
   custom_location :'Lokasi tersuai',
-  credit_card :'Kad Kredit'
+  credit_card :'Kad Kredit',
+  account_activated:'Akaun anda telah diaktifkan, sila muat naik avatar anda dalam tetapan supaya rakan anda dapat menemui anda'
 }
 
 export default mas

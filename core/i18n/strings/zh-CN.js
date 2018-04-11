@@ -303,7 +303,8 @@ const zh_CN = {
   refer_account:'推荐人账号',
   scan:'扫一扫',
   custom_location :'自定义位置',
-  credit_card :'信用卡'
+  credit_card :'信用卡',
+  account_activated:'您的账号已激活，请前往设置中上传您的头像，以便朋友能够找到您'
 }
 
 export default zh_CN

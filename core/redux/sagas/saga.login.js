@@ -19,6 +19,7 @@ const STAGE_DEFINE = {
 }
 
 function* loginFlow() {
+  const i18n = yield select(state => state.intl.messages||{})
   while (true) {
     const { next, back } = yield race({
       next: take(account.loginNext().type),
@@ -35,10 +36,10 @@ function* loginFlow() {
         try {
           const url = 'v1/sendVerificationCode/phone'
           yield call(session.User.Post, url, value)
-          yield put(application.showMessage('已将验证码发送至您的手机'))
+          yield put(application.showMessage(i18n.alert_sent_code))
         } catch (e) {
           if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
-            yield put(application.showMessage(`验证码发送过于频繁，请[${e.response.data.data}]秒后再试`))
+            yield put(application.showMessage(`${i18n.server_busy_code}[${e.response.data.data}]${i18n.seconds_later}`))
           } else {
             yield put(application.showMessage('无法连接到服务器，请稍后再试'))
           }
@@ -115,7 +116,7 @@ function* loginFlow() {
             yield call(session.User.Post, url, { email: id })
             yield all([
               put(application.hideProgress()),
-              put(application.showMessage('已将验证码发送至您的手机')),
+              put(application.showMessage(i18n.alert_sent_code)),
               put(account.loginPutValue(2))
             ])
           } else {
@@ -146,7 +147,7 @@ function* loginFlow() {
             { latitude: 3.321, longitude: 1.23 }
           ))
 
-          yield put(application.showMessage('您的账号已激活，请前往设置中上传您的头像，以便朋友能够找到您'))
+          yield put(application.showMessage(i18n.account_activated))
           yield call(loginSuccess, register) // 登录成功
 
         } catch (e) {

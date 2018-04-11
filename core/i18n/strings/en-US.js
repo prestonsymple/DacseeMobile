@@ -307,7 +307,8 @@ const en_US = {
   refer_account:'Referrer account',
   scan:'Scan Code',
   custom_location :'Custom location',
-  credit_card :'Credit Card'
+  credit_card :'Credit Card',
+  account_activated:'Your account has been activated, please upload your avatar in Settings so that your friends can recognize you easily'
 }
 
 export default en_US

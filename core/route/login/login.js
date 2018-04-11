@@ -408,14 +408,14 @@ export default connect(state => ({
           { opacity: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
         ]}>
           <ScrollView contentContainerStyle={{ justifyContent: 'center' }} style={{
-            flex: 1, paddingHorizontal: 45, marginTop: this.isEmail(this.state.value) ? 110 : 200
+            flex: 1,  marginTop: this.isEmail(this.state.value) ? 110 : 200
           }}>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
               <Text style={{ fontSize:26, color: '#f2f2f2', fontWeight: '400' }}>
                 <FormattedMessage id={'active_account'} />
               </Text>
             </View>
-            <View style={{ marginBottom: 15 }}>
+            <View style={{ marginBottom: 15 ,paddingHorizontal:45}}>
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
@@ -525,12 +525,12 @@ export default connect(state => ({
                 title: i18n.privacy_policy,
                 source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
               })} style={{  }}>
-                <Text style={{ fontSize: 12, color: '#ffa81d', fontWeight: '200' }}>
+                <Text style={{ fontSize: 12,marginLeft:5, color: '#ffa81d', fontWeight: '200' }}>
                   <FormattedMessage id={'user_protocol'}/>
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ height: 44 }}>
+            <View style={{ height: 44,paddingHorizontal:45 }}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.onPressComplate.bind(this)}>
                 <View style={{ height: 44, alignItems: 'center', flexDirection: 'row', backgroundColor: '#ffa81d', borderRadius: 22 }}>
                   <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>
