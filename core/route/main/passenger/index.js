@@ -247,7 +247,6 @@ export default connect(state => ({
   }
 
   async onLocationSearch(longitude, latitude) {
-    console.log(longitude, latitude)
     try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
@@ -259,8 +258,11 @@ export default connect(state => ({
         const { formatted_address = '', address_components, place_id, geometry } = results[0]
 
         const street_number = address_components.find(pipe => pipe.types.find(sub => sub === 'street_number')) || { long_name: '' }
+        const political = address_components.find(pipe => pipe.types.find(sub => sub === 'political')) || { long_name: '' }
         const route = address_components.find(pipe => pipe.types.find(sub => sub === 'route')) || { long_name: '' }
-        const short_name = `${street_number.long_name} ${route.long_name}`.trim()
+        const short_name = `${street_number.long_name} ${route.long_name} ${political.long_name}`.trim()
+
+        console.log(results)
 
         if (short_name.length === 0) {
           throw new Error('UNKNOW_GEO')
@@ -278,6 +280,8 @@ export default connect(state => ({
         const resp = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
         place = resp.data
       }
+
+      console.log(longitude, latitude)
 
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
     } catch (e) {

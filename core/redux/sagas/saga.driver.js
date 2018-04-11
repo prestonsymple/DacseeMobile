@@ -32,9 +32,10 @@ function* updateDriverLocation() {
         map_mode: state.application.map_mode
       }))
       if (working) {
+        console.log(map_mode)
         let location = { latitude: undefined, longitude: undefined }
         if (map_mode === 'AMAP') {
-          location = yield select(state => location: state.account.location)
+          location = yield select(state => state.account.location)
           delete location.lat
           delete location.lng
         } else if (map_mode === 'GOOGLEMAP') {
