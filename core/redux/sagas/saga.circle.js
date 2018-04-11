@@ -31,6 +31,8 @@ function* fetchFriends() {
       if (!init) {
         const clone = circleReducer.friend.splice(0)
         friend = clone.concat(friend)
+      } else {
+        yield delay(500)
       }
 
       yield put(circle.setValues({ loading: false, requestor, friend, page }))

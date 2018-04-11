@@ -93,7 +93,7 @@ const en_US = {
   Arrived: 'Arrived',
   No_Show: 'No Show',
   On_Board: 'On Board',
-  Completed: 'COmpleted',
+  Completed: 'Completed',
   Cancelled_by_Passenger: 'Cancelled by Passenger',
   Cancelled_by_Driver: 'Cancelled by Driver',
   Rejected_by_Driver: 'Rejected by Driver',
