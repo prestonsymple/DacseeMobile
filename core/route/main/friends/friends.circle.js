@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, ScrollView,StyleSheet,TouchableWithoutFeedback
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, StatusBar,StyleSheet,TouchableWithoutFeedback
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
@@ -132,21 +132,13 @@ export default connect(state => ({
     }
   }
 
-  _getHeight=()=>{
-    const { dataSource } = this.state
-    const compare = (dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0) ? 0 : Define.system.ios.x?(110+84+62):(78+64+62)
-    return {height:Define.system.ios.x ?(height-compare):(height-compare)}
-  }
-
-
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
-
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <HeaderSearchBar />
-        <View style={this._getHeight()}>
+        <View style={{flex:1}}>
           <ListView
             refreshControl={
               <RefreshControl
@@ -214,13 +206,15 @@ export default connect(state => ({
             )}
           />
         </View>
-        <View style={styles.bottomButton}>
-          <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
-            <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
-              <FormattedMessage id={selected.length === 0?'select_all':'confirm'}/>
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {(dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0)?
+          null: <View style={styles.bottomButton}>
+            <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
+              <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
+                <FormattedMessage id={selected.length === 0?'select_all':'confirm'}/>
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
       </View>
     )
   }
