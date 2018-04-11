@@ -69,7 +69,7 @@ export default connect(state => ({
               <Text style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
               <Text style={[styles.order_status,{color:optionObject.color}]}>{optionObject.text}</Text>
             </View>
-            <Text style={styles.fare}>{working ? '' : fare}</Text>
+            <Text style={styles.fare}>{working ? '' : `RM ${parseFloat(fare).toFixed(2)}`}</Text>
           </View>
           <View style={styles.text_cell}>
             <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />

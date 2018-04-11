@@ -90,7 +90,7 @@ export default class OfflineListItem extends Component {
   render() {
     const { itemData, itemDay, onPress = () => { } } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
-    
+
     return (
       <View style={styles.container}>
         <View style={[styles.text_cell, { justifyContent: 'space-between' }]}>
@@ -99,7 +99,7 @@ export default class OfflineListItem extends Component {
             <Image source={Resources.image.distance} resizeMode='contain' style={{height:18,width:20,marginLeft:10}}/>
             <Text style={styles.order_status}>{'~ 15km'}</Text>
           </View>
-          <Text style={styles.fare}>{fare}</Text>
+          <Text style={styles.fare}>{`RM ${parseFloat(fare).toFixed(2)}`}</Text>
         </View>
         <View style={styles.text_cell}>
           <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
