@@ -220,7 +220,7 @@ export default class Wheel extends Component {
     if (Math.abs(this.index - itemIndex) > this.hiddenOffset) return null
 
     if (typeof item === 'string' || typeof item === 'number') {
-      item = <Text style={itemStyle}>{item + (type == 'h' ? '点' : type == 'm' ? '分' : '')}</Text>
+      item = <Text style={itemStyle}>{item}</Text> // + (type == 'h' ? '点' : type == 'm' ? '分' : '')
     }
     //  else {
     //   item = <View style={{ flexDirection: 'row', alignItems: 'center' ,justifyContent:'center'}}>

@@ -135,10 +135,10 @@ export default class TimePicker extends PureComponent {
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange('now')} >
-                <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>取消</Text>
+                <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>{this.props.i18n.cancel}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange(`${this.state.day}${this.state.hour}点${this.state.minute}分`)} >
-                <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>确定</Text>
+                <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>{this.props.i18n.confirm}</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height: weelHeight }}>

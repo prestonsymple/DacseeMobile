@@ -305,7 +305,9 @@ const en_US = {
   standard_car:'Standard car',
 
   refer_account:'Referrer account',
-  scan:'Scan Code'
+  scan:'Scan Code',
+  custom_location :'Custom location',
+  credit_card :'Credit Card'
 }
 
 export default en_US

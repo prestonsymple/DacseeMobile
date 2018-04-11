@@ -467,8 +467,9 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
           </TouchableOpacity>
         </View>
         <TimePicker visible={this.props.timePickerShow}
+          i18n={this.props.i18n}
           dateChange={(time) => this.props.dateChange(time)} />
-        <SelectPay visible={this.props.selectPayShow} payChange={(pay) => this.props.payChange(pay)} />
+        <SelectPay visible={this.props.selectPayShow} i18n={this.props.i18n} payChange={(pay) => this.props.payChange(pay)} />
       </Animated.View>
     )
   }
