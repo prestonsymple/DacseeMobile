@@ -19,8 +19,9 @@ const STAGE_DEFINE = {
 }
 
 function* loginFlow() {
-  const i18n = yield select(state => state.intl.messages||{})
+
   while (true) {
+    const i18n = yield select(state => state.intl.messages||{})
     const { next, back } = yield race({
       next: take(account.loginNext().type),
       back: take(account.loginBack().type)

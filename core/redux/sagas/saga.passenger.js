@@ -40,7 +40,9 @@ function* bookingOnComplete() {
 }
 
 function* bookingFlow() {
+
   while(true) {
+    const i18n = yield select(state => state.intl.messages||{})
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
     const { booking_id, destination, from, time, payment, type, selected_friends, fare } = yield select(state => ({
@@ -70,7 +72,7 @@ function* bookingFlow() {
         (Array.isArray(selected_friends) && selected_friends.length === 0) ||
         (!Array.isArray(selected_friends) && selected_friends !== 'all')
       ) {
-        yield put(application.showMessage('请选择至少一个朋友'))
+        yield put(application.showMessage(i18n.select_least_one))
         yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
         continue
       }
@@ -80,7 +82,7 @@ function* bookingFlow() {
         destination,
         fare: fare,
         type: 'now',
-        notes : '', 
+        notes : '',
         booking_at: Methods.timeZone(time),
         payment_method: Methods.payment(payment),
       }
@@ -108,16 +110,16 @@ function* bookingFlow() {
       try {
         yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
         // const {  } = yield call(
-          
+
         // )
         // body.fare = fare.Circle
 
-        const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body) 
+        const { doc, isSuccess } = yield call(Session.Booking.Post, 'v1', body)
         if (isSuccess) {
           yield put(booking.passengerSetID(doc._id))
           yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT))
         } else {
-          yield put(application.showMessage('订单创建失败'))
+          yield put(application.showMessage(i18n.order_creat_err))
           yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
         }
         continue
@@ -126,9 +128,9 @@ function* bookingFlow() {
         const { data = {} } = response
         const { code = '', message = '' } = data
         if (code === 'BOOKING_HAS_ACTIVE') {
-          yield put(application.showMessage('当前还有未结束的行程'))
+          yield put(application.showMessage(i18n.hava_unfinish_order))
         } else if (code === 'NO_AVAILABLE_DRIVER') {
-          yield put(application.showMessage('当前没有可接单的司机'))
+          yield put(application.showMessage(i18n.no_driver_order))
         } else {
           // yield put(application.showMessage(`${code}${message}`))
           yield put(application.showMessage('无法连接到服务器，请检查网络'))
@@ -151,7 +153,7 @@ function* bookingFlow() {
       // DATA RECEIVE
       if ((destination && from) && !('coords' in destination) || !('coords' in from)) {
         // TODO: 恢复车型数据
-        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare,driver_info`)  
+        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare,driver_info`)
         yield put(booking.passengerSetValue({
           destination: bookingDetail.destination,
           fare: bookingDetail.fare,
@@ -160,11 +162,11 @@ function* bookingFlow() {
           driver_info: bookingDetail.driver_info
         }))
       }
-    } 
-    
+    }
+
     // TODO COMPLETE
     // else if (status === STATUS.PASSGENER_BOOKING_HAVE_COMPLETE) {
-      
+
     // }
 
     yield put(booking.passengerSaveStatus(status))
@@ -173,6 +175,7 @@ function* bookingFlow() {
 
 function* bookingBoardCastListener() {
   while(true) {
+    const i18n = yield select(state => state.intl.messages||{})
     const { payload: { action, booking_id } } = yield take(booking.passengerBoardCastListener().type)
     const status = yield select(state => state.booking.status)
 
@@ -180,7 +183,7 @@ function* bookingBoardCastListener() {
     if (action === 'CANCELLED_BY_DRIVER') { // 司机取消
       if (status >= STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ARRIVED) {
         yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
-        yield put(application.showMessage('很抱歉，该订单已被司机取消'))
+        yield put(application.showMessage(i18n.drive_cancel_order))
       }
     } else if (action === 'ON_THE_WAY') { // 司机接单-已在路上
       if (status < STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) {
@@ -201,7 +204,7 @@ function* bookingBoardCastListener() {
     } else if (action === 'NO_TAKER') { // 没有司机
       if (status === STATUS.PASSGENER_BOOKING_WAIT_DRIVER_ACCEPT) {
         yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
-        yield put(application.showMessage('暂无司机接单，订单超时，已被取消'))
+        yield put(application.showMessage(i18n.order_timeout))
       }
     } else if (action === 'COMPLETED') { // 完成订单
       if (status === STATUS.PASSGENER_BOOKING_ON_RATING) {
@@ -240,7 +243,9 @@ function* passengerUpdateDriverLocation() {
 }
 
 function* passengerStatusObserver() {
+
   while (true) {
+    const i18n = yield select(state => state.intl.messages||{})
     const { booking_id, app_status } = yield select(state => ({
       booking_id: state.storage.booking_id,
       app_status: state.application.application_status === 'active'
@@ -252,19 +257,19 @@ function* passengerStatusObserver() {
     } else {
       try {
         const passengerStatus = yield select(state => state.booking.status)
-        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=driver_id,status`) 
+        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=driver_id,status`)
         const driver_id = bookingDetail.driver_id
         const bookingStatus = bookingDetail.status
 
         if (bookingStatus === 'No_Taker') {
           yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
-          yield put(application.showMessage('暂无司机接单，订单超时，已被取消'))
+          yield put(application.showMessage(i18n.order_timeout))
         } else if (bookingStatus === 'Cancelled_by_Driver') {
           const backStatus = passengerStatus === STATUS.PASSGENER_BOOKING_INIT ? STATUS.PASSGENER_BOOKING_INIT : STATUS.PASSGENER_BOOKING_PICKED_ADDRESS
           yield put(booking.passengerSetStatus(backStatus))
-          yield put(application.showMessage('订单已被司机取消，请尝试重新预订'))
+          yield put(application.showMessage(i18n.order_to_afresh))
         } else if (
-          bookingStatus === 'On_The_Way' && 
+          bookingStatus === 'On_The_Way' &&
           passengerStatus < STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY
         ) {
           yield all([
@@ -289,8 +294,8 @@ function* passengerStatusObserver() {
         }
 
         console.log({
-          driver_id, 
-          bookingStatus, 
+          driver_id,
+          bookingStatus,
           passengerStatus
         })
       } catch (e) {

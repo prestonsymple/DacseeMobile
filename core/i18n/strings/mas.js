@@ -308,7 +308,14 @@ const mas = {
   scan:'Mengimbas kod QR',
   custom_location :'Lokasi tersuai',
   credit_card :'Kad Kredit',
-  account_activated:'Akaun anda telah diaktifkan, sila muat naik avatar anda dalam tetapan supaya rakan anda dapat menemui anda'
+  account_activated:'Akaun anda telah diaktifkan, sila muat naik avatar anda dalam tetapan supaya rakan anda dapat menemui anda',
+  order_creat_err:'Penciptaan pesanan gagal',
+  select_least_one:'Sila pilih sekurang-kurangnya seorang kawan',
+  hava_unfinish_order:'Terdapat perjalanan yang belum selesai',
+  no_driver_order:'Pada masa ini tiada pemandu untuk mengambil pesanan',
+  drive_cancel_order:' Maaf, pesanan telah dibatalkan oleh pemandu',
+  order_timeout:'Tiada pemandu pada masa ini, pesanan telah dibatalkan.',
+  order_to_afresh:'Pesanan telah dibatalkan oleh pemandu, sila cuba menempah semula'
 }
 
 export default mas

@@ -308,7 +308,14 @@ const en_US = {
   scan:'Scan Code',
   custom_location :'Custom location',
   credit_card :'Credit Card',
-  account_activated:'Your account has been activated, please upload your avatar in Settings so that your friends can recognize you easily'
+  account_activated:'Your account has been activated, please upload your avatar in Settings so that your friends can recognize you easily',
+  order_creat_err:'Fail to create booking',
+  select_least_one:'Please select at least one of your friend.',
+  hava_unfinish_order:'There is an incomplete job.',
+  no_driver_order:'There is not driver available at the moments.',
+  drive_cancel_order:'sorry, the booking has been cancelled by the driver.',
+  order_timeout:'There is not driver at the moments. Booking request has been cancelled.',
+  order_to_afresh:'Booking has been cancelled by the driver, please try to book again.'
 }
 
 export default en_US
