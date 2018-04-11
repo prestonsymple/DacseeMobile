@@ -71,10 +71,10 @@ export default connect(state => ({ booking: state.booking ,i18n: state.intl.mess
     } catch (e) {
       this.tick += 1
       if (this.tick >= 4) {
-        this.props.dispatch(application.showMessage('无法获取订单信息，请检查您的网络环境'))
+        this.props.dispatch(application.showMessage(this.props.i18n.unable_get_order_pls_check_network))
         // TODO:
       } else {
-        this.props.dispatch(application.showMessage('订单信息获取超时，正在重试'))
+        this.props.dispatch(application.showMessage(this.props.i18n.order_timeout_try))
         this.fetchOrderDetail()
       }
     }

@@ -305,7 +305,9 @@ const mas = {
   standard_car:'Kereta standard',
 
   refer_account:'Akuan perujuk',
-  scan:'Mengimbas kod QR'
+  scan:'Mengimbas kod QR',
+  custom_location :'Lokasi tersuai',
+  credit_card :'Kad Kredit'
 }
 
 export default mas

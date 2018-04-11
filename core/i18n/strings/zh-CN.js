@@ -301,7 +301,9 @@ const zh_CN = {
   driver_license_info:'驾照信息',
 
   refer_account:'推荐人账号',
-  scan:'扫一扫'
+  scan:'扫一扫',
+  custom_location :'自定义位置',
+  credit_card :'信用卡'
 }
 
 export default zh_CN
