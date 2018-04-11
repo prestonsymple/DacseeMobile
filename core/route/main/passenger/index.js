@@ -17,7 +17,7 @@ import CircleBar from '../components/circle.bar'
 import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
 import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Screen, Icons, Define, Session, UtilMath, TextFont } from '../../../utils'
-import { booking, account } from '../../../redux/actions'
+import { booking, account, application } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
 import SelectPay from '../../../components/selectPay'
@@ -34,6 +34,7 @@ export default connect(state => ({
   map_mode: state.application.map_mode,
   vehicleGroups: state.booking.vehicleGroups,
   location: state.account.location,
+  i18n: state.intl.messages
 }))(class PassengerComponent extends Component {
 
   constructor(props) {
@@ -291,16 +292,14 @@ export default connect(state => ({
 
   dateChange(time) {
     this.setState({ timePickerShow: false })
-    console.log(time)
   }
   payChange(pay) {
     this.setState({ selectPayShow: false })
-    console.log(pay)
   }
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode, location } = this.props
-
+    const { status, from, destination, map_mode, location, driver_info } = this.props
+    
     const MAP_SETTER = {
       /* A MAP */
       tiltEnabled: false,
@@ -423,6 +422,17 @@ export default connect(state => ({
             dateChange={(time) => this.dateChange(time)}
           />
         )}
+
+        {status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY && (
+          <BookingDetailView onPress={async () => {
+            try {
+              await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
+              this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+            } catch(e) {
+              this.props.dispatch(application.showMessage('无法连接到服务器'))
+            }
+          }} driver={driver_info} i18n={this.props.i18n} />
+        )}
         <ModalDriverRespond />
       </View>
     )
@@ -530,15 +540,15 @@ class MapPin extends PureComponent {
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { onPress, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail
-  const time = moment(booking_at).format('YYYY-MM-D HH:mm')
+  const { onPress = () => {}, driver, i18n } = props
+
   return (
-    <View style={{ backgroundColor: 'transparent', height: height / 2.3 }}>
-      <BookingDetailHeaderView passenger_info={passenger_info} />
-      <DrvierCarDetail  car_info={''}/>
-      <View style={{ backgroundColor: '#fff', marginBottom: Define.system.ios.x ? 20 : 0, alignItems: 'center', justifyContent: 'center', height: 60 }}>
-        <TouchableOpacity onPress={onPress} style={{ backgroundColor: 'red', borderRadius: 6, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center', }}>
-          <Text style={{ color: '#fff', fontSize: TextFont.TextSize(16) }}>{'取消行程'}</Text>
+    <View style={{ backgroundColor: 'transparent', height: 294 }}>
+      <BookingDetailHeaderView driver={driver} />
+      <DrvierCarDetail car_info={''}/>
+      <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
+        <TouchableOpacity onPress={onPress} style={{ backgroundColor: 'red', borderRadius: 6, marginTop: 8, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center', }}>
+          <Text style={{ color: '#fff', fontSize: TextFont.TextSize(16) }}>{i18n.cancel_trip}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -549,7 +559,11 @@ const BookingDetailView = (props) => {
  * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
  */
 const BookingDetailHeaderView = (props) => {
-  const { avatars, fullName, userId, phoneCountryCode, phoneNo } = props.passenger_info
+  const { driver } = props
+  const { phoneNo, phoneCountryCode, fullName, avatars = [{
+    url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg'
+  }] } = driver
+
   return (
     <View style={{
       height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopLeftRadius: 20, borderTopRightRadius: 20,
@@ -557,18 +571,18 @@ const BookingDetailHeaderView = (props) => {
     }}>
       <View style={{ flexDirection: 'row' }}>
         <Image
-          source={{ uri: avatars === undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
+          source={{ uri: avatars[avatars.length - 1].url }}
           style={{ width: 54, height: 54, borderRadius: 27, marginLeft: 14 }} />
-        <View>
+        <View style={{ justifyContent: 'center' }}>
           <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{fullName}</Text>
-          <Text style={{ marginLeft: 10, marginTop: 2, fontSize: TextFont.TextSize(14), color: 'rgba(0, 0, 0, 0.5)' }}>{`User ID: ${userId}`}</Text>
+          {/* <Text style={{ marginLeft: 10, marginTop: 2, fontSize: TextFont.TextSize(14), color: 'rgba(0, 0, 0, 0.5)' }}>{`User ID: ${userId}`}</Text> */}
         </View>
       </View>
       <View style={{ flexDirection: 'row' }}>
         <BookingDetailButton style={{ marginRight: 10, }} onPress={() => Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
           <View>{Icons.Generator.Awesome('comment', 24, '#666')}</View>
         </BookingDetailButton>
-        <BookingDetailButton style={{ marginRight: 10, }} onPress={() => Linking.openURL(`sms:${phoneCountryCode}${phoneNo}`)}>
+        <BookingDetailButton style={{ marginRight: 10, }} onPress={() => Linking.openURL(`tel:${phoneCountryCode}${phoneNo}`)}>
           <View>{Icons.Generator.Material('phone-in-talk', 24, '#666')}</View>
         </BookingDetailButton>
       </View>
@@ -594,12 +608,12 @@ const BookingDetailButton = (props) => {
 const DrvierCarDetail = (props) => {
   const { ...car_info } = props.car_info
   return (
-    <View style={{ backgroundColor: '#F5F5F5', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'保时捷-911'}</Text>
-        <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
+    <View style={{ backgroundColor: 'white', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'Standard'}</Text>
+        {/* <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
         <Text style={styles.car_cell}>{'颜色-白色'}</Text>
-        <Text style={styles.car_cell}>{'豪华跑车'}</Text>
+        <Text style={styles.car_cell}>{'豪华跑车'}</Text> */}
       </View>
       <Image style={{ flex: 1 }} source={Resources.image.slice_adv_car} />
     </View>

@@ -21,7 +21,8 @@ const initialState = {
 
   status: 0,
   driver_id: '',
-  driver: {}
+  driver: {},
+  driver_info: {}
 }
 
 export default handleActions({

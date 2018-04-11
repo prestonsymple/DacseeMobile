@@ -43,14 +43,17 @@ const BookingDetailButton = (props) => {
  * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
  */
 const BookingDetailHeaderView = (props) => {
-  const { avatars, fullName, userId, phoneCountryCode, phoneNo } = props.passenger_info;
+  console.log(props)
+
+  const { passenger_info } = props
+  const { avatars = [], fullName, userId, phoneCountryCode, phoneNo } = passenger_info
   return(
     <View style={{height:80, flexDirection: 'row', alignItems:'center', justifyContent:'space-between', borderTopLeftRadius:20, borderTopRightRadius: 20,
       backgroundColor: 'white'
     }}>
       <View style={{flexDirection: 'row'}}>
         <Image
-          source={{ uri: avatars === undefined ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
+          source={{ uri: avatars.length === 0 ? 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' : avatars[avatars.length - 1].url }}
           style={{ width: 54, height: 54 , borderRadius: 27, marginLeft: 14 }} />
         <View>
           <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{ fullName }</Text>

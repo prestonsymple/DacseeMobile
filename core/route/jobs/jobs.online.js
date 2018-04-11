@@ -51,7 +51,9 @@ export default connect(state => ({
     if (status !== 0) {
       try {
         await Session.Booking.Put(`v1/${_id}`, { action: status === -1 ? 'reject' : 'accept' })
-        this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: this.props.jobs.find(pipe => pipe._id === _id) } }))
+        if (status !== -1) {
+          this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: this.props.jobs.find(pipe => pipe._id === _id) } }))
+        }
       } catch (e) {
         this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
       }

@@ -60,7 +60,7 @@ function* bookingFlow() {
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
       yield all([
         put(booking.passengerSetID('')),
-        put(booking.passengerSetValue({ driver_id: '', driver: {} }))
+        put(booking.passengerSetValue({ driver_id: '', driver: {}, driver_info: {} }))
       ])
       if (!destination.coords || !from.coords) continue
     } else if (status === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS) {
@@ -151,12 +151,13 @@ function* bookingFlow() {
       // DATA RECEIVE
       if ((destination && from) && !('coords' in destination) || !('coords' in from)) {
         // TODO: 恢复车型数据
-        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare`)  
+        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare,driver_info`)  
         yield put(booking.passengerSetValue({
           destination: bookingDetail.destination,
           fare: bookingDetail.fare,
           from: bookingDetail.from,
-          payment: bookingDetail.payment_method
+          payment: bookingDetail.payment_method,
+          driver_info: bookingDetail.driver_info
         }))
       }
     } 
