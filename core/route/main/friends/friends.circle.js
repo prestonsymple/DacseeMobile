@@ -1,13 +1,30 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, StatusBar,StyleSheet,TouchableWithoutFeedback
+  Text,
+  View,
+  TouchableOpacity,
+  DeviceEventEmitter,
+  ListView,
+  TextInput,
+  Image,
+  RefreshControl,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import { NavigationActions } from 'react-navigation'
+
+
+import NavigatorBarSwitcher from '../components/navigator.bar.switcher'
+
 
 import { application, booking, circle } from '../../../redux/actions'
-import { Icons, Screen, Define, Session,TextFont } from '../../../utils'
+import {Icons, Screen, Define, Session, TextFont, System} from '../../../utils'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 const { width, height } = Screen.window
@@ -21,30 +38,6 @@ export default connect(state => ({
   i18n: state.intl.messages || {}
 }))(class FriendsCircleComponent extends PureComponent {
 
-  static navigationOptions = ({ navigation }) => {
-    const reducer = global.store.getState()
-    return {
-      drawerLockMode: 'locked-closed',
-      headerRight: (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={{ top: -0.5, width: 54, paddingRight: 20, justifyContent: 'center', alignItems: 'flex-end' }}
-          onPress={() => DeviceEventEmitter.emit('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS')}
-        >
-          {Icons.Generator.Material('add', 28, 'white', { style: { left: 8 } })}
-        </TouchableOpacity>
-      ),
-      headerStyle: {
-        backgroundColor: '#1AB2FD',
-        shadowColor: 'transparent',
-        shadowOpacity: 0,
-        borderBottomWidth: 0,
-        borderBottomColor: 'transparent',
-        elevation: 0,
-      },
-      title: reducer.intl.messages.mycircle,
-    }
-  }
 
   constructor(props) {
     super(props)
@@ -64,12 +57,8 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
-    const {i18n} = this.props
-    const {mycircle} = i18n
-    const {setParams} = this.props.navigation
-    setParams({mycircle})
     await InteractionManager.runAfterInteractions()
-    this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd',{i18n}))
+    // this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd',{i18n}))
   }
 
   componentWillReceiveProps(props) {
@@ -84,10 +73,6 @@ export default connect(state => ({
       ])
       this.setState({ dataSource: _dataSource })
     }
-  }
-
-  componentWillUnmount() {
-    this.subscription && this.subscription.remove()
   }
 
   onPressCheck(data) {
@@ -135,10 +120,10 @@ export default connect(state => ({
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
+    console.log(this.props)
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <HeaderSearchBar />
-        <View style={{flex:1}}>
+      <View>
+        <View style={{flex:1, backgroundColor:'white'}}>
           <ListView
             refreshControl={
               <RefreshControl
@@ -198,7 +183,7 @@ export default connect(state => ({
                 (<ItemPerson
                   data={data}
                   onPressCheck={() => this.onPressCheck(data)}
-                  onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data })}
+                  onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsDetail', params: { i18n,...data } }))}
                 />)
             }
             renderSeparator={() => (
@@ -219,28 +204,6 @@ export default connect(state => ({
     )
   }
 })
-
-class HeaderSearchBar extends Component {
-  render() {
-    return (
-      <View style={{ height: 62, width, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
-          <FormattedMessage id={'search_name_phone_email'}>
-            {
-              msg => (
-                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
-                  Platform.select({
-                    android: { height: 42, width: width - 56 },
-                    ios: { height: 42, width: width - 56 }
-                  })} />
-              )
-            }
-          </FormattedMessage>
-        </View>
-      </View>
-    )
-  }
-}
 
 class ItemPerson extends Component {
   render() {

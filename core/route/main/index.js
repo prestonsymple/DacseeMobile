@@ -3,7 +3,9 @@ import DriverAndPassengerScreen from './main'
 import PassengerDriverDetailScreen from './passenger/passenger.driver.detail'
 import PassengerCompleteScreen from './passenger/passenger.complete'
 
-import FriendsCircleScreen from './friends/friends.circle'
+// import FriendsCircleScreen from './friends/friends.circle'
+import FriendsCircleScreen from './friends/friends.container';
+
 import FriendsCircleAddScreen from './friends/friends.circle.add'
 import FriendsRequestScreen from './friends/friends.request'
 import FriendsDetailScreen from './friends/friends.circle.detail'

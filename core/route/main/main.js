@@ -107,6 +107,7 @@ export default connect(state => ({
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
+    this.props.dispatch(application.setCoreMode('passenger'))
     this.subscription = DeviceEventEmitter.addListener('APPLICATION.LISTEN.EVENT.DRAWER.OPEN', () => this.props.navigation.navigate('DrawerOpen'))
   }
 
@@ -122,7 +123,8 @@ export default connect(state => ({
   }
 
   render() {
-    const { gps_access, i18n } = this.props
+    const { gps_access, i18n } = this.props;
+    const titles = ['driver','passenger'];
     return !gps_access ? (
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
@@ -137,7 +139,7 @@ export default connect(state => ({
     ) : (
       <View style={{ flex: 1, alignItems: 'center' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
-        <NavigatorBarSwitcher />
+        <NavigatorBarSwitcher titles={titles} index={1}/>
         <BookingContainerSwitcher />
       </View>
     )

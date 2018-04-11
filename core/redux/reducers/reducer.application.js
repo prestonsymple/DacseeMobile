@@ -28,7 +28,7 @@ const initialState = {
 
   hud_modal_visible: false,
 
-  core_mode: 'passenger', // 首页TAB
+  core_mode: '', // 首页TAB
   map_mode: '', // 地图模块
   gps_access: true, // gps权限
 
