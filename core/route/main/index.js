@@ -10,13 +10,14 @@ import FriendsCircleAddScreen from './friends/friends.circle.add'
 import FriendsRequestScreen from './friends/friends.request'
 import FriendsDetailScreen from './friends/friends.circle.detail'
 import FriendsSearchScreen from './friends/friends.search.base'
+import FriendsGroupDetailScreen from './friends/friends.group.detail'
 import CommonScanQRCodeScreen from './friends/common.scan.qrcode'
 
 import BOOKING_STATUS from './status.define'
 
 export {
   DriverAndPassengerScreen,
-  
+
   PassengerDriverDetailScreen,
   PassengerCompleteScreen,
 
@@ -25,7 +26,7 @@ export {
   FriendsDetailScreen,
   FriendsRequestScreen,
   FriendsSearchScreen,
-  
+  FriendsGroupDetailScreen,
   CommonScanQRCodeScreen,
 
   BOOKING_STATUS
