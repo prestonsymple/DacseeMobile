@@ -20,7 +20,7 @@ const { width, height } = Screen.window
 // import NavigatorBarSwitcher from '../components/navigator.bar.switcher'
 import NavigatorBarSwitcher from '../components/navigator.switcher'
 import {FormattedMessage} from "react-intl"
-
+import FriendsGroupList from './friends.group.list'
 import FriendsCircleComponent from './friends.circle';
 import {application} from "../../../redux/actions";
 
@@ -158,9 +158,7 @@ const FriendsContainerSwitcher = connect(state => ({ core_mode: state.applicatio
     return (
       <ScrollView {...VIEW_SETTER} onScroll={this.onScroll} scrollEventThrottle={0}>
         <FriendsCircleComponent/>
-        <View style={{height, width, alignItems: 'center', justifyContent:'center', backgroundColor:'orange'}}>
-          <Text>1231323</Text>
-        </View>
+        <FriendsGroupList />
       </ScrollView>
     )
   }
