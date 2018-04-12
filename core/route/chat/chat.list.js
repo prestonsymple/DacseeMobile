@@ -151,7 +151,7 @@ class ChatWindow extends PureComponent{
     const {messageContent,bounceValue,keyboardHeight} = this.state
     const WrapView = Platform.OS==='android' ? (View) : (KeyboardAvoidingView)
     const setter = Platform.select({
-      ios: { behavior: 'position', keyboardVerticalOffset: -64 },
+      ios: { behavior: 'position', keyboardVerticalOffset:  Define.system.ios.x?-88:-64 },
       android: { /* props */ }
     })
     return(
