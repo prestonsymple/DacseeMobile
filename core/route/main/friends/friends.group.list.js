@@ -115,8 +115,7 @@ export default connect(state => ({
     this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
     this.props.navigation.goBack()
   }
-  selectAllGroup(){
-    console.log(this.props.friend)
+  selectAllGroup = () => {
     const _selected = this.props.friend
     const {selectAll}=this.state
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
@@ -157,7 +156,7 @@ export default connect(state => ({
                       <Text style={{ fontSize: TextFont.TextSize(14), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
                     </View>
                     {section !== '0' ?
-                      <TouchableOpacity onPress={() => this.selectAllGroup()} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectAll?'#7ed321':'#e7e7e7'}]}>
+                      <TouchableOpacity onPress={this.selectAllGroup} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectAll?'#7ed321':'#e7e7e7'}]}>
                         { selectAll ?Icons.Generator.Material('check', 18, 'white'):null }
                       </TouchableOpacity>
                       :null

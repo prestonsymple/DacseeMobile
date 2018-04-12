@@ -119,7 +119,7 @@ export default connect(state => ({
     }
   }
 
-  renderSectionPress = (data, section) => {
+  selectAllFriends = (data, section) => {
     // alert('123')
     // console.log(data, section)
     // console.log(this.state.selected)
@@ -148,7 +148,7 @@ export default connect(state => ({
             <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
           </View>
           {section !== '0' ?
-            <TouchableOpacity onPress={()=>this.renderSectionPress(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
+            <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
               { selectedAll ?Icons.Generator.Material('check', 18, 'white'):null }
             </TouchableOpacity>
             :
