@@ -18,7 +18,8 @@ import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { NavigationActions } from 'react-navigation'
-
+import FriendCell from './components/friend.cell'
+import FriendRequest from './components/friend.request'
 
 import NavigatorBarSwitcher from '../components/navigator.bar.switcher'
 
@@ -80,7 +81,6 @@ export default connect(state => ({
     const { selected } = this.state
 
     let clone = _.cloneDeep(selected)
-    console.log(clone);
     if (clone.find(pipe => pipe._id === data._id)) {
       clone = clone.filter(pipe => pipe._id !== data._id)
     } else {
@@ -139,7 +139,7 @@ export default connect(state => ({
   _renderSectionHeader = (data, section) => {
     const { i18n } = this.props
     const { _id, friend_id, friend_info, checked } = data
-    const { selectedAll } = this.state;
+    const { selectedAll } = this.state
 
     return (data.length > 0) && (
       <View>
@@ -197,7 +197,7 @@ export default connect(state => ({
             )}
             renderRow={(data, section, rowId) =>
               section === '0' ?
-                (<RequestorPerson
+                (<FriendRequest
                   onPressAccept={async (requestor_id) => {
                     try {
                       const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
@@ -217,7 +217,7 @@ export default connect(state => ({
                     }
                   }}
                   data={data} />) :
-                (<ItemPerson
+                (<FriendCell
                   data={data}
                   onPressCheck={() => this.onPressCheck(data)}
                   onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsDetail', params: { i18n,...data } }))}
