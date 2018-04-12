@@ -151,13 +151,19 @@ export default connect(state => ({
             dataSource={dataSource}
             renderSectionHeader={(data, section) => {
               return (data.length > 0) && (
-                <View style={{alignItems:'center',flexDirection:'row',paddingVertical:10, justifyContent:'space-between'}}>
-                  <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
-                    <Text style={{ fontSize: TextFont.TextSize(14), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+                <View style={{}}>
+                  <View style={{alignItems:'center',flexDirection:'row',paddingVertical:10, justifyContent:'space-between'}}>
+                    <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
+                      <Text style={{ fontSize: TextFont.TextSize(14), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+                    </View>
+                    {section !== '0' ?
+                      <TouchableOpacity onPress={() => this.selectAllGroup()} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectAll?'#7ed321':'#e7e7e7'}]}>
+                        { selectAll ?Icons.Generator.Material('check', 18, 'white'):null }
+                      </TouchableOpacity>
+                      :null
+                    }
+
                   </View>
-                  <TouchableOpacity onPress={() => this.selectAllGroup()} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectAll?'#7ed321':'#e7e7e7'}]}>
-                    { selectAll ?Icons.Generator.Material('check', 18, 'white'):null }
-                  </TouchableOpacity>
                 </View>
               )
             }}

@@ -11,7 +11,7 @@ import { Icons, Screen, Session,TextFont } from '../../../utils'
 
 const { width, height } = Screen.window
 
-export default connect(state => ({ account: state.account }))(class FriendsCircleComponent extends Component {
+export default connect(state => ({ account: state.account }))(class FriendsCircleRequest extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const {i18n} = navigation.state.params

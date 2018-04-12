@@ -52,7 +52,8 @@ export default connect(state => ({
 
     this.state = {
       dataSource: _dataSource,
-      selected: selected_friends
+      selected: selected_friends,
+      selectedAll : false,
     }
   }
 
@@ -79,6 +80,7 @@ export default connect(state => ({
     const { selected } = this.state
 
     let clone = _.cloneDeep(selected)
+    console.log(clone);
     if (clone.find(pipe => pipe._id === data._id)) {
       clone = clone.filter(pipe => pipe._id !== data._id)
     } else {
@@ -117,25 +119,42 @@ export default connect(state => ({
     }
   }
 
-  renderSectionPress = () => {
-    alert('123')
+  renderSectionPress = (data, section) => {
+    // alert('123')
+    // console.log(data, section)
+    // console.log(this.state.selected)
+    const _selected = this.props.friend
+    const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
+      checked: true
+    }))
+    const _dataSource = dataContrast.cloneWithRowsAndSections([
+      this.props.requestor,
+      _friend
+    ])
+    this.setState({ dataSource: _dataSource, selected: _selected, selectedAll: !this.state.selectedAll })
+
   }
 
 
   _renderSectionHeader = (data, section) => {
     const { i18n } = this.props
     const { _id, friend_id, friend_info, checked } = data
+    const { selectedAll } = this.state;
+
     return (data.length > 0) && (
       <View>
         <View style={{ height: 34,flexDirection:'row', justifyContent: 'space-between', backgroundColor: 'white' }}>
-          <View style={{marginTop: 16, backgroundColor:'green'}}>
+          <View style={{marginTop: 16}}>
             <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
           </View>
-          <View style={{backgroundColor:'blue'}}>
-            <TouchableOpacity onPress={this.renderSectionPress} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
-              { checked ?Icons.Generator.Material('check', 18, 'white'):null }
+          {section !== '0' ?
+            <TouchableOpacity onPress={()=>this.renderSectionPress(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
+              { selectedAll ?Icons.Generator.Material('check', 18, 'white'):null }
             </TouchableOpacity>
-          </View>
+            :
+            null
+          }
+
         </View>
       </View>
     )
@@ -285,7 +304,8 @@ const styles=StyleSheet.create({
     height: 30,
     borderRadius: 18,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop:2
   },
   bottomButton:{
     justifyContent: 'center',
