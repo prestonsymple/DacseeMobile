@@ -46,6 +46,7 @@ export default connect(state => ({
     const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
       checked: typeof(selected_friends) === 'string' ? false : selected_friends.find(sub => sub._id === pipe._id) !== undefined
     }))
+
     const _dataSource = dataContrast.cloneWithRowsAndSections([
       props.requestor,
       _friend
@@ -78,15 +79,19 @@ export default connect(state => ({
   }
 
   onPressCheck(data) {
-    const { selected } = this.state
-
+    const { selected ,selectedAll} = this.state
     let clone = _.cloneDeep(selected)
-    if (clone.find(pipe => pipe._id === data._id)) {
-      clone = clone.filter(pipe => pipe._id !== data._id)
-    } else {
+    let nextSelect = !clone.find(pipe => pipe._id === data._id)
+    let nextSelectAll = selectedAll
+    if (nextSelect) {
       clone.push(data)
+      //全部选中则全选按钮高亮
+      nextSelectAll = (clone.length === this.props.friend.length) && (!nextSelectAll) ? true : false
+    } else {
+      clone = clone.filter(pipe => pipe._id !== data._id)
+      //全选按钮 变灰
+      nextSelectAll=nextSelectAll?false:nextSelectAll
     }
-
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
       checked: clone.find(sub => sub._id === pipe._id) !== undefined
     }))
@@ -95,7 +100,7 @@ export default connect(state => ({
       this.props.requestor,
       _friend
     ])
-    this.setState({ dataSource: _dataSource, selected: clone })
+    this.setState({ dataSource: _dataSource, selected: clone, selectedAll:nextSelectAll })
   }
 
   onPressCheckAll() {
@@ -111,31 +116,34 @@ export default connect(state => ({
   }
   _handleClick=()=>{
     const {  selected } = this.state
-    if(selected.length === 0){
-      this.onPressCheckAll()
-    }else {
-      this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
-      this.props.navigation.goBack()
-    }
+
+    this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
+
+    this.props.dispatch(NavigationActions.back())
   }
 
-  selectAllFriends = (data, section) => {
-    // alert('123')
-    // console.log(data, section)
-    // console.log(this.state.selected)
+  selectAllFriends = () => {
     const _selected = this.props.friend
+    const {selectedAll}=this.state
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
-      checked: true
+      checked: !selectedAll
     }))
     const _dataSource = dataContrast.cloneWithRowsAndSections([
       this.props.requestor,
       _friend
     ])
-    this.setState({ dataSource: _dataSource, selected: _selected, selectedAll: !this.state.selectedAll })
-
+    this.setState({ dataSource: _dataSource, selected:( !selectedAll ? _selected : []) ,selectedAll: !selectedAll})
   }
 
-
+  _refreshControl = (loading, i18n) => (
+    <RefreshControl
+      refreshing={loading}
+      onRefresh={() => this.props.dispatch(circle.asyncFetchFriends({ init: true }))}
+      title={i18n.pull_refresh}
+      colors={['#ffffff']}
+      progressBackgroundColor={'#1c99fb'}
+    />
+  )
   _renderSectionHeader = (data, section) => {
     const { i18n } = this.props
     const { _id, friend_id, friend_info, checked } = data
@@ -148,7 +156,7 @@ export default connect(state => ({
             <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
           </View>
           {section !== '0' ?
-            <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
+            <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectedAll?'#7ed321':'#e7e7e7'}]}>
               { selectedAll ?Icons.Generator.Material('check', 18, 'white'):null }
             </TouchableOpacity>
             :
@@ -160,6 +168,56 @@ export default connect(state => ({
     )
   }
 
+  _renderFooter = () => {
+    const { dataSource, selected } = this.state
+    return(
+      dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0 ?
+        <TouchableWithoutFeedback>
+          <View style={{ marginTop: 108,alignItems:'center',}}>
+            <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
+            <Text style={{ color: '#666', fontSize: TextFont.TextSize(22), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
+              <FormattedMessage id={'no_friend'}/>
+            </Text>
+            <Text style={{ color: '#999', fontSize: TextFont.TextSize(15), fontWeight: '400', textAlign: 'center' }}>
+              <FormattedMessage id={'clickto_add_friend'}/>
+            </Text>
+          </View>
+        </TouchableWithoutFeedback> : null
+    )
+  }
+
+  _renderRow = (data, section, rowId) => {
+    const { loading, i18n } = this.props
+    return(
+      section === '0' ?
+        (<FriendRequest
+          onPressAccept={async (requestor_id) => {
+            try {
+              const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
+            } catch (e) {
+              this.props.dispatch(application.showMessage(i18n.error_try_again))
+            } finally {
+              this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+            }
+          }}
+          onPressReject={async (requestor_id) => {
+            try {
+              const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
+            } catch (e) {
+              this.props.dispatch(application.showMessage(i18n.error_try_again))
+            } finally {
+              this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+            }
+          }}
+          data={data} />) :
+        (<FriendCell
+          data={data}
+          onPressCheck={() => this.onPressCheck(data)}
+          onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsDetail', params: { i18n,...data } }))}
+        />)
+    )
+  }
+
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
@@ -168,64 +226,14 @@ export default connect(state => ({
       <View>
         <View style={{flex:1, backgroundColor:'white'}}>
           <ListView
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={() => this.props.dispatch(circle.asyncFetchFriends({ init: true }))}
-                title={i18n.pull_refresh}
-                colors={['#ffffff']}
-                progressBackgroundColor={'#1c99fb'}
-              />
-            }
-            contentContainerStyle={{
-              paddingHorizontal: 25
-            }}
+            refreshControl={this._refreshControl(loading, i18n)}
+            contentContainerStyle={{ paddingHorizontal: 25 }}
             enableEmptySections={true}
             dataSource={dataSource}
             renderSectionHeader={this._renderSectionHeader}
-            renderFooter={()=>((dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0)?
-              <TouchableWithoutFeedback>
-                <View style={{ marginTop: 108,alignItems:'center',}}>
-                  <Image style={{ marginBottom: 18 }} source={require('../../../resources/images/friend-empty-state.png')} />
-                  <Text style={{ color: '#666', fontSize: TextFont.TextSize(22), fontWeight: '600', textAlign: 'center', marginBottom: 6 }}>
-                    <FormattedMessage id={'no_friend'}/>
-                  </Text>
-                  <Text style={{ color: '#999', fontSize: TextFont.TextSize(15), fontWeight: '400', textAlign: 'center' }}>
-                    <FormattedMessage id={'clickto_add_friend'}/>
-                  </Text>
-                </View></TouchableWithoutFeedback>:null
-            )}
-            renderRow={(data, section, rowId) =>
-              section === '0' ?
-                (<FriendRequest
-                  onPressAccept={async (requestor_id) => {
-                    try {
-                      const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
-                    } catch (e) {
-                      this.props.dispatch(application.showMessage(i18n.error_try_again))
-                    } finally {
-                      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-                    }
-                  }}
-                  onPressReject={async (requestor_id) => {
-                    try {
-                      const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
-                    } catch (e) {
-                      this.props.dispatch(application.showMessage(i18n.error_try_again))
-                    } finally {
-                      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-                    }
-                  }}
-                  data={data} />) :
-                (<FriendCell
-                  data={data}
-                  onPressCheck={() => this.onPressCheck(data)}
-                  onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsDetail', params: { i18n,...data } }))}
-                />)
-            }
-            renderSeparator={() => (
-              <View style={{ height: .8, backgroundColor: '#e8e8e8' }} />
-            )}
+            renderFooter={this._renderFooter}
+            renderRow={this._renderRow}
+            renderSeparator={() => (<View style={{ height: .8, backgroundColor: '#e8e8e8' }} />)}
           />
         </View>
         {(dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0)?
