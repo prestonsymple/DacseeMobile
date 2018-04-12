@@ -20,7 +20,6 @@ export default  class ItemPerson extends Component {
           <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400' }}>{fullName}</Text>
           <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
           <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>100成员</Text>
         </View>

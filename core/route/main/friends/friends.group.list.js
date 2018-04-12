@@ -204,7 +204,7 @@ export default connect(state => ({
                 (<GroupCell
                   data={data}
                   onPressCheck={() => this.onPressCheck(data)}
-                  onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsDetail', params: { i18n,...data } }))}
+                  onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsGroupDetail', params: { i18n,...data } }))}
                 />)
             }
             renderSeparator={() => (
