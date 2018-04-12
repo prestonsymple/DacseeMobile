@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Component } from 'react'
 import {
   Text, View, Image, TouchableOpacity, FlatList, Keyboard, TextInput, StyleSheet, Platform,ScrollView,KeyboardAvoidingView,
   TouchableWithoutFeedback,Animated
@@ -14,14 +14,12 @@ const toName = 'jacky'
 const to_id = '5a79423ab2ccf66e117f1b7f' //此处从导航中获取
 const avatar = 'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg'  //此处从导航中获取
 
-class ChatWindow extends PureComponent{
-  static navigationOptions = ({ navigation }) => {
-
-    return {
-      drawerLockMode: 'locked-closed',
-      title: toName,
-    }
+class ChatWindow extends Component {
+  static navigationOptions = {
+    drawerLockMode: 'locked-closed',
+    title: toName
   }
+
   constructor(props){
     super(props)
     this.state = {
@@ -84,7 +82,7 @@ class ChatWindow extends PureComponent{
   }
 
 
-  componentDidMount=()=> {
+  componentDidMount() {
     this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', (e) => {
       this.setState({keyboardHeight:e.endCoordinates.height,keyboardShow:true})
     })
@@ -97,14 +95,14 @@ class ChatWindow extends PureComponent{
     })
   }
 
-  componentWillUnmount=()=>{
+  componentWillUnmount() {
     this.keyboardWillShowListener.remove()
     this.keyboardWillHideListener.remove()
 
   }
 
 
-  _sendMessage=()=>{
+  _sendMessage() {
     const {messageContent,data} = this.state
     const {user} = this.props
     let newId = data[data.length-1]._id+1
@@ -122,67 +120,30 @@ class ChatWindow extends PureComponent{
     setTimeout(()=>this.chatList.scrollToEnd(),200)
   }
 
-  _changeHeight=()=> {
-    const {keyboardShow, keyboardHeight} = this.state
-    let showCompare = Define.system.ios.x ? height - 88 - 49 : height - 64 - 49
-    let compare = Define.system.ios.x ? height - 88 - 89 : height - 64 - 49
-    if (Platform.OS === 'ios') {
-      if (keyboardShow) {
-        return {height: showCompare - keyboardHeight}
-      } else {
-        return {height: compare}
-      }
-    }else{
-      return{flex:1}
-    }
-  }
+  // _changeHeight = () => {
+  //   const {keyboardShow, keyboardHeight} = this.state
+  //   let showCompare = Define.system.ios.x ? height - 88 - 49 : height - 64 - 49
+  //   let compare = Define.system.ios.x ? height - 88 - 89 : height - 64 - 49
+  //   if (Platform.OS === 'ios') {
+  //     if (keyboardShow) {
+  //       return {height: showCompare - keyboardHeight}
+  //     } else {
+  //       return {height: compare}
+  //     }
+  //   }else{
+  //     return{flex:1}
+  //   }
+  // }
 
-  _contentBarHeight=()=>{
-    const {keyboardShow,keyboardHeight} = this.state
-    if(keyboardShow){
-      return{height:49+keyboardHeight}
-    }else{
-      let newHeight = Define.system.ios.x?89:49
-      return{height:newHeight}
-    }
-  }
-
-  _chatBar=()=>{
-    const {messageContent,bounceValue,keyboardHeight} = this.state
-    const WrapView = Platform.OS==='android' ? (View) : (KeyboardAvoidingView)
-    const setter = Platform.select({
-      ios: { behavior: 'position', keyboardVerticalOffset:  Define.system.ios.x?-88:-64 },
-      android: { /* props */ }
-    })
-    return(
-      <WrapView {...setter}>
-        <View style={[styles.commentBar]} >
-          <View style={{flexDirection:'row',alignItems:'center',marginVertical:7}}>
-            <View style={{backgroundColor:'#fff',borderRadius:4,borderColor:'#ddd',borderWidth:0.6,marginHorizontal:8}}>
-              <TextInput
-                ref={e => this.chat = e}
-                blurOnSubmit={false}
-                returnKeyType="send"
-                value={messageContent}
-                onSubmitEditing={this._sendMessage}
-                underlineColorAndroid="transparent"
-                onChangeText={(messageContent) => this.setState({messageContent})}
-                style={[styles.commentBar__input]}
-                placeholder={'发送'}/>
-            </View>
-            <View style={{width:(width-36)*0.2,alignItems:'center',justifyContent:'space-around',flexDirection:'row'}}>
-              <TouchableOpacity>
-                { Icons.Generator.Awesome('smile-o', 32, '#bbb') }
-              </TouchableOpacity>
-              <TouchableOpacity>
-                { Icons.Generator.Ion('ios-add-circle', 32, '#bbb') }
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </WrapView>
-    )
-  }
+  // _contentBarHeight = () => {
+  //   const {keyboardShow,keyboardHeight} = this.state
+  //   if(keyboardShow){
+  //     return{height:49+keyboardHeight}
+  //   }else{
+  //     let newHeight = Define.system.ios.x?89:49
+  //     return { height:newHeight }
+  //   }
+  // }
 
   render(){
     const {data,listHeight} = this.state
@@ -210,17 +171,61 @@ class ChatWindow extends PureComponent{
             />
           )}
         />
-        {this._chatBar()}
+        <ChatBar onSubmitEditing={this._sendMessage.bind(this)} messageContent={this.state.messageContent} />
       </View>
     )
   }
 }
 
+class ChatBar extends Component {
 
-class ChatItem extends PureComponent{
+  render() {
+    const { messageContent, onSubmitEditing = () => {}, bounceValue, keyboardHeight } = this.props
+    const WrapView = Platform.OS === 'android' ? (View) : (KeyboardAvoidingView)
+    const setter = Platform.select({
+      ios: { behavior: 'position', keyboardVerticalOffset: Define.system.ios.x ? 72 : 64 },
+      android: { /* props */ }
+    })
 
-  state={
-    footerY:''
+    return(
+      <WrapView {...setter}>
+        <View style={[styles.commentBar, { height: 64 }]} >
+          <View style={{flexDirection:'row',alignItems:'center',marginVertical:7}}>
+            <View style={{backgroundColor:'#fff',borderRadius:4,borderColor:'#ddd',borderWidth:0.6,marginHorizontal:8}}>
+              <TextInput
+                ref={e => this.chat = e}
+                blurOnSubmit={false}
+                returnKeyType='send'
+                value={ messageContent }
+                onSubmitEditing={onSubmitEditing}
+                underlineColorAndroid='transparent'
+                onChangeText={(messageContent) => this.setState({ messageContent })}
+                style={[ styles.commentBar__input ]}
+                placeholder={'发送'}/>
+            </View>
+            <View style={{ width: (width - 36) * 0.2, alignItems:'center', justifyContent:'space-around', flexDirection:'row' }}>
+              <TouchableOpacity>
+                { Icons.Generator.Awesome('smile-o', 32, '#bbb') }
+              </TouchableOpacity>
+              <TouchableOpacity>
+                { Icons.Generator.Ion('ios-add-circle', 32, '#bbb') }
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </WrapView>
+    )
+  }
+}
+
+
+class ChatItem extends PureComponent {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      footerY: ''
+    }
   }
 
   _renderContent=()=>{
@@ -264,7 +269,6 @@ const styles= StyleSheet.create({
     bottom:0,
     left:0,
     right:0,
-    height: Define.system.ios.x?69:49,
     backgroundColor:'#F8F8F8',
     borderTopWidth: 0.8,
     borderColor: '#DDD',

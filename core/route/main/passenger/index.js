@@ -260,11 +260,11 @@ export default connect(state => ({
         const street_number = address_components.find(pipe => pipe.types.find(sub => sub === 'street_number')) || { long_name: '' }
         const political = address_components.find(pipe => pipe.types.find(sub => sub === 'political')) || { long_name: '' }
         const route = address_components.find(pipe => pipe.types.find(sub => sub === 'route')) || { long_name: '' }
-        const short_name = `${street_number.long_name} ${route.long_name} ${political.long_name}`.trim()
+        const combine_name = `${street_number.long_name} ${route.long_name} ${political.long_name}`.trim()
 
         console.log(results)
 
-        if (short_name.length === 0) {
+        if (combine_name.length === 0) {
           throw new Error('UNKNOW_GEO')
         }
         place = {
@@ -273,7 +273,7 @@ export default connect(state => ({
             lng: geometry.location.lng,
             lat: geometry.location.lat
           },
-          name: short_name,
+          name: combine_name,
           address: formatted_address
         }
       } else {

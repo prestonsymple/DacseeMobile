@@ -1,12 +1,16 @@
 /* global navigator */
 import moment from 'moment'
+import Permissions from 'react-native-permissions'
 
 import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { application, account, booking } from '../actions'
 import { Session } from '../../utils'
 
-const oncePosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 3000 }))
+const oncePosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 2500 }))
+const permissionsCheck = (permission) => Permissions.check(permission)
+const permissionsReqeust = (permission) => Permissions.request(permission)
+
 
 function* initializationFlow(action) {
   const { status, foreground } = yield select(state => ({ 
@@ -34,9 +38,18 @@ function* initializationFlow(action) {
   } catch (e) {
     try {
       navigator.geolocation.requestAuthorization()
-    } catch (e) { /* DO NOTHING */ }
+      const permissionStatus = yield call(permissionsCheck, 'location')
+      if (permissionStatus !== 'authorized') {
+        yield call(permissionsReqeust, 'location')
+      }
+    } catch (e) { /* */ }
+
     if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
-    // TODO: 增加默认位置坐标
+    // 辅助定位模式 //TODO : 辅助定位
+    if (e.code === 3) yield all([
+      put(application.setValues({ map_mode: 'AMAP' })),
+      put(account.setAccountValue({ country: 'MY', language: 'cn' }))
+    ])
   }
 
   if (!status || !foreground) return;

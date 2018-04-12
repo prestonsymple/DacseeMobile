@@ -4,7 +4,6 @@ import React, { Component, PureComponent } from 'react'
 import { Text, View, Image, TouchableOpacity, DeviceEventEmitter, StatusBar, ScrollView, Linking } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
-import OpenAppSettings from 'react-native-app-settings'
 
 import NavigatorBarSwitcher from './components/navigator.bar.switcher'
 import DriverComponent from './driver'
