@@ -76,6 +76,8 @@ target 'dacsee' do
     pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings/ios'
     pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
 end
 
 post_install do |installer|

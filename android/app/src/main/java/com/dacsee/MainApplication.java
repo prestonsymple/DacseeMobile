@@ -21,7 +21,6 @@ import com.imagepicker.ImagePickerPackage;
 import com.rnfs.RNFSPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import org.reactnative.camera.RNCameraPackage;
-import com.krazylabs.OpenAppSettingsPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -53,7 +52,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new ArrayList<>();
       packages.add(new MainReactPackage());
-      packages.add(new OpenAppSettingsPackage());
       packages.add(new LottiePackage());
       packages.add(new RNCameraPackage());
       packages.add(new ImagePickerPackage());

@@ -4410,10 +4410,6 @@ react-native-animatable@^1.2.3:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-app-settings@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.0.tgz#d2dbcf88dbb40d7261599fc373b35bd0f9fd886e"
-
 react-native-calendars@^1.17.4:
   version "1.17.4"
   resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.17.4.tgz#5a3b53264d9ea7ca9292d827bc92eb8083bc5dcc"
@@ -4501,6 +4497,10 @@ react-native-modal@3.1.0:
   dependencies:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
+
+react-native-permissions@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
 
 react-native-picker@^4.3.5:
   version "4.3.5"
