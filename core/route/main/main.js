@@ -6,7 +6,9 @@ import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 import OpenAppSettings from 'react-native-app-settings'
 
-import NavigatorBarSwitcher from './components/navigator.bar.switcher'
+// import NavigatorBarSwitcher from './components/navigator.bar.switcher'
+import NavigatorBarSwitcher from './components/navigator.switcher'
+
 import DriverComponent from './driver'
 import PassengerComponent from './passenger'
 
@@ -105,6 +107,13 @@ export default connect(state => ({
     return maps
   }
 
+  constructor(props){
+    super(props)
+    this.state= {
+      switcherStatus: 1,
+    }
+  }
+
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     this.props.dispatch(application.setCoreMode('passenger'))
@@ -139,33 +148,39 @@ export default connect(state => ({
     ) : (
       <View style={{ flex: 1, alignItems: 'center' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
-        <NavigatorBarSwitcher titles={titles} index={1}/>
-        <BookingContainerSwitcher />
+        <NavigatorBarSwitcher titles={titles} index={1} onPress={(index)=>{ this.setState({switcherStatus:index})}} />
+        <BookingContainerSwitcher switcherStatus={this.state.switcherStatus}/>
       </View>
     )
   }
 })
 
-const BookingContainerSwitcher = connect(state => ({ core_mode: state.application.core_mode }))(class BookingContainerSwitcher extends PureComponent {
+class BookingContainerSwitcher extends PureComponent {
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false })
+
+    const { switcherStatus } = this.props
+    // alert(switcherStatus);
+
+    this.scrollView.scrollTo({ x: switcherStatus === 0 ? 0 : width, animated: false })
 
     // 修复Android初始化加载延迟问题, Tab页切换不对
     if (System.Platform.Android) {
       await new Promise((resolve) => setTimeout(() => resolve(), 200))
-      this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false })
+      this.scrollView.scrollTo({ x: switcherStatus === 0 ? 0 : width, animated: false })
     }
   }
 
   componentWillReceiveProps(props) {
-    if (props.core_mode !== this.props.core_mode) {
-      this.scrollView.scrollTo({ x: props.core_mode === 'driver' ? 0 : width, animated: false })
+    console.log(props);
+    if (props.switcherStatus !== this.props.switcherStatus) {
+      this.scrollView.scrollTo({ x: props.switcherStatus === 0 ? 0 : width, animated: false })
     }
   }
 
   render() {
+    // alert(switcherStatus);
     const VIEW_SETTER = {
       scrollEnabled: false,
       horizontal: true,
@@ -178,4 +193,4 @@ const BookingContainerSwitcher = connect(state => ({ core_mode: state.applicatio
       </ScrollView>
     )
   }
-})
+}

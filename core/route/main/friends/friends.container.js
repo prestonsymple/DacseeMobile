@@ -17,7 +17,8 @@ import { connect } from "react-redux"
 const { width, height } = Screen.window
 
 
-import NavigatorBarSwitcher from '../components/navigator.bar.switcher'
+// import NavigatorBarSwitcher from '../components/navigator.bar.switcher'
+import NavigatorBarSwitcher from '../components/navigator.switcher'
 import {FormattedMessage} from "react-intl"
 
 import FriendsCircleComponent from './friends.circle';
@@ -70,10 +71,7 @@ export default connect(state => ({
     this.subscription && this.subscription.remove()
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -84,12 +82,18 @@ export default connect(state => ({
 })
 
 class HeaderSearchBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      switcherStatus: 0
+    };
+  }
   render() {
     const titles = ['friends','group'];
     return (
       <View style={{ flex:1 }}>
         <View style={{height:112, backgroundColor: '#1ab2fd'}}>
-          <NavigatorBarSwitcher titles={titles} index={0}/>
+          <NavigatorBarSwitcher titles={titles} index={0} onPress={(index)=>{this.setState({switcherStatus:index})}}/>
           <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, marginTop:10, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
             <FormattedMessage id={'search_name_phone_email'}>
               {
@@ -104,7 +108,7 @@ class HeaderSearchBar extends Component {
             </FormattedMessage>
           </View>
         </View>
-        <FriendsContainerSwitcher />
+        <FriendsContainerSwitcher switcherStatus={this.state.switcherStatus}/>
       </View>
     )
   }
@@ -113,27 +117,30 @@ class HeaderSearchBar extends Component {
 
 const FriendsContainerSwitcher = connect(state => ({ core_mode: state.application.core_mode }))(class FriendsContainerSwitcher extends PureComponent {
   async componentDidMount() {
-    this.props.dispatch(application.setCoreMode('friends'))
 
     await InteractionManager.runAfterInteractions()
-    this.scrollView.scrollTo({ x: this.props.core_mode === 'friends' ? 0 : width, animated: false })
+    const { switcherStatus } = this.props;
+
+    this.scrollView.scrollTo({ x: switcherStatus === 0 ? 0 : width, animated: false })
 
     // 修复Android初始化加载延迟问题, Tab页切换不对
     if (System.Platform.Android) {
       await new Promise((resolve) => setTimeout(() => resolve(), 200))
-      this.scrollView.scrollTo({ x: this.props.core_mode === 'friends' ? 0 : width, animated: false })
+      this.scrollView.scrollTo({ x: switcherStatus === 0 ? 0 : width, animated: false })
     }
   }
 
-
   componentWillReceiveProps(props) {
-    if (props.core_mode !== this.props.core_mode) {
-      this.scrollView.scrollTo({ x: props.core_mode === 'friends' ? 0 : width, animated: false })
+    if (props.switcherStatus !== this.props.switcherStatus) {
+      this.scrollView.scrollTo({ x: props.switcherStatus === 0 ? 0 : width, animated: false })
     }
   }
 
   onScroll = (e) => {
-    if (e.nativeEvent.contentOffset.x !== 0 && e.nativeEvent.contentOffset.x > 0){
+
+    console.log(e.nativeEvent.contentOffset.x);
+
+    if (e.nativeEvent.contentOffset.x !== 0 && e.nativeEvent.contentOffset.x > 0 && e.nativeEvent.contentOffset.x > width/2 - 50){
       DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 1)
     }else{
       DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 0)

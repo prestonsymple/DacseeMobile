@@ -1,25 +1,23 @@
+/**
+ * Created by Rabbit on 2018/4/12.
+ */
+
 import React, { PureComponent } from 'react'
 import {View, Animated, TouchableOpacity, DeviceEventEmitter} from 'react-native'
 import { connect } from 'react-redux'
 
-import { Screen } from '../../../utils' 
+import { Screen } from '../../../utils'
 import { application } from '../../../redux/actions'
 
 const { width } = Screen.window
 
 const BUTTON_WIDTH = 88
 
-export default connect(state => ({ 
-  core_mode: state.application.core_mode,
-  status: state.booking.status,
-  hidden: (state.booking.status >= 1) || (state.driver.working),
-  i18n: state.intl.messages,
-}))(class NavigationBarSwipe extends PureComponent {
+export default class NavigationBarSwipe extends PureComponent {
 
   constructor(props) {
     super(props)
     const index = this.props.index
-    const mode = this.props.mode
     this.state = {
       // index: new Animated.Value(!props.core_mode === titles[0] ? 0 : 1)
       index: new Animated.Value(index),
@@ -27,9 +25,12 @@ export default connect(state => ({
   }
 
   componentDidMount() {
-    this.subscription = DeviceEventEmitter.addListener('FRIENDS.SWITCHER.EMITTER', (index) => {
-      Animated.timing(this.state.index, { duration: 200, toValue: index, useNativeDriver: true }).start()
-    })
+    if (this.props.index === 0){
+      this.subscription = DeviceEventEmitter.addListener('FRIENDS.SWITCHER.EMITTER', (index) => {
+        Animated.timing(this.state.index, { duration: 200, toValue: index, useNativeDriver: true }).start()
+      })
+    }
+
   }
 
   componentWillUnmount() {
@@ -37,11 +38,10 @@ export default connect(state => ({
   }
 
   onPress(index) {
-    const titles = this.props.titles;
-
-    this.props.dispatch(application.setCoreMode(index === 0 ? titles[index] : titles[index]))
 
     Animated.timing(this.state.index, { duration: 200, toValue: index, useNativeDriver: true }).start()
+
+    this.props.onPress(index)
   }
 
   render() {
@@ -63,18 +63,18 @@ export default connect(state => ({
                 { position: 'absolute', left: 0, height: 44, borderRadius: 22, width: BUTTON_WIDTH, backgroundColor: '#ffb639' }
               ]} />
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => this.onPress(0)}
-                activeOpacity={1} 
+                activeOpacity={1}
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
               >
                 <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>{ titles[0] }</Animated.Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => this.onPress(1)}
-                activeOpacity={1} 
+                activeOpacity={1}
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
-              >               
+              >
                 <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_1 }}>{ titles[1] }</Animated.Text>
               </TouchableOpacity>
             </View>
@@ -83,4 +83,4 @@ export default connect(state => ({
       </View>
     )
   }
-})
+}

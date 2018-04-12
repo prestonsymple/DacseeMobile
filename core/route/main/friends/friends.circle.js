@@ -117,6 +117,30 @@ export default connect(state => ({
     }
   }
 
+  renderSectionPress = () => {
+    alert('123')
+  }
+
+
+  _renderSectionHeader = (data, section) => {
+    const { i18n } = this.props
+    const { _id, friend_id, friend_info, checked } = data
+    return (data.length > 0) && (
+      <View>
+        <View style={{ height: 34,flexDirection:'row', justifyContent: 'space-between', backgroundColor: 'white' }}>
+          <View style={{marginTop: 16, backgroundColor:'green'}}>
+            <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+          </View>
+          <View style={{backgroundColor:'blue'}}>
+            <TouchableOpacity onPress={this.renderSectionPress} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:checked?'#7ed321':'#e7e7e7'}]}>
+              { checked ?Icons.Generator.Material('check', 18, 'white'):null }
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
@@ -139,13 +163,7 @@ export default connect(state => ({
             }}
             enableEmptySections={true}
             dataSource={dataSource}
-            renderSectionHeader={(data, section) => {
-              return (data.length > 0) && (
-                <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
-                  <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
-                </View>
-              )
-            }}
+            renderSectionHeader={this._renderSectionHeader}
             renderFooter={()=>((dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0)?
               <TouchableWithoutFeedback>
                 <View style={{ marginTop: 108,alignItems:'center',}}>
