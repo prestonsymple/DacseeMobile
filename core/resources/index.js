@@ -25,7 +25,12 @@ export default {
     map_car_pin: require('./images/rn_car.png'),
     distance:require ('./images/distance.png'),
     slice_adv_car:require('./images/Slice_Adv_Car.png'),
-    car_dafult:require('./images/car_dafult.png')
+    car_dafult:require('./images/car_dafult.png'),
+    
+    car_budget: require('./images/car_budget.png'),
+    car_premium: require('./images/car_premium.png'),
+    car_rookie: require('./images/car_rookie.png'),
+    car_taxi: require('./images/car_taxi.png')
   },
 
   animation: {

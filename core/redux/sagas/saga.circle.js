@@ -51,8 +51,9 @@ function* updateFriendsLocation() {
     const selected_friends = yield select(state => state.booking.selected_friends)
     if (selected_friends && Array.isArray(selected_friends) && selected_friends.length > 0) {
       const params = selected_friends.map(pipe => pipe.friend_id).join(',')
-      const friends_location = yield call(Session.Location.Get, `v1/friends?reqUser_id=${params}`)
-      console.log(friends_location)
+      let friends_location = yield call(Session.Location.Get, `v1/friends?reqUser_id=${params}`)
+      friends_location = friends_location.filter(pipe => (pipe.latitude && pipe.longitude))
+      yield put(circle.setValues({ friends_location }))
     }
     yield delay(5000)
   }

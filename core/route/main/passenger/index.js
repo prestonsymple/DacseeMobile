@@ -33,6 +33,7 @@ export default connect(state => ({
   booking_id: state.storage.booking_id,
   map_mode: state.application.map_mode,
   vehicleGroups: state.booking.vehicleGroups,
+  friends_location: state.circle.friends_location,
   location: state.account.location,
   i18n: state.intl.messages
 }))(class PassengerComponent extends Component {
@@ -281,8 +282,6 @@ export default connect(state => ({
         place = resp.data
       }
 
-      console.log(longitude, latitude)
-
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
     } catch (e) {
       console.log(e)
@@ -302,7 +301,7 @@ export default connect(state => ({
   }
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode, location, driver_info } = this.props
+    const { status, from, destination, map_mode, location, driver_info, friends_location } = this.props
     
     const MAP_SETTER = {
       /* A MAP */
@@ -395,6 +394,15 @@ export default connect(state => ({
                 <Image source={Resources.image.map_car_pin} />
               </GoogleMarker>
               <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
+              {
+                friends_location.length > 0 && (
+                  friends_location.map((pipe, index) => (
+                    <GoogleMarker key={index} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }}>
+                      <Image source={Resources.image.car_rookie} />
+                    </GoogleMarker>
+                  ))
+                )
+              }
             </GoogleMapView>
           )
         }
