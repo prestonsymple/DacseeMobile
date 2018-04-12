@@ -3,7 +3,7 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image
+  Image, StyleSheet
 } from 'react-native'
 import {Icons, Screen, Define, Session, TextFont, System} from '../../../../utils'
 
@@ -33,3 +33,14 @@ export default  class ItemPerson extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2
+  }
+})
