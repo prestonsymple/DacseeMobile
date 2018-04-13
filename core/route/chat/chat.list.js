@@ -198,7 +198,7 @@ class ChatWindow extends Component {
 class InputBar extends Component {
 
   render() {
-    const { messageContent, onSubmitEditing = () => {},textChange=()=>{}, onMethodChange=()=>{}, showVoice, xHeight} = this.props
+    const { messageContent, onSubmitEditing = () => {},textChange = () => {}, onMethodChange = () => {}, showVoice, xHeight} = this.props
 
     return(
       <View style={[styles.commentBar, { height:  Define.system.ios.x ? xHeight: 44 }]} >
@@ -254,7 +254,7 @@ class ChatItem extends Component {
     const msgContent = JSON.parse(content.content)
     switch (msgContent.type){
     case 'text':
-      return <Text selectable={true} style={{lineHeight:20}}>{msgContent.content}</Text>
+      return <Text selectable={true} style={{lineHeight:20}} >{msgContent.content}</Text>
     case 'image':
       return <Image
         source={[{uri:msgContent.content, width: 30, height: 30}]}
