@@ -6,7 +6,7 @@ import {
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
-
+import moment from 'moment'
 import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 import { Button } from '../../components'
 import Resources from '../../resources'
@@ -108,10 +108,12 @@ export default connect(state => ({
 })
 
 class DetailItem extends Component {
+
   render() {
     const { data } = this.props
-    const { type, amount, remarks, timestamp, yourRef } = data
-
+    const { type, amount, remarks, yourRef } = data
+    console.log(data.timestamp)
+    const timestamp = moment( new Date(data.timestamp).getTime()).format('YYYY-MM-DD HH:mm:ss')
     return (
       <View style={{ paddingHorizontal: 26, flex: 1, height: 104, backgroundColor: 'white', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
         {/* <View style={{  }}> */}
@@ -126,7 +128,7 @@ class DetailItem extends Component {
           <Text style={{ fontSize: TextFont.TextSize(14), color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ type }</Text>
           <View style={{ flexDirection: 'row' }}>
             {/* <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text> */}
-            <Text style={{ fontSize: TextFont.TextSize(13), color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ `${timestamp.substr(0, 10)} ${ timestamp.substr(11, 8) }` }</Text>
+            <Text style={{ fontSize: TextFont.TextSize(13), color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ timestamp }</Text>
           </View>
           <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(13) }}>{ yourRef }</Text>
         </View>
