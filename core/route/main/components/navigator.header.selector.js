@@ -22,22 +22,8 @@ const DEFAULT_MENU = [{
 
 export default connect(state => ({
   selected_type: state.booking.type,
-  locale: state.intl.locale,
   i18n: state.intl.messages
 }))(class HeaderSection extends Component {
-
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     menu: DEFAULT_MENU
-  //   }
-  // }
-
-  // componentWillReceiveProps(props) {
-  //   if (this.props.locale !== props.locale) {
-  //     this.setState({ menu: lodash.cloneDeep(DEFAULT_MENU) })
-  //   }
-  // }
 
   render() {
     const { selected_type, i18n } = this.props
