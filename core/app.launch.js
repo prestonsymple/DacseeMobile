@@ -27,7 +27,6 @@ const addListener = createReduxBoundAddListener('AuthLoading');
 class I18nLoadView extends PureComponent {
   constructor(props) {
     super(props)
-    console.log(props)
   }
 
   render() {
@@ -49,8 +48,7 @@ class I18nLoadView extends PureComponent {
 } 
 
 export default connect(state => ({ 
-  nav: state.nav,
-  i18n: state.intl
+  nav: state.nav
 }))(class AppLaunch extends PureComponent {
 
   componentDidMount() {

@@ -23,9 +23,15 @@ export default connect(state => ({
     }
   }
 
+  componentWillReceiveProps(props) {
+    if (props.core_mode !== this.props.core_mode) {
+      Animated.timing(this.state.index, { duration: 200, toValue: props.core_mode === 'driver' ? 0 : 1, useNativeDriver: true }).start()
+    }
+  }
+
+
   onPress(index) {
     this.props.dispatch(application.setCoreMode(index === 0 ? 'driver' : 'passenger'))
-    Animated.timing(this.state.index, { duration: 200, toValue: index, useNativeDriver: true }).start()
   }
 
   render() {
