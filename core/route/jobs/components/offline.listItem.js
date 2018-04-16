@@ -60,7 +60,7 @@ export default connect(state => ({
     const { itemData,itemIndex, itemDay, onPress = () => { }, working } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
     const optionObject = this._getStatus(status)
-    console.log(itemIndex,'itemIndex')
+    
     return (
       <TouchableOpacity activeOpacity={.7} onPress={onPress}>
         <View style={[styles.container,{marginTop:itemIndex==0?15:0}]}>

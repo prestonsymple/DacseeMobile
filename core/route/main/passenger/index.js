@@ -554,7 +554,6 @@ class MapPin extends PureComponent {
  */
 const BookingDetailView = (props) => {
   const { onPress = () => {}, driver, i18n, status } = props
-  console.log(driver)
 
   return (
     <View style={{ backgroundColor: 'transparent', height: 294 }}>

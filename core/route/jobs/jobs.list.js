@@ -54,7 +54,14 @@ export default connect(state => ({
     try {
       this.setState({ loading: true })
       const resp = await Session.Booking.Get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
-      this.setState({ detail: dataContrast.cloneWithRows(resp) })
+      // TODO: 检查过滤器
+      const jobs = resp.filter(pipe => (
+        pipe.status !== 'ON_THE_WAY' &&
+        pipe.status !== 'ARRIVED' &&
+        pipe.status !== 'ON_BOARD' &&
+        pipe.status !== 'Pending_Acceptance'
+      ))
+      this.setState({ detail: dataContrast.cloneWithRows(jobs) })
     } catch (e) {
       /*  */
     } finally {
