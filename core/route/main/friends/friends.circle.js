@@ -86,11 +86,11 @@ export default connect(state => ({
     if (nextSelect) {
       clone.push(data)
       //全部选中则全选按钮高亮
-      nextSelectAll = (clone.length === this.props.friend.length) && (!nextSelectAll) ? true : false
+      nextSelectAll = (clone.length === this.props.friend.length) && (!nextSelectAll) && true
     } else {
       clone = clone.filter(pipe => pipe._id !== data._id)
       //全选按钮 变灰
-      nextSelectAll=nextSelectAll?false:nextSelectAll
+      nextSelectAll = nextSelectAll ? false : nextSelectAll
     }
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
       checked: clone.find(sub => sub._id === pipe._id) !== undefined
@@ -100,7 +100,7 @@ export default connect(state => ({
       this.props.requestor,
       _friend
     ])
-    this.setState({ dataSource: _dataSource, selected: clone, selectedAll:nextSelectAll })
+    this.setState({ dataSource: _dataSource, selected: clone, selectedAll: nextSelectAll })
   }
 
   onPressCheckAll() {
@@ -156,7 +156,7 @@ export default connect(state => ({
             <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
           </View>
           {section !== '0' ?
-            <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectedAll?'#7ed321':'#e7e7e7'}]}>
+            <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectedAll?'#7ed321':'#e7e7e7', marginTop:13}]}>
               { selectedAll ?Icons.Generator.Material('check', 18, 'white'):null }
             </TouchableOpacity>
             :
@@ -221,7 +221,6 @@ export default connect(state => ({
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
-    console.log(this.props)
     return (
       <View>
 
@@ -242,7 +241,7 @@ export default connect(state => ({
           null: <View style={styles.bottomButton}>
             <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
               <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
-                <FormattedMessage id={selected.length === 0?'select_all':'confirm'}/>
+                <FormattedMessage id={'confirm'}/>
               </Text>
             </TouchableOpacity>
           </View>
@@ -288,21 +287,19 @@ class HeaderSearchBar extends Component {
   }
   render() {
     return (
-      <View style={{ backgroundColor: 'blue' }}>
-        <View style={{height:60, backgroundColor: '#1ab2fd'}}>
-          <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, marginTop:10, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
-            <FormattedMessage id={'search_name_phone_email'}>
-              {
-                msg => (
-                  <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
-                    Platform.select({
-                      android: { height: 42, width: width - 56 },
-                      ios: { height: 42, width: width - 56 }
-                    })} />
-                )
-              }
-            </FormattedMessage>
-          </View>
+      <View style={{paddingVertical: 10, backgroundColor: '#1ab2fd'}}>
+        <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, backgroundColor: '#0d618a', borderRadius: 21, alignItems: 'center' }}>
+          <FormattedMessage id={'search_name_phone_email'}>
+            {
+              msg => (
+                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
+                  Platform.select({
+                    android: { height: 72, width: width - 56 },
+                    ios: { height: 36, width: width - 56 }
+                  })} />
+              )
+            }
+          </FormattedMessage>
         </View>
       </View>
     )
@@ -340,8 +337,8 @@ class RequestorPerson extends Component {
 
 const styles=StyleSheet.create({
   circle:{
-    width: 30,
-    height: 30,
+    width: 23,
+    height: 23,
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',

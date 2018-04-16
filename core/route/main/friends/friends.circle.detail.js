@@ -87,6 +87,7 @@ export default connect(state => ({
     }
   }
 
+  /* @TODO  删除好友的多语言 */
   render() {
     const { i18n } = this.props
     const { dataSource } = this.state
@@ -94,7 +95,7 @@ export default connect(state => ({
     const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <ScrollView contentContainerStyle={{}} style={{ backgroundColor: 'white' }}>
           <View style={{ height: 161, backgroundColor: '#1ab2fd', justifyContent: 'center' }}>
             <View style={{ alignItems: 'center' }}>
@@ -124,6 +125,13 @@ export default connect(state => ({
             </View>
           </View>
         </ScrollView>
+        <View style={{height:80, width: width - 92, marginHorizontal: 46,}}>
+          <TouchableOpacity style={{alignItems:'center',  justifyContent:'center', borderRadius:50, backgroundColor: '#ff2239', borderStyle: 'solid', borderColor: '#ffffff', 	shadowColor: 'rgba(0, 0, 0, 0.15)',
+            borderWidth: 5, shadowOffset: { width: 0, height: 1 },shadowRadius: 3, shadowOpacity: 1 ,height: 66}} onPress={()=>this._pressActionSheet(1)}
+          >
+            <Text style={{color:'white', fontSize: 19}}>REMOVE FROM MY CIRCLE</Text>
+          </TouchableOpacity>
+        </View>
         <ActionSheet
           ref={e => this.ActionSheet = e}
           title={i18n.more}
