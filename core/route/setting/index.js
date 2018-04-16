@@ -10,7 +10,7 @@ import SettingHelpCenterScreen from './setting.help.center'
 import SettingWetViewScreen from './setting.web.view'
 
 import ProfileChangeAvatarScreen from './profile.change.avatars'
-
+import BankDetailScreen from './bank.details'
 import {Icons, Session} from '../../utils'
 
 import {
@@ -139,6 +139,13 @@ const SettingAccountScreen = connect(state => ({
               value: user.email,
               onChangeValue:  (val) => this._changeEmail(val)
             }
+          })
+        },{
+          title: i18n.bank_detail,
+          type: 'text',
+          onPress: () => navigation.navigate('BankDetail', {
+            title: i18n.bank_detail,
+            editorName: 'String',
           })
         }], [{
           title: i18n.bind_wechat, type: 'text', value: '', onPress: () => { this.props }
@@ -298,5 +305,6 @@ export {
   SettingHelpCenterScreen,
   SettingWetViewScreen,
   ProfileChangeAvatarScreen,
-  SettingPrivateScreen
+  SettingPrivateScreen,
+  BankDetailScreen
 }
