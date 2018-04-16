@@ -37,7 +37,7 @@ function* initializationFlow(action) {
     // 配置当前所在国家和语言
     const { code, language } = yield call(Session.Lookup.Get, 'v1/lookup/country')
     // TODO: GET DEFAULT LANGUAGE SET
-    const map_mode = code === 'CN' ? 'GOOGLEMAP' : 'GOOGLEMAP'
+    const map_mode = code === 'CN' ? 'AMAP' : 'GOOGLEMAP'
     if (save_language) {
       yield all([
         put(application.setValues({ map_mode })),
