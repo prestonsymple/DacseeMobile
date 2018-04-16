@@ -157,6 +157,17 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':rn-splash-screen')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-push-notification')
+    compile project(':react-native-picker')
+    compile project(':react-native-maps')
+    compile project(':react-native-image-picker')
+    compile project(':react-native-fs')
+    compile project(':react-native-device-info')
+    compile project(':react-native-camera')
+    compile project(':react-native-app-settings')
+    compile project(':lottie-react-native')
     compile project(':react-native-code-push')
     compile project(':rn-splash-screen')
     compile project(':react-native-vector-icons')

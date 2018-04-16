@@ -8,6 +8,17 @@ import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.facebook.react.ReactApplication;
+import com.mehcode.reactnative.splashscreen.SplashScreenPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import com.beefe.picker.PickerViewPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.rnfs.RNFSPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import org.reactnative.camera.RNCameraPackage;
+import com.krazylabs.OpenAppSettingsPackage;
+import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -52,7 +63,18 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new ArrayList<>();
-      packages.add(new MainReactPackage());
+      packages.add(new MainReactPackage(),
+            new SplashScreenPackage(),
+            new VectorIconsPackage(),
+            new ReactNativePushNotificationPackage(),
+            new PickerViewPackage(),
+            new MapsPackage(),
+            new ImagePickerPackage(),
+            new RNFSPackage(),
+            new RNDeviceInfo(),
+            new RNCameraPackage(),
+            new OpenAppSettingsPackage(),
+            new LottiePackage());
       packages.add(new OpenAppSettingsPackage());
       packages.add(new LottiePackage());
       packages.add(new RNCameraPackage());
