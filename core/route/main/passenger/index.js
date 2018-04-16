@@ -436,7 +436,7 @@ export default connect(state => ({
         )}
 
         {status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY && (
-          <BookingDetailView onPress={async () => {
+          <BookingDetailView status={status} onPress={async () => {
             try {
               await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
               this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
@@ -553,14 +553,19 @@ class MapPin extends PureComponent {
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { onPress = () => {}, driver, i18n } = props
+  const { onPress = () => {}, driver, i18n, status } = props
+  console.log(driver)
 
   return (
     <View style={{ backgroundColor: 'transparent', height: 294 }}>
       <BookingDetailHeaderView driver={driver} />
       <DrvierCarDetail car_info={''}/>
       <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
-        <TouchableOpacity onPress={onPress} style={{ backgroundColor: 'red', borderRadius: 6, marginTop: 8, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center', }}>
+        <TouchableOpacity 
+          activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7} 
+          onPress={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? () => {} : onPress} 
+          style={{ backgroundColor: status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 'red' : '#999', borderRadius: 6, marginTop: 8, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center' }}
+        >
           <Text style={{ color: '#fff', fontSize: TextFont.TextSize(16) }}>{i18n.cancel_trip}</Text>
         </TouchableOpacity>
       </View>

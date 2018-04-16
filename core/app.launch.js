@@ -22,12 +22,11 @@ import Hud from './modal/modal.hud'
 import { application } from './redux/actions'
 import i18n from './i18n'
 
-const addListener = createReduxBoundAddListener('AuthLoading');
+const addListener = createReduxBoundAddListener('AuthLoading')
 
 class I18nLoadView extends PureComponent {
   constructor(props) {
     super(props)
-    console.log(props)
   }
 
   render() {
@@ -50,7 +49,10 @@ class I18nLoadView extends PureComponent {
 
 export default connect(state => ({ 
   nav: state.nav,
-  i18n: state.intl
+  i18n: {
+    messages: state.intl.messages,
+    locale: state.account.language
+  }
 }))(class AppLaunch extends PureComponent {
 
   componentDidMount() {
@@ -67,13 +69,13 @@ export default connect(state => ({
     const _url = System.Platform.Android ? url.replace('dacsee://dacsee/', '') : url.replace('dacsee://', '')
     const _args = _url.split('/')
 
-    if (!_args || _args.length === 0) return undefined;
+    if (!_args || _args.length === 0) return undefined
     switch (_args[0]) {
     case 'invite': 
       this.handleInvite(_args[1], _args[2])
-      break;
+      break
     default:
-      break;
+      break
     }
   }
 

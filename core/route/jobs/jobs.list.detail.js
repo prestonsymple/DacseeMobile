@@ -43,8 +43,6 @@ const BookingDetailButton = (props) => {
  * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
  */
 const BookingDetailHeaderView = (props) => {
-  console.log(props)
-
   const { passenger_info } = props
   const { avatars = [], fullName, userId, phoneCountryCode, phoneNo } = passenger_info
   return(
