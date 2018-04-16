@@ -30,7 +30,7 @@ const MAP_DEFINE = {
  * @desc bookingDetailButton 按钮
  */
 const BookingDetailButton = (props) => {
-  const { onPress, style,children} = props;
+  const { onPress, style,children} = props
   return(
     <TouchableOpacity
       onPress={onPress}
@@ -38,7 +38,7 @@ const BookingDetailButton = (props) => {
       {children}
     </TouchableOpacity>
   )
-};
+}
 /**
  * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
  */
@@ -70,12 +70,12 @@ const BookingDetailHeaderView = (props) => {
       </View>
     </View>
   )
-};
+}
 /**
  * @desc bookingDetail listItem
  */
 const BookingDetailListItem = (props) => {
-  const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props;
+  const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props
   return(
     <View>
       <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 44, width, backgroundColor:'white'}, style]}>
@@ -98,14 +98,14 @@ const BookingDetailListItem = (props) => {
       <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
     </View>
   )
-};
+}
 
 /**
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail;
-  const time = moment(booking_at).format('YYYY-MM-D HH:mm');
+  const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail
+  const time = moment(booking_at).format('YYYY-MM-D HH:mm')
   return(
     <View style={{backgroundColor: 'transparent', height: height / 2  }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
@@ -160,19 +160,19 @@ const BookingDetailView = (props) => {
       </ScrollView>
     </View>
   )
-};
+}
 
 /**
  * @desc bookingDetail 底部处理View
  */
 const BookingDetailBottomView = (props) => {
-  const fare  = props.fare;
+  const fare  = props.fare
 
-  const getOption = props.getOption;
+  const getOption = props.getOption
 
-  const i18n = props.i18n;
-  const optionObject = props.optionObject;
-  const chineseStatus = props.chineseStatus;
+  const i18n = props.i18n
+  const optionObject = props.optionObject
+  const chineseStatus = props.chineseStatus
 
   return(
     <View style={[styles.JobDetailWrap,{ height: 61, width, backgroundColor:'white' }]}>
@@ -202,7 +202,7 @@ const BookingDetailBottomView = (props) => {
       </View>
     </View>
   )
-};
+}
 
 export default connect(state => ({
   i18n: state.intl.messages || {},
@@ -213,10 +213,23 @@ export default connect(state => ({
 
   static navigationOptions = ({ navigation }) => {
     const reducer = global.store.getState()
-    return {
+    const { jobDetail } = navigation.state.params
+
+    const navMap = {
       drawerLockMode: 'locked-closed',
       title: reducer.intl.messages.job_detail
     }
+
+    if (
+      jobDetail.status === 'On_The_Way' ||
+      jobDetail.status === 'Arrived' ||
+      jobDetail.status === 'On_Board' ||
+      jobDetail.status === 'Pending_Acceptance'
+    ) {
+      navMap.headerLeft = null
+      navMap.gesturesEnabled = false
+    }
+    return navMap
   }
 
   constructor(props) {
@@ -384,11 +397,13 @@ export default connect(state => ({
 
   componentWillReceiveProps(props) {
     if (props.working && props.jobs !== this.props.jobs) {
-      const { _id } = props.navigation.state.params.jobDetail
-      this.setState({ detail : props.jobs.find(pipe => pipe._id === _id) })
-      if (!this.state.detail) {
-        this.props.navigation.goBack()
-      }
+      const { jobDetail } = props.navigation.state.params
+      const { _id } = jobDetail
+      const current = props.jobs.find(pipe => pipe._id === _id)
+      if (!current) this.props.navigation.goBack()
+
+      this.props.navigation.setParams({ jobDetail: current })
+      this.setState({ detail: current })
     }
   }
 
