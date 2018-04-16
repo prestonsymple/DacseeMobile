@@ -5,7 +5,6 @@ import {
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { SafeAreaView } from 'react-navigation'
-import getDirections from 'react-native-google-maps-directions'
 
 import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
 import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../native/AMap'
@@ -122,13 +121,13 @@ const BookingDetailView = (props) => {
           icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#1ab2fd'}}/>}
           linkingIconName={Resources.image.booking_detail_linking}
           onPress={() => {
-            getDirections({
-              destination: { latitude: from.coords.lat, longitude: from.coords.lng },
-              params: [
-                { key: 'travelmode', value: 'driving' },
-                { key: 'dir_action', value: 'navigate' }
-              ]
-            })
+            // getDirections({
+            //   destination: { latitude: from.coords.lat, longitude: from.coords.lng },
+            //   params: [
+            //     { key: 'travelmode', value: 'driving' },
+            //     { key: 'dir_action', value: 'navigate' }
+            //   ]
+            // })
           }}
         />
         <BookingDetailListItem
@@ -136,13 +135,13 @@ const BookingDetailView = (props) => {
           icon={<View style={{height: 10, width: 10, marginRight: 10, borderRadius:5, backgroundColor:'#ffb539'}}/>}
           linkingIconName={Resources.image.booking_detail_linking}
           onPress={() => {
-            getDirections({
-              destination: { latitude: destination.coords.lat, longitude: destination.coords.lng },
-              params: [
-                { key: 'travelmode', value: 'driving' },
-                { key: 'dir_action', value: 'navigate' }
-              ]
-            })
+            // getDirections({
+            //   destination: { latitude: destination.coords.lat, longitude: destination.coords.lng },
+            //   params: [
+            //     { key: 'travelmode', value: 'driving' },
+            //     { key: 'dir_action', value: 'navigate' }
+            //   ]
+            // })
           }}
         />
         <BookingDetailListItem

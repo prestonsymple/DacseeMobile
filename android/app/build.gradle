@@ -158,6 +158,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-sound')
     compile project(':react-native-code-push')
     compile project(':rn-splash-screen')
     compile project(':react-native-vector-icons')
