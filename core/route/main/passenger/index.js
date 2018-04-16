@@ -72,6 +72,22 @@ export default connect(state => ({
       this.geoWatch = undefined
     }
 
+    // 选择地址时，如果为手动输入起点的位置，将地图中心点移动到新的起点
+    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && props.from.coords !== this.props.from.coords) {
+      try {
+        const prevCoords = this.props.from.coords
+        const nextCoords = props.from.coords
+        if (!prevCoords.lng || !prevCoords.lat) throw new Error()
+        // const distance = UtilMath.distance(prevCoords.lng, prevCoords.lat, nextCoords.lng, nextCoords.lat)
+        if (this.map.animateTo) {
+          this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: nextCoords.lat, longitude: nextCoords.lng } }, 500)
+        } else {
+          let region = Object.assign({}, { latitude: nextCoords.lat, longitude: nextCoords.lng }, { latitudeDelta: 0.025, longitudeDelta: 0.025 * (width / height) })
+          this.map.animateToRegion(region, 500)
+        }
+      } catch (e) {/* */}
+    }
+
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.status !== props.status) {
       const { lat, lng } = props.from.coords
       if (this.map.animateTo) {
@@ -85,8 +101,6 @@ export default connect(state => ({
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && this.props.status !== props.status) {
       const { destination, from } = props
-
-      console.log(destination, from)
 
       const mLat = ((from.coords.lat + destination.coords.lat) / 2) - 0.035
       const mLng = ((from.coords.lng + destination.coords.lng) / 2)
