@@ -5,30 +5,35 @@ import { zh_cn, en_mas, en_us } from '../../i18n'
 import { handleActions } from 'redux-actions'
 
 const initialState = {
-  locale: 'en',
   messages: en_us,
-  formats: undefined
+  locale: 'en'
 }
 
 export default handleActions({
   
   [intl.update]: (state, { payload }) => {
-    let msgs = {}
+    let _state = {
+      messages: en_us,
+      locale: 'en'
+    }
     switch(payload) {
-    case 'zh':
-      msgs = zh_cn
+    case 'zh-CN':
+      _state.messages = zh_cn
+      _state.locale = 'zh'
       break
     case 'mas':
-      msgs = en_mas
+      _state.messages = en_mas
+      _state.locale = 'mas'
       break
-    case 'en':
-      msgs = en_us
+    case 'en-US':
+      _state.messages = en_us
+      _state.locale = 'en'
       break
     default:
-      msgs = en_us
       break
     }
-    return Object.assign({}, state, { locale: payload, messages: msgs })
+    
+    return Object.assign({}, state, _state)
   },
 
 }, initialState)

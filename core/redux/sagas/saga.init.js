@@ -4,7 +4,7 @@ import Permissions from 'react-native-permissions'
 
 import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { application, account, booking } from '../actions'
+import { application, account, booking, intl } from '../actions'
 import { Session } from '../../utils'
 
 const oncePosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 2500 }))
@@ -13,11 +13,18 @@ const permissionsReqeust = (permission) => Permissions.request(permission)
 
 
 function* initializationFlow(action) {
-  const { status, foreground } = yield select(state => ({ 
+  const { status, foreground, save_language } = yield select(state => ({ 
     status: state.account.status, 
+    save_language: state.account.language,
     foreground: state.application.application_status === 'active'
   }))
 
+  // 多语言状态恢复
+  if (action.type === 'persist/REHYDRATE') {
+    yield put(intl.update(save_language))
+  }
+
+  // 默认语言及地区配置
   try {
     // 请求位置
     const { coords } = yield call(oncePosition)
@@ -30,11 +37,19 @@ function* initializationFlow(action) {
     // 配置当前所在国家和语言
     const { code, language } = yield call(Session.Lookup.Get, 'v1/lookup/country')
     // TODO: GET DEFAULT LANGUAGE SET
-    const map_mode = code === 'CN' ? 'AMAP' : 'GOOGLEMAP'
-    yield all([
-      put(application.setValues({ map_mode })),
-      put(account.setAccountValue({ country: code, language }))
-    ])
+    const map_mode = code === 'CN' ? 'GOOGLEMAP' : 'GOOGLEMAP'
+    if (save_language) {
+      yield all([
+        put(application.setValues({ map_mode })),
+        put(account.setAccountValue({ country: code })),
+      ])
+    } else {
+      yield all([
+        put(application.setValues({ map_mode })),
+        put(account.setAccountValue({ country: code, language })),
+        put(intl.update(language))
+      ])
+    }
   } catch (e) {
     try {
       navigator.geolocation.requestAuthorization()

@@ -40,10 +40,9 @@ const SettingMenuScreen = connect(state => ({
           title: i18n.privacy_setting, type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
         [{
-          title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion',{
-            refresh: (data)=>{
-              this.props.navigation.setParams({});
-            }})
+          title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion', {
+            refresh: (data) => this.props.navigation.setParams({})
+          })
         }],
         [{
           title: i18n.feedback, type: 'text', onPress: async () => navigation.navigate('SettingWetView', {
@@ -206,7 +205,7 @@ const SettingPrivateScreen = connect(state => ({
 // 语言和地区
 const SettingLanguageRegionScreen = connect(state => ({
   i18n: state.intl.messages || {},
-  language: state.intl.locale
+  language: state.account.language
 }))(class SettingLanguageRegionScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const reducer = global.store.getState()
@@ -241,7 +240,7 @@ const SettingLanguageRegionScreen = connect(state => ({
 // 语言选择
 const SettingLanguageChooseScreen = connect(state => ({
   i18n: state.intl.messages || {},
-  language: state.intl.locale
+  language: state.account.language
 }))(class SettingLanguageChooseScreen extends PureComponent {
   // static navigationOptions = { title: '语言选择' }
   static navigationOptions = ({ navigation }) => {
@@ -253,29 +252,32 @@ const SettingLanguageChooseScreen = connect(state => ({
   render() {
     const { navigation, dispatch, language, i18n } = this.props
 
-    const {refresh}  = navigation.state.params;
+    const { refresh }  = navigation.state.params
 
 
     return (
       <Settings producer={[
         [{
-          title: i18n.cn_simple, type: 'radio', value: language == 'zh', editable: false,
+          title: i18n.cn_simple, type: 'radio', value: language === 'zh-CN', editable: false,
           onPress: () => {
-            dispatch(intl.update('zh'))
-            refresh()
+            dispatch(account.setAccountValue({ language: 'zh-CN' }))
+            dispatch(intl.update('zh-CN'))
+            refresh('refresh')
             navigation.goBack()
           }
         }, {
           title: i18n.mas, type: 'radio', value: language === 'mas', editable: false,
           onPress: () => {
-            dispatch(intl.update('mas'));
+            dispatch(account.setAccountValue({ language: 'mas' }))
+            dispatch(intl.update('mas'))
             refresh('refresh')
             navigation.goBack()
           }
         }, {
-          title: i18n.en, type: 'radio', value: language == 'en', editable: false,
+          title: i18n.en, type: 'radio', value: language === 'en-US', editable: false,
           onPress: () => {
-            dispatch(intl.update('en'))
+            dispatch(account.setAccountValue({ language: 'en-US' }))
+            dispatch(intl.update('en-US'))
             refresh('refresh')
             navigation.goBack()
           }
