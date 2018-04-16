@@ -222,7 +222,7 @@ export default connect(state => ({
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
     return (
-      <View>
+      <View style={{backgroundColor: 'white'}}>
 
         <View style={{flex:1, backgroundColor:'white'}}>
           <HeaderSearchBar/>
@@ -239,7 +239,7 @@ export default connect(state => ({
         </View>
         {(dataSource.rowIdentities[0].length === 0 && dataSource.rowIdentities[1].length === 0)?
           null: <View style={styles.bottomButton}>
-            <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
+            <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={styles.confirmButton}>
               <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
                 <FormattedMessage id={'confirm'}/>
               </Text>
@@ -347,8 +347,27 @@ const styles=StyleSheet.create({
   bottomButton:{
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#fff',
+    // backgroundColor:'red',
     height:Define.system.ios.x ?110:78,
-    width:width
+    width: width - 90,
+    marginHorizontal: 45,
+  },
+  confirmButton:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width - 90,
+    height: 60,
+    borderRadius: 36,
+    backgroundColor: '#7dd320',
+    borderStyle: 'solid',
+    borderWidth: 5,
+    borderColor: '#ffffff',
+    shadowColor: 'rgba(0, 0, 0, 0.15)',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 3,
+    shadowOpacity: 1
   }
 })
