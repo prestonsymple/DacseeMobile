@@ -1,6 +1,6 @@
 package com.dacsee.nativeBridge.AMap.maps
 
-import cn.qiuxiang.react.amap3d.toPx
+import com.dacsee.nativeBridge.AMap.toPx
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext

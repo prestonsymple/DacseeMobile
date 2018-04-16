@@ -1,7 +1,5 @@
 package com.dacsee.nativeBridge.AMap
 
-import cn.qiuxiang.react.amap3d.AMapOfflineModule
-import cn.qiuxiang.react.amap3d.AMapUtilsModule
 import com.dacsee.nativeBridge.AMap.maps.*
 import com.dacsee.nativeBridge.AMap.navigation.AMapDriveManager
 import com.dacsee.nativeBridge.AMap.navigation.AMapRideManager

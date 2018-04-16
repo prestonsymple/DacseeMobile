@@ -7,6 +7,7 @@ import com.airbnb.android.react.maps.MapsPackage;
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
+import com.dacsee.nativeBridge.Utils.UtilsPackages;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -50,6 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
+
       List<ReactPackage> packages = new ArrayList<>();
       packages.add(new MainReactPackage());
       packages.add(new LottiePackage());
@@ -64,6 +66,7 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new AMap3DPackage());
       packages.add(new DplusReactPackage());
       packages.add(new RNFSPackage());
+      packages.add(new UtilsPackages());
 
       int googleAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
       if (googleAvailable == ConnectionResult.SUCCESS || googleAvailable == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED) {

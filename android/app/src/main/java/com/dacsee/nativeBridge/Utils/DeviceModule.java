@@ -1,7 +1,6 @@
 package com.dacsee.nativeBridge.Utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;

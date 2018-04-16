@@ -1,4 +1,4 @@
-package cn.qiuxiang.react.amap3d
+package com.dacsee.nativeBridge.AMap
 
 import com.amap.api.maps.offlinemap.OfflineMapCity
 import com.amap.api.maps.offlinemap.OfflineMapManager
