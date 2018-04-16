@@ -315,7 +315,11 @@ const mas = {
   no_driver_order:'Pada masa ini tiada pemandu untuk mengambil pesanan',
   drive_cancel_order:' Maaf, pesanan telah dibatalkan oleh pemandu',
   order_timeout:'Tiada pemandu pada masa ini, pesanan telah dibatalkan.',
-  order_to_afresh:'Pesanan telah dibatalkan oleh pemandu, sila cuba menempah semula'
+  order_to_afresh:'Pesanan telah dibatalkan oleh pemandu, sila cuba menempah semula',
+
+  bank_detail:'银行详情',
+  bank_name:'银行名称',
+  bank_holder_name:'持卡人姓名'
 }
 
 export default mas

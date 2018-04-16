@@ -55,7 +55,7 @@ import {
   SettingHelpCenterScreen,
   SettingWetViewScreen,
   SettingPrivateScreen,
-
+  BankDetailScreen,
   ProfileChangeAvatarScreen
 } from '../route/setting'
 
@@ -143,7 +143,8 @@ const HomeScreen = {
 
   PublicPickerCountry: { screen: PickerCountryScreen },
 
-  ChatWindow: { screen: ChatScreen }
+  ChatWindow: { screen: ChatScreen },
+  BankDetail:{ screen:BankDetailScreen}
 }
 
 export {

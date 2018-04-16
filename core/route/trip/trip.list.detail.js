@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 import {
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
+  Text, View, StyleSheet, Image, ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'

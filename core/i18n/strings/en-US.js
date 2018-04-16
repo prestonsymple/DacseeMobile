@@ -111,7 +111,7 @@ const en_US = {
   available_balance: 'Available Balance',
   overView: 'Overview',
   transaction: 'Transaction',
-  floating_comm: 'Floating Comm.',
+  floating_comm: 'Floating Comm',
   floating_amount_driver: 'Floating Comm.(Driver)',
   floating_amount_passenger: 'Floating Comm.(Passenger)',
   transfer: 'Transfer',
@@ -315,7 +315,11 @@ const en_US = {
   no_driver_order:'There is not driver available at the moments.',
   drive_cancel_order:'sorry, the booking has been cancelled by the driver.',
   order_timeout:'There is not driver at the moments. Booking request has been cancelled.',
-  order_to_afresh:'Booking has been cancelled by the driver, please try to book again.'
+  order_to_afresh:'Booking has been cancelled by the driver, please try to book again.',
+
+  bank_detail:'银行详情',
+  bank_name:'银行名称',
+  bank_holder_name:'持卡人姓名'
 }
 
 export default en_US

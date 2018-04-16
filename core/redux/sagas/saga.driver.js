@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { driver } from '../actions'
+import { driver, application } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { System, Session } from '../../utils'
 
@@ -60,19 +60,22 @@ function* updateDriverLocation() {
 
 function* driverStatusObserver() {
   while (true) {
-    const { booking_id, app_status, working } = yield select(state => ({
+    const { booking_id, app_status, working, logined } = yield select(state => ({
       booking_id: state.storage.driver_booking_id,
       app_status: state.application.application_status === 'active',
+      logined: state.account.status,
       working: state.driver.working
     }))
+
+    const fields = [
+      '_id', 'assign_type', 'booking_at', 'country', 'destination', 
+      'fare', 'from', 'notes', 'status', 'payment_method', 'passenger_info'
+    ]
+
 
     if (working) {
       // LISTEN NEW JOBS
       try {
-        const fields = [
-          '_id', 'assign_type', 'booking_at', 'country', 'destination', 
-          'fare', 'from', 'notes', 'status', 'payment_method', 'passenger_info'
-        ]
         let jobs = yield call(Session.Booking.Get, `v1/bookings?role=driver&limit=10&sort=-booking_at&fields=${fields.join(',')}`)
         jobs = jobs.filter(({ status }) => {
           if (
@@ -86,7 +89,21 @@ function* driverStatusObserver() {
       } catch (e) {
         // DO NOTHING
       } 
+    } else if (!working && logined) {
+      try {
+        const activeBooking = yield call(Session.Booking.Get, 'v1/activeBookings')
+        // 恢复工作模式
+        if (activeBooking.length > 0) {
+          const jobs = yield all(activeBooking.map(pipe => call(Session.Booking.Get, `v1/bookings/${pipe._id}?fields=${fields.join(',')}`)))
+          yield all([
+            put(application.setCoreMode('driver')),
+            put(driver.driverSetValue({ working: true, jobs }))
+          ])
+          yield put(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: jobs[0] } }))
+        }
+      } catch (error) { /* */ }
     }
+
     yield delay(2500)
   }
 }

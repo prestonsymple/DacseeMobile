@@ -311,7 +311,11 @@ const zh_CN = {
   no_driver_order:'当前没有可接单的司机',
   drive_cancel_order:'很抱歉，该订单已被司机取消',
   order_timeout:'暂无司机接单，订单超时，已被取消',
-  order_to_afresh:'订单已被司机取消，请尝试重新预订'
+  order_to_afresh:'订单已被司机取消，请尝试重新预订',
+
+  bank_detail:'银行详情',
+  bank_name:'银行名称',
+  bank_holder_name:'持卡人姓名'
 }
 
 export default zh_CN
