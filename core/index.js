@@ -15,7 +15,7 @@ import PushService from './native/push-service'
 import zhLocaleData from 'react-intl/locale-data/zh'
 import masLocaleData from 'react-intl/locale-data/mas'
 import enLocaleData from 'react-intl/locale-data/en'
-
+import Sound from 'react-native-sound'
 import InteractionManager from 'InteractionManager'
 /*eslint-enabled no-unused-vars*/
 
@@ -62,6 +62,7 @@ class Core extends PureComponent {
 
     //#AMap SDK Init
     this.initializationi18n()
+    this.initializationRingTone()
     this.initializationPushNotification()
     this.initializationMomentConfig()
     this.initializationApplicationLinstener()
@@ -74,6 +75,12 @@ class Core extends PureComponent {
 
   initializationi18n() {
     addLocaleData([...zhLocaleData, ...masLocaleData, ...enLocaleData])
+  }
+
+  initializationRingTone() {
+    new Sound('dacsee.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) return console.log('[加载铃声][失败]', error)
+    })
   }
 
   async initializationPushNotification() {

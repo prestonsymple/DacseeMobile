@@ -4,11 +4,19 @@ import React from 'react'
 import { Alert } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Platform from 'Platform'
+import Sound from 'react-native-sound'
 // const { android, ios } = { isAndroid: Platform.OS === 'android', isIOS: Platform.OS === 'ios' }
 /* eslint-enable */
 
 
 export default {
+  LoadSound: (name, path = Sound.MAIN_BUNDLE) => new Promise((resolve, reject) => {
+    // Sound.setCategory('Playback')
+    const sound = new Sound(name, path, (error) => {
+      if (error) return reject()
+      resolve(sound)
+    })
+  }),
   Version: DeviceInfo.getVersion(),
   Build: DeviceInfo.getBuildNumber(),
   UUID: DeviceInfo.getUniqueID(),

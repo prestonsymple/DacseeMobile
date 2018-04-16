@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 import moment from 'moment'
 
-import { Screen, Icons, Session, TextFont } from '../../utils'
+import { Screen, System, Session, TextFont } from '../../utils'
 import Resources from '../../resources'
 import { application, driver } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
@@ -35,16 +35,28 @@ export default connect(state => ({
       loading: false,
       jobs: dataContrast.cloneWithRows([])
     }
+    this.sound = null
   }
 
   async componentDidMount() {
-    await InteractionManager.runAfterInteractions();
+    await InteractionManager.runAfterInteractions()
+    try {
+      this.sound = await System.LoadSound('dacsee.mp3')
+    } catch (e) {
+      console.log('[音频文件]', '[载入失败]')
+    }
   }
 
   componentWillReceiveProps(props) {
-    // UPDATE WORKING JOBS LIST
     if (props.working && this.props.jobs !== props.jobs) {
       this.setState({ jobs: dataContrast.cloneWithRows(props.jobs) })
+    }
+   
+    if (
+      props.working && this.props.jobs !== props.jobs && 
+      props.jobs.length > this.props.jobs.length
+    ) {
+      this.sound.play()
     }
   }
   async sliderChange(status, _id) {
