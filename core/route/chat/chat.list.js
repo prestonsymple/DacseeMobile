@@ -1,11 +1,10 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, Image, TouchableOpacity, FlatList, Keyboard, TextInput, StyleSheet, Platform,ScrollView,KeyboardAvoidingView,
-  TouchableWithoutFeedback,Animated
+  Text, View, Image, TouchableOpacity, FlatList, Keyboard, TextInput, StyleSheet, Platform,LayoutAnimation,KeyboardAvoidingView,
+  TouchableWithoutFeedback,
 } from 'react-native'
 
-import { SafeAreaView} from 'react-navigation'
-import {Screen, Icons, Session, TextFont, Define} from '../../utils'
+import {Screen, Icons, Session, TextFont, Define, System} from '../../utils'
 import {connect} from 'react-redux'
 import {application} from '../../redux/actions'
 const { height, width } = Screen.window
@@ -26,8 +25,9 @@ class ChatWindow extends Component {
       messageContent:'',
       keyboardShow:false,
       keyboardHeight:0,
-      listHeight:0,
-      bounceValue: new Animated.Value(0),
+      visibleHeight:height,
+      showVoice:false,
+      xHeight:64,
       data:[
         {
           _id:1,
@@ -45,61 +45,94 @@ class ChatWindow extends Component {
           content:'{"type": "text", "content": "你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好" }',
           time:'1523248662'
         },
-        // {
-        //   _id:3,
-        //   from_id:'5a79423ab2ccf66e117f1b7f',
-        //   to_id:'5ac2de564647815dd78dbb07',
-        //   avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-        //   content:'{"type": "image", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
-        //   time:'1523248662'
-        // },
-        // {
-        //   _id:4,
-        //   from_id:'5a79423ab2ccf66e117f1b7f',
-        //   to_id:'5ac2de564647815dd78dbb07',
-        //   avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-        //   content:'{"type": "image", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
-        //   time:'1523248662'
-        // },
-        // {
-        //   _id:5,
-        //   from_id:'5a79423ab2ccf66e117f1b7f',
-        //   to_id:'5ac2de564647815dd78dbb07',
-        //   avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-        //   content:'{"type": "image", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
-        //   time:'1523248662'
-        // },
-        // {
-        //   _id:6,
-        //   from_id:'5a79423ab2ccf66e117f1b7f',
-        //   to_id:'5ac2de564647815dd78dbb07',
-        //   avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-        //   content:'{"type": "image", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
-        //   time:'1523248662'
-        // }
+        {
+          _id:3,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+          time:'1523248662'
+        },
+        {
+          _id:4,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+          time:'1523248662'
+        },
+        {
+          _id:5,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+          time:'1523248662'
+        },
+        {
+          _id:6,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "image", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+          time:'1523248662'
+        }
       ]
     }
   }
 
 
   componentDidMount() {
-    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', (e) => {
-      this.setState({keyboardHeight:e.endCoordinates.height,keyboardShow:true})
-    })
-    this.keyboardWillShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+    System.Platform.iOS && this._willShow()
+    System.Platform.iOS && this._willHide()
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
       this.chatList.scrollToEnd()
     })
 
-    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', (e) => {
-      this.setState({keyboardHeight:0,keyboardShow:false})
-    })
   }
 
   componentWillUnmount() {
-    this.keyboardWillShowListener.remove()
-    this.keyboardWillHideListener.remove()
+    System.Platform.iOS && this._willRemove()
+    this.keyboardDidShowListener.remove()
 
   }
+
+  _willShow() {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', (e) => {
+
+      const visibleHeight = height - e.endCoordinates.height
+
+      LayoutAnimation.configureNext(LayoutAnimation.create(
+        e.duration,
+        LayoutAnimation.Types[e.easing]
+      ))
+
+      this.setState({
+        visibleHeight,xHeight:44
+      })
+
+      this.setState({keyboardHeight:e.endCoordinates.height,keyboardShow:true})
+    })
+  }
+
+  _willHide() {
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', (e) => {
+      LayoutAnimation.configureNext(LayoutAnimation.create(
+        e.duration,
+        LayoutAnimation.Types[e.easing]
+      ))
+      this.setState({keyboardHeight:0,keyboardShow:false,visibleHeight:height,xHeight:64})
+    })
+  }
+
+
+  _willRemove(){
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
+  }
+
+
+
 
 
   _sendMessage() {
@@ -120,120 +153,108 @@ class ChatWindow extends Component {
     setTimeout(()=>this.chatList.scrollToEnd(),200)
   }
 
-  // _changeHeight = () => {
-  //   const {keyboardShow, keyboardHeight} = this.state
-  //   let showCompare = Define.system.ios.x ? height - 88 - 49 : height - 64 - 49
-  //   let compare = Define.system.ios.x ? height - 88 - 89 : height - 64 - 49
-  //   if (Platform.OS === 'ios') {
-  //     if (keyboardShow) {
-  //       return {height: showCompare - keyboardHeight}
-  //     } else {
-  //       return {height: compare}
-  //     }
-  //   }else{
-  //     return{flex:1}
-  //   }
-  // }
+  _changeMethod(){
+    this.setState({showVoice:!this.state.showVoice})
+  }
 
-  // _contentBarHeight = () => {
-  //   const {keyboardShow,keyboardHeight} = this.state
-  //   if(keyboardShow){
-  //     return{height:49+keyboardHeight}
-  //   }else{
-  //     let newHeight = Define.system.ios.x?89:49
-  //     return { height:newHeight }
-  //   }
-  // }
+  _changeText(e) {
+    this.setState({messageContent:e})
+  }
 
   render(){
-    const {data,listHeight} = this.state
-    // let newData = [...data]
-    // const invertData= listHeight>400?newData.sort((a,b)=>b._id-a._id):data
-
+    const {data,messageContent,xHeight,visibleHeight} = this.state
     const {user} = this.props
     return(
-      <View style={{flex:1}}>
-        <FlatList
-          onScroll={(e)=>{console.log(e.nativeEvent)}}
-          keyboardDismissMode={'on-drag'}
-          ref={e => this.chatList = e}
-          onLayout={(event)=>{}}   //勿删
-          data={data}
-          keyExtractor={(item, index)=>item._id}
-          renderItem={({item,index}) =>(
-            <ChatItem
-              content={item}
-              msgData={data}
-              index={index}
-              user={user}
-              navigation={this.props.navigation}
-              listHeight={listHeight}
-            />
-          )}
+      <View style={Platform.OS==='android'?{flex:1}:{height:visibleHeight-(Define.system.ios.x?88:64)}}>
+        <View style={{flex:1}}>
+          <FlatList
+            onLayout={()=>{}}           //勿删！
+            ref={e => this.chatList = e}
+            data={data}
+            keyExtractor={(item, index)=>item._id}
+            renderItem={({item,index}) =>(
+              <ChatItem
+                content={item}
+                msgData={data}
+                index={index}
+                user={user}
+              />
+            )}
+          />
+        </View>
+        <InputBar
+          onMethodChange={this._changeMethod.bind(this)}
+          showVoice={this.state.showVoice}
+          onSubmitEditing={this._sendMessage.bind(this)}
+          messageContent={messageContent}
+          textChange={this._changeText.bind(this)}
+          xHeight={xHeight}
         />
-        <ChatBar onSubmitEditing={this._sendMessage.bind(this)} messageContent={this.state.messageContent} />
       </View>
     )
   }
 }
 
-class ChatBar extends Component {
+class InputBar extends Component {
 
   render() {
-    const { messageContent, onSubmitEditing = () => {}, bounceValue, keyboardHeight } = this.props
-    const WrapView = Platform.OS === 'android' ? (View) : (KeyboardAvoidingView)
-    const setter = Platform.select({
-      ios: { behavior: 'position', keyboardVerticalOffset: Define.system.ios.x ? 72 : 64 },
-      android: { /* props */ }
-    })
+    const { messageContent, onSubmitEditing = () => {},textChange = () => {}, onMethodChange = () => {}, showVoice, xHeight} = this.props
 
     return(
-      <WrapView {...setter}>
-        <View style={[styles.commentBar, { height: 64 }]} >
-          <View style={{flexDirection:'row',alignItems:'center',marginVertical:7}}>
-            <View style={{backgroundColor:'#fff',borderRadius:4,borderColor:'#ddd',borderWidth:0.6,marginHorizontal:8}}>
-              <TextInput
-                ref={e => this.chat = e}
+      <View style={[styles.commentBar, { height:  Define.system.ios.x ? xHeight: 44 }]} >
+        <View style={{flexDirection:'row',alignItems:'center',marginVertical:5}}>
+          <View style={{ width: (width - 36) * 0.1,height:34,justifyContent:'center',alignItems:'center'}}>
+            <TouchableOpacity onPress={onMethodChange} style={{width:34,height:34,justifyContent:'center',alignItems:'center',borderColor:'#ddd',borderWidth:0.8,borderRadius:17}}>
+              { Icons.Generator.Material(showVoice?'keyboard':'mic', 20, '#bbb') }
+            </TouchableOpacity>
+          </View>
+          <View style={{backgroundColor:'#fff',borderRadius:4,borderColor:'#ddd',borderWidth:0.6,marginHorizontal:8}}
+          >
+            {showVoice?
+              <TouchableOpacity>
+                <View style={[ styles.commentBar__input,{justifyContent:'center',alignItems:'center'}]}>
+                  <Text style={{fontWeight:'bold',fontSize:16,color:'#4d4d4d'}}>
+                      按住 说话
+                  </Text>
+                </View>
+              </TouchableOpacity> : <TextInput
                 blurOnSubmit={false}
                 returnKeyType='send'
                 value={ messageContent }
                 onSubmitEditing={onSubmitEditing}
+                onKeyPress={(event) => {
+                  console.log( event.nativeEvent.key)
+                }}
                 underlineColorAndroid='transparent'
-                onChangeText={(messageContent) => this.setState({ messageContent })}
+                onChangeText={textChange}
                 style={[ styles.commentBar__input ]}
-                placeholder={'发送'}/>
-            </View>
-            <View style={{ width: (width - 36) * 0.2, alignItems:'center', justifyContent:'space-around', flexDirection:'row' }}>
-              <TouchableOpacity>
-                { Icons.Generator.Awesome('smile-o', 32, '#bbb') }
-              </TouchableOpacity>
-              <TouchableOpacity>
-                { Icons.Generator.Ion('ios-add-circle', 32, '#bbb') }
-              </TouchableOpacity>
-            </View>
+              />
+            }
           </View>
+          {/*注释右边按钮*/}
+          {/*<View style={{ width: (width - 36) * 0.2, alignItems:'center', justifyContent:'space-around', flexDirection:'row'}}>*/}
+          {/*<TouchableOpacity>*/}
+          {/*{ Icons.Generator.Awesome('smile-o', 32, '#bbb') }*/}
+          {/*</TouchableOpacity>*/}
+          {/*<TouchableOpacity>*/}
+          {/*{ Icons.Generator.Ion('ios-add-circle', 32, '#bbb') }*/}
+          {/*</TouchableOpacity>*/}
+          {/*</View>*/}
         </View>
-      </WrapView>
+      </View>
     )
   }
 }
 
 
-class ChatItem extends PureComponent {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      footerY: ''
-    }
-  }
+class ChatItem extends Component {
 
   _renderContent=()=>{
     const {content} = this.props
     const msgContent = JSON.parse(content.content)
     switch (msgContent.type){
     case 'text':
-      return <Text selectable={true}>{msgContent.content}</Text>
+      return <Text selectable={true} style={{lineHeight:20}} >{msgContent.content}</Text>
     case 'image':
       return <Image
         source={[{uri:msgContent.content, width: 30, height: 30}]}
@@ -265,10 +286,7 @@ class ChatItem extends PureComponent {
 
 const styles= StyleSheet.create({
   commentBar: {
-    position:'absolute',
-    bottom:0,
-    left:0,
-    right:0,
+    width:width,
     backgroundColor:'#F8F8F8',
     borderTopWidth: 0.8,
     borderColor: '#DDD',
@@ -277,7 +295,7 @@ const styles= StyleSheet.create({
   commentBar__input:{
     paddingHorizontal: 10,
     height:34,
-    width:0.8*(width-36),
+    width:0.9*(width-36),
     padding:0
   },
   circle:{
@@ -305,6 +323,7 @@ const styles= StyleSheet.create({
     paddingVertical: 10,
     maxWidth: width - 160,
     backgroundColor: '#FFF',
+    justifyContent:'center'
   },
   avatar: {
     marginHorizontal: 10,

@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
-import cn.qiuxiang.react.amap3d.toPx
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.*
+import com.dacsee.nativeBridge.AMap.toPx
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.views.view.ReactViewGroup
 

@@ -1,4 +1,4 @@
-package cn.qiuxiang.react.amap3d
+package com.dacsee.nativeBridge.AMap
 
 import android.content.res.Resources
 import com.amap.api.maps.AMapUtils

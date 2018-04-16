@@ -97,13 +97,14 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '26.0.1'
+
 
     defaultConfig {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18041002
+        versionCode 18041201
         versionName "0.35.0"
         multiDexEnabled true
         ndk {
