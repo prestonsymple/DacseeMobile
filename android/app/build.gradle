@@ -97,14 +97,14 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 18041002
-        versionName "0.34.1"
+        versionName "0.35.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -176,7 +176,6 @@ dependencies {
     compile project(':react-native-fs')
     compile project(':react-native-device-info')
     compile project(':react-native-camera')
-    compile project(':react-native-app-settings')
     compile project(':lottie-react-native')
     compile project(':react-native-maps')
 

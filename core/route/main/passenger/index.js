@@ -33,6 +33,7 @@ export default connect(state => ({
   booking_id: state.storage.booking_id,
   map_mode: state.application.map_mode,
   vehicleGroups: state.booking.vehicleGroups,
+  friends_location: state.circle.friends_location,
   location: state.account.location,
   i18n: state.intl.messages
 }))(class PassengerComponent extends Component {
@@ -247,7 +248,6 @@ export default connect(state => ({
   }
 
   async onLocationSearch(longitude, latitude) {
-    console.log(longitude, latitude)
     try {
       Animated.timing(this.pin, { toValue: 0, duration: 200 }).start()
       Animated.timing(this.board, { toValue: 0, duration: 200 }).start()
@@ -259,10 +259,13 @@ export default connect(state => ({
         const { formatted_address = '', address_components, place_id, geometry } = results[0]
 
         const street_number = address_components.find(pipe => pipe.types.find(sub => sub === 'street_number')) || { long_name: '' }
+        const political = address_components.find(pipe => pipe.types.find(sub => sub === 'political')) || { long_name: '' }
         const route = address_components.find(pipe => pipe.types.find(sub => sub === 'route')) || { long_name: '' }
-        const short_name = `${street_number.long_name} ${route.long_name}`.trim()
+        const combine_name = `${street_number.long_name} ${route.long_name} ${political.long_name}`.trim()
 
-        if (short_name.length === 0) {
+        console.log(results)
+
+        if (combine_name.length === 0) {
           throw new Error('UNKNOW_GEO')
         }
         place = {
@@ -271,7 +274,7 @@ export default connect(state => ({
             lng: geometry.location.lng,
             lat: geometry.location.lat
           },
-          name: short_name,
+          name: combine_name,
           address: formatted_address
         }
       } else {
@@ -298,7 +301,7 @@ export default connect(state => ({
   }
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode, location, driver_info } = this.props
+    const { status, from, destination, map_mode, location, driver_info, friends_location } = this.props
     
     const MAP_SETTER = {
       /* A MAP */
@@ -391,6 +394,15 @@ export default connect(state => ({
                 <Image source={Resources.image.map_car_pin} />
               </GoogleMarker>
               <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
+              {
+                friends_location.length > 0 && (
+                  friends_location.map((pipe, index) => (
+                    <GoogleMarker key={index} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }}>
+                      <Image source={Resources.image.car_rookie} />
+                    </GoogleMarker>
+                  ))
+                )
+              }
             </GoogleMapView>
           )
         }

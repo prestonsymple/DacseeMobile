@@ -93,10 +93,10 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
             <UserDetail data={data} />
           </View>
           {
-            data.users && data.users.length > 0 ?
+            data.users && data.users.length > 0 &&
               <View style={{ backgroundColor: '#f7f7f7', flex: 1 }}>
                 <UserList users={data.users} goUserDetails={(_id) => this.goUserDetails(_id)} />
-              </View> : null
+              </View>
           }
         </ScrollView>
       </View>

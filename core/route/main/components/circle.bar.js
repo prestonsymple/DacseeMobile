@@ -25,7 +25,7 @@ export default connect(state => ({
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     if (this.props.selected && this.props.init) {
-      this.props.dispatch(circle.asyncFetchFriends({ init: true, delay: 2000 }))
+      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
     }
   }
 

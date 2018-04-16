@@ -36,8 +36,8 @@ export default  class ItemPerson extends Component {
 
 const styles=StyleSheet.create({
   circle: {
-    width: 30,
-    height: 30,
+    width: 23,
+    height: 23,
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',

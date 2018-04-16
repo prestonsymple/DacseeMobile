@@ -11,18 +11,17 @@ import {
   Platform,
   InteractionManager, ScrollView, TextInput, TouchableOpacity, DeviceEventEmitter
 } from 'react-native';
-import { Define, Screen, System, Icons } from "../../../utils"
-import { connect } from "react-redux"
+import { Define, Screen, System, Icons } from '../../../utils'
+import { connect } from 'react-redux'
 
 const { width, height } = Screen.window
 
 
 // import NavigatorBarSwitcher from '../components/navigator.bar.switcher'
 import NavigatorBarSwitcher from '../components/navigator.switcher'
-import {FormattedMessage} from "react-intl"
+import {FormattedMessage} from 'react-intl'
 import FriendsGroupList from './friends.group.list'
 import FriendsCircleComponent from './friends.circle';
-import {application} from "../../../redux/actions";
 
 
 export default connect(state => ({
@@ -57,6 +56,13 @@ export default connect(state => ({
     }
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      switcherStatus: 0
+    };
+  }
+
   async componentDidMount() {
     const {i18n} = this.props
     const {mycircle} = i18n
@@ -73,53 +79,21 @@ export default connect(state => ({
 
 
   render() {
+    const titles = ['friends','group'];
     return (
       <View style={styles.container}>
-        <HeaderSearchBar />
+        <NavigatorBarSwitcher titles={titles} index={0} onPress={(index)=>{this.setState({switcherStatus:index})}}/>
+        <FriendsContainerSwitcher switcherStatus={this.state.switcherStatus}/>
       </View>
     );
   }
 })
 
-class HeaderSearchBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      switcherStatus: 0
-    };
-  }
-  render() {
-    const titles = ['friends','group'];
-    return (
-      <View style={{ flex:1 }}>
-        <View style={{height:112, backgroundColor: '#1ab2fd'}}>
-          <NavigatorBarSwitcher titles={titles} index={0} onPress={(index)=>{this.setState({switcherStatus:index})}}/>
-          <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, marginTop:10, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
-            <FormattedMessage id={'search_name_phone_email'}>
-              {
-                msg => (
-                  <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
-                    Platform.select({
-                      android: { height: 42, width: width - 56 },
-                      ios: { height: 42, width: width - 56 }
-                    })} />
-                )
-              }
-            </FormattedMessage>
-          </View>
-        </View>
-        <FriendsContainerSwitcher switcherStatus={this.state.switcherStatus}/>
-      </View>
-    )
-  }
-}
-
-
 const FriendsContainerSwitcher = connect(state => ({ core_mode: state.application.core_mode }))(class FriendsContainerSwitcher extends PureComponent {
   async componentDidMount() {
 
     await InteractionManager.runAfterInteractions()
-    const { switcherStatus } = this.props;
+    const { switcherStatus } = this.props
 
     this.scrollView.scrollTo({ x: switcherStatus === 0 ? 0 : width, animated: false })
 
@@ -157,7 +131,7 @@ const FriendsContainerSwitcher = connect(state => ({ core_mode: state.applicatio
     }
     return (
       <ScrollView {...VIEW_SETTER} onScroll={this.onScroll} scrollEventThrottle={0}>
-        <FriendsCircleComponent/>
+        <FriendsCircleComponent />
         <FriendsGroupList />
       </ScrollView>
     )

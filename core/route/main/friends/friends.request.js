@@ -35,7 +35,7 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage(i18n.invitation_failure))
     console.log(data[0])
     const { _id, avatars, fullName, userId } = data[0]
-    this.setState({ invite_id: _id, avatars: avatars[0], fullName, userId })
+    this.setState({ invite_id: _id, avatars: avatars[avatars.length - 1], fullName, userId })
   }
 
   omponentWillUnmount() {
@@ -69,7 +69,6 @@ export default connect(state => ({ account: state.account }))(class FriendsCircl
                     const response = await Session.Circle.Post('v1/requests', { addFriend_id: id })
                     this.props.dispatch(application.showMessage(i18n.already_send_wait_confirm))
                   } catch (e) {
-                    console.log(e)
                     if (e.response && e.response.data && e.response.data.code === 'CIRCLE_REQUEST_EXIST') {
                       this.props.dispatch(application.showMessage(i18n.already_send_wait_confirm))
                     } else if (e.response && e.response.data && e.response.data.code === 'ALREADY_IN_CIRCLE') {
