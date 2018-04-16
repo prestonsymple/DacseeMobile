@@ -18,6 +18,7 @@ import {
   FriendsDetailScreen,
   FriendsSearchScreen,
   FriendsGroupDetailScreen,
+  FriendsGroupAddScreen,
   CommonScanQRCodeScreen
 } from '../route/main'
 
@@ -96,6 +97,7 @@ const HomeScreen = {
   FriendsRequest: { screen: FriendsRequestScreen },
   FriendsDetail: { screen: FriendsDetailScreen },
   FriendsGroupDetail: { screen: FriendsGroupDetailScreen },
+  FriendsGroupAdd: { screen: FriendsGroupAddScreen },
 
   CommonScanQRCode: { screen: CommonScanQRCodeScreen },
 

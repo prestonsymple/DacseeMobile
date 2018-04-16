@@ -12,6 +12,7 @@ import FriendsDetailScreen from './friends/friends.circle.detail'
 import FriendsSearchScreen from './friends/friends.search.base'
 import FriendsGroupDetailScreen from './friends/friends.group.detail'
 import CommonScanQRCodeScreen from './friends/common.scan.qrcode'
+import FriendsGroupAddScreen from './friends/friends.group.add'
 
 import BOOKING_STATUS from './status.define'
 
@@ -27,6 +28,7 @@ export {
   FriendsRequestScreen,
   FriendsSearchScreen,
   FriendsGroupDetailScreen,
+  FriendsGroupAddScreen,
   CommonScanQRCodeScreen,
 
   BOOKING_STATUS

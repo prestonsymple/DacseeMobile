@@ -22,6 +22,7 @@ import NavigatorBarSwitcher from '../components/navigator.switcher'
 import {FormattedMessage} from 'react-intl'
 import FriendsGroupList from './friends.group.list'
 import FriendsCircleComponent from './friends.circle';
+import {FriendsGroupAddScreen} from "../index";
 
 
 export default connect(state => ({
@@ -69,11 +70,12 @@ export default connect(state => ({
     const {setParams} = this.props.navigation
     setParams({mycircle})
     await InteractionManager.runAfterInteractions()
-    this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd',{i18n}))
+    // this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsCircleAdd',{i18n}))
+    this.subscription = DeviceEventEmitter.addListener('NAVIGATION.EVENT.ON.PRESS.ADD.FREIENDS', () => this.props.navigation.navigate('FriendsGroupAdd',{i18n}))
   }
 
   componentWillUnmount() {
-    DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 1)
+    // DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 1)
     this.subscription && this.subscription.remove()
   }
 
@@ -112,7 +114,7 @@ const FriendsContainerSwitcher = connect(state => ({ core_mode: state.applicatio
 
   onScroll = (e) => {
 
-    console.log(e.nativeEvent.contentOffset.x);
+    // console.log(e.nativeEvent.contentOffset.x);
 
     if (e.nativeEvent.contentOffset.x !== 0 && e.nativeEvent.contentOffset.x > 0 && e.nativeEvent.contentOffset.x > width/2 - 50){
       DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 1)
