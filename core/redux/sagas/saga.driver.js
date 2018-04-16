@@ -60,11 +60,12 @@ function* updateDriverLocation() {
 
 function* driverStatusObserver() {
   while (true) {
-    const { booking_id, app_status, working, logined } = yield select(state => ({
+    const { booking_id, app_status, working, logined, user_id } = yield select(state => ({
       booking_id: state.storage.driver_booking_id,
       app_status: state.application.application_status === 'active',
       logined: state.account.status,
-      working: state.driver.working
+      working: state.driver.working,
+      user_id: state.account.user._id
     }))
 
     const fields = [
@@ -90,7 +91,8 @@ function* driverStatusObserver() {
       } 
     } else if (!working && logined) {
       try {
-        const activeBooking = yield call(Session.Booking.Get, 'v1/activeBookings')
+        let activeBooking = yield call(Session.Booking.Get, 'v1/activeBookings')
+        activeBooking = activeBooking.filter(pipe => pipe.passenger_id !== user_id)
         // 恢复工作模式
         if (activeBooking.length > 0) {
           const jobs = yield all(activeBooking.map(pipe => call(Session.Booking.Get, `v1/bookings/${pipe._id}?fields=${fields.join(',')}`)))

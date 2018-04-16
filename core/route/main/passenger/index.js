@@ -564,7 +564,7 @@ const BookingDetailView = (props) => {
         <TouchableOpacity 
           activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7} 
           onPress={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? () => {} : onPress} 
-          style={{ backgroundColor: status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 'red' : '#999', borderRadius: 6, marginTop: 8, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center' }}
+          style={{ backgroundColor: status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? '#999' : 'red', borderRadius: 6, marginTop: 8, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center' }}
         >
           <Text style={{ color: '#fff', fontSize: TextFont.TextSize(16) }}>{i18n.cancel_trip}</Text>
         </TouchableOpacity>
