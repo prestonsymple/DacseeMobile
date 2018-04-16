@@ -165,7 +165,7 @@ class ListItem extends Component {
               <Text style={{ marginLeft: 5, fontSize: TextFont.TextSize(14), color: '#5C5B63' }}>{payment_method }</Text>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                 {/* <View style={{ marginLeft: 30 }}>{ Icons.Generator.Material('monetization-on', 15, '#bbb') }</View> */}
-                <Text style={{ fontSize: TextFont.TextSize(14), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{fare}</Text>
+                <Text style={{ fontSize: TextFont.TextSize(14), marginLeft: 10, fontWeight: 'bold', color: '#6A696F' }}>{ `RM ${parseFloat(fare).toFixed(2)}`}</Text>
               </View>
             </View>
           </View>

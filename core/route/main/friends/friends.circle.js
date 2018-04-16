@@ -224,7 +224,9 @@ export default connect(state => ({
     console.log(this.props)
     return (
       <View>
+
         <View style={{flex:1, backgroundColor:'white'}}>
+          <HeaderSearchBar/>
           <ListView
             refreshControl={this._refreshControl(loading, i18n)}
             contentContainerStyle={{ paddingHorizontal: 25 }}
@@ -273,6 +275,36 @@ class ItemPerson extends Component {
           </TouchableOpacity>
         }
       </TouchableOpacity>
+    )
+  }
+}
+
+class HeaderSearchBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      switcherStatus: 0
+    };
+  }
+  render() {
+    return (
+      <View style={{ backgroundColor: 'blue' }}>
+        <View style={{height:60, backgroundColor: '#1ab2fd'}}>
+          <View style={{ marginHorizontal: 10, width: width - 20, paddingHorizontal: 18, marginTop:10, backgroundColor: '#1697d7', borderRadius: 21, alignItems: 'center' }}>
+            <FormattedMessage id={'search_name_phone_email'}>
+              {
+                msg => (
+                  <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
+                    Platform.select({
+                      android: { height: 42, width: width - 56 },
+                      ios: { height: 42, width: width - 56 }
+                    })} />
+                )
+              }
+            </FormattedMessage>
+          </View>
+        </View>
+      </View>
     )
   }
 }

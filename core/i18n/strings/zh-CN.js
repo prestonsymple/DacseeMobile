@@ -304,7 +304,14 @@ const zh_CN = {
   scan:'扫一扫',
   custom_location :'自定义位置',
   credit_card :'信用卡',
-  account_activated:'您的账号已激活，请前往设置中上传您的头像，以便朋友能够找到您'
+  account_activated:'您的账号已激活，请前往设置中上传您的头像，以便朋友能够找到您',
+  order_creat_err:'订单创建失败',
+  select_least_one:'请选择至少一个朋友',
+  hava_unfinish_order:'当前还有未结束的行程',
+  no_driver_order:'当前没有可接单的司机',
+  drive_cancel_order:'很抱歉，该订单已被司机取消',
+  order_timeout:'暂无司机接单，订单超时，已被取消',
+  order_to_afresh:'订单已被司机取消，请尝试重新预订'
 }
 
 export default zh_CN

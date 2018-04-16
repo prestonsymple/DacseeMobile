@@ -137,7 +137,7 @@ export default connect( state => ({
               <Text style={{ fontSize: TextFont.TextSize(15), color:'#555'}}>{i18n.fare_total}</Text>
               <View stye={{ marginTop: 10, flex: 1, flexDirection: 'row'}}>
                 {/* <Text style={{ width: 60, fontSize: 14, color: '#555', backgroundColor: 'red' }}>总费用</Text> */}
-                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#555' }}>{ fare }</Text>
+                <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(15), color: '#555' }}>{ `RM ${parseFloat(fare).toFixed(2)}`}</Text>
               </View>
             </View>
 
