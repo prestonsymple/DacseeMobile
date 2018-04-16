@@ -56,9 +56,9 @@ export default connect(state => ({
       const resp = await Session.Booking.Get(`v1/bookings?role=driver&date_from=${dateFrom}&date_to=${dateTo}`)
       // TODO: 检查过滤器
       const jobs = resp.filter(pipe => (
-        pipe.status !== 'ON_THE_WAY' &&
-        pipe.status !== 'ARRIVED' &&
-        pipe.status !== 'ON_BOARD' &&
+        pipe.status !== 'On_The_Way' &&
+        pipe.status !== 'Arrived' &&
+        pipe.status !== 'On_Board' &&
         pipe.status !== 'Pending_Acceptance'
       ))
       this.setState({ detail: dataContrast.cloneWithRows(jobs) })

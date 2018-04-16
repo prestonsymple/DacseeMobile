@@ -41,7 +41,7 @@ const SettingMenuScreen = connect(state => ({
         }],
         [{
           title: i18n.language_region, type: 'text', onPress: () => navigation.navigate('SettingLanguageRegion', {
-            refresh: (data) => this.props.navigation.setParams({})
+            refresh: () => this.props.navigation.setParams({})
           })
         }],
         [{
