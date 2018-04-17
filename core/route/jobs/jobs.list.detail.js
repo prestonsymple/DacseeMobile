@@ -74,7 +74,7 @@ const BookingDetailHeaderView = (props) => {
  * @desc bookingDetail listItem
  */
 const BookingDetailListItem = (props) => {
-  const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress } = props
+  const { style, icon, title, titleStyle, linkingIconName, linkingIconStyle, rightViewStyle, onPress ,hideLine } = props
   return(
     <View>
       <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 44, width, backgroundColor:'white'}, style]}>
@@ -94,7 +94,7 @@ const BookingDetailListItem = (props) => {
             null
         }
       </View>
-      <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
+      {!hideLine&&<View style={{backgroundColor: '#eee', width, height: 0.8}}/>}
     </View>
   )
 }
@@ -103,12 +103,13 @@ const BookingDetailListItem = (props) => {
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { destination, from, payment_method, fare, booking_at, passenger_info, _id } = props.jobDetail
+  const { destination,fare, from, payment_method, booking_at, passenger_info, _id } = props.jobDetail
+  const {optionObject,chineseStatus,i18n,getOption} = props
   const time = moment(booking_at).format('YYYY-MM-D HH:mm')
   return(
     <View style={{backgroundColor: 'transparent', height: height / 2  }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
-      <ScrollView style={{ marginBottom: Define.system.ios.x ? 90 : 60}}>
+      <ScrollView style={{flex:1}}>
         <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
         {/* <BookingDetailListItem
           title={time}
@@ -154,9 +155,11 @@ const BookingDetailView = (props) => {
         />
         <BookingDetailListItem
           title={ <FormattedMessage id={'note_to_driver'}/>}
+          hideLine={true}
           icon={<Image style={{height:14,width:14, marginRight:8}} source={Resources.image.booking_detail_info}/>}
         />
       </ScrollView>
+      <BookingDetailBottomView fare={fare} getOption={getOption} i18n={i18n} optionObject={optionObject} chineseStatus={chineseStatus}/>
     </View>
   )
 }
@@ -174,9 +177,9 @@ const BookingDetailBottomView = (props) => {
   const chineseStatus = props.chineseStatus
 
   return(
-    <View style={[styles.JobDetailWrap,{ height: 61, width, backgroundColor:'white' }]}>
+    <View style={[styles.JobDetailWrap,{ height: 61, width, backgroundColor:'#fff' }]}>
       <View style={{ height: 1, backgroundColor: '#d7d7d7' }} />
-      <View style={{flexDirection: 'row', flex:1, justifyContent: 'space-between'}}>
+      <View style={{flexDirection: 'row',flex:1, justifyContent: 'space-between',alignItems:'center'}}>
         <View style={{ justifyContent:'center'}}>
           <Text style={{fontSize: 14, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
             RM
@@ -186,7 +189,7 @@ const BookingDetailBottomView = (props) => {
 
         {
           getOption ?
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
+            <View style={{ flexDirection: 'row', marginRight: 10,marginBottom:10}}>
               <Button style={{ borderRadius: 5, width: 100, height: 40, backgroundColor: '#E8969E', marginRight: 10 }} onPress={ optionObject.leftAction }>
                 <Text style={{ fontSize: TextFont.TextSize(16), fontWeight: 'bold', color: 'white'}}>{ i18n[optionObject.left] }</Text>
               </Button>
@@ -444,8 +447,11 @@ export default connect(state => ({
             </GoogleMapView>
           )
         }
-        <BookingDetailView jobDetail={this.props.navigation.state.params.jobDetail} i18n={i18n} detail={this.state.detail} optionObject={optionObject}/>
-        <BookingDetailBottomView fare={fare} getOption={getOption} i18n={i18n} optionObject={optionObject} chineseStatus={chineseStatus}/>
+        <BookingDetailView jobDetail={this.props.navigation.state.params.jobDetail}
+          i18n={i18n} detail={this.state.detail} 
+          getOption={getOption}
+          optionObject={optionObject} chineseStatus={chineseStatus}/>
+       
       </SafeAreaView>
     )
   }
@@ -453,7 +459,7 @@ export default connect(state => ({
 
 const styles = StyleSheet.create({
   JobDetailWrap: Platform.select({
-    ios: { position: 'absolute', bottom: Define.system.ios.x ? 20 : 0, left: 0, right: 0},
-    android: { position: 'absolute', bottom: 0, left: 0, right: 0 }
+    ios: { paddingBottom: Define.system.ios.x ? 20 : 0},
+    android: {  paddingBottom: 0}
   }),
 })
