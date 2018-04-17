@@ -387,7 +387,7 @@ export default connect(state => ({
                       if (message !== 'success') throw new Error('')
                       this._facebookAuth(result)
                     } catch (e) {
-                      this.props.showMessage(app.showMessage('Error'))
+                      this.props.dispatch(app.showMessage('Error'))
                     }
                   })
 
