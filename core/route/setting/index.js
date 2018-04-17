@@ -16,7 +16,7 @@ import {Icons, Session} from '../../utils'
 import {
   account, application, intl
 } from '../../redux/actions'
-import {DeviceEventEmitter} from "react-native";
+import {DeviceEventEmitter} from 'react-native'
 
 // 主菜单
 const SettingMenuScreen = connect(state => ({
@@ -231,7 +231,7 @@ const SettingLanguageRegionScreen = connect(state => ({
         [{
           title: i18n.language, type: 'text', value: i18n.current_language, editable: true, onPress: () => navigation.navigate('SettingLanguageChoose', {
             refresh: (data)=>{
-              this.props.navigation.setParams({});
+              this.props.navigation.setParams({})
             }
           })
         }

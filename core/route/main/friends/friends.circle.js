@@ -253,10 +253,10 @@ export default connect(state => ({
 
 class HeaderSearchBar extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       switcherStatus: 0
-    };
+    }
   }
   render() {
     return (
@@ -265,7 +265,7 @@ class HeaderSearchBar extends Component {
           <FormattedMessage id={'search_name_phone_email'}>
             {
               msg => (
-                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
+                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF'} placeholder={msg} style={
                   Platform.select({
                     android: { height: 72, width: width - 56 },
                     ios: { height: 36, width: width - 56 }

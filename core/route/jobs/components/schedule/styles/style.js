@@ -1,10 +1,10 @@
-import {StyleSheet} from 'react-native';
-import platformStyles from './platform-style';
+import {StyleSheet} from 'react-native'
+import platformStyles from './platform-style'
 
-const STYLESHEET_ID = 'stylesheet.agenda.main';
+const STYLESHEET_ID = 'stylesheet.agenda.main'
 
 export default function styleConstructor(theme = {}) {
-  const { knob, weekdays } = platformStyles();
+  const { knob, weekdays } = platformStyles()
   return StyleSheet.create({
     knob,
     weekdays,
@@ -41,5 +41,5 @@ export default function styleConstructor(theme = {}) {
       backgroundColor:'#f4f4f4'
     },
     ...(theme[STYLESHEET_ID] || {})
-  });
+  })
 }

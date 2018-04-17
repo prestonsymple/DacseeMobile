@@ -72,7 +72,7 @@ export default connect(state => ({
         detail: dataContrast.cloneWithRows(data)
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'));
+      this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
         loading: false
       })

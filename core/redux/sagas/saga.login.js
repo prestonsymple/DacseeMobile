@@ -207,7 +207,7 @@ function* registerDevice() {
       status: state.account.status
     }))
 
-    if (!status) return;
+    if (!status) return
     try {
       const extendFields = System.Platform.Android ? { channelId: token, userId } : { token }
       const postData = Object.assign({}, {

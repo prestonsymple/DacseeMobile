@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Text,
   View,
@@ -7,8 +7,8 @@ import {
   PanResponder,
   Easing,
   StyleSheet
-} from 'react-native';
-import PropTypes from 'prop-types';
+} from 'react-native'
+import PropTypes from 'prop-types'
 const {width,height}=Dimensions.get('window')
 import { Screen, Icons, Session, TextFont } from '../../../utils'
 export default class OrderSlider extends Component {

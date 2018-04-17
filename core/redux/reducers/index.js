@@ -13,9 +13,9 @@ import address from './reducer.address'
 import SwitchNavigator from '../../app.routes'
 const initialState = SwitchNavigator.router.getStateForAction(SwitchNavigator.router.getActionForPathAndParams('AuthLoading'))
 const navReducer = (state = initialState, action) => {
-  const nextState = SwitchNavigator.router.getStateForAction(action, state);
+  const nextState = SwitchNavigator.router.getStateForAction(action, state)
   // console.log(`[NAVIGATION][ACTION][${action}]`, state, nextState)
-  return nextState || state;
+  return nextState || state
 }
 
 export default combineReducers({

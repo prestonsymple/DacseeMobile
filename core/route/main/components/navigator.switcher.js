@@ -19,37 +19,28 @@ export default class NavigationBarSwipe extends PureComponent {
     super(props)
     const index = this.props.index
     this.state = {
-      // index: new Animated.Value(!props.core_mode === titles[0] ? 0 : 1)
-      index: new Animated.Value(index),
+      value: new Animated.Value(index),
     }
   }
 
-  componentDidMount() {
-    if (this.props.index === 0){
-      this.subscription = DeviceEventEmitter.addListener('FRIENDS.SWITCHER.EMITTER', (index) => {
-        Animated.timing(this.state.index, { duration: 200, toValue: index, useNativeDriver: true }).start()
-      })
-    }
+  componentWillReceiveProps(nextProps) {
 
+    Animated.timing(this.state.value, { duration: 200, toValue: nextProps.index, useNativeDriver: true }).start()
   }
 
-  componentWillUnmount() {
-    this.subscription && this.subscription.remove()
-  }
+  onPress = (index) => {
 
-  onPress(index) {
-
-    Animated.timing(this.state.index, { duration: 200, toValue: index, useNativeDriver: true }).start()
+    Animated.timing(this.state.value, { duration: 200, toValue: index, useNativeDriver: true }).start()
 
     this.props.onPress(index)
   }
 
   render() {
-    const { index } = this.state
+    const { value } = this.state
     const { hidden, i18n } = this.props
-    const translateX = index.interpolate({ inputRange: [0, 1], outputRange: [0, 88] })
-    const opacity_0 = index.interpolate({ inputRange: [0, 1], outputRange: [1, .4] })
-    const opacity_1 = index.interpolate({ inputRange: [0, 1], outputRange: [.4, 1] })
+    const translateX = value.interpolate({ inputRange: [0, 1], outputRange: [0, 88] })
+    const opacity_0 = value.interpolate({ inputRange: [0, 1], outputRange: [1, .4] })
+    const opacity_1 = value.interpolate({ inputRange: [0, 1], outputRange: [.4, 1] })
     const titles = this.props.titles
 
     /** TODO 标题文字是没有国际化的，之后需要将titles[0]改成 i18[titles[0]] */
@@ -70,6 +61,7 @@ export default class NavigationBarSwipe extends PureComponent {
               >
                 <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>{ titles[0] }</Animated.Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 onPress={() => this.onPress(1)}
                 activeOpacity={1}

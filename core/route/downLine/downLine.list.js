@@ -11,7 +11,7 @@ import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../ut
 
 import { application, booking } from '../../redux/actions'
 import UserList from './components/user.list'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 const { height, width } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 export default connect(state => ({
@@ -67,7 +67,7 @@ export default connect(state => ({
     }
   }
   goUserDetails(_id) {
-    const {i18n} = this.props;
+    const {i18n} = this.props
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'DownLineDetail',
       params: {

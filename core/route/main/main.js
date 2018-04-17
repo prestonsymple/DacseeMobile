@@ -131,8 +131,8 @@ export default connect(state => ({
   }
 
   render() {
-    const { gps_access, i18n } = this.props;
-    const titles = ['driver','passenger'];
+    const { gps_access, i18n } = this.props
+    const titles = ['driver','passenger']
     return !gps_access ? (
       <View style={{ flex: 1, width, justifyContent: 'center', alignItems: 'center', top: -44 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
@@ -147,7 +147,7 @@ export default connect(state => ({
     ) : (
       <View style={{ flex: 1, alignItems: 'center' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#1ab2fd'} barStyle={'light-content'} />
-        <NavigatorBarSwitcher titles={titles} index={1} onPress={(index)=>{ this.setState({switcherStatus:index})}} />
+        <NavigatorBarSwitcher titles={titles} index={this.state.switcherStatus} onPress={(index)=>{ this.setState({switcherStatus:index})}} />
         <BookingContainerSwitcher switcherStatus={this.state.switcherStatus}/>
       </View>
     )
@@ -172,7 +172,7 @@ class BookingContainerSwitcher extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    console.log(props);
+    console.log(props)
     if (props.switcherStatus !== this.props.switcherStatus) {
       this.scrollView.scrollTo({ x: props.switcherStatus === 0 ? 0 : width, animated: false })
     }

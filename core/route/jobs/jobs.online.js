@@ -38,7 +38,7 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
-    await InteractionManager.runAfterInteractions();
+    await InteractionManager.runAfterInteractions()
   }
 
   componentWillReceiveProps(props) {

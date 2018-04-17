@@ -9,7 +9,7 @@ import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-hel
 const navigationMiddleware = createReactNavigationReduxMiddleware(
   'AuthLoading',
   state => state.nav,
-);
+)
 
 const persistConfig = {
   key: 'v0.0.4',

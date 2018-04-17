@@ -1,6 +1,6 @@
 import {
   Platform
-} from 'react-native';
+} from 'react-native'
 export default function platformStyles() {
   return {
     knob: {
@@ -23,5 +23,5 @@ export default function platformStyles() {
       paddingBottom: 7,
       backgroundColor: '#ffffff'
     },
-  };
+  }
 }

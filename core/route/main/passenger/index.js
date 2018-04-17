@@ -394,15 +394,15 @@ export default connect(state => ({
                 <Image source={Resources.image.map_car_pin} />
               </GoogleMarker>
               <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
-              {
-                friends_location.length > 0 && (
-                  friends_location.map((pipe, index) => (
-                    <GoogleMarker key={index} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }}>
-                      <Image source={Resources.image.car_rookie} />
-                    </GoogleMarker>
-                  ))
-                )
-              }
+              {/*{*/}
+              {/*friends_location.length > 0 && (*/}
+              {/*friends_location.map((pipe, index) => (*/}
+              {/*<GoogleMarker key={index} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }}>*/}
+              {/*<Image source={Resources.image.car_rookie} />*/}
+              {/*</GoogleMarker>*/}
+              {/*))*/}
+              {/*)*/}
+              {/*}*/}
             </GoogleMapView>
           )
         }

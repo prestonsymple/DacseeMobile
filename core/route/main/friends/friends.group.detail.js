@@ -44,7 +44,6 @@ export default connect(state => ({
       dataSource: _dataSource,
       selected: selected_friends,
       selectAll: false,
-      isEdit: false,
     }
   }
 
@@ -114,7 +113,7 @@ export default connect(state => ({
 
     console.log('data', data)
 
-    this.setState({ dataSource: _dataSource, selected: clone, selectAll: nextSelectAll, isEdit: true })
+    this.setState({ dataSource: _dataSource, selected: clone, selectAll: nextSelectAll })
   }
 
   onPressCheckAll() {
@@ -142,11 +141,7 @@ export default connect(state => ({
   }
 
   editPress = () => {
-    const _dataSource = dataContrast.cloneWithRowsAndSections([
-      this.props.requestor,
-      this.props.friend
-    ])
-    this.setState({ dataSource: _dataSource, isEdit: !this.state.isEdit })
+    this.props.navigation.navigate('FriendsGroupAdd')
   }
 
   renderHeaderView = () => {
@@ -217,7 +212,6 @@ export default connect(state => ({
 
   _renderRow = (data, section, rowId) => {
     const { loading, i18n } = this.props
-    console.log('isEdit', this.state.isEdit);
     return(
       section === '0' ?
         (<FriendRequest
@@ -241,8 +235,8 @@ export default connect(state => ({
           }}
           data={data} />) :
         (<FriendCell
+          isFriendsGroupCell={true}
           data={data}
-          isShowCheck={!this.state.isEdit}
           onPressCheck={() => this.onPressCheck(data)}
           onPressDetail={()=> this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsDetail', params: { i18n,...data } }))}
         />)

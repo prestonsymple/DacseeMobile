@@ -38,7 +38,7 @@ export default connect(({ application }) => ({
   }
 
   componentWillReceiveProps(props) {
-    if (props.remoteBundle === null || this.running) return;
+    if (props.remoteBundle === null || this.running) return
 
     this.downloadBundle(props.remoteBundle)
   }

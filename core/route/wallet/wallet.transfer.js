@@ -11,7 +11,7 @@ import { Screen, Icons, Redux, Define, System, Session ,TextFont} from '../../ut
 import { Button } from '../../components'
 import Resources from '../../resources'
 import { application, wallet } from '../../redux/actions'
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const {height, width} = Screen.window
 

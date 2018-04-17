@@ -2,7 +2,7 @@
  * Created by Rabbit on 2018/4/11.
  */
 
-import React, {Component, PureComponent} from 'react';
+import React, {Component, PureComponent} from 'react'
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,7 @@ import {
   Image,
   Platform,
   InteractionManager, ScrollView, TextInput, TouchableOpacity, DeviceEventEmitter
-} from 'react-native';
+} from 'react-native'
 import { Define, Screen, System, Icons } from '../../../utils'
 import { connect } from 'react-redux'
 
@@ -21,8 +21,7 @@ const { width, height } = Screen.window
 import NavigatorBarSwitcher from '../components/navigator.switcher'
 import {FormattedMessage} from 'react-intl'
 import FriendsGroupList from './friends.group.list'
-import FriendsCircleComponent from './friends.circle';
-import {FriendsGroupAddScreen} from "../index";
+import FriendsCircleComponent from './friends.circle'
 
 
 export default connect(state => ({
@@ -58,10 +57,10 @@ export default connect(state => ({
   }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       switcherStatus: 0
-    };
+    }
   }
 
   async componentDidMount() {
@@ -75,23 +74,26 @@ export default connect(state => ({
   }
 
   componentWillUnmount() {
-    // DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 1)
     this.subscription && this.subscription.remove()
   }
 
 
+  onSwitch = (index) => {
+    this.setState({switcherStatus:index})
+  }
+
   render() {
-    const titles = ['friends','group'];
+    const titles = ['friends','group']
     return (
       <View style={styles.container}>
-        <NavigatorBarSwitcher titles={titles} index={0} onPress={(index)=>{this.setState({switcherStatus:index})}}/>
-        <FriendsContainerSwitcher switcherStatus={this.state.switcherStatus}/>
+        <NavigatorBarSwitcher titles={titles} index={this.state.switcherStatus} onPress={this.onSwitch}/>
+        <FriendsContainerSwitcher switcherStatus={this.state.switcherStatus} onScroll={this.onSwitch}/>
       </View>
-    );
+    )
   }
 })
 
-const FriendsContainerSwitcher = connect(state => ({ core_mode: state.application.core_mode }))(class FriendsContainerSwitcher extends PureComponent {
+const FriendsContainerSwitcher = connect(state => ({ core_mode: state.application.core_mode }))(class FriendsContainerSwitcher extends Component {
   async componentDidMount() {
 
     await InteractionManager.runAfterInteractions()
@@ -114,12 +116,10 @@ const FriendsContainerSwitcher = connect(state => ({ core_mode: state.applicatio
 
   onScroll = (e) => {
 
-    // console.log(e.nativeEvent.contentOffset.x);
-
     if (e.nativeEvent.contentOffset.x !== 0 && e.nativeEvent.contentOffset.x > 0 && e.nativeEvent.contentOffset.x > width/2 - 50){
-      DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 1)
+      this.props.onScroll(1)
     }else{
-      DeviceEventEmitter.emit('FRIENDS.SWITCHER.EMITTER', 0)
+      this.props.onScroll(0)
     }
   }
 
@@ -145,4 +145,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-});
+})

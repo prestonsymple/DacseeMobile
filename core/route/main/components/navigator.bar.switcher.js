@@ -37,7 +37,7 @@ export default connect(state => ({
   }
 
   onPress(index) {
-    const titles = this.props.titles;
+    const titles = this.props.titles
 
     this.props.dispatch(application.setCoreMode(index === 0 ? titles[index] : titles[index]))
 

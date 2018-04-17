@@ -137,7 +137,7 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
           } })
           this.uploadImage(response.data)
         }
-      });
+      })
     }
   }
 

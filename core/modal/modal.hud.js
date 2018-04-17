@@ -8,7 +8,7 @@ export default connect((state)=>({
   hudModalVisible: state.application.hud_modal_visible
 }))(class Hud extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     // 初始状态
     // this.state = {};
   }
