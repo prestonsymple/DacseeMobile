@@ -320,7 +320,6 @@ const mas = {
   bank_detail:'银行详情',
   bank_name:'银行名称',
   bank_holder_name:'持卡人姓名',
-  pls_enter_bank_name:'请输入银行名称',
   pls_enter_holder_name:'请输入持卡人姓名',
   sel_bank:'选择银行',
   add_bank_account:'添加账户',
@@ -330,6 +329,7 @@ const mas = {
   empty_holder_name:'持卡人姓名不能为空',
   add_bank_info_succ:'添加银行信息成功',
   update_bank_info_succ:'修改银行信息成功',
+  bank_detail_for_withdrawals:'完善银行信息以便于提现',
   chat:'聊天'
 }
 

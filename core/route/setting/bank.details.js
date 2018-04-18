@@ -59,7 +59,7 @@ class  BankDetails extends Component{
     return(
       <View style={styles.container}>
         <View style={{paddingTop:16,paddingLeft:12}}>
-          <Text>Bank details is for your withdrawal purposes</Text>
+          <Text>{i18n.bank_detail_for_withdrawals}</Text>
         </View>
         <Settings producer={[
           [{
@@ -77,7 +77,7 @@ class  BankDetails extends Component{
               title: bankInfo==null ? i18n.add_bank_account : i18n.update_bank_account,
               editorName: 'String',
               option: {
-                placeholder: i18n.pls_enter_bank_name,
+                placeholder: i18n.pls_enter_bank_account,
                 keyboardType:'numeric',
                 value: wallet.bank_info.accountNo || (bankInfo && bankInfo.accountNo) || '',
                 onChangeValue:  (val) => this._changeBankAccount(val)

@@ -118,7 +118,7 @@ const SettingAccountScreen = connect(state => ({
         /* 用户没有添加过卡的情况 */
         if( !bank_info.name || bank_info.name.length===0) return this.props.dispatch(application.showMessage(i18n.empty_bank_name))
         if( !bank_info.accountNo || bank_info.accountNo.length===0) return this.props.dispatch(application.showMessage(i18n.empty_bank_account))
-        if(  !bank_info.accountHolderName || bank_info.accountHolderName.length===0) return this.props.dispatch(application.showMessage(i18n.empty_holder_name))
+        if( !bank_info.accountHolderName || bank_info.accountHolderName.length===0) return this.props.dispatch(application.showMessage(i18n.empty_holder_name))
         info=bank_info
       }
       const data = await Session.User.Put('v1/profile/bankInfo', { ...info })
