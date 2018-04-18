@@ -15,9 +15,9 @@ const en_US = {
   enter_referee_id: 'Referrer ID',
   referee_id: 'Referrer ID',
   send_code: 'ReSend',
-  active_account_tip: 'I have read and agree to the',
+  active_account_tip: 'Click finish as I have read and agree to the',
   choose_account: 'Please select your account',
-  user_protocol: 'User Protocol',
+  user_protocol: 'Terms and Condition',
   finish: 'Finish',
   alert_sent_code: 'Verification code has been send to your phone number',
 
