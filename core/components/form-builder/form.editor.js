@@ -50,7 +50,7 @@ class StringEditor extends BaseEditor {
 
   render() {
     const { option = {} } = this.props
-    const { value, placeholder, onValidValue, onChangeValue, keyboardType, style } = option
+    const { value, placeholder, onValidValue, onChangeValue, keyboardType='default', style } = option
 
     return (
       <View style={{ backgroundColor: 'white', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#eee' }}>
