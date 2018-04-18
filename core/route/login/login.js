@@ -181,8 +181,6 @@ export default connect(state => ({
       const data = await Session.User.Post('v1/auth/oauth', {
         oAuth: { provider: 'facebook', id: user.uid }
       })
-      console.log(data)
-
       this.props.dispatch(account.saveLogin(data))
       this.props.dispatch(app.hideProgress())
       this.props.dispatch(app.updatePushToken())
@@ -350,7 +348,7 @@ export default connect(state => ({
                 </Animated.View>
               </TouchableOpacity>
               {
-                this.props.stage===2&&
+                (this.props.stage===2||this.props.stage===3)&&
                 <View style={{borderRadius: 22,flex: 2, marginLeft: 10,backgroundColor: '#ffa81d'}} >
                   <CountDownButton sendCode={this.sendCode} style={{flex:1}} i18n={i18n}/>
                 </View>
