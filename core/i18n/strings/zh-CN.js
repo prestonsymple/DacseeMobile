@@ -313,9 +313,22 @@ const zh_CN = {
   order_timeout:'暂无司机接单，订单超时，已被取消',
   order_to_afresh:'订单已被司机取消，请尝试重新预订',
 
+  //todo
   bank_detail:'银行详情',
   bank_name:'银行名称',
-  bank_holder_name:'持卡人姓名'
+  bank_holder_name:'持卡人姓名',
+  pls_enter_holder_name:'请输入持卡人姓名',
+  sel_bank:'选择银行',
+  add_bank_account:'添加账户',
+  update_bank_account:'修改账户',
+  empty_bank_name:'银行名称不能为空',
+  empty_bank_account:'银行账号不能为空',
+  empty_holder_name:'持卡人姓名不能为空',
+  add_bank_info_succ:'添加银行信息成功',
+  update_bank_info_succ:'修改银行信息成功',
+  bank_detail_for_withdrawals:'完善银行信息以便于提现',
+
+  chat:'聊天'
 }
 
 export default zh_CN

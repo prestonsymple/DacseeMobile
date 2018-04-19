@@ -40,7 +40,8 @@ import {
   WalletDetailScreen,
   WalletTransferScreen,
   WalletTransferSelectionScreen,
-  WalletTransferSummaryScreen
+  WalletTransferSummaryScreen,
+  BankListScreen
 } from '../route/wallet'
 
 import {
@@ -115,6 +116,7 @@ const HomeScreen = {
   WalletTransfer: { screen: WalletTransferScreen },
   WalletTransferSelection: { screen: WalletTransferSelectionScreen },
   WalletTransferSummary: { screen: WalletTransferSummaryScreen },
+  BankList:{ screen:BankListScreen},
 
   IncomeList: { screen: IncomeListScreen },
 

@@ -8,14 +8,14 @@ import {
 // import { NavigationActions, SafeAreaView } from 'react-navigation'
 import marked from 'marked'
 
-import { Screen, Icons, Define, Session ,TextFont } from '../../utils'
+import { Screen, Icons, Define, Session, TextFont } from '../../utils'
 import resources from '../../resources'
 import { Button } from '../../components'
 import ShareUtile from '../../native/umeng/ShareUtil'
 import { application as app, account } from '../../redux/actions'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-
+import CountDownButton from './components/button.count.down'
 const codeInputWidth = ((Screen.window.width - 40 * 2) - 35 * 3) / 4
 const codeInputProps = {
   maxLength: 1,
@@ -99,7 +99,7 @@ export default connect(state => ({
   }
 
   stageHandle() {
-    const { stage,i18n} = this.props
+    const { stage, i18n } = this.props
     const { value, countryCode } = this.state
 
     this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
@@ -121,8 +121,8 @@ export default connect(state => ({
   }
 
   onPressComplate() {
-    const {i18n} = this.props
-    const { value, countryCode, fullName, referralUserId, v1, v2 ,v3, v4, value_extend, verify_code_extend } = this.state
+    const { i18n } = this.props
+    const { value, countryCode, fullName, referralUserId, v1, v2, v3, v4, value_extend, verify_code_extend } = this.state
     if (fullName.length < 2) {
       return this.props.dispatch(app.showMessage(i18n.full_name_two_chart))
     }
@@ -171,19 +171,21 @@ export default connect(state => ({
     var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
     return reg.test(val)
   }
-
+  sendCode = async()=>{
+    const {value ,countryCode }=this.state
+    let body = { phoneCountryCode: countryCode, phoneNo: value }
+    await Session.User.Post('v1/sendVerificationCode/phone',body)
+  }
   async _facebookAuth(user) {
     try {
       const data = await Session.User.Post('v1/auth/oauth', {
         oAuth: { provider: 'facebook', id: user.uid }
       })
-      console.log(data)
-
       this.props.dispatch(account.saveLogin(data))
       this.props.dispatch(app.hideProgress())
       this.props.dispatch(app.updatePushToken())
       // console.log('facebook登录', data)
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       // console.log('facebook登录失败', e)
       if (e.response.data.code == 'INVALID_USER') {
@@ -310,7 +312,7 @@ export default connect(state => ({
             </Animated.View>
 
             <Animated.View style={[
-              { position: 'absolute', overflow: 'hidden' },
+              { position: 'absolute', flexDirection: 'row', overflow: 'hidden' },
               { height: stage.interpolate({ inputRange: [0, 1], outputRange: [bottomBtnHeight, 44], extrapolate: 'clamp' }) },
               {
                 top: Platform.select({
@@ -324,40 +326,34 @@ export default connect(state => ({
             ]}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.stageHandle.bind(this)}>
                 <Animated.View style={[
-                  { flex: 1, alignItems: 'center', flexDirection: 'row' },
-                  { backgroundColor: stage.interpolate({ inputRange: [0, 1, 2], outputRange: ['#ffa81d', '#ffa81d', '#ffa81d'], extrapolate: 'clamp' }) },
-                  { width: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [width * 3, (width - 70) * 3, (width - 70) * 3], extrapolate: 'clamp' }), }
+                  { flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', backgroundColor: '#ffa81d' },
+                  { borderRadius: stage.interpolate({ inputRange: [0, 1, 2, 3], outputRange: [0, 22, 22, 22] }) },
                 ]}>
-
-                  <FormattedMessage id={'login'}>
-                    {
-                      msg => (
-                        <Animated.Text style={[
-                          { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' },
-                          { opacity: stage.interpolate({ inputRange: [0, 1.4, 1.8, 2], outputRange: [1, 1, 0, 0], extrapolate: 'clamp' }) },
-                          { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
-                        ]}>{msg}</Animated.Text>
-                      )
-                    }
-                  </FormattedMessage>
-                  <Animated.View style={[
-                    { flex: 1, alignItems: 'center' },
-                    { opacity: stage.interpolate({ inputRange: [0, 1.5, 1.9, 2, 2.4], outputRange: [0, 0, 1, 1, 0], extrapolate: 'clamp' }) },
-                    { left: stage.interpolate({ inputRange: [0, 1, 2, 3], outputRange: [0, 0, -(width - 70), -((width - 70) * 2)], extrapolate: 'clamp' }) }
-                  ]}>
-                    {Icons.Generator.Material('arrow-forward', 28, 'white')}
-                  </Animated.View>
-                  <Animated.View style={[
-                    { flex: 1, alignItems: 'center' },
-                    { opacity: stage.interpolate({ inputRange: [0, 2, 3], outputRange: [0, 0, 1], extrapolate: 'clamp' }) },
-                    { left: stage.interpolate({ inputRange: [0, 2, 3], outputRange: [0, 0, -((width - 70) * 2)], extrapolate: 'clamp' }) }
-                  ]}>
-                    {Icons.Generator.Material('arrow-back', 28, 'white')}
-                  </Animated.View>
+                  {this.props.stage === 0 ?
+                    <FormattedMessage id={'login'}>
+                      {
+                        msg => (
+                          <Animated.Text style={[
+                            { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white' },
+                            { opacity: stage.interpolate({ inputRange: [0, 1.4, 1.8, 2], outputRange: [1, 1, 0, 0], extrapolate: 'clamp' }) },
+                            { left: stage.interpolate({ inputRange: [0, 1, 2], outputRange: [0, 0, -(width - 70)], extrapolate: 'clamp' }) }
+                          ]}>{msg}</Animated.Text>
+                        )
+                      }
+                    </FormattedMessage> :
+                    this.props.stage === 1 ?
+                      Icons.Generator.Material('arrow-forward', 28, 'white') :
+                      Icons.Generator.Material('arrow-back', 28, 'white')
+                  }
                 </Animated.View>
               </TouchableOpacity>
+              {
+                (this.props.stage===2||this.props.stage===3)&&
+                <View style={{borderRadius: 22,flex: 2, marginLeft: 10,backgroundColor: '#ffa81d'}} >
+                  <CountDownButton sendCode={this.sendCode} style={{flex:1}} i18n={i18n}/>
+                </View>
+              }
             </Animated.View>
-
             <Animated.View style={[
               { position: 'absolute', right: 0, top: (height / 2) + 120 },
               { justifyContent: 'center', alignItems: 'center' },
@@ -408,14 +404,14 @@ export default connect(state => ({
           { opacity: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [0, 0, 1], extrapolate: 'clamp' }) }
         ]}>
           <ScrollView contentContainerStyle={{ justifyContent: 'center' }} style={{
-            flex: 1,  marginTop: this.isEmail(this.state.value) ? 110 : 200
+            flex: 1, marginTop: this.isEmail(this.state.value) ? 110 : 200
           }}>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 45 }}>
-              <Text style={{ fontSize:26, color: '#f2f2f2', fontWeight: '400' }}>
+              <Text style={{ fontSize: 26, color: '#f2f2f2', fontWeight: '400' }}>
                 <FormattedMessage id={'active_account'} />
               </Text>
             </View>
-            <View style={{ marginBottom: 15 ,paddingHorizontal:45}}>
+            <View style={{ marginBottom: 15, paddingHorizontal: 45 }}>
               <TextInput
                 {...Define.TextInputArgs}
                 clearTextOnFocus={false}
@@ -500,7 +496,7 @@ export default connect(state => ({
                 placeholder={i18n.enter_name}
                 returnKeyType={'done'}
                 value={this.state.fullName}
-                { ...Object.assign({}, this.props.full_name !== undefined ? { defaultValue: this.props.full_name } : {}) }
+                {...Object.assign({}, this.props.full_name !== undefined ? { defaultValue: this.props.full_name } : {})}
                 onChangeText={text => this.setState({ fullName: text })}
                 style={[styles.stdInput, styles.registerTextInput]} />
               <TextInput
@@ -510,10 +506,10 @@ export default connect(state => ({
                 placeholder={i18n.enter_referee_id}
                 returnKeyType={'done'}
                 value={this.state.referralUserId}
-                { ...Object.assign({}, this.props.referrer_id !== undefined ? {
+                {...Object.assign({}, this.props.referrer_id !== undefined ? {
                   defaultValue: this.props.referrer_id,
                   editable: false
-                } : {}) }
+                } : {})}
                 onChangeText={text => this.setState({ referralUserId: text })}
                 style={[styles.stdInput, styles.registerTextInput]} />
             </View>
@@ -524,13 +520,13 @@ export default connect(state => ({
               <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('SettingWetView', {
                 title: i18n.privacy_policy,
                 source: { html: this.renderHtml(marked(require('../../resources/document/user.guide').markdown)) }
-              })} style={{  }}>
-                <Text style={{ fontSize: 12,marginLeft:5, color: '#ffa81d', fontWeight: '200' }}>
-                  <FormattedMessage id={'user_protocol'}/>
+              })} style={{}}>
+                <Text style={{ fontSize: 12, marginLeft: 5, color: '#ffa81d', fontWeight: '200' }}>
+                  <FormattedMessage id={'user_protocol'} />
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ height: 44,paddingHorizontal:45 }}>
+            <View style={{ height: 44, paddingHorizontal: 45 }}>
               <TouchableOpacity style={{ flex: 1 }} activeOpacity={.9} onPress={this.onPressComplate.bind(this)}>
                 <View style={{ height: 44, alignItems: 'center', flexDirection: 'row', backgroundColor: '#ffa81d', borderRadius: 22 }}>
                   <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: '400', color: 'white' }}>
@@ -552,7 +548,7 @@ export default connect(state => ({
                 }
               }}
             >
-              { Icons.Generator.Material('keyboard-arrow-left', 38, 'white') }
+              {Icons.Generator.Material('keyboard-arrow-left', 38, 'white')}
             </TouchableOpacity>
           </View>
         </Animated.View>

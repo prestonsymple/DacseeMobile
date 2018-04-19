@@ -73,7 +73,8 @@ const SettingMenuScreen = connect(state => ({
 // 账号与安全
 const SettingAccountScreen = connect(state => ({
   user: state.account.user,
-  i18n: state.intl.messages || {}
+  i18n: state.intl.messages || {},
+  wallet: state.wallet
 }))(class SettingProfileScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => {const reducer = global.store.getState()
     return {
@@ -99,6 +100,33 @@ const SettingAccountScreen = connect(state => ({
         user: Object.assign({}, this.props.user, { email: data.email })
       }))
       this.props.dispatch(application.showMessage('邮箱修改成功'))
+    } catch (e) {
+      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+    }
+  }
+
+  async _updateBankInfo() {
+    try {
+      const {i18n,user} = this.props
+      const {bankInfo} =user  //原始数据源
+      const {bank_info} =this.props.wallet //修改后的数据集合
+      let info={}
+      if(bankInfo != null) {
+        /* 用户有添加过卡的情况 */
+        if(!bank_info.name && !bank_info.accountNo && !bank_info.accountHolderName) return true //用户无修改数据
+        info=Object.assign({},bankInfo,bank_info)
+      }else{
+        /* 用户没有添加过卡的情况 */
+        if( !bank_info.name || bank_info.name.length===0) return this.props.dispatch(application.showMessage(i18n.empty_bank_name))
+        if( !bank_info.accountNo || bank_info.accountNo.length===0) return this.props.dispatch(application.showMessage(i18n.empty_bank_account))
+        if( !bank_info.accountHolderName || bank_info.accountHolderName.length===0) return this.props.dispatch(application.showMessage(i18n.empty_holder_name))
+        info=bank_info
+      }
+      const data = await Session.User.Put('v1/profile/bankInfo', { ...info })
+      this.props.dispatch(account.setAccountValue({
+        user: Object.assign({}, this.props.user, { bankInfo: data.bankInfo })
+      }))
+      this.props.dispatch(application.showMessage(bankInfo != null?i18n.update_bank_info_succ:i18n.add_bank_info_succ))
     } catch (e) {
       this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
     }
@@ -147,6 +175,9 @@ const SettingAccountScreen = connect(state => ({
           onPress: () => navigation.navigate('BankDetail', {
             title: i18n.bank_detail,
             editorName: 'String',
+            option: {
+              onsubmit:()=> this._updateBankInfo()
+            }
           })
         }], [{
           title: i18n.bind_wechat, type: 'text', value: '', onPress: () => { this.props }
