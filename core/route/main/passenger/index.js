@@ -486,7 +486,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
     const { drag, from, destination, i18n, selected_friends } = this.props
     return (
       <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? height / 2 + 22 : 360, justifyContent: 'center' },
+        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ?height-456:height-434, height: Define.system.ios.x ? 360 + 22 : 360, justifyContent: 'center' },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
         { backgroundColor: '#fff', },
         { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
@@ -522,17 +522,17 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
         <View style={{ height: 44, width: width, flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => this.props.payChange()} activeOpacity={.7}
             style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#999', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
+            <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
           </TouchableOpacity>
           <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
           <TouchableOpacity onPress={() => this.props.dateChange()}
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#999', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.now}</Text>
+            <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.now}</Text>
           </TouchableOpacity>
           <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
           <TouchableOpacity onPress={() => this.props.remarkChange()}
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#999', fontSize: 16, fontWeight: '600' }}>{'Remarks'}</Text>
+            <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{'Remarks'}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
@@ -541,7 +541,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             activeOpacity={.7} style={{ height: 50, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <View style={{ flexDirection:'row',justifyContent:'center',alignItems:'center'}} > 
               <Image style={{height:40,width:40,marginHorizontal:10 }} source={Resources.image.car_budget} />
-              <Text style={{ color: '#111', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? 'Economy' : `Economy - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
+              <Text style={{ color: '#111', fontSize: 14, fontWeight: '600' }}>{(this.props.fare === 0) ? 'Economy' : `Economy - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
             </View>
             <View style={{ alignItems:'center',marginRight:20,marginBottom:6}} > 
               {Icons.Generator.Awesome('sort-desc', 20, '#6F6F6F')}
@@ -593,7 +593,8 @@ class RemarkModel extends Component {
               <View style={{ flex: 1, }}>
                 <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{'备注'}</Text>
                 <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{'留下一段描述'}</Text>
-                <TextInput  {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }} style={{ backgroundColor: '#f1f1f1', textAlignVertical: 'top', flex: 1, marginTop: 15, borderRadius: 10 }} underlineColorAndro />
+                <TextInput  {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }} 
+                  style={{ backgroundColor: '#f1f1f1', textAlignVertical: 'top', paddingHorizontal:8, flex: 1, marginTop: 15, borderRadius: 10 }} underlineColorAndro />
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginHorizontal: 10, justifyContent: 'space-between' }}>
                 <TouchableOpacity onPress={() => this.props.remarkChange()}
