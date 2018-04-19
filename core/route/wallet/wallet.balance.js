@@ -27,7 +27,7 @@ export default connect(state => ({
     const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
-      title: reducer.intl.messages.wallet
+      title: reducer.intl.messages.wallet_lis
     }
   }
 
@@ -96,7 +96,7 @@ export default connect(state => ({
 
             this.props.dispatch(Wallet.setValues({ selected_wallet: row}))
             this.props.navigation.navigate('WalletDetail')
-          }} activeOpacity={.7}><ListItem data={row} /></TouchableOpacity>}
+          }} activeOpacity={.7}><ListItem data={row} i18n={i18n}/></TouchableOpacity>}
           // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
           style={{ flex: 1, height: 30, marginTop: 15 }}
         />
@@ -107,7 +107,7 @@ export default connect(state => ({
 
 class ListItem extends Component {
   render() {
-    const { data } = this.props
+    const { data, i18n} = this.props
     const { type, name, countryName, countryCode, countryFlag, availableAmount, floatingDriverAmount, floatingPassengerAmount } = data
     return (
       <View style={{ marginBottom: 15, width, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -143,7 +143,7 @@ class ListItem extends Component {
           {
             floatingDriverAmount === undefined & floatingPassengerAmount === undefined ?
               null :
-              <FloatingAmounView amount={{ floatingDriverAmount: floatingDriverAmount, floatingPassengerAmount: floatingPassengerAmount}} />
+              <FloatingAmounView amount={{ floatingDriverAmount: floatingDriverAmount, floatingPassengerAmount: floatingPassengerAmount}} i18n={i18n}/>
           }
 
         </View>
@@ -166,7 +166,7 @@ class FloatingAmounView extends Component {
           floatingPassengerAmount === undefined ?
             null :
             <View style={{ flex: 1, paddingLeft:15, paddingTop: 10}}>
-              <Text style={{ fontSize: TextFont.TextSize(11), color: '#a5a5a5' }}>Floating Balance (Passenger)</Text>
+              <Text style={{ fontSize: TextFont.TextSize(11), color: '#a5a5a5' }}>{this.props.i18n.float_balance_passenger}</Text>
               <Text style={{ fontSize: TextFont.TextSize(13) }}>{ floatingPassengerAmount.toFixed(2) }</Text>
             </View>
         }
@@ -174,7 +174,7 @@ class FloatingAmounView extends Component {
           floatingDriverAmount === undefined ?
             null :
             <View style={{ flex: 1, paddingLeft:15, paddingTop: 5}}>
-              <Text style={{ fontSize: TextFont.TextSize(11), color: '#a5a5a5' }}>Floating Balance (Driver)</Text>
+              <Text style={{ fontSize: TextFont.TextSize(11), color: '#a5a5a5' }}>{this.props.i18n.float_balance_driver}</Text>
               <Text style={{ fontSize: TextFont.TextSize(13) }}>{ floatingDriverAmount.toFixed(2) }</Text>
             </View>
         }
