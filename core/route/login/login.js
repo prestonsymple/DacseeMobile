@@ -104,17 +104,14 @@ export default connect(state => ({
 
     this.codeInput.v1.clear() || this.codeInput.v2.clear() || this.codeInput.v3.clear() || this.codeInput.v4.clear()
 
-    if
-    (stage === 0) {
+    if (stage === 0) {
       this.props.dispatch(account.loginNext({ stage: 1 }))
-    } else if
-    (stage === 1) {
+    } else if (stage === 1) {
       if (!value.length) return this.props.dispatch(app.showMessage(i18n.enter_correct_email_phone))
       const isMail = this.isEmail(value)
       const body = isMail ? { id: value, isMail: true } : { phoneCountryCode: countryCode, phoneNo: value }
-      this.props.dispatch(account.loginNext({ stage: isMail ? 3 : 2, value: body }))
-    } else if
-    (stage === 2) {
+      this.props.dispatch(account.loginNext({ stage: 2, value: body }))
+    } else if (stage === 2) {
       this.props.dispatch(account.loginBack(1))
       Keyboard.dismiss()
     }
@@ -171,10 +168,10 @@ export default connect(state => ({
     var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
     return reg.test(val)
   }
-  sendCode = async()=>{
-    const {value ,countryCode }=this.state
+  sendCode = async () => {
+    const { value, countryCode } = this.state
     let body = { phoneCountryCode: countryCode, phoneNo: value }
-    await Session.User.Post('v1/sendVerificationCode/phone',body)
+    await Session.User.Post('v1/sendVerificationCode/phone', body)
   }
   async _facebookAuth(user) {
     try {
@@ -210,12 +207,14 @@ export default connect(state => ({
           { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
           { backgroundColor: stage.interpolate({ inputRange: [0, 0.6, 3, 4, 5], outputRange: ['#33333300', '#33333373', '#33333373', '#000000cc', '#000000cc'] }) }
         ]} />
+        {/* 欢迎界面、输入账号、验证码界面 */}
         <Animated.View style={[
           { flex: 1, position: 'absolute', top: 0, bottom: 0 },
           { left: stage.interpolate({ inputRange: [0, 3.95, 3.99], outputRange: [0, 0, -width], extrapolate: 'clamp' }) },
           { right: stage.interpolate({ inputRange: [0, 3.95, 3.99], outputRange: [0, 0, width], extrapolate: 'clamp' }) },
           { opacity: stage.interpolate({ inputRange: [0, 3, 3.95], outputRange: [1, 1, 0], extrapolate: 'clamp' }) }
         ]}>
+
           <TouchableOpacity style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} onPress={this.backgroundHandle.bind(this)} activeOpacity={1}>
             <Animated.Image style={[
               { height: 80, width: 80, resizeMode: 'contain', position: 'absolute' },
@@ -236,7 +235,7 @@ export default connect(state => ({
               { left: stage.interpolate({ inputRange: [0, .5, .9, 1.4, 2], outputRange: [35, 35, -150, width, (width / 2) - 62], extrapolate: 'clamp' }) },
               { opacity: stage.interpolate({ inputRange: [0, .8, 1, 1.3, 2], outputRange: [1, 0, 0, 0, 1], extrapolate: 'clamp' }) }
             ]}>DACSEE</Animated.Text>
-
+            {/* 输入账号（手机号、邮箱两种模式） */}
             <Animated.View style={[
               { position: 'absolute', top: (height / 2) - 60 },
               { justifyContent: 'center' },
@@ -281,7 +280,7 @@ export default connect(state => ({
                 </FormattedMessage>
               </View>
             </Animated.View>
-
+            {/* 输入验证码 */}        
             <Animated.View style={[
               { position: 'absolute', right: 0, top: (height / 2) - 60 },
               { justifyContent: 'center' },
@@ -310,7 +309,7 @@ export default connect(state => ({
                   onChangeText={text => this.validAccount(text)} />
               </View>
             </Animated.View>
-
+            {/* 欢迎界面、输入账号、验证码界面底部按钮 */}
             <Animated.View style={[
               { position: 'absolute', flexDirection: 'row', overflow: 'hidden' },
               { height: stage.interpolate({ inputRange: [0, 1], outputRange: [bottomBtnHeight, 44], extrapolate: 'clamp' }) },
@@ -347,13 +346,14 @@ export default connect(state => ({
                   }
                 </Animated.View>
               </TouchableOpacity>
-              {
-                (this.props.stage===2||this.props.stage===3)&&
-                <View style={{borderRadius: 22,flex: 2, marginLeft: 10,backgroundColor: '#ffa81d'}} >
-                  <CountDownButton sendCode={this.sendCode} style={{flex:1}} i18n={i18n}/>
+              { /* 重发验证码按钮 */
+                (this.props.stage === 2 || this.props.stage === 3) &&
+                <View style={{ borderRadius: 22, flex: 2, marginLeft: 10, backgroundColor: '#ffa81d' }} >
+                  <CountDownButton sendCode={this.sendCode} style={{ flex: 1 }} i18n={i18n} />
                 </View>
               }
             </Animated.View>
+            {/* 第三方登录按钮 */}
             <Animated.View style={[
               { position: 'absolute', right: 0, top: (height / 2) + 120 },
               { justifyContent: 'center', alignItems: 'center' },
@@ -363,20 +363,8 @@ export default connect(state => ({
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>
                 <FormattedMessage id={'login_social'} />
               </Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'center', width: 150, marginTop: 25 }}>
-                {/* <Button onPress={() => {
-                  ShareUtile.auth(0, (code, result, message) =>{
-                    this.setState({ result: message })
-                    if (code == 0){
-                      this.setState({ result: result.uid })
-                      console.log('facebook登录', result)
-                    } else {
-                      console.log('第三方登录' + code)
-                    }
-                  })
-                }} style={styles.socialBtn}>
-                  {Icons.Generator.Awesome('google-plus', 24, '#333')}
-                </Button> */}
+              <View style={{ flexDirection: 'row', justifyContent: 'center', width: 150, marginTop: 25 }}>   
+              
                 <Button onPress={() => {
                   ShareUtile.auth(7, (code, result, message) => {
                     try {
@@ -390,13 +378,11 @@ export default connect(state => ({
                 }} style={styles.socialBtn}>
                   {Icons.Generator.Awesome('facebook', 24, '#333')}
                 </Button>
-                {/* <Button onPress={() => this.props.dispatch(app.showMessage('SDK尚未初始化'))} style={styles.socialBtn}>
-                  {Icons.Generator.Awesome('twitter', 24, '#333')}
-                </Button> */}
               </View>
             </Animated.View>
           </TouchableOpacity>
         </Animated.View>
+        {/* 注册界面(邮箱和手机号两种模式) */}
         <Animated.View style={[
           { flex: 1, backgroundColor: 'transparent', position: 'absolute', top: 0, bottom: 0 },
           { left: stage.interpolate({ inputRange: [0, 4, 5], outputRange: [width, width, 0], extrapolate: 'clamp' }) },

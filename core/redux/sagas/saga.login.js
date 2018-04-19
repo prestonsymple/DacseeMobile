@@ -15,7 +15,8 @@ const STAGE_DEFINE = {
   ENTER_MOBILE_COMPLATE: 2,
   VERIFICATION_CODE: 3,
   WAIT_RESPONSE: 4,
-  READY_REGISTER: 5
+  READY_REGISTER: 5,
+  BIND_PHONE:6
 }
 
 function* loginFlow() {
@@ -33,13 +34,26 @@ function* loginFlow() {
 
     if (next) {
       let { stage, value } = next.payload
-      if (stage === STAGE_DEFINE.ENTER_MOBILE_COMPLATE) { // 输入手机号&&邮箱
+      // 输完手机号&&邮箱
+      //TODO 需要验证账号是否存在&&发送验证码||转至注册状态
+      if (stage === STAGE_DEFINE.ENTER_MOBILE_COMPLATE) { 
+        const { isMail ,id }=value
         try {
-          const url = 'v1/sendVerificationCode/phone'
-          yield call(session.User.Post, url, value)
+          let url =isMail? 'v1/auth/email': 'v1/sendVerificationCode/phone'
+          let body=isMail? {email:id} : value
+          console.log('body',body)
+          yield call(session.User.Post, url, body)
           yield put(application.showMessage(i18n.alert_sent_code))
         } catch (e) {
-          if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
+          if(e.response && e.response.data.code == 'MISSING_INPUT'){
+            try {
+              yield call(session.User.Post, 'v1/sendVerificationCode/phone', e.response.data.data)
+              yield put(account.loginPutValue(2))
+            } catch (e) {
+              console.log(' e.response.data', e.response.data)
+             
+            }
+          }  else if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
             yield put(application.showMessage(`${i18n.server_busy_code}[${e.response.data.data}]${i18n.seconds_later}`))
           } else {
             yield put(application.showMessage('无法连接到服务器，请稍后再试'))
@@ -54,7 +68,7 @@ function* loginFlow() {
             put(account.loginPutValue(3)),
             put(application.showProgress())
           ])
-
+          console.log('value',value)
           let { id, code, isMail, phoneCountryCode, _id = '' } = value
           // 邮箱登录模式 - 二次验证码
           if (!_id) {
@@ -62,22 +76,24 @@ function* loginFlow() {
             yield put(application.setMailModeValue(undefined))
           }
           //
-
+         
           const path = isMail ? 'v1/auth/email' : 'v1/auth/phone'
           const base = isMail ?
             { email: id, phoneVerificationCode: code, emailVerificationCode: code, _id } :
             { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
+          console.log(body)
           if (!body._id) {
             delete body._id
           }
           const data = yield call(session.User.Post, path, body)
-          console.log(data)
+          console.log(1)
 
           yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
+          console.log(2,e)
           let { isMail, id } = value
           if (e.response && (
             e.response.data.code == 'INVALID_VERIFICATION_CODE' ||
@@ -99,7 +115,7 @@ function* loginFlow() {
 
             yield delay(400)
             yield put(application.hideProgress())
-            yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value } }))
+            yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value,type:'SELECT_LOGIN' } }))
             yield put(account.loginPutValue(2))
           } else if (e.response && (
             e.response.data.code == 'INVALID_USER' ||
@@ -142,7 +158,7 @@ function* loginFlow() {
             put(account.loginPutValue(3)),
             put(application.showProgress())
           ])
-
+          console.log('dfsdfsd')
           const register = yield call(session.User.Post, 'v1/register', Object.assign({},
             value,
             { latitude: 3.321, longitude: 1.23 }
@@ -157,6 +173,9 @@ function* loginFlow() {
               put(application.hideProgress()),
               put(application.showMessage(e.response.data.message)),
             ])
+          }else if (e.response && e.response.data.code === 'MULTIPLE_USER_ACCOUNT') {
+            yield put(application.hideProgress())
+            yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value,type:'BIND_PHONE' } }))
           } else if (e.response && e.response.data.message) {
             yield all([
               put(account.loginPutValue(2)),
@@ -172,6 +191,15 @@ function* loginFlow() {
           }
           continue
         }
+      }
+      if (stage === STAGE_DEFINE.BIND_PHONE) {
+        try {
+          console.log(value)
+          yield call(session.User.Post, 'v1/register/bind',value)
+        } catch (e) {
+          console.log(e)
+        }
+        continue
       }
 
       yield put(account.loginPutValue(stage))
@@ -207,7 +235,7 @@ function* registerDevice() {
       status: state.account.status
     }))
 
-    if (!status) return;
+    if (!status) return
     try {
       const extendFields = System.Platform.Android ? { channelId: token, userId } : { token }
       const postData = Object.assign({}, {

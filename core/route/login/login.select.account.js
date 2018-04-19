@@ -5,14 +5,15 @@ import {
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'
 
-import { Icons, Session ,TextFont} from '../../utils'
+import { Icons,Screen, Session ,TextFont,Define} from '../../utils'
 import { account, application } from '../../redux/actions'
-
+const { height, width } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
 export default connect(state => ({ account: state.account,i18n: state.intl.messages }))(class LoginSelectAccountScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
+    const params =  navigation.state.params
     const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
@@ -34,24 +35,32 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
   }
 
   render() {
-    const { value } = this.props.navigation.state.params
+    const { value ,type} = this.props.navigation.state.params
     const {i18n} = this.props
     const { isMail } = value
 
     return (
-      <View style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
-        <StatusBar animated={true} hidden={false} backgroundColor={'white'} barStyle={'light-content'} />
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+        <StatusBar animated={true} hidden={false} backgroundColor={'#1AB2FD'} barStyle={'light-content'} />
+        {type==='BIND_PHONE'&&
+          <View style={{marginHorizontal:20,marginVertical:15,}}>
+            <Text style={{color:'#999999',fontSize:13}}>Bind account </Text>
+          </View >
+        }
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={(row) => (<RowItem isMail={isMail} onPress={async () => {
-            if (isMail && row.phoneNo) {
-              await Session.User.Post('v1/sendVerificationCode/phone', {
-                phoneCountryCode: row.phoneCountryCode,
-                phoneNo: row.phoneNo
-              })
-              this.props.dispatch(application.setMailModeValue(row._id))
-              this.props.dispatch(application.showMessage(i18n.already_send_code))
+            if (type==='BIND_PHONE') {
+              this.props.dispatch(account.loginNext({ stage: 6, value: Object.assign({}, value, {
+                _id: row._id
+              }) }))
+              // await Session.User.Post('v1/sendVerificationCode/phone', {
+              //   phoneCountryCode: row.phoneCountryCode,
+              //   phoneNo: row.phoneNo
+              // })
+              // this.props.dispatch(application.setMailModeValue(row._id))
+              // this.props.dispatch(application.showMessage(i18n.already_send_code))
             } else {
               this.props.dispatch(account.loginNext({ stage: 3, value: Object.assign({}, value, {
                 _id: row._id
@@ -64,6 +73,15 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
           )}
           style={{ backgroundColor: 'white', flex: 1 }}
         />
+        {type==='BIND_PHONE'&&
+          <View style={{height:60,width:width-60,marginHorizontal:30,}}>
+            <TouchableOpacity style={{flex:1,marginBottom:Define.system.ios.x ? 32 : 10,marginTop:6, justifyContent:'center',alignItems:'center',borderRadius:22,backgroundColor:'#ffa81d'}}
+              
+            >
+              <Text style={{color:'#fff',fontWeight: '600',fontSize:15}}>Bind account fsdfdfgsdgdsg</Text>
+            </TouchableOpacity >
+          </View >
+        }
       </View>
     )
   }
