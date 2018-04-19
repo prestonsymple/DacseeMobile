@@ -87,6 +87,7 @@
 		F5F98C2A20849B4E008E7568 /* RNUMConfigure.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F98C2820849B4E008E7568 /* RNUMConfigure.m */; };
 		F5F98C2C20849B76008E7568 /* dacsee.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F5F98C2B20849B76008E7568 /* dacsee.mp3 */; };
 		F5F98C2E20849BE6008E7568 /* dacsee.caf in Resources */ = {isa = PBXBuildFile; fileRef = F5F98C2D20849BE6008E7568 /* dacsee.caf */; };
+		F5F98C8E2085C432008E7568 /* LocationService.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F98C8D2085C432008E7568 /* LocationService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -558,6 +559,7 @@
 		F5F98C2820849B4E008E7568 /* RNUMConfigure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNUMConfigure.m; path = dacsee/NativeBridge/UMeng/RNUMConfigure.m; sourceTree = "<group>"; };
 		F5F98C2B20849B76008E7568 /* dacsee.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = dacsee.mp3; path = Resources/Sound/dacsee.mp3; sourceTree = "<group>"; };
 		F5F98C2D20849BE6008E7568 /* dacsee.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = dacsee.caf; path = Resources/Sound/dacsee.caf; sourceTree = "<group>"; };
+		F5F98C8D2085C432008E7568 /* LocationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LocationService.m; path = dacsee/NativeBridge/Location/LocationService.m; sourceTree = "<group>"; };
 		F83003D7435241979684458E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FBBA790CE36040B99ED31E6E /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -856,6 +858,7 @@
 		F59CD5932005934E00F2824A /* NativeBridge */ = {
 			isa = PBXGroup;
 			children = (
+				F5F98C8C2085C410008E7568 /* Location */,
 				49411F8C202BEE9B00EEBE1C /* UMeng */,
 				F59CD5BC2005935D00F2824A /* AMap */,
 			);
@@ -1045,6 +1048,14 @@
 				F5F98C2B20849B76008E7568 /* dacsee.mp3 */,
 			);
 			name = Sound;
+			sourceTree = "<group>";
+		};
+		F5F98C8C2085C410008E7568 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				F5F98C8D2085C432008E7568 /* LocationService.m */,
+			);
+			name = Location;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1762,6 +1773,7 @@
 				F5F98C2920849B4E008E7568 /* UMShareModule.m in Sources */,
 				F5669BB820098BD900A0159A /* RCTConvert+AMap3D.m in Sources */,
 				F5669BCC20098BD900A0159A /* AMapPolygon.m in Sources */,
+				F5F98C8E2085C432008E7568 /* LocationService.m in Sources */,
 				F5669BD220098BD900A0159A /* AMapCircle.m in Sources */,
 				F5669BCF20098BD900A0159A /* AMapCircleManager.m in Sources */,
 				F5669BC420098BD900A0159A /* AMapCalloutManager.m in Sources */,

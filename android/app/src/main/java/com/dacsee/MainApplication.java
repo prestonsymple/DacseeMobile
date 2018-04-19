@@ -100,4 +100,8 @@ public class MainApplication extends Application implements ReactApplication {
     appContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, map);
   }
 
+  @Override
+  public void onTerminate() {
+    super.onTerminate();
+  }
 }
