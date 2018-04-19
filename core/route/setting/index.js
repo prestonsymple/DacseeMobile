@@ -8,6 +8,7 @@ import SettingAboutScreen from './setting.about'
 import SettingFeedbackScreen from './setting.feedback'
 import SettingHelpCenterScreen from './setting.help.center'
 import SettingWetViewScreen from './setting.web.view'
+import SettingQrCodeScreen from './setting.qrcode'
 
 import ProfileChangeAvatarScreen from './profile.change.avatars'
 import BankDetailScreen from './bank.details'
@@ -35,7 +36,7 @@ const SettingMenuScreen = connect(state => ({
     return (
       <Settings producer={[
         [{
-          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingAccount')
+          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingQrCode')
         }, {
           title: i18n.privacy_setting, type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
@@ -337,5 +338,6 @@ export {
   SettingWetViewScreen,
   ProfileChangeAvatarScreen,
   SettingPrivateScreen,
-  BankDetailScreen
+  BankDetailScreen,
+  SettingQrCodeScreen
 }

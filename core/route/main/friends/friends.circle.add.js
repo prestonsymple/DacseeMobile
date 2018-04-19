@@ -96,15 +96,15 @@ export default connect(state => ({
           />
 
           {/* SCAN QRCODE SESSION */}
-          {/* <BlockWrap
+          <BlockWrap
             iconBackgroundColor={'#f4a951'}
             icon={Icons.Generator.Awesome('qrcode', 32, 'white')}
             title={'二维码'}
             describer={'通过扫码添加好友'}
             onPress={(value) => {
-              this.props.navigation.navigate('CommonScanQRCode', { value })
+              this.props.navigation.navigate('CommonScanQRCode', )
             }}
-          /> */}
+          />
 
           {/* WECHAT SESSION */}
           <BlockWrap
