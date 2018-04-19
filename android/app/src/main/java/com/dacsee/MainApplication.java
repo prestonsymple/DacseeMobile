@@ -55,8 +55,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
 
       List<ReactPackage> packages = new ArrayList<>();
-      packages.add(new MainReactPackage(),
-            new SvgPackage());
+      packages.add(new MainReactPackage());
+      packages.add(new SvgPackage());
       packages.add(new RNSoundPackage());
       packages.add(new LottiePackage());
       packages.add(new RNCameraPackage());

@@ -12,6 +12,14 @@ import { Icons, Session, System, TextFont, Screen, Define } from '../../../utils
 
 const { width, height } = Screen.window
 
+import { NavigationActions } from 'react-navigation'
+
+
+const resetAction = NavigationActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'FriendsRequest' })],
+})
+
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1._id !== r2._id, sectionHeaderHasChanged: (s1, s2) => s1 !== s2 })
 
 export default connect(state => ({
@@ -34,10 +42,28 @@ export default connect(state => ({
     }
   }
 
+  constructor(props){
+    super(props)
+    this.state = {
+      qrData: {}
+    }
+  }
+
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     // const data = await Camera.capture()
     // console.log(data)
+
+    console.log(this.props.navigation)
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+    console.log(this.state.qrData)
+    // if (code.data){
+    //   this.props.navigation.navigate({ routeName: 'FriendsRequest', params: { referrer: code.data, i18n:this.props.i18n } })
+    // }
   }
 
   render() {
@@ -51,6 +77,22 @@ export default connect(state => ({
           permissionDialogMessage={this.props.i18n.pls_allow_camera_try}
           onBarCodeRead={(code) => {
             console.log(code)
+
+            // this.props.navigation.navigate({ routeName: 'FriendsRequest', params: { referrer: code.data, i18n:this.props.i18n } })
+
+            if (code.data){
+              this.props.navigation.replace('FriendsRequest', { referrer: code.data, i18n:this.props.i18n })
+              // this.props.navigation.dispatch(
+              //   NavigationActions.replace(
+              //     'FriendsRequest'
+              //     // actions: [NavigationActions.navigate({ routeName: 'FriendsRequest', params: { referrer: code.data, i18n:this.props.i18n } })],
+              //   ))
+            }
+
+            // this.setState({
+            //   qrData: code
+            // })
+
           }}
         >
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

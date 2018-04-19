@@ -36,7 +36,7 @@ const SettingMenuScreen = connect(state => ({
     return (
       <Settings producer={[
         [{
-          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingQrCode')
+          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingAccount')
         }, {
           title: i18n.privacy_setting, type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
@@ -132,6 +132,8 @@ const SettingAccountScreen = connect(state => ({
     }
   }
 
+
+  // TODO 二维码多语言
   render() {
     const { navigation, dispatch, user, i18n } = this.props
 
@@ -177,6 +179,19 @@ const SettingAccountScreen = connect(state => ({
             editorName: 'String',
             option: {
               onsubmit:()=> this._updateBankInfo()
+            }
+          })
+        },{
+          title: '我的二维码',
+          type: 'icon',
+          value: Icons.Generator.Awesome('qrcode', 25, '#bbb'),
+          editable: false,
+          onPress: () => navigation.navigate('SettingQrCode', {
+            title: '我的二维码',
+            editorName: 'String',
+            option: {
+              userId: user.userId,
+              id: user._id,
             }
           })
         }], [{

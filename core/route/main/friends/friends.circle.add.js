@@ -102,7 +102,7 @@ export default connect(state => ({
             title={'二维码'}
             describer={'通过扫码添加好友'}
             onPress={(value) => {
-              this.props.navigation.navigate('CommonScanQRCode', )
+              this.props.navigation.navigate('CommonScanQRCode',{i18n} )
             }}
           />
 
