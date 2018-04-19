@@ -8,6 +8,7 @@ import SettingAboutScreen from './setting.about'
 import SettingFeedbackScreen from './setting.feedback'
 import SettingHelpCenterScreen from './setting.help.center'
 import SettingWetViewScreen from './setting.web.view'
+import SettingQrCodeScreen from './setting.qrcode'
 
 import ProfileChangeAvatarScreen from './profile.change.avatars'
 import BankDetailScreen from './bank.details'
@@ -16,7 +17,7 @@ import {Icons, Session} from '../../utils'
 import {
   account, application, intl
 } from '../../redux/actions'
-import {DeviceEventEmitter} from "react-native";
+import {DeviceEventEmitter} from 'react-native'
 
 // 主菜单
 const SettingMenuScreen = connect(state => ({
@@ -35,7 +36,7 @@ const SettingMenuScreen = connect(state => ({
     return (
       <Settings producer={[
         [{
-          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingAccount')
+          title: i18n.profile, type: 'text', onPress: () => navigation.navigate('SettingQrCode')
         }, {
           title: i18n.privacy_setting, type: 'text', onPress: () => navigation.navigate('SettingPrivate')
         }],
@@ -231,7 +232,7 @@ const SettingLanguageRegionScreen = connect(state => ({
         [{
           title: i18n.language, type: 'text', value: i18n.current_language, editable: true, onPress: () => navigation.navigate('SettingLanguageChoose', {
             refresh: (data)=>{
-              this.props.navigation.setParams({});
+              this.props.navigation.setParams({})
             }
           })
         }
@@ -306,5 +307,6 @@ export {
   SettingWetViewScreen,
   ProfileChangeAvatarScreen,
   SettingPrivateScreen,
-  BankDetailScreen
+  BankDetailScreen,
+  SettingQrCodeScreen
 }

@@ -9,6 +9,7 @@ import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.dacsee.nativeBridge.Utils.UtilsPackages;
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -54,7 +55,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
 
       List<ReactPackage> packages = new ArrayList<>();
-      packages.add(new MainReactPackage());
+      packages.add(new MainReactPackage(),
+            new SvgPackage());
       packages.add(new RNSoundPackage());
       packages.add(new LottiePackage());
       packages.add(new RNCameraPackage());

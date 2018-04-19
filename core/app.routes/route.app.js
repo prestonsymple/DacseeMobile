@@ -55,7 +55,8 @@ import {
   SettingWetViewScreen,
   SettingPrivateScreen,
   BankDetailScreen,
-  ProfileChangeAvatarScreen
+  ProfileChangeAvatarScreen,
+  SettingQrCodeScreen
 } from '../route/setting'
 
 import {
@@ -127,6 +128,7 @@ const HomeScreen = {
   SettingHelpCenter: { screen: SettingHelpCenterScreen },
   SettingPrivate: { screen: SettingPrivateScreen },
   SettingWetView: { screen: SettingWetViewScreen },
+  SettingQrCode: { screen: SettingQrCodeScreen },
 
   DownLineTotal: { screen: DownLineTotalScreen },
   DownLineList: { screen: DownLineListScreen },

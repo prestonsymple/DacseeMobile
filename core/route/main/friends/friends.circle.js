@@ -123,7 +123,7 @@ export default connect(state => ({
     this.setState({ dataSource: _dataSource, selected: _selected })
   }
   _handleClick=()=>{
-    const {  selected } = this.state
+    const { selected } = this.state
     if(selected.length === 0){
       this.onPressCheckAll()
     }else {
@@ -132,12 +132,60 @@ export default connect(state => ({
     }
   }
 
+
+  searchByRegExp(text){
+    let friends = this.props.friend
+
+    if(!(friends instanceof Array)){
+      return
+    }
+    let len = friends.length
+    let arr = []
+    // for(var i=0;i<len;i++){
+    //如果字符串中不包含目标字符会返回-1
+    //   let fullName = friends[i].friend_info.fullName
+    //   if(fullName.toLowerCase().indexOf(text) >= 0){
+    //     arr.push(fullName)
+    //   }
+    // }
+    // return arr
+
+    let reg = new RegExp(text)
+    for(let i=0 ; i<len ; i++){
+      let fullName = friends[i].friend_info.fullName
+      //如果字符串中不包含目标字符会返回-1
+      if(fullName.toLowerCase().match(reg)){
+        arr.push(friends[i])
+      }
+    }
+
+    return arr
+  }
+
+  searchBarChange(text){
+    const searchFriends =  this.searchByRegExp(text)
+
+    let requestor = []
+
+    if (text === ''){
+      requestor = this.props.requestor
+    }
+
+
+    const _dataSource = dataContrast.cloneWithRowsAndSections([
+      requestor,
+      searchFriends
+    ])
+    this.setState({ dataSource: _dataSource })
+
+  }
+
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <HeaderSearchBar />
+        <HeaderSearchBar onChangeText={this.searchBarChange.bind(this)}/>
         <View style={{flex:1}}>
           <ListView
             refreshControl={
@@ -221,6 +269,7 @@ export default connect(state => ({
 })
 
 class HeaderSearchBar extends Component {
+
   render() {
     return (
       <View style={{ height: 62, width, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
@@ -228,11 +277,11 @@ class HeaderSearchBar extends Component {
           <FormattedMessage id={'search_name_phone_email'}>
             {
               msg => (
-                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF66'} placeholder={msg} style={
+                <TextInput {...Define.TextInputArgs} placeholderTextColor={'#FFFFFF'} placeholder={msg} style={[
                   Platform.select({
                     android: { height: 42, width: width - 56 },
                     ios: { height: 42, width: width - 56 }
-                  })} />
+                  }),{color: 'white'}]} onChangeText={(text)=>this.props.onChangeText(text)}/>
               )
             }
           </FormattedMessage>
