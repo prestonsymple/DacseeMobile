@@ -7,9 +7,9 @@ import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 
 import { circle, booking } from '../../../redux/actions'
-import { Icons, Define } from '../../../utils'
+import { Icons, Define ,Screen} from '../../../utils'
 import { BOOKING_STATUS } from '..'
-
+const { height, width } = Screen.window
 export default connect(state => ({ 
   ...state.circle,
   selected_friends: state.booking.selected_friends,
@@ -43,11 +43,11 @@ export default connect(state => ({
     }
 
     return selected ? (
-      <View style={{ position: 'absolute', bottom, left: 6, right: 6 }}>
+      <View style={{ position: 'absolute', bottom, left: 10, right: 10 }}>
         <View style={[
           { backgroundColor: 'white', borderRadius: 28 }, 
           { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5, shadowRadius: 3 },
-          { height: 56, paddingHorizontal: 6, paddingVertical: 4.5, justifyContent: 'center', alignItems: 'center' },
+          { height: (width-82)/6+10, paddingHorizontal: 6, paddingVertical: 4.5, justifyContent: 'center', alignItems: 'center' },
           { flexDirection: 'row' }
         ]}>
           {
@@ -130,8 +130,8 @@ class SelectButton extends PureComponent {
     const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
 
     return (
-      <View key={_id} style={{ backgroundColor: '#f2f2f2', marginRight: 4, borderRadius: 23 }}>
-        <Image style={{ height: 46, width: 46, borderRadius: 23 }} source={{ uri: avatars[avatars.length - 1].url }} />
+      <View key={_id} style={{ backgroundColor: '#f2f2f2', marginRight:10, borderRadius: 23 }}>
+        <Image style={{ height: (width-82)/6, width: (width-82)/6, borderRadius:  (width-82)/12 }} source={{ uri: avatars[avatars.length - 1].url }} />
         <View style={{ position: 'absolute', bottom: 2, right: 2, borderRadius: 4, width: 8, height: 8, backgroundColor: '#7ed321' }} />
       </View>
     )

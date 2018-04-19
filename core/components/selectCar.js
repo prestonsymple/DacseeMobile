@@ -12,13 +12,12 @@ const pixelSize = (function() {
   else if (pixelRatio >= 2) return 0.5
   else return 1
 })()
-export default class SelectPay extends PureComponent {
+export default class SelectCar extends PureComponent {
   constructor(props) {
     super(props)
-    this.pays = [this.props.i18n.cash,this.props.i18n.credit_card]
-    this.payskey = ['cash','credit_card']
+    this.cars = this.props.cars
     this.state={
-      pay:this.payskey[0]
+      car:this.cars[0]
     }
   }
   componentDidMount(){
@@ -26,7 +25,7 @@ export default class SelectPay extends PureComponent {
   }
   onPayChange(index){
     this.setState({
-      pay:this.payskey[index]
+      car:this.cars[index]
     })
   }
 
@@ -38,16 +37,16 @@ export default class SelectPay extends PureComponent {
         animationType='fade'           //渐变
         transparent={true}             // 不透明
         visible={this.props.visible}    // 根据isModal决定是否显示
-        onRequestClose={() => this.props.payChange()}  // android必须实现 安卓返回键调用
+        onRequestClose={() => this.props.carChange()}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-        <View style={{ width: width, height:height-modalHeight }}></View>
+          <View style={{ width: width, height:height-modalHeight }}></View>
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth:pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payChange()} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.carChange()} >
                 <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>{this.props.i18n.cancel}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.payChange(this.state.pay)} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.carChange(this.state.car)} >
                 <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>{this.props.i18n.confirm}</Text>
               </TouchableOpacity>
             </View>
@@ -55,8 +54,8 @@ export default class SelectPay extends PureComponent {
               <Wheel
                 style={{ height: weelHeight, width: width  }}
                 itemStyle={{ textAlign: 'center' }}
-                index={this.payskey.indexOf(this.state.pay)}
-                items={this.pays}
+                index={this.cars.indexOf(this.state.car)}
+                items={this.cars}
                 onChange={index => this.onPayChange(index)}
               />
             </View>

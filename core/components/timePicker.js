@@ -121,7 +121,7 @@ export default class TimePicker extends PureComponent {
   //
 
   render() {
-    let modalHeight = Define.system.ios.x ?  242 + 22 : 242
+    let modalHeight = Define.system.ios.x ?  266 + 22 : 266
     let weelHeight=modalHeight- 70
     return (
       <Modal
@@ -131,7 +131,7 @@ export default class TimePicker extends PureComponent {
         onRequestClose={() => this.props.dateChange('now')}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-          <TouchableOpacity style={{ width: width, height: height -modalHeight }} onPress={() => this.props.dateChange('now')} ></TouchableOpacity>
+        <View style={{ width: width, height:height-modalHeight }}></View>
           <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
               <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange('now')} >

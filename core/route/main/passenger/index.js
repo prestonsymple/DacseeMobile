@@ -1,7 +1,7 @@
 /* global navigator */
 
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking,StyleSheet, Image } from 'react-native'
+import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking, StyleSheet, Image, Modal, TextInput, ScrollView } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
@@ -21,6 +21,7 @@ import { booking, account, application } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
 import SelectPay from '../../../components/selectPay'
+import SelectCar from '../../../components/selectCar'
 const { height, width } = Screen.window
 
 const DEFAULT_COORDS = { lat: 84.764846, lng: 44.138130, latitude: 84.764846, longitude: 44.138130 }
@@ -44,6 +45,8 @@ export default connect(state => ({
       drag: false,
       timePickerShow: false,
       selectPayShow: false,
+      remarkShow: false,
+      selectCarShow:false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
       polyline: [],
 
@@ -85,7 +88,7 @@ export default connect(state => ({
           let region = Object.assign({}, { latitude: nextCoords.lat, longitude: nextCoords.lng }, { latitudeDelta: 0.025, longitudeDelta: 0.025 * (width / height) })
           this.map.animateToRegion(region, 500)
         }
-      } catch (e) {/* */}
+      } catch (e) {/* */ }
     }
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.status !== props.status) {
@@ -308,15 +311,25 @@ export default connect(state => ({
   }
 
   dateChange(time) {
-    this.setState({ timePickerShow: false })
+    let { timePickerShow } = this.state
+    this.setState({timePickerShow:!timePickerShow})
   }
   payChange(pay) {
-    this.setState({ selectPayShow: false })
+    let { selectPayShow } = this.state
+    this.setState({selectPayShow:!selectPayShow})
+  }
+  remarkChange(txt) {
+    let { remarkShow } = this.state
+    this.setState({remarkShow:!remarkShow})
+  }
+  carChange(car){
+    let { selectCarShow } = this.state
+    this.setState({selectCarShow:!selectCarShow})
   }
   render() {
     const { drag, polyline } = this.state
     const { status, from, destination, map_mode, location, driver_info, friends_location } = this.props
-    
+
     const MAP_SETTER = {
       /* A MAP */
       tiltEnabled: false,
@@ -442,8 +455,10 @@ export default connect(state => ({
           <PickerOptions
             selectPayShow={this.state.selectPayShow}
             timePickerShow={this.state.timePickerShow}
-            showSelcetPay={() => this.setState({ selectPayShow: true })}
-            showTimerPicker={() => this.setState({ timePickerShow: true })}
+            remarkShow={this.state.remarkShow}
+            selectCarShow={this.state.selectCarShow}
+            remarkChange={(txt) => this.remarkChange(txt)}
+            carChange={(car) => this.carChange(car)}
             payChange={(pay) => this.payChange(pay)}
             dateChange={(time) => this.dateChange(time)}
           />
@@ -454,7 +469,7 @@ export default connect(state => ({
             try {
               await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
               this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
-            } catch(e) {
+            } catch (e) {
               this.props.dispatch(application.showMessage('无法连接到服务器'))
             }
           }} driver={driver_info} i18n={this.props.i18n} />
@@ -465,33 +480,84 @@ export default connect(state => ({
   }
 })
 
-const PickerOptions = connect(state => ({ status: state.booking.status, fare: state.booking.fare, i18n: state.intl.messages }))(class PickerOptions extends PureComponent {
+const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.messages }))(class PickerOptions extends PureComponent {
 
   render() {
+    const { drag, from, destination, i18n, selected_friends } = this.props
     return (
       <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? 160 + 22 : 160, justifyContent: 'center' },
+        { position: 'absolute', left: 0, right: 0, bottom: 0, height: Define.system.ios.x ? height / 2 + 22 : 360, justifyContent: 'center' },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
-        { backgroundColor: 'white', paddingHorizontal: 23 },
+        { backgroundColor: '#fff', },
         { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
       ]}>
-        <View style={{ alignItems: 'center' }}>
-          <View style={{ width: 276, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <TouchableOpacity onPress={() => this.props.showSelcetPay()}
-              activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.showTimerPicker()}
-              activeOpacity={.7} style={{ width: 128, height: 56, borderRadius: 8, backgroundColor: '#1ab2fd', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.now}</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={{ marginVertical: 10, height: 32, justifyContent: 'center', backgroundColor: '#fff' }}><Text style={[{ fontSize: TextFont.TextSize(16) }, styles.adress]}>{'我的团队'}</Text></View>
+        <View style={{ height: 56, marginHorizontal: (width - 326) / 2, width: 326, overflow: 'hidden', flexDirection: 'row', }}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={{ flex: 1 }}
+          >
+            {selected_friends.map((pipe, index) => (<SelectButton key={index} data={pipe} />))}
+          </ScrollView>
+
           <TouchableOpacity onPress={() => {
-            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
-          }} activeOpacity={.7} style={{ width: 276, height: 56, borderRadius: 28, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `${this.props.i18n.start} - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsCircle' }))
+          }} activeOpacity={.7} style={{ backgroundColor: '#7ed321', width: 46, height: 46, borderRadius: 23, justifyContent: 'center', alignItems: 'center' }}>
+            {Icons.Generator.Material('create', 23, 'white')}
           </TouchableOpacity>
         </View>
+        <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
+        <View style={{ marginHorizontal: 15, height: 70, paddingVertical: 5 }}>
+          <View style={styles.text_cell}>
+            <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
+            <Text style={styles.adress}>{from.name}</Text>
+          </View>
+          <View style={styles.text_cell}>
+            <View style={[styles.dot, { backgroundColor: '#7ED321' }]} />
+            <Text style={styles.adress}>{destination.name}</Text>
+          </View>
+        </View>
+        <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
+        <View style={{ height: 44, width: width, flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => this.props.payChange()} activeOpacity={.7}
+            style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: '#999', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
+          </TouchableOpacity>
+          <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
+          <TouchableOpacity onPress={() => this.props.dateChange()}
+            activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: '#999', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.now}</Text>
+          </TouchableOpacity>
+          <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
+          <TouchableOpacity onPress={() => this.props.remarkChange()}
+            activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: '#999', fontSize: 16, fontWeight: '600' }}>{'Remarks'}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
+        <View style={{ alignItems: 'center', marginHorizontal: 15, marginVertical: 10, }}>
+          <TouchableOpacity onPress={() => this.props.carChange()} 
+            activeOpacity={.7} style={{ height: 50, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ flexDirection:'row',justifyContent:'center',alignItems:'center'}} > 
+              <Image style={{height:40,width:40,marginHorizontal:10 }} source={Resources.image.car_budget} />
+              <Text style={{ color: '#111', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? 'Economy' : `Economy - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            </View>
+            <View style={{ alignItems:'center',marginRight:20,marginBottom:6}} > 
+              {Icons.Generator.Awesome('sort-desc', 20, '#6F6F6F')}
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{ alignItems: 'center', width: width - 30, marginHorizontal: 15, height: 56, borderRadius: 28, paddingBottom: 10 }}>
+          <TouchableOpacity onPress={() => {
+            this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
+          }} activeOpacity={.7} style={{ width: width - 42, height: 50, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.start}</Text>
+          </TouchableOpacity>
+
+        </View>
+        <SelectCar cars={['SUV','玛莎拉蒂']} visible={this.props.selectCarShow} i18n={this.props.i18n} carChange={(car) => this.props.carChange(car)} />
+        <RemarkModel visible={this.props.remarkShow} i18n={this.props.i18n} remarkChange={(txt) => this.props.remarkChange(txt)} />
         <TimePicker visible={this.props.timePickerShow}
           i18n={this.props.i18n}
           dateChange={(time) => this.props.dateChange(time)} />
@@ -500,8 +566,66 @@ const PickerOptions = connect(state => ({ status: state.booking.status, fare: st
     )
   }
 })
+class RemarkModel extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      remark: ''
+    }
+  }
+  render() {
+    let modalHeight = Define.system.ios.x ? 242 + 22 : 360
+    let weelHeight = modalHeight - 70
+    const { visible, i18n } = this.props
+    return (
+      <Modal
+        animationType='fade'           //渐变
+        transparent={true}             // 不透明
+        visible={visible}    // 根据isModal决定是否显示
+        onRequestClose={() => this.props.remarkChange()}  // android必须实现 安卓返回键调用
+      >
+        <View style={{ width: width, height: height, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(57, 56, 67, 0.4)' }}>
 
-const PickerAddress = connect(state => ({ ...state.booking,i18n: state.intl.messages}))(class PickerAddress extends PureComponent {
+          <View style={{ height: modalHeight, width: modalHeight - 40 }}>
+            <Image style={{ height: 80, position: 'absolute', left: 10, top: 0, zIndex: 1 }} source={Resources.image.book_page} />
+            <View style={{ height: 40, marginTop: 40, backgroundColor: '#FDC377', borderTopLeftRadius: 20, borderTopRightRadius: 20, width: modalHeight - 40 }} />
+            <View style={{ flex: 1, padding: 15, backgroundColor: '#fff', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
+              <View style={{ flex: 1, }}>
+                <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{'备注'}</Text>
+                <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{'留下一段描述'}</Text>
+                <TextInput  {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }} style={{ backgroundColor: '#f1f1f1', textAlignVertical: 'top', flex: 1, marginTop: 15, borderRadius: 10 }} underlineColorAndro />
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginHorizontal: 10, justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => this.props.remarkChange()}
+                  activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#D8D8D8', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.cancel}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.remarkChange(this.state.remark)}
+                  activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.confirm}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View style={{ height: 60 }} />
+        </View>
+      </Modal >
+    )
+  }
+
+}
+const SelectButton = (props) => {
+  const { data } = props
+  const { _id, friend_id, friend_info } = data
+  const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
+  return (
+    <View key={_id} style={{ backgroundColor: '#f2f2f2', marginRight: 10, height: 46, borderRadius: 23 }}>
+      <Image style={{ height: 46, width: 46, borderRadius: 23 }} source={{ uri: avatars[avatars.length - 1].url }} />
+      <View style={{ position: 'absolute', bottom: 2, right: 2, borderRadius: 4, width: 8, height: 8, backgroundColor: '#7ed321' }} />
+    </View>
+  )
+}
+const PickerAddress = connect(state => ({ ...state.booking, i18n: state.intl.messages }))(class PickerAddress extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -514,7 +638,7 @@ const PickerAddress = connect(state => ({ ...state.booking,i18n: state.intl.mess
   }
 
   render() {
-    const { drag, from, destination,i18n} = this.props
+    const { drag, from, destination, i18n } = this.props
 
     return (
       <Animated.View style={[
@@ -567,16 +691,16 @@ class MapPin extends PureComponent {
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { onPress = () => {}, driver, i18n, status } = props
+  const { onPress = () => { }, driver, i18n, status } = props
 
   return (
     <View style={{ backgroundColor: 'transparent', height: 294 }}>
       <BookingDetailHeaderView driver={driver} />
-      <DrvierCarDetail car_info={''}/>
+      <DrvierCarDetail car_info={''} />
       <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
-        <TouchableOpacity 
-          activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7} 
-          onPress={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? () => {} : onPress} 
+        <TouchableOpacity
+          activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7}
+          onPress={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? () => { } : onPress}
           style={{ backgroundColor: status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? '#999' : 'red', borderRadius: 6, marginTop: 8, height: 44, width: width - 40, alignItems: 'center', justifyContent: 'center' }}
         >
           <Text style={{ color: '#fff', fontSize: TextFont.TextSize(16) }}>{i18n.cancel_trip}</Text>
@@ -651,7 +775,16 @@ const DrvierCarDetail = (props) => {
   )
 }
 const styles = StyleSheet.create({
-  car_cell:{
+  car_cell: {
     color: '#9e9e9e', fontSize: TextFont.TextSize(15), marginBottom: 5
-  }
+  },
+  text_cell: {
+    flexDirection: 'row', flex: 1, alignItems: 'center',
+  },
+  dot: {
+    height: 10, width: 10, borderRadius: 5,
+  },
+  adress: {
+    fontSize: TextFont.TextSize(15), fontWeight: 'bold', color: '#404040', marginLeft: 15
+  },
 })
