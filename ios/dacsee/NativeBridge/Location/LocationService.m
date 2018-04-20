@@ -11,6 +11,7 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTEventEmitter.h>
+#import <AFNetworking/AFNetworking.h>
 
 #define NATIVE_EVENT_NAME_IDENT_LOCATION_CHANGE @"@@@NATIVE_EVENT_NAME_IDENT_LOCATION_CHANGE"
 
@@ -49,17 +50,28 @@ RCT_EXPORT_MODULE();
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
   if ([locations count] > 0) {
     [bridge.eventDispatcher sendAppEventWithName: NATIVE_EVENT_NAME_IDENT_LOCATION_CHANGE body: @[locations.lastObject]];
+    
+    // UPLOAD
+//    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//    
+//    NSString *URL = @"https://location-dev.dacsee.io/api/v1";
+//    NSURLRequest *request = [[AFJSONRequestSerializer serializer] requestWithMethod: @"POST" URLString: URL parameters: @[] error:nil];
+//    NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+//      // DO NOTHING;
+//    }];
+//    [dataTask resume];
   }
 }
 
-RCT_EXPORT_METHOD(startListener: (RCTResponseSenderBlock)completion) {
+RCT_EXPORT_METHOD(startTracking: (RCTResponseSenderBlock)completion) {
   [self.locationManager startUpdatingLocation];
   if (completion) {
     completion(@[]);
   }
 }
 
-RCT_EXPORT_METHOD(removeListener: (RCTResponseSenderBlock)completion) {
+RCT_EXPORT_METHOD(stopTracking: (RCTResponseSenderBlock)completion) {
   [self.locationManager stopUpdatingLocation];
   if (completion) {
     completion(@[]);
