@@ -21,7 +21,8 @@ import { booking, account, application } from '../../../redux/actions'
 import { BOOKING_STATUS } from '..'
 import TimePicker from '../../../components/timePicker'
 import SelectPay from '../../../components/selectPay'
-import SelectCar from '../../../components/selectCar'
+import SelectCar from './components/modal.select.car'
+import RemarkModel from './components/modal.remark'
 const { height, width } = Screen.window
 
 const DEFAULT_COORDS = { lat: 84.764846, lng: 44.138130, latitude: 84.764846, longitude: 44.138130 }
@@ -322,7 +323,7 @@ export default connect(state => ({
     let { remarkShow } = this.state
     this.setState({remarkShow:!remarkShow})
   }
-  carChange(car){
+  carChange(car,fare){
     let { selectCarShow } = this.state
     this.setState({selectCarShow:!selectCarShow})
   }
@@ -556,7 +557,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
           </TouchableOpacity>
 
         </View>
-        <SelectCar cars={['SUV','玛莎拉蒂']} visible={this.props.selectCarShow} i18n={this.props.i18n} carChange={(car) => this.props.carChange(car)} />
+        <SelectCar cars={['SUV','玛莎拉蒂']} visible={this.props.selectCarShow} i18n={this.props.i18n} carChange={(car,fare) => this.props.carChange(car,fare)} />
         <RemarkModel visible={this.props.remarkShow} i18n={this.props.i18n} remarkChange={(txt) => this.props.remarkChange(txt)} />
         <TimePicker visible={this.props.timePickerShow}
           i18n={this.props.i18n}
@@ -566,55 +567,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
     )
   }
 })
-class RemarkModel extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      remark: ''
-    }
-  }
-  render() {
-    let modalHeight = Define.system.ios.x ? 242 + 22 : 360
-    let weelHeight = modalHeight - 70
-    const { visible, i18n } = this.props
-    return (
-      <Modal
-        animationType='fade'           //渐变
-        transparent={true}             // 不透明
-        visible={visible}    // 根据isModal决定是否显示
-        onRequestClose={() => this.props.remarkChange()}  // android必须实现 安卓返回键调用
-      >
-        <View style={{ width: width, height: height, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(57, 56, 67, 0.4)' }}>
 
-          <View style={{ height: modalHeight, width: modalHeight - 40 }}>
-            <Image style={{ height: 80, position: 'absolute', left: 10, top: 0, zIndex: 1 }} source={Resources.image.book_page} />
-            <View style={{ height: 40, marginTop: 40, backgroundColor: '#FDC377', borderTopLeftRadius: 20, borderTopRightRadius: 20, width: modalHeight - 40 }} />
-            <View style={{ flex: 1, padding: 15, backgroundColor: '#fff', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
-              <View style={{ flex: 1, }}>
-                <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{'备注'}</Text>
-                <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{'留下一段描述'}</Text>
-                <TextInput  {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }} 
-                  style={{ backgroundColor: '#f1f1f1', textAlignVertical: 'top', paddingHorizontal:8, flex: 1, marginTop: 15, borderRadius: 10 }} underlineColorAndro />
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginHorizontal: 10, justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => this.props.remarkChange()}
-                  activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#D8D8D8', justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.cancel}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.props.remarkChange(this.state.remark)}
-                  activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.confirm}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={{ height: 60 }} />
-        </View>
-      </Modal >
-    )
-  }
-
-}
 const SelectButton = (props) => {
   const { data } = props
   const { _id, friend_id, friend_info } = data
