@@ -1,4 +1,4 @@
-package com.dacsee.nativeBridge.KeepAliveService;
+package com.dacsee.KeepAliveService;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import com.dacsee.R;
 
-public class DriverJobBoardView extends Activity {
+public class ServiceBoard extends Activity {
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -14,3 +14,4 @@ public class DriverJobBoardView extends Activity {
     setContentView(R.layout.driver_board_service);
   }
 }
+
