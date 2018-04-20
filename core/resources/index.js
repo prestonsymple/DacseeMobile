@@ -31,7 +31,9 @@ export default {
     car_premium: require('./images/car_premium.png'),
     car_rookie: require('./images/car_rookie.png'),
     car_taxi: require('./images/car_taxi.png'),
-    book_page: require('./images/book_page.png')
+    car_xl :require('./images/XL.png'),
+    book_page: require('./images/book_page.png'),
+    car_vehicle: require ('./images/car_vehicle.png')
   },
 
   animation: {
