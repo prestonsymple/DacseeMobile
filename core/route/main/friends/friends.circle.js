@@ -59,7 +59,8 @@ export default connect(state => ({
 
     this.state = {
       dataSource: _dataSource,
-      selected: selected_friends
+      selected: selected_friends,
+      selectedAll: false,
     }
   }
 
@@ -91,15 +92,19 @@ export default connect(state => ({
   }
 
   onPressCheck(data) {
-    const { selected } = this.state
-
+    const { selected ,selectedAll} = this.state
     let clone = _.cloneDeep(selected)
-    if (clone.find(pipe => pipe._id === data._id)) {
-      clone = clone.filter(pipe => pipe._id !== data._id)
-    } else {
+    let nextSelect = !clone.find(pipe => pipe._id === data._id)
+    let nextSelectAll = selectedAll
+    if (nextSelect) {
       clone.push(data)
+      //全部选中则全选按钮高亮
+      nextSelectAll = (clone.length === this.props.friend.length) && (!nextSelectAll) && true
+    } else {
+      clone = clone.filter(pipe => pipe._id !== data._id)
+      //全选按钮 变灰
+      nextSelectAll = nextSelectAll ? false : nextSelectAll
     }
-
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
       checked: clone.find(sub => sub._id === pipe._id) !== undefined
     }))
@@ -108,7 +113,7 @@ export default connect(state => ({
       this.props.requestor,
       _friend
     ])
-    this.setState({ dataSource: _dataSource, selected: clone })
+    this.setState({ dataSource: _dataSource, selected: clone, selectedAll: nextSelectAll })
   }
 
   onPressCheckAll() {
@@ -120,7 +125,7 @@ export default connect(state => ({
       this.props.requestor,
       _friend
     ])
-    this.setState({ dataSource: _dataSource, selected: _selected })
+    this.setState({ dataSource: _dataSource, selected: _selected, selectedAll: true })
   }
   _handleClick=()=>{
     const { selected } = this.state
@@ -177,12 +182,25 @@ export default connect(state => ({
       searchFriends
     ])
     this.setState({ dataSource: _dataSource })
+  }
 
+  selectAllFriends = () => {
+    const _selected = this.props.friend
+    const {selectedAll}=this.state
+    const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
+      checked: !selectedAll
+    }))
+    const _dataSource = dataContrast.cloneWithRowsAndSections([
+      this.props.requestor,
+      _friend
+    ])
+    this.setState({ dataSource: _dataSource, selected:( !selectedAll ? _selected : []) ,selectedAll: !selectedAll})
   }
 
   render() {
     const { dataSource, selected } = this.state
     const { loading, i18n } = this.props
+    const { selectedAll } = this.state
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <HeaderSearchBar onChangeText={this.searchBarChange.bind(this)}/>
@@ -204,8 +222,20 @@ export default connect(state => ({
             dataSource={dataSource}
             renderSectionHeader={(data, section) => {
               return (data.length > 0) && (
-                <View style={{ height: 34, justifyContent: 'center', paddingTop: 16, backgroundColor: 'white' }}>
-                  <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+                <View>
+                  <View style={{ height: 34,flexDirection:'row', justifyContent: 'space-between', backgroundColor: 'white' }}>
+                    <View style={{marginTop: 16}}>
+                      <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
+                    </View>
+                    {section !== '0' ?
+                      <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectedAll?'#7ed321':'#e7e7e7', marginTop:13}]}>
+                        { selectedAll ?Icons.Generator.Material('check', 18, 'white'):null }
+                      </TouchableOpacity>
+                      :
+                      null
+                    }
+
+                  </View>
                 </View>
               )
             }}
@@ -258,7 +288,7 @@ export default connect(state => ({
           null: <View style={styles.bottomButton}>
             <TouchableOpacity onPress={() => this._handleClick()} activeOpacity={.7} style={{marginHorizontal:45,borderRadius: 33,backgroundColor: '#FFB639',width:width-90,height:56,justifyContent:'center',alignItems:'center'}}>
               <Text style={{ fontSize: TextFont.TextSize(18), fontWeight: '400', color: 'white' }}>
-                <FormattedMessage id={selected.length === 0?'select_all':'confirm'}/>
+                <FormattedMessage id={selected.length === 0? 'select_all' : 'confirm'}/>
               </Text>
             </TouchableOpacity>
           </View>
@@ -349,9 +379,9 @@ class RequestorPerson extends Component {
 
 const styles=StyleSheet.create({
   circle:{
-    width: 30,
-    height: 30,
-    borderRadius: 18,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     justifyContent: 'center',
     alignItems: 'center'
   },

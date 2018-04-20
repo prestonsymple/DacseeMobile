@@ -5,11 +5,14 @@ import { JobsOnlineScreen } from '../../jobs'
 import { Screen } from '../../../utils'
 const { width } = Screen.window
 
+import { JobsAddScreen } from '../../jobs'
+
 export default class DriverComponent extends React.PureComponent {
   render() {
     return (
       <View style={{ width }}>
-        <JobsOnlineScreen />
+        {/*<JobsOnlineScreen />*/}
+        <JobsAddScreen />
       </View>
     )
   }
