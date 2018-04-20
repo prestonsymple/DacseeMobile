@@ -2,9 +2,12 @@ package com.dacsee;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
 import com.airbnb.android.react.maps.MapsPackage;
+import com.dacsee.KeepAliveService.LocalService;
 import com.dacsee.nativeBridge.AMap.AMap3DPackage;
+import com.dacsee.nativeBridge.LocationService.LocationServicePackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.dacsee.nativeBridge.Utils.UtilsPackages;
@@ -31,7 +34,6 @@ import com.facebook.soloader.SoLoader;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -69,6 +71,7 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new DplusReactPackage());
       packages.add(new RNFSPackage());
       packages.add(new UtilsPackages());
+      packages.add(new LocationServicePackage());
 
       int googleAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
       if (googleAvailable == ConnectionResult.SUCCESS || googleAvailable == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED) {
@@ -94,6 +97,9 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     context = this.getApplicationContext();
     CrashReport.initCrashReport(getApplicationContext(), "71b843ec39", false);
+
+    Intent localService = new Intent(this, LocalService.class);
+    startService(localService);
   }
 
   public static void sendEvent(ReactContext appContext, String eventName, WritableMap map) {

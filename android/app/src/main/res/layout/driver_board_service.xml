@@ -9,7 +9,7 @@
   android:layout_gravity="center_horizontal"
   android:background="#ffffff"
   app:layout_behavior="@string/appbar_scrolling_view_behavior"
-  tools:context="com.dacsee.nativeBridge.KeepAliveService.DriverServiceHandle"
+  tools:context=".KeepAliveService.DriverServiceHandle"
   tools:showIn="@layout/driver_board_service">
 
   <LinearLayout

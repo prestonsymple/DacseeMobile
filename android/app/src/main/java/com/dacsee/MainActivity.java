@@ -3,7 +3,6 @@ package com.dacsee;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.dacsee.nativeBridge.KeepAliveService.ServiceManager;
 import com.dacsee.nativeBridge.UMeng.ShareModule;
 import com.facebook.react.ReactActivity;
 import com.mehcode.reactnative.splashscreen.SplashScreen;
@@ -22,9 +21,9 @@ public class MainActivity extends ReactActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-      ServiceManager.startService();
-      ServiceManager.setService(new Bundle());
-      ServiceManager.connectionService();
+//      ServiceManager.startService();
+//      ServiceManager.setService(new Bundle());
+//      ServiceManager.connectionService();
 
 
       SplashScreen.show(this, getReactInstanceManager());

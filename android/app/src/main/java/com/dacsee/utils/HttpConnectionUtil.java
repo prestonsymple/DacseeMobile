@@ -1,5 +1,7 @@
 package com.dacsee.utils;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -64,7 +66,7 @@ public class HttpConnectionUtil {
     return s;
   }
 
-  public String postRequset(final String url, final Map<String, String> header, final Map<String, String> map) {
+  public String postRequset(final String url, final Map<String, Object> header, final Map<String, Object> map) {
     final StringBuilder sb = new StringBuilder();
     FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
       @Override
@@ -85,16 +87,18 @@ public class HttpConnectionUtil {
           connection.setRequestProperty("Content-Type", "application/json");
 
           for (String key : header.keySet()) {
-            connection.setRequestProperty(key, URLEncoder.encode(header.get(key), "UTF-8"));
+            connection.setRequestProperty(key, URLEncoder.encode(header.get(key).toString(), "UTF-8"));
           }
 
           DataOutputStream out = new DataOutputStream(connection
                   .getOutputStream());
           StringBuilder request = new StringBuilder();
-          for (String key : map.keySet()) {
-            request.append(key + "=" + URLEncoder.encode(map.get(key), "UTF-8") + "&");
-          }
-          out.writeBytes(request.toString());//写入请求参数
+
+          // TO JSON
+          JSONObject json = new JSONObject(map);
+          request.append(json.toString());
+
+          out.writeBytes(request.toString());
           out.flush();
           out.close();
           if (connection.getResponseCode() == 200) {
