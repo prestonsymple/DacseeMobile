@@ -24,10 +24,7 @@ function* ping(server, agent = false) {
 
 function* networkObserver() {
   while (true) {
-    yield take(action => (
-      action.type === application.changeNetworkStatus().type || 
-      action.type === application.checkNetworkMapServer().type
-    ))
+    yield take()
     const apiMaps = yield select(state => state.application.api_maps)
     
     // 获取主服务器响应时间
@@ -47,12 +44,13 @@ function* networkObserver() {
       yield put(application.setAgentSvr(''))
     }
 
-    yield delay(10000)
+    yield delay(5000)
   }
 }
 
-export default function* networkSaga() {
-  yield all([
-    fork(networkObserver)
-  ])
+export default function*() {
+  yield takeLatest([
+    application.changeNetworkStatus().type,
+    application.checkNetworkMapServer().type
+  ], networkObserver)
 }

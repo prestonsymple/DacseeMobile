@@ -8,8 +8,8 @@ import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-hel
 
 const navigationMiddleware = createReactNavigationReduxMiddleware(
   'AuthLoading',
-  state => state.nav,
-);
+  state => state.nav
+)
 
 const persistConfig = {
   key: 'v0.0.4',
@@ -29,7 +29,6 @@ export default () => {
   const middleware = applyMiddleware(...[
     sagaMiddleware,
     navigationMiddleware
-    // logger
   ])
   const persistedReducer = persistReducer(persistConfig, reducers)
   const store = createStore(persistedReducer, middleware)
