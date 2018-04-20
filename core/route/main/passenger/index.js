@@ -126,6 +126,8 @@ export default connect(state => ({
       const { driver, from } = props
       const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
       const passengerCoords = [from.coords.lng, from.coords.lat]
+      
+      if (passengerCoords[0] === 0 || passengerCoords[1] === 0.05) return
 
       if (this.map.animateTo) {
         const { data } = await Session.Lookup_CN.Get(`v1/map/calculate/route/polyline/${driverCoords.join(',')}/${passengerCoords.join(',')}`)
@@ -211,7 +213,6 @@ export default connect(state => ({
       longitude = nativeEvent.coordinate.longitude
     } = nativeEvent
 
-
     if (latitude === 0 || longitude === 0) return
     if (!this.ready && this.props.map_mode.length > 0) {
       await InteractionManager.runAfterInteractions()
@@ -227,6 +228,15 @@ export default connect(state => ({
     //   await Session.Location.Put('v1', { latitude, longitude })
     // } catch (e) { /**/ }
   }
+
+
+  onMapDragEvent() {
+  }
+
+  onMapLocationEvent() {
+    
+  }
+
 
   onStatusChangeListener(region) {
     const { nativeEvent = {} } = region
@@ -277,8 +287,6 @@ export default connect(state => ({
         const route = address_components.find(pipe => pipe.types.find(sub => sub === 'route')) || { long_name: '' }
         const combine_name = `${street_number.long_name} ${route.long_name} ${political.long_name}`.trim()
 
-        console.log(results)
-
         if (combine_name.length === 0) {
           throw new Error('UNKNOW_GEO')
         }
@@ -292,13 +300,13 @@ export default connect(state => ({
           address: formatted_address
         }
       } else {
+        if (latitude < 1 && longitude < 1) throw new Error()
         const resp = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
         place = resp.data
       }
 
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
     } catch (e) {
-      console.log(e)
       this.props.dispatch(booking.passengerSetValue({
         from: { address: '自定义位置', name: this.props.i18n.location, coords: { lng: longitude, lat: latitude } }
       }))
@@ -307,12 +315,6 @@ export default connect(state => ({
     }
   }
 
-  dateChange(time) {
-    this.setState({ timePickerShow: false })
-  }
-  payChange(pay) {
-    this.setState({ selectPayShow: false })
-  }
   render() {
     const { drag, polyline } = this.state
     const { status, from, destination, map_mode, location, driver_info, friends_location } = this.props
@@ -348,6 +350,9 @@ export default connect(state => ({
       MAP_SETTER.showsUserLocation = true
       MAP_SETTER.onStatusChange = this.onStatusChangeListener.bind(this)
       MAP_SETTER.onRegionChange = this.onStatusChangeListener.bind(this)
+    } else {
+      MAP_SETTER.onStatusChange = null
+      MAP_SETTER.onRegionChange = null
     }
 
     /** FIX ANDROID LOCATION SERVICE CRASH */
@@ -392,6 +397,13 @@ export default connect(state => ({
               <AMarker image={'rn_amap_endpoint'} coordinate={destination_coords} />
               <AMarker image={`rn_car_${direction}`} coordinate={_polyline[0]} />
               <APolyline coordinates={_polyline} width={6} color={'#666'} />
+              {
+                friends_location.length > 0 && (
+                  friends_location.map((pipe, index) => (
+                    <AMarker key={index} image={'rn_car_rookie'} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }} />
+                  ))
+                )
+              }
             </AMapView>
           )
         }
