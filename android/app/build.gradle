@@ -113,10 +113,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("release.keystore")
-            storePassword "Quzhi17168"
-            keyAlias "Dacsee"
-            keyPassword "Quzhi17168"
+            storeFile file("dacsee.keystore")
+            storePassword "db2inst1"
+            keyAlias "dacsee"
+            keyPassword "db2inst1"
         }
     }
     splits {

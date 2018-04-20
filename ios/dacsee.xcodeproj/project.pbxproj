@@ -1219,12 +1219,12 @@
 					ProjectRef = F5A336FF2073B75B0057CB84 /* RCTNetwork.xcodeproj */;
 				},
 				{
-					ProductGroup = F5A33675207376600057CB84 /* Products */;
-					ProjectRef = F5A33674207376600057CB84 /* RCTPushNotification.xcodeproj */;
-				},
-				{
 					ProductGroup = F5A337092073B7640057CB84 /* Products */;
 					ProjectRef = F5A337082073B7640057CB84 /* RCTPushNotification.xcodeproj */;
+				},
+				{
+					ProductGroup = F5A33675207376600057CB84 /* Products */;
+					ProjectRef = F5A33674207376600057CB84 /* RCTPushNotification.xcodeproj */;
 				},
 				{
 					ProductGroup = F5A337122073B7720057CB84 /* Products */;
