@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, ScrollView, Alert
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, StyleSheet, Image, ScrollView, Alert
 } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -92,38 +92,62 @@ export default connect(state => ({
     const { dataSource } = this.state
     const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
     const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
-
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor:'white' }}>
         <ScrollView contentContainerStyle={{}} style={{ backgroundColor: 'white' }}>
-          <View style={{ height: 161, backgroundColor: '#1ab2fd', justifyContent: 'center' }}>
-            <View style={{ alignItems: 'center' }}>
-              <View style={{ borderColor: '#106e9d', borderWidth: 4, borderRadius: 60, marginBottom: 10 }}>
-                <Image style={{ width: 88, height: 88, borderRadius: 44 }} source={{ uri: avatars[avatars.length - 1].url }} />
-                <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 2, right: 2, borderRadius: 9 }} />
-              </View>
-              <Text style={{ color: 'white', fontSize: TextFont.TextSize(18), fontWeight: '600' }}>{ fullName }</Text>
+          <View style={{ height: height * 0.25, backgroundColor: '#1ab2fd', alignItems: 'center' }}>
+            {/*<View style={{marginTop: 10}}>*/}
+            <View style={{marginTop: 10}}>
+              <Image style={styles.avatar} source={{ uri: avatars[avatars.length - 1].url }} />
+              <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 8, right: 8, borderRadius: 9 }} />
             </View>
+            <Text style={{ color: 'white', fontSize: TextFont.TextSize(25), marginTop: 10 }}>{ fullName }</Text>
+            {/*</View>*/}
           </View>
-          <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
-            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>
-              { userId && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ userId }</Text>) }
-            </View>
-            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.phone }</Text>
-              { phoneNo && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }
-            </View>
-            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>
-              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ email || i18n.no_content}</Text>
-            </View>
-            <View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>
-              <Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ i18n.no_content }</Text>
-            </View>
+          <View style={{ paddingHorizontal: 20,  marginTop: 10,  }}>
+            <ListItem i18n={i18n.userid} params={userId}/>
+            <ListItem i18n={i18n.phone} params={phoneCountryCode}/>
+            <ListItem i18n={i18n.email} params={email || i18n.no_content}/>
+            <ListItem i18n={i18n.country} params={i18n.no_content}/>
+
+            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'green' }}>*/}
+            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>*/}
+            {/*{ userId && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ userId }</Text>) }*/}
+            {/*</View>*/}
+            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>*/}
+            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.phone }</Text>*/}
+            {/*{ phoneNo && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }*/}
+            {/*</View>*/}
+            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>*/}
+            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>*/}
+            {/*<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ email || i18n.no_content}</Text>*/}
+            {/*</View>*/}
+            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>*/}
+            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>*/}
+            {/*<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ i18n.no_content }</Text>*/}
+            {/*</View>*/}
           </View>
         </ScrollView>
+        <View style={{ flexDirection: 'row', alignItems:'center', justifyContent: 'center'}}>
+          <TouchableOpacity onPress={async () => {
+            Alert.alert(i18n.friend_delete, i18n.del_friend_confirm, [{
+              text: i18n.confirm,
+              onPress: async () => {
+                try {
+                  const { _id } = this.props.navigation.state.params
+                  await Session.Circle.Delete(`v1/circle/${_id}`)
+                  this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+                  Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
+                } catch (e) {
+                  console.log(e)
+                  this.props.dispatch(application.showMessage(i18n.timeout_try_again))
+                }
+              }
+            }, { text: i18n.cancel}])
+          }} activeOpacity={.7} style={styles.sendRequest}>
+            <Text style={{ color: 'white', fontSize: TextFont.TextSize(18), fontWeight: 'bold' }}>{i18n.friend_delete}</Text>
+          </TouchableOpacity>
+        </View>
         <ActionSheet
           ref={e => this.ActionSheet = e}
           title={i18n.more}
@@ -135,4 +159,46 @@ export default connect(state => ({
       </View>
     )
   }
+})
+
+function ListItem(props) {
+  const { i18n, params } = props
+  return(
+    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
+      <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400' }}>{ i18n }</Text>
+      { params && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400' }}>{ params }</Text>) }
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  avatar: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 4,
+    borderColor: '#106e9d',
+    backgroundColor: '#1ab2fd',
+  },
+  sendRequest:{
+    height: 66,
+    marginBottom: 20,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 40,
+    // height: 33,
+    borderRadius: 36,
+    backgroundColor: '#7dd320',
+    borderStyle: 'solid',
+    borderWidth: 5,
+    borderColor: '#ffffff',
+    shadowColor: 'rgba(0, 0, 0, 0.15)',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 3,
+    shadowOpacity: 1
+  },
 })
