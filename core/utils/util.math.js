@@ -34,7 +34,7 @@ const direction = (n1, e1, n2, e2) => {
 }
 
 const carDirection = (n1, e1, n2, e2) => {
-  const DEFINE_ANGLE = 16
+  const DEFINE_ANGLE = 32
 
   const _direction = direction(n1, e1, n2, e2)
   return parseInt(_direction / DEFINE_ANGLE) + ((_direction % DEFINE_ANGLE) >= (DEFINE_ANGLE / 2) ? 1 : 0) + 1

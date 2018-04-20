@@ -24,6 +24,7 @@ import Launch from './app.launch'
 import { network, application, jobs, booking } from './redux/actions'
 import { BOOKING_STATUS } from './route/main'
 import ShareUtil from './native/umeng/ShareUtil'
+import Unit from './unit'
 
 import { Define, System } from './utils'
 
@@ -38,12 +39,8 @@ const SHARE_MEDIA = {
   FACEBOOK: Platform.select({ ios: 16, android: 13 }),
   TWITTER: Platform.select({ ios: 17, android: 8 })
 }
-
-/*eslint-disable*/
-// console.ignoredYellowBox = ['Warning: BackAndroid', 'Remote debugger'];
-/*eslint-enable*/
-
 global.store = Store()
+global.unit = Unit
 
 class Core extends PureComponent {
 

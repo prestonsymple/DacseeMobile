@@ -1,4 +1,3 @@
-import { Keyboard } from 'react-native'
 import moment from 'moment'
 
 import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
@@ -23,33 +22,17 @@ const Methods = {
 var MAIN_TIMER_QUEUE = []
 
 
-function* bookingOnTheWay() {
-  while(true) {
-    const { payload } = yield take(booking.journeyUserDriverRespondSuccess().type)
-    yield put(NavigationActions.navigate({ routeName: 'BookingDriverDetail', params: { booking_id: payload } }))
-  }
-}
-
-function* bookingOnComplete() {
-  while (true) {
-    const { payload } = yield take(booking.passengerEventDriverComplete().type)
-    yield put(NavigationActions.navigate({ routeName: 'BookingComplete', params: { booking_id: payload } }))
-    // const { nav } = yield select(state => ({ nav: state.nav }))
-    // console.log(nav)
-  }
-}
-
 function* bookingFlow() {
 
   while(true) {
-    const i18n = yield select(state => state.intl.messages||{})
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
-    const { booking_id, destination, from, time, payment, type, selected_friends, fare } = yield select(state => ({
+    const { i18n, booking_id, destination, from, time, payment, type, selected_friends, fare, currentStatus } = yield select(state => ({
       ...state.booking,
-      booking_id: state.storage.booking_id
+      currentStatus: state.booking.status,
+      booking_id: state.storage.booking_id,
+      i18n: state.intl.messages || {}
     }))
-
 
     if (
       status === STATUS.PASSGENER_BOOKING_INIT ||
@@ -145,22 +128,29 @@ function* bookingFlow() {
       // }, 2000)
       continue
     } else if (
-      status === STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY ||
-      status === STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED ||
-      status === STATUS.PASSGENER_BOOKING_ON_BOARD ||
-      status === STATUS.PASSGENER_BOOKING_ON_RATING
+      // 当有未完成的订单时，检查订单状态并恢复订单
+      booking_id.length > 0 &&
+      (
+        currentStatus === STATUS.PASSGENER_BOOKING_INIT ||
+        currentStatus === STATUS.PASSGENER_BOOKING_PICKED_ADDRESS ||
+        currentStatus === STATUS.PASSGENER_BOOKING_PICKED_OPTIONS
+      ) && (
+        status === STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY ||
+        status === STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED ||
+        status === STATUS.PASSGENER_BOOKING_ON_BOARD ||
+        status === STATUS.PASSGENER_BOOKING_ON_RATING
+      )
     ) {
-      // DATA RECEIVE
-      if ((destination && from) && !('coords' in destination) || !('coords' in from)) {
-        // TODO: 恢复车型数据
-        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare`)
-        yield put(booking.passengerSetValue({
-          destination: bookingDetail.destination,
-          fare: bookingDetail.fare,
-          from: bookingDetail.from,
-          payment: bookingDetail.payment_method
-        }))
-      }
+      // TODO: 恢复车型数据
+      console.log('[恢复数据]')
+      const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare`)
+      console.log(bookingDetail)
+      yield put(booking.passengerSetValue({
+        destination: bookingDetail.destination,
+        fare: bookingDetail.fare,
+        from: bookingDetail.from,
+        payment: bookingDetail.payment_method
+      }))
     }
 
     // TODO COMPLETE
@@ -218,7 +208,6 @@ function* bookingTriggerEventListener() {
   while(true) {
     const action = yield take(booking.passengerTriggerEventListener().type)
     const event = action.payload
-
   }
 }
 
@@ -231,12 +220,19 @@ function* passengerUpdateDriverLocation() {
     }))
 
     if (!driver_id || !app_status || !(passengerStatus < STATUS.PASSGENER_BOOKING_HAVE_COMPLETE)) {
-      yield delay(2500)
+      yield delay(2000)
       continue
     } else {
-      const driver = yield call(Session.Location.Get, `v1?reqUser_id=${driver_id}&userRole=passenger`)
-      yield put(booking.passengerSetValue({ driver }))
-      yield delay(10000)
+      try {
+        const driver = yield call(Session.Location.Get, `v1?reqUser_id=${driver_id}&userRole=passenger`)
+        if ('latitude' in driver && 'longitude' in driver) {
+          yield put(booking.passengerSetValue({ driver }))
+        }
+      } 
+      catch (e) {/**/}
+      finally {
+        yield delay(5000)
+      }
     }
   }
 }
@@ -244,10 +240,10 @@ function* passengerUpdateDriverLocation() {
 function* passengerStatusObserver() {
 
   while (true) {
-    const i18n = yield select(state => state.intl.messages||{})
-    const { booking_id, app_status } = yield select(state => ({
+    const { booking_id, app_status, i18n } = yield select(state => ({
       booking_id: state.storage.booking_id,
-      app_status: state.application.application_status === 'active'
+      app_status: state.application.application_status === 'active',
+      i18n: state.intl.messages || {}
     }))
 
     if (!booking_id || !app_status) {
@@ -293,11 +289,11 @@ function* passengerStatusObserver() {
           ])
         }
 
-        console.log({
-          driver_id,
-          bookingStatus,
-          passengerStatus
-        })
+        // console.log({
+        //   driver_id,
+        //   bookingStatus,
+        //   passengerStatus
+        // })
       } catch (e) {
         console.log(e)
       }
@@ -307,15 +303,11 @@ function* passengerStatusObserver() {
 }
 
 export default function* bookingHandle() {
-  try {
-    yield all([
-      fork(passengerUpdateDriverLocation),
-      fork(passengerStatusObserver),
-      fork(bookingFlow),
-      fork(bookingBoardCastListener),
-      fork(bookingTriggerEventListener)
-    ])
-  } catch(e) {
-    console.log(e)
-  }
+  yield all([
+    fork(passengerUpdateDriverLocation),
+    fork(passengerStatusObserver),
+    fork(bookingFlow),
+    fork(bookingBoardCastListener),
+    fork(bookingTriggerEventListener)
+  ])
 }

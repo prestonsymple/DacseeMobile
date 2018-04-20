@@ -54,6 +54,8 @@ function* updateFriendsLocation() {
       let friends_location = yield call(Session.Location.Get, `v1/friends?reqUser_id=${params}`)
       friends_location = friends_location.filter(pipe => (pipe.latitude && pipe.longitude))
       yield put(circle.setValues({ friends_location }))
+    } else {
+      yield put(circle.setValues({ friends_location: [] }))
     }
     yield delay(5000)
   }

@@ -21,9 +21,15 @@ public class MainActivity extends ReactActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.show(this, getReactInstanceManager());
-        ShareModule.initSocialSDK(this);
-        super.onCreate(savedInstanceState);
+//      ServiceManager.startService();
+//      ServiceManager.setService(new Bundle());
+//      ServiceManager.connectionService();
+
+
+      SplashScreen.show(this, getReactInstanceManager());
+      ShareModule.initSocialSDK(this);
+
+      super.onCreate(savedInstanceState);
     }
 
     @Override

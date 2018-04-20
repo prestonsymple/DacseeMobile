@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dacsee"
-          android:versionCode="18041201"
-          android:versionName="0.35.0">
+          package="com.dacsee">
 
   <uses-sdk
     android:minSdkVersion="16"
@@ -52,6 +50,8 @@
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
+    android:hardwareAccelerated="false"
+    android:largeHeap="true"
     >
     <activity
       android:name=".MainActivity"
@@ -61,10 +61,14 @@
       android:windowSoftInputMode="adjustResize"
       android:theme="@style/AppTheme">
       <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="dacsee" android:host="dacsee" />
+        <action android:name="android.intent.action.VIEW" />
+        <action android:name="android.intent.action.MEDIA_MOUNTED" />
+        <action android:name="android.intent.action.USER_PRESENT" />
+        <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+        <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -72,6 +76,16 @@
       </intent-filter>
     </activity>
     <activity android:screenOrientation="portrait" android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
+
+    <service
+      android:name=".KeepAliveService.LocalService"
+      android:enabled="true"
+      android:exported="true" />
+    <service
+      android:name=".KeepAliveService.RemoteService"
+      android:process=":romoteservice"
+      android:enabled="true"
+      android:exported="true" />
 
     <meta-data
       android:name="com.amap.api.v2.apikey"
@@ -183,8 +197,7 @@
         <data android:scheme="package" />
       </intent-filter>
     </receiver>
-    <service android:name="com.baidu.android.pushservice.PushService" android:exported="true"
-             android:process=":bdservice_v1" >
+    <service android:name="com.baidu.android.pushservice.PushService" android:exported="true" android:process=":bdservice_v1" >
       <intent-filter >
         <action android:name="com.baidu.android.pushservice.action.PUSH_SERVICE" />
       </intent-filter>
