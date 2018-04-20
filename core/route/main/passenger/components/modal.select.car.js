@@ -31,7 +31,7 @@ export default class RemarkModel extends Component {
     })
   }
   render() {
-    let modalHeight = Define.system.ios.x ? 242 + 22 : 360
+    let modalHeight = width
     const { visible, i18n } = this.props
     const { selectIndex } =this.state
     return (
@@ -43,9 +43,9 @@ export default class RemarkModel extends Component {
       >
         <View style={{ width: width, height: height, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(57, 56, 67, 0.4)' }}>
 
-          <View style={{ height: modalHeight, width: modalHeight - 40 }}>
-            <View style={{ height: 40, marginTop: 40, backgroundColor: '#FDC377', borderTopLeftRadius: 20, borderTopRightRadius: 20, width: modalHeight - 40 }} />
-            <View style={{ height:80, position: 'absolute', top:0, left: 20, width: modalHeight - 60}}>
+          <View style={{ height: modalHeight, width: modalHeight - 60 }}>
+            <View style={{ height: 40, marginTop: 40, backgroundColor: '#FDC377', borderTopLeftRadius: 20, borderTopRightRadius: 20, width: modalHeight - 60 }} />
+            <View style={{ height:80, position: 'absolute', top:0, left: 20, width: modalHeight -80}}>
               <Image style={{ height: 80,width:183,}} source={Resources.image.car_vehicle} />
             </View>
             <View style={{ flex: 1, padding: 15, backgroundColor: '#fff', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
