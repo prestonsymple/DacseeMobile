@@ -44,10 +44,6 @@ export default connect(state => ({
     super(props)
     this.state = {
       drag: false,
-      timePickerShow: false,
-      selectPayShow: false,
-      remarkShow: false,
-      selectCarShow:false,
       routeBounds: {}, routeCenterPoint: {}, routeLength: 0, routeNaviPoint: [], routeTime: 0, routeTollCost: 0,
       polyline: [],
 
@@ -130,7 +126,7 @@ export default connect(state => ({
       const { driver, from } = props
       const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
       const passengerCoords = [from.coords.lng, from.coords.lat]
-      
+
       if (passengerCoords[0] === 0 || passengerCoords[1] === 0.05) return
 
       if (this.map.animateTo) {
@@ -238,7 +234,7 @@ export default connect(state => ({
   }
 
   onMapLocationEvent() {
-    
+
   }
 
 
@@ -317,23 +313,6 @@ export default connect(state => ({
     } finally {
       this.setState({ drag: false })
     }
-  }
-
-  dateChange(time) {
-    let { timePickerShow } = this.state
-    this.setState({timePickerShow:!timePickerShow})
-  }
-  payChange(pay) {
-    let { selectPayShow } = this.state
-    this.setState({selectPayShow:!selectPayShow})
-  }
-  remarkChange(txt) {
-    let { remarkShow } = this.state
-    this.setState({remarkShow:!remarkShow})
-  }
-  carChange(car,fare){
-    let { selectCarShow } = this.state
-    this.setState({selectCarShow:!selectCarShow})
   }
   render() {
     const { drag, polyline } = this.state
@@ -471,16 +450,7 @@ export default connect(state => ({
 
         {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />)}
         {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (
-          <PickerOptions
-            selectPayShow={this.state.selectPayShow}
-            timePickerShow={this.state.timePickerShow}
-            remarkShow={this.state.remarkShow}
-            selectCarShow={this.state.selectCarShow}
-            remarkChange={(txt) => this.remarkChange(txt)}
-            carChange={(car) => this.carChange(car)}
-            payChange={(pay) => this.payChange(pay)}
-            dateChange={(time) => this.dateChange(time)}
-          />
+          <PickerOptions />
         )}
 
         {status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY && (
@@ -500,12 +470,21 @@ export default connect(state => ({
 })
 
 const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.messages }))(class PickerOptions extends PureComponent {
-
+  constructor(props) {
+    super(props)
+    this.state = {
+      timePickerShow: false,
+      selectPayShow: false,
+      remarkShow: false,
+      selectCarShow: false
+    }
+  }
   render() {
     const { drag, from, destination, i18n, selected_friends } = this.props
+    const { timePickerShow, selectPayShow, remarkShow, selectCarShow } = this.state
     return (
       <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ?height-456:height-434, height: Define.system.ios.x ? 360 + 22 : 360, justifyContent: 'center' },
+        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ? height - 456 : height - 434, height: Define.system.ios.x ? 360 + 22 : 360, justifyContent: 'center' },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
         { backgroundColor: '#fff', },
         { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
@@ -539,30 +518,30 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
         </View>
         <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
         <View style={{ height: 44, width: width, flexDirection: 'row' }}>
-          <TouchableOpacity onPress={() => this.props.payChange()} activeOpacity={.7}
+          <TouchableOpacity onPress={() =>  this.setState({ selectPayShow: !selectPayShow })} activeOpacity={.7}
             style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
           </TouchableOpacity>
           <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
-          <TouchableOpacity onPress={() => this.props.dateChange()}
+          <TouchableOpacity onPress={() =>  this.setState({ timePickerShow: !timePickerShow })} 
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.now}</Text>
           </TouchableOpacity>
           <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
-          <TouchableOpacity onPress={() => this.props.remarkChange()}
+          <TouchableOpacity onPress={() =>this.setState({ remarkShow: !remarkShow })}
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{'Remarks'}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
         <View style={{ alignItems: 'center', marginHorizontal: 15, marginVertical: 10, }}>
-          <TouchableOpacity onPress={() => this.props.carChange()} 
-            activeOpacity={.7} style={{ height: 50, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <View style={{ flexDirection:'row',justifyContent:'center',alignItems:'center'}} > 
-              <Image style={{height:40,width:40,marginHorizontal:10 }} source={Resources.image.car_budget} />
+          <TouchableOpacity onPress={() => this.setState({ selectCarShow: !selectCarShow })}
+            activeOpacity={.7} style={{ height: 50, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
+              <Image style={{ height: 40, width: 40, marginHorizontal: 10 }} source={Resources.image.car_budget} />
               <Text style={{ color: '#111', fontSize: 14, fontWeight: '600' }}>{(this.props.fare === 0) ? 'Economy' : `Economy - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
             </View>
-            <View style={{ alignItems:'center',marginRight:20,marginBottom:6}} > 
+            <View style={{ alignItems: 'center', marginRight: 20, marginBottom: 6 }} >
               {Icons.Generator.Awesome('sort-desc', 20, '#6F6F6F')}
             </View>
           </TouchableOpacity>
@@ -575,12 +554,26 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
           </TouchableOpacity>
 
         </View>
-        <SelectCar cars={['SUV','玛莎拉蒂']} visible={this.props.selectCarShow} i18n={this.props.i18n} carChange={(car,fare) => this.props.carChange(car,fare)} />
-        <RemarkModel visible={this.props.remarkShow} i18n={this.props.i18n} remarkChange={(txt) => this.props.remarkChange(txt)} />
-        <TimePicker visible={this.props.timePickerShow}
-          i18n={this.props.i18n}
-          dateChange={(time) => this.props.dateChange(time)} />
-        <SelectPay visible={this.props.selectPayShow} i18n={this.props.i18n} payChange={(pay) => this.props.payChange(pay)} />
+        <SelectPay visible={selectPayShow} i18n={this.props.i18n}
+          payChange={(pay) => {
+            this.setState({ selectPayShow: !selectPayShow })
+            this.props.dispatch(booking.passengerSetValue({ payment:pay }))
+          }} />
+        <TimePicker visible={timePickerShow} i18n={this.props.i18n}
+          dateChange={(time) =>  {
+            this.setState({ timePickerShow: !timePickerShow })
+            this.props.dispatch(booking.passengerSetValue({ time:time }))
+          }} />
+        
+        <SelectCar cars={['SUV', '玛莎拉蒂']} visible={selectCarShow} i18n={this.props.i18n} 
+          carChange={(car, fare) => { this.setState({ selectCarShow: !selectCarShow })
+          //this.props.dispatch(booking.passengerSetValue({ payment:pay }))
+          }} />
+        <RemarkModel visible={remarkShow} i18n={this.props.i18n} 
+          remarkChange={(txt) => {
+            this.setState({ remarkShow: !remarkShow })
+            // this.props.dispatch(booking.passengerSetValue({ payment:pay }))
+          }} />
       </Animated.View>
     )
   }

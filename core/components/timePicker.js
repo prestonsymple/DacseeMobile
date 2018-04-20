@@ -1,13 +1,13 @@
 import React, { Component, PureComponent } from 'react'
-import { Text, View, TouchableOpacity, Modal,PixelRatio } from 'react-native'
+import { Text, View, TouchableOpacity, Modal, PixelRatio } from 'react-native'
 import {
-  Screen, Icons, Define,TextFont
+  Screen, Icons, Define, TextFont
 } from '../utils'
 import Wheel from './Wheel'
 import _ from 'lodash'
 import moment from 'moment'
 const { height, width } = Screen.window
-const pixelSize = (function() {
+const pixelSize = (function () {
   let pixelRatio = PixelRatio.get()
   if (pixelRatio >= 3) return 0.333
   else if (pixelRatio >= 2) return 0.5
@@ -30,7 +30,7 @@ export default class TimePicker extends PureComponent {
       minute: this.getDafultMinutes()[0],
     }
   }
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
       hours: this.getDafultHours(),
       minutes: this.getDafultMinutes(),
@@ -44,17 +44,25 @@ export default class TimePicker extends PureComponent {
     date.setDate(date.getDate() + n)//获取n天后的日期
     return moment(date).format('MMM DD ddd')
   }
+  getYear(day) {
+    let index = _.findIndex(this.days, function (chr) {
+      return chr == day
+    })
+    let date = new Date()
+    date.setDate(date.getDate() + index)
+    return moment(date).format('YYYY-MM-DD')
+  }
   getDafultHours() {
     let HM = this.getNowHM()
     let nowHour = HM.hour
     // let nowMinute = HM.minute
-    return this.getDropedDate(this.hours,nowHour)
+    return this.getDropedDate(this.hours, nowHour)
   }
   getDafultMinutes() {
     let HM = this.getNowHM()
     // let nowHour = HM.hour
     let nowMinute = HM.minute
-    return this.getDropedDate(this.minutes,nowMinute)
+    return this.getDropedDate(this.minutes, nowMinute)
   }
   getNowHM() {
     let json = {}
@@ -74,7 +82,7 @@ export default class TimePicker extends PureComponent {
     json.minute = m
     return json
   }
-  getDropedDate(data,pa){
+  getDropedDate(data, pa) {
     let index = _.findIndex(data, function (chr) {
       return chr == pa
     })
@@ -85,21 +93,22 @@ export default class TimePicker extends PureComponent {
     let HM = this.getNowHM()
     let nowHour = HM.hour
     let nowMinute = HM.minute
-    if (this.state.day == this.days[0]&&day!= this.days[0]){
+    if (this.state.day == this.days[0] && day != this.days[0]) {
       this.setState({ hours: this.hours })
-      if (this.hour == nowHour) {
+      if (this.state.hour == nowHour) {
         this.setState({ minutes: this.minutes })
       }
     }
-    if (day == this.days[0]&&this.state.day!=day) {
-      let hours=this.getDropedDate(this.hours,nowHour)
-      this.setState({hours:hours,hour:hours[0]})
+    if (day == this.days[0] && this.state.day != day) {
+      
+      let hours = this.getDropedDate(this.hours, nowHour)
+      this.setState({ hours: hours, hour: hours[0] })
       if (this.state.hour == nowHour) {
-        let minutes=this.getDropedDate(this.minutes,nowMinute)
-        this.setState({minutes:minutes,minute:minutes[0]})
+        let minutes = this.getDropedDate(this.minutes, nowMinute)
+        this.setState({ minutes: minutes, minute: minutes[0] })
       }
     }
-    this.setState({day:day})
+    this.setState({ day: day })
   }
   onHourChange(index) {
     let hour = this.state.hours[index]
@@ -107,22 +116,22 @@ export default class TimePicker extends PureComponent {
     let nowHour = HM.hour
     let nowMinute = HM.minute
     if (this.state.day == this.days[0] && hour == nowHour) {
-      let minutes=this.getDropedDate(this.minutes,nowMinute)
-      this.setState({minutes:minutes,hour:hour,minute:minutes[0]})
+      let minutes = this.getDropedDate(this.minutes, nowMinute)
+      this.setState({ minutes: minutes, hour: hour, minute: minutes[0] })
     }
-    if (this.state.day == this.days[0] && this.hour == nowHour&&hour!=nowHour) {
-      this.setState({hour:hour, minutes: this.minutes })
+    if (this.state.day == this.days[0] && this.hour == nowHour && hour != nowHour) {
+      this.setState({ hour: hour, minutes: this.minutes })
     }
-    this.setState({hour:hour})
+    this.setState({ hour: hour })
   }
   onMinuteChange(index) {
-    this.setState({minute:this.state.minutes[index]})
+    this.setState({ minute: this.state.minutes[index] })
   }
   //
 
   render() {
-    let modalHeight = Define.system.ios.x ?  266 + 22 : 266
-    let weelHeight=modalHeight- 70
+    let modalHeight = Define.system.ios.x ? 266 + 22 : 266
+    let weelHeight = modalHeight - 70
     return (
       <Modal
         animationType='fade'           //渐变
@@ -131,17 +140,18 @@ export default class TimePicker extends PureComponent {
         onRequestClose={() => this.props.dateChange('now')}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, backgroundColor: 'rgba(57, 56, 67, 0.2)' }}>
-        <View style={{ width: width, height:height-modalHeight }}></View>
-          <View style={{ height:modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
+          <View style={{ width: width, height: height - modalHeight }}></View>
+          <View style={{ height: modalHeight, backgroundColor: '#fff', paddingBottom: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: pixelSize, borderBottomColor: '#ccc', alignItems: 'center', width: width, height: 50 }}>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange('now')} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.props.dateChange('now')} >
                 <Text style={{ color: '#1ab2fd', fontSize: TextFont.TextSize(15) }}>{this.props.i18n.cancel}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }} onPress={()=>this.props.dateChange(`${this.state.day}${this.state.hour}点${this.state.minute}分`)} >
+              <TouchableOpacity style={{ height: 50, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }}
+                onPress={() => this.props.dateChange(moment(`${this.getYear(this.state.day)} ${this.state.hour}:${this.state.minute}`).toISOString())} >
                 <Text style={{ color: '#ffa03c', fontSize: TextFont.TextSize(15) }}>{this.props.i18n.confirm}</Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width,height: weelHeight }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: width, height: weelHeight }}>
               <Wheel
                 style={{ height: weelHeight, width: width / 2 }}
                 itemStyle={{ textAlign: 'center' }}
