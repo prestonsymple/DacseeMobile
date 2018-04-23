@@ -27,7 +27,7 @@ function* bookingFlow() {
   while(true) {
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
-    const { i18n, booking_id, destination, from, time, payment, type, selected_friends, fare, currentStatus } = yield select(state => ({
+    const { i18n, booking_id, destination, from, time, payment, type, selected_friends, fare, currentStatus, notes } = yield select(state => ({
       ...state.booking,
       currentStatus: state.booking.status,
       booking_id: state.storage.booking_id,
@@ -63,9 +63,9 @@ function* bookingFlow() {
       const body = {
         from,
         destination,
-        fare: fare,
+        notes,
+        fare,
         type: 'now',
-        notes : '',
         booking_at: Methods.timeZone(time),
         payment_method: Methods.payment(payment),
       }

@@ -147,18 +147,18 @@ const BookingContainerSwitcher = connect(state => ({ core_mode: state.applicatio
 
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
-    this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false })
+    this.scrollView.scrollTo({ x: this.props.core_mode === 'passenger' ? 0 : width, animated: false })
 
     // 修复Android初始化加载延迟问题, Tab页切换不对
     if (System.Platform.Android) {
       await new Promise((resolve) => setTimeout(() => resolve(), 200))
-      this.scrollView.scrollTo({ x: this.props.core_mode === 'driver' ? 0 : width, animated: false })
+      this.scrollView.scrollTo({ x: this.props.core_mode === 'passenger' ? 0 : width, animated: false })
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.core_mode !== this.props.core_mode) {
-      this.scrollView.scrollTo({ x: props.core_mode === 'driver' ? 0 : width, animated: false })
+      this.scrollView.scrollTo({ x: props.core_mode === 'passenger' ? 0 : width, animated: false })
     }
   }
 
@@ -170,8 +170,8 @@ const BookingContainerSwitcher = connect(state => ({ core_mode: state.applicatio
     }
     return (
       <ScrollView {...VIEW_SETTER}>
-        <DriverComponent />
         <PassengerComponent />
+        <DriverComponent />
       </ScrollView>
     )
   }

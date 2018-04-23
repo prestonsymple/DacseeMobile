@@ -15,6 +15,7 @@ const initialState = {
   book: false,
   time: 'now',
   fare: 0,
+  notes: '',
   selected_friends: [],
 
   vehicleGroups: [],
