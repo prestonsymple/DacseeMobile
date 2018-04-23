@@ -10,10 +10,18 @@ import com.dacsee.MainApplication;
 
 public class LocationManagerUtil {
 
-  private static Location lastLocation;
+  private static LocationManagerUtil _shareInstance;
+  public static LocationManagerUtil shareInstance() {
+    if (_shareInstance == null) {
+      _shareInstance = new LocationManagerUtil();
+    }
+    return _shareInstance;
+  }
 
-  private static LocationManager mLocationManager;
-  private static LocationListener mLocationListener = new LocationListener() {
+  public Location lastLocation;
+
+  private LocationManager mLocationManager;
+  private LocationListener mLocationListener = new LocationListener() {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) { }
@@ -28,7 +36,9 @@ public class LocationManagerUtil {
     public void onProviderDisabled(String provider) { }
 
     @Override
-    public void onLocationChanged(Location location) { }
+    public void onLocationChanged(Location location) {
+      lastLocation = location;
+    }
 
   };
 

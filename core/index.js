@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react'
 import moment from 'moment'
 import intl from 'intl'
 import { addLocaleData } from 'react-intl'
+import { NavigationActions } from 'react-navigation'
 // import PushNotification from 'react-native-push-notification'
 import PushService from './native/push-service'
 
@@ -215,11 +216,36 @@ class Core extends PureComponent {
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TENCENT_QQ_ZONE, '1106730946', 'cpXqcASFJs2r6vH3', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.FACEBOOK, '1728454220518965', '2d53c4fce565096b2c08845ffaf08a00', '')
     ShareUtil.setPlatformConfig(SHARE_MEDIA.TWITTER, '75sUPCwmmjb7R4VP8F7mIly8B', 'gBpNFDJ07FGO5dPQ8zlUFyzrr3KWd82RE6HWVQzyNfiXNbRyCX', '')
-  }
+  }  
 
   initializationBackHandler() {
+    var getParentRoute = (name, route) => {
+      let result = null
+      for(var i = 0; i < route.routes.length; i++) {
+        if (route.routes[i].routeName === name) {
+          result = route
+        } else if (route.routes[i].routes && route.routes[i].routes.length > 0) {
+          result = getParentRoute(name, route.routes[i])
+        }
+        if (result !== null) return result
+      }
+    }
+
     if (Define.system.android) {
-      BackHandler.addEventListener('hardwareBackPress', () => store.dispatch(application.onPressAndroidBackButton()))
+      BackHandler.addEventListener('hardwareBackPress', () => {
+        try {
+          const nav = store.getState().nav
+          const app = getParentRoute('Main', nav)
+          if (app.routes.length > 1) {
+            store.dispatch(NavigationActions.back())
+            return true
+          } else {
+            return false
+          }
+        } catch (e) {
+          return true
+        }
+      })
     }
   }
 
