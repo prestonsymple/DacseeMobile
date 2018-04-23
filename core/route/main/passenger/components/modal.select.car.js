@@ -55,10 +55,10 @@ export default class RemarkModel extends Component {
                 <View style={{ flex: 1, marginTop: 15, borderRadius: 10, borderColor: '#ccc', borderWidth: 0.8 }}>
                   <CarCell isSelected={selectIndex == 0} onChange={() => this.onChange(0)}
                     img={Resources.image.car_budget} fare={'25'} car={this.cars[0]} />
-                  <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
+                  <View style={{ backgroundColor: '#ccc', height: 1, width: modalHeight-89 }} />
                   <CarCell isSelected={selectIndex == 1} onChange={() => this.onChange(1)}
                     img={Resources.image.car_premium} fare={'45'} car={this.cars[1]} />
-                  <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
+                  <View style={{ backgroundColor: '#ccc', height: 1, width:  modalHeight-89 }} />
                   <CarCell isSelected={selectIndex == 2} onChange={() => this.onChange(2)}
                     img={Resources.image.car_xl} fare={'30'} car={this.cars[2]} />
                 </View>
@@ -87,7 +87,7 @@ const CarCell = (props) => {
   innerCircle = props.isSelected ? <View style={[styles.innerCircle, { backgroundColor: '#1AB2FD' }]} /> : null
   return (
     <TouchableOpacity onPress={props.onChange}
-      activeOpacity={.7} style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      activeOpacity={1} style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
         <Image style={{ height: 32, width:32, marginHorizontal: 10 }} source={props.img} />
         <Text style={{ color: '#111', fontSize: 14, fontWeight: '600' }}>{props.car}</Text>
