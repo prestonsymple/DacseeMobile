@@ -71,9 +71,11 @@ function* bookingFlow() {
       }
 
       const vehicleGroups = yield select(state => state.booking.vehicleGroups)
+      const vehicleCategories = yield select(state => state.booking.vehicleCategories)
       if (type === 'circle') {
-        const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
-        body.vehicle_category_id = vehicleGroupsId
+        // const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+        const vehicleCategoriesId = vehicleCategories.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+        body.vehicle_category_id = vehicleCategoriesId
         body.assign_type = typeof(selected_friends) === 'string' ? 'circle' : 'selected_circle'
       } else if (type === 'taxi') {
         const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'Taxi' || pipe.name === '出租车')._id

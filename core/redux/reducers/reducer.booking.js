@@ -19,6 +19,7 @@ const initialState = {
   selected_friends: [],
 
   vehicleGroups: [],
+  vehicleCategories: [],
 
   status: 0,
   driver_id: '',

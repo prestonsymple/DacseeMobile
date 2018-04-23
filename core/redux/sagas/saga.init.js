@@ -71,7 +71,9 @@ function* initializationFlow(action) {
   try {
     const country = yield select(state => state.account.country)
     const vehicleGroups = yield call(Session.Lookup.Get, `v1/lookup/vehicleGroups?country=${country || 'MY'}`)
-    yield put(booking.passengerSetValue({ vehicleGroups }))
+    const groupId = vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+    const vehicleCategories = yield call(Session.Lookup.Get, `v1/lookup/vehicleCategories?group_id=${groupId}`)
+    yield put(booking.passengerSetValue({ vehicleGroups, vehicleCategories }))
   } catch (e) {
     console.log(e)
   }
