@@ -321,8 +321,8 @@ const mas = {
   bank_detail:'Butiran Perbankan',
   bank_name:'Bank Pilihan',
   bank_holder_name:'Pemegang Akaun Bank',
-  pls_enter_holder_name:'请输入持卡人姓名',
   sel_bank:'Pilih Bank',
+  pls_enter_holder_name:'请输入持卡人姓名',
   add_bank_account:'添加账户',
   update_bank_account:'修改账户',
   empty_bank_name:'银行名称不能为空',
@@ -331,6 +331,7 @@ const mas = {
   add_bank_info_succ:'添加银行信息成功',
   update_bank_info_succ:'修改银行信息成功',
   bank_detail_for_withdrawals:'Butiran perbankan untuk tujuan pengeluaran',
+
   chat:'聊天',
 
   float_balance_passenger:'Baki terapung (Penumpang)',
