@@ -103,7 +103,6 @@ export default connect(state => ({
     const _friend = this.props.friend.map(pipe => Object.assign({}, pipe, {
       checked: clone.find(sub => sub._id === pipe._id) !== undefined
     }))
-    if (_friend.length >= 20) return this.props.dispatch(application.showMessage(this.props.i18n.max_twenty_friends))
     const _dataSource = dataContrast.cloneWithRowsAndSections([
       this.props.requestor,
       _friend
@@ -126,7 +125,8 @@ export default connect(state => ({
     const { selected } = this.state
     if(selected.length === 0){
       this.onPressCheckAll()
-    }else {
+    } else {
+      if (selected.length >= 20) return this.props.dispatch(application.showMessage(this.props.i18n.max_twenty_friends))
       this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
       this.props.navigation.goBack()
     }
