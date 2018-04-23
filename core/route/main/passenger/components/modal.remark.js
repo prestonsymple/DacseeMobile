@@ -35,7 +35,7 @@ export default class RemarkModel extends Component {
       >
         <View style={{ width: width, height: height, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(57, 56, 67, 0.4)' }}>
 
-          <View style={{ height: modalHeight, width: modalHeight - 80 }}>
+          <View style={{ height: modalHeight, width: modalHeight - 60 }}>
             <Image style={{ height: 80, position: 'absolute', left: 10, top: 0, zIndex: 1 }} source={Resources.image.book_page} />
             <View style={{ height: 40, marginTop: 40, backgroundColor: '#FDC377', borderTopLeftRadius: 20, borderTopRightRadius: 20, width: modalHeight - 60 }} />
             <View style={{ flex: 1, padding: 15, backgroundColor: '#fff', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
