@@ -11,7 +11,18 @@ export default class CountDownButton extends Component {
     }
   }
   componentDidMount() {
-    this.startInterval()
+    if(!this.props.stop){
+      this.startInterval()
+    }
+  }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.stop){
+      this.resetInterval()
+    }
+  }
+  resetInterval(){
+    this.timer && clearInterval(this.timer)
+    this.setState({ started: false , time: 30})
   }
   startInterval() {
     this.setState({ started: true })
