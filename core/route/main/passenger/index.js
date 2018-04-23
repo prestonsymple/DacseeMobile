@@ -566,7 +566,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
               borderColor: 'white'
             }
           ]}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.start}</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `${this.props.i18n.start} - ${this.props.i18n.start.startsWith('开始') ? '行程费用 ￥' : 'RM '}${parseInt(this.props.fare).toFixed(2)}`}</Text>
           </TouchableOpacity>
 
         </View>

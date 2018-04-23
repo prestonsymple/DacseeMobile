@@ -109,6 +109,7 @@ const zh_CN = {
   pull_refresh:'下拉进行刷新',
 
   wallet: '钱包',
+  wallet_lis: '钱包列表',
   credit_wallet: '信用钱包',
   Dacsee_wallet: '大喜钱包',
   available_balance: '可用余额',
@@ -317,10 +318,10 @@ const zh_CN = {
   bank_detail:'银行详情',
   bank_name:'银行名称',
   bank_holder_name:'持卡人姓名',
-  pls_enter_holder_name:'请输入持卡人姓名',
   sel_bank:'选择银行',
   add_bank_account:'添加账户',
   update_bank_account:'修改账户',
+  pls_enter_holder_name:'请输入持卡人姓名',
   empty_bank_name:'银行名称不能为空',
   empty_bank_account:'银行账号不能为空',
   empty_holder_name:'持卡人姓名不能为空',
@@ -328,7 +329,10 @@ const zh_CN = {
   update_bank_info_succ:'修改银行信息成功',
   bank_detail_for_withdrawals:'完善银行信息以便于提现',
 
-  chat:'聊天'
+  chat:'聊天',
+
+  float_balance_passenger:'流动资金(乘客)',
+  float_balance_driver:'流动资金(司机)',
 }
 
 export default zh_CN

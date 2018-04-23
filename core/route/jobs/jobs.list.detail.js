@@ -304,7 +304,7 @@ export default connect(state => ({
       } }
     case 'Arrived':
       return {left: 'No_Show', right: 'On_Board', leftAction: () => {
-        Alert.alert(this.props.i18n.cancel_order, this.props.i18n.unable_find_move_customer_service, [
+        Alert.alert('', this.props.i18n.unable_find_move_customer_service, [
           { text: this.props.i18n.cancel},
           { text: this.props.i18n.confirm, onPress: async () => {
             try {
