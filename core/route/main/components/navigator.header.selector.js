@@ -8,17 +8,21 @@ import {TextFont } from '../../../utils'
 import { booking } from '../../../redux/actions'
 import { FormattedMessage } from 'react-intl'
 
-const DEFAULT_MENU = [{
-  title: 'taxi', key: 'taxi'
-}, {
-  title: 'mycircle', key: 'circle'
-}, {
-  title: 'preferred', key: 'standard'
-}, {
-  title: 'economy', key: 'eco'
-}, {
-  title: 'special', key: 'lux'
-}]
+const DEFAULT_MENU = [
+// {
+//   title: 'taxi', key: 'taxi'
+// }, 
+  {
+    title: 'mycircle', key: 'circle'
+  }, 
+// {
+//   title: 'preferred', key: 'standard'
+// }, {
+//   title: 'economy', key: 'eco'
+// }, {
+//   title: 'special', key: 'lux'
+// }
+]
 
 export default connect(state => ({
   selected_type: state.booking.type,
