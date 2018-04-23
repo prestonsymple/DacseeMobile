@@ -185,8 +185,10 @@ export default connect(state => ({
     } catch (e) {
       console.log(e)
       // console.log('facebook登录失败', e)
-      if (e.response.data.code == 'INVALID_USER') {
-        this.props.navigation.navigate('SocialRegister', { userInfo: user })
+      if (e.response &&e.response.data.code == 'INVALID_USER') {
+        this.props.navigation.navigate('SocialRegister', { userInfo: user ,provider:'facebook'})
+      }else{
+        console.log('facebook登录失败', e)
       }
     }
   }
@@ -371,7 +373,7 @@ export default connect(state => ({
                       if (message !== 'success') throw new Error('')
                       this._facebookAuth(result)
                     } catch (e) {
-                      this.props.dispatch(app.showMessage('Error'))
+                      //this.props.dispatch(app.showMessage('Error'))
                     }
                   })
 

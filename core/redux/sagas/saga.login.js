@@ -41,7 +41,6 @@ function* loginFlow() {
         try {
           let url =isMail? 'v1/auth/email': 'v1/sendVerificationCode/phone'
           let body=isMail? {email:id} : value
-          console.log('body',body)
           yield call(session.User.Post, url, body)
           yield put(application.showMessage(i18n.alert_sent_code))
         } catch (e) {
@@ -52,7 +51,6 @@ function* loginFlow() {
               yield put(account.loginPutValue(2))
             } catch (e) {
               console.log(' e.response.data', e.response.data)
-             
             }
           } else if(e.response && e.response.data.code =='INVALID_USER'){
             //如果账号不存在,转至注册界面
@@ -72,7 +70,6 @@ function* loginFlow() {
             put(account.loginPutValue(3)),
             put(application.showProgress())
           ])
-          console.log('value',value)
           let { id, code, isMail, phoneCountryCode, _id = '' } = value
           // 邮箱登录模式 - 二次验证码
           if (!_id) {
@@ -87,17 +84,14 @@ function* loginFlow() {
             { phoneCountryCode, phoneNo: id, phoneVerificationCode: code, _id }
 
           const body = Object.assign({}, base, { latitude: 3.321, longitude: 1.23 })
-          console.log(body)
           if (!body._id) {
             delete body._id
           }
           const data = yield call(session.User.Post, path, body)
-          console.log(1)
 
           yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
-          console.log(2,e)
           let { isMail, id } = value
           if (e.response && (
             e.response.data.code == 'INVALID_VERIFICATION_CODE' ||
@@ -162,7 +156,6 @@ function* loginFlow() {
             put(account.loginPutValue(3)),
             put(application.showProgress())
           ])
-          console.log('dfsdfsd')
           const register = yield call(session.User.Post, 'v1/register', Object.assign({},
             value,
             { latitude: 3.321, longitude: 1.23 }
@@ -198,10 +191,14 @@ function* loginFlow() {
       }
       if (stage === STAGE_DEFINE.BIND_PHONE) {
         try {
-          console.log(value)
-          yield call(session.User.Post, 'v1/register/bind',value)
+          yield all([
+            put(account.loginPutValue(6)),
+            put(application.showProgress())
+          ])
+          const register=yield call(session.User.Post, 'v1/register/bind',value)
+          yield call(loginSuccess, register) // 登录成功
         } catch (e) {
-          console.log(e)
+          yield put(application.showMessage('无法连接到服务器，请稍后再试'))
         }
         continue
       }

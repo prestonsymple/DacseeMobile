@@ -13,25 +13,37 @@ import {
   TextInput,
   ScrollView
 } from 'react-native'
+import { connect } from 'react-redux'
+import { booking } from '../../../../redux/actions'
 import { Screen, Icons, Define, Session, UtilMath, TextFont } from '../../../../utils'
 import Resources from '../../../../resources'
 const { height, width } = Screen.window
-export default class RemarkModel extends Component {
+export default connect(state => ({
+  notes: state.booking.notes || ''
+}))(class RemarkModel extends Component {
+
   constructor(props) {
     super(props)
     this.state = {
-      remark: ''
+      remark: props.notes
     }
   }
+
+  componentWillReceiveProps(props) {
+    if (props.notes !== this.props.notes) {
+      this.setState({ remark: props.notes })
+    }
+  }
+
   render() {
-    let modalHeight =width
+    let modalHeight = width
     const { visible, i18n } = this.props
     return (
       <Modal
         animationType='fade'           //渐变
         transparent={true}             // 不透明
         visible={visible}    // 根据isModal决定是否显示
-        onRequestClose={() => this.props.remarkChange()}  // android必须实现 安卓返回键调用
+        onRequestClose={() => this.props.onClose()}  // android必须实现 安卓返回键调用
       >
         <View style={{ width: width, height: height, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(57, 56, 67, 0.4)' }}>
 
@@ -42,16 +54,18 @@ export default class RemarkModel extends Component {
               <View style={{ flex: 1, }}>
                 <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{'备注'}</Text>
                 <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{'留下一段描述'}</Text>
-                <TextInput  {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }}
+                <TextInput defaultValue={this.state.remark} {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }}
                   style={{ backgroundColor: '#f1f1f1', textAlignVertical: 'top', paddingHorizontal: 8, flex: 1, marginTop: 15, borderRadius: 10 }} underlineColorAndro />
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginHorizontal: 10, justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => this.props.remarkChange()}
+                <TouchableOpacity onPress={() => this.props.onClose()}
                   activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#D8D8D8', justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.cancel}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.props.remarkChange(this.state.remark)}
-                  activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => {
+                  this.props.dispatch(booking.passengerSetValue({ notes: this.state.remark }))
+                  this.props.onClose()
+                }} activeOpacity={.7} style={{ width: 100, height: 40, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.confirm}</Text>
                 </TouchableOpacity>
               </View>
@@ -63,4 +77,4 @@ export default class RemarkModel extends Component {
     )
   }
 
-}
+})

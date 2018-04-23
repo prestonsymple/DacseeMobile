@@ -78,7 +78,7 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
             <TouchableOpacity style={{flex:1,marginBottom:Define.system.ios.x ? 32 : 10,marginTop:6, justifyContent:'center',alignItems:'center',borderRadius:22,backgroundColor:'#ffa81d'}}
               
             >
-              <Text style={{color:'#fff',fontWeight: '600',fontSize:15}}>Bind account fsdfdfgsdgdsg</Text>
+              <Text style={{color:'#fff',fontWeight: '600',fontSize:15}}>Bind account </Text>
             </TouchableOpacity >
           </View >
         }

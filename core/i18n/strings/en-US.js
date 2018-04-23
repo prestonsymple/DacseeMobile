@@ -332,9 +332,20 @@ const en_US = {
   update_bank_info_succ:'Bank information updated successfully',
   bank_detail_for_withdrawals:'Bank details is for your withdrawal purposes',
 
+
   chat:'聊天',
   float_balance_passenger:'Floating Balance (Passenger)',
   float_balance_driver:'Floating Balance (Driver)',
+
+  note_trip: 'Leave a note to your driver about you trip',
+  remarks_apliction: 'I\'m here at the main entrance',
+  vehicle_selection: 'Vehicle Selection',
+  select_vehicle: 'Please select vehicle category among the friends you have selected ',
+  vehicle_economy: 'Economy',
+  premiun: 'Premiun',
+  xl: 'XL',
+  indonesia:'Indonesia',
+
 }
 
 export default en_US

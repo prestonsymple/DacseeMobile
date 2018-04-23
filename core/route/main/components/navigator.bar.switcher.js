@@ -19,27 +19,27 @@ export default connect(state => ({
   constructor(props) {
     super(props)
     this.state = {
-      index: new Animated.Value(props.core_mode === 'driver' ? 0 : 1)
+      index: new Animated.Value(props.core_mode === 'passenger' ? 0 : 1)
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.core_mode !== this.props.core_mode) {
-      Animated.timing(this.state.index, { duration: 200, toValue: props.core_mode === 'driver' ? 0 : 1, useNativeDriver: true }).start()
+      Animated.timing(this.state.index, { duration: 200, toValue: props.core_mode === 'passenger' ? 0 : 1, useNativeDriver: true }).start()
     }
   }
 
 
   onPress(index) {
-    this.props.dispatch(application.setCoreMode(index === 0 ? 'driver' : 'passenger'))
+    this.props.dispatch(application.setCoreMode(index === 0 ? 'passenger' : 'driver'))
   }
 
   render() {
     const { index } = this.state
     const { hidden, i18n } = this.props
     const translateX = index.interpolate({ inputRange: [0, 1], outputRange: [0, 88] })
-    const opacity_0 = index.interpolate({ inputRange: [0, 1], outputRange: [1, .4] })
-    const opacity_1 = index.interpolate({ inputRange: [0, 1], outputRange: [.4, 1] })
+    const opacity_0 = index.interpolate({ inputRange: [0, 1], outputRange: [.4, 1] })
+    const opacity_1 = index.interpolate({ inputRange: [0, 1], outputRange: [1, .4] })
     return (
 
       <View style={{ backgroundColor: '#1AB2FD', width, alignItems: 'center', height: hidden ? 0 : 50 }}>
@@ -56,14 +56,14 @@ export default connect(state => ({
                 activeOpacity={1} 
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
               >
-                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>{ i18n.driver }</Animated.Text>
+                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_1 }}>{ i18n.passenger }</Animated.Text>                                   
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => this.onPress(1)} 
                 activeOpacity={1} 
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 44, flexDirection: 'row' }}
               >               
-                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_1 }}>{ i18n.passenger }</Animated.Text>                                   
+                <Animated.Text style={{ fontWeight: '600', color: 'white', opacity: opacity_0 }}>{ i18n.driver }</Animated.Text>
               </TouchableOpacity>
             </View>
           )

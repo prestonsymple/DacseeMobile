@@ -27,7 +27,7 @@ function* bookingFlow() {
   while(true) {
     const action = yield take(booking.passengerSetStatus().type)
     const status = action.payload
-    const { i18n, booking_id, destination, from, time, payment, type, selected_friends, fare, currentStatus } = yield select(state => ({
+    const { i18n, booking_id, destination, from, time, payment, type, selected_friends, fare, currentStatus, notes } = yield select(state => ({
       ...state.booking,
       currentStatus: state.booking.status,
       booking_id: state.storage.booking_id,
@@ -63,17 +63,19 @@ function* bookingFlow() {
       const body = {
         from,
         destination,
-        fare: fare,
+        notes,
+        fare,
         type: 'now',
-        notes : '',
         booking_at: Methods.timeZone(time),
         payment_method: Methods.payment(payment),
       }
 
       const vehicleGroups = yield select(state => state.booking.vehicleGroups)
+      const vehicleCategories = yield select(state => state.booking.vehicleCategories)
       if (type === 'circle') {
-        const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
-        body.vehicle_category_id = vehicleGroupsId
+        // const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+        const vehicleCategoriesId = vehicleCategories.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
+        body.vehicle_category_id = vehicleCategoriesId
         body.assign_type = typeof(selected_friends) === 'string' ? 'circle' : 'selected_circle'
       } else if (type === 'taxi') {
         const vehicleGroupsId = vehicleGroups.find(pipe => pipe.name === 'Taxi' || pipe.name === '出租车')._id

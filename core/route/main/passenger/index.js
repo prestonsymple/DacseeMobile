@@ -508,7 +508,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: '#ddd', height: StyleSheet.hairlineWidth, width: width }} />
-        <View style={{ marginHorizontal: 15, height: 86, justifyContent: 'center' }}>
+        <View style={{ marginHorizontal: 18, height: 86, justifyContent: 'center' }}>
           <View style={{ height: 70 }}>
             <View style={styles.text_cell}>
               <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
@@ -531,10 +531,10 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.now}</Text>
           </TouchableOpacity>
-          <View style={{ backgroundColor: '#ddd', height: 44, width: StyleSheet.hairlineWidth, }} />
+          <View style={{ backgroundColor: '#ddd', height: 44, width: StyleSheet.hairlineWidth }} />
           <TouchableOpacity onPress={() =>this.setState({ remarkShow: !remarkShow })}
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{'Remarks'}</Text>
+            <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.remarks}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: '#ddd', height: StyleSheet.hairlineWidth, width: width, marginBottom: 6 }} />
@@ -566,7 +566,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
               borderColor: 'white'
             }
           ]}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{(this.props.fare === 0) ? this.props.i18n.start : `${this.props.i18n.start} - ${this.props.i18n.start.startsWith('开始') ? '行程费用 ￥' : 'RM '}${parseInt(this.props.fare).toFixed(2)}`}</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{ this.props.i18n.start }</Text>
           </TouchableOpacity>
 
         </View>
@@ -580,15 +580,16 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             this.setState({ timePickerShow: !timePickerShow })
             this.props.dispatch(booking.passengerSetValue({ time:time }))
           }} />
-        <SelectCar cars={['SUV', '玛莎拉蒂']} visible={selectCarShow} i18n={this.props.i18n} 
-          carChange={(car, fare) => { this.setState({ selectCarShow: !selectCarShow })
-          //this.props.dispatch(booking.passengerSetValue({ payment:pay }))
-          }} />
-        <RemarkModel visible={remarkShow} i18n={this.props.i18n} 
-          remarkChange={(txt) => {
-            this.setState({ remarkShow: !remarkShow })
-            // this.props.dispatch(booking.passengerSetValue({ payment:pay }))
-          }} />
+        <SelectCar vehicle_categories={[{
+          name: 'Enconomy',
+          icon: Resources.image.car_budget,
+          fare: parseFloat(this.props.fare).toFixed(2)
+        }]} visible={selectCarShow} i18n={this.props.i18n} onClose={(car, fare) => { 
+          this.setState({ selectCarShow: !selectCarShow })
+        }} />
+        <RemarkModel visible={remarkShow} i18n={this.props.i18n} onClose={notes => {
+          this.setState({ remarkShow: !remarkShow })
+        }} />
       </Animated.View>
     )
   }
