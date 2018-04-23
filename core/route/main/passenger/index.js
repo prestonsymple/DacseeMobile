@@ -484,13 +484,15 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
     const { timePickerShow, selectPayShow, remarkShow, selectCarShow } = this.state
     return (
       <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ? height - 456 : height - 434, height: Define.system.ios.x ? 360 + 22 : 360, justifyContent: 'center' },
+        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ? height - 464 - 22 : height - 464, paddingTop: 10, justifyContent: 'center' },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
         { backgroundColor: '#fff', },
         { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
       ]}>
-        <View style={{ marginVertical: 10, height: 32, justifyContent: 'center', backgroundColor: '#fff' }}><Text style={[{ fontSize: TextFont.TextSize(16) }, styles.adress]}>{'我的团队'}</Text></View>
-        <View style={{ height: 56, marginHorizontal: (width - 326) / 2, width: 326, overflow: 'hidden', flexDirection: 'row', }}>
+        <View style={{ marginLeft: 4, marginBottom: 6, height: 32, justifyContent: 'center' }}>
+          <Text style={[{ fontSize: TextFont.TextSize(16), backgroundColor: 'transparent' }, styles.adress]}>{'朋友圈'}</Text>
+        </View>
+        <View style={{ height: 56, marginHorizontal: 18, overflow: 'hidden', flexDirection: 'row', marginBottom: 6 }}>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -505,38 +507,40 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             {Icons.Generator.Material('create', 23, 'white')}
           </TouchableOpacity>
         </View>
-        <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
-        <View style={{ marginHorizontal: 15, height: 70, paddingVertical: 5 }}>
-          <View style={styles.text_cell}>
-            <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
-            <Text style={styles.adress}>{from.name}</Text>
-          </View>
-          <View style={styles.text_cell}>
-            <View style={[styles.dot, { backgroundColor: '#7ED321' }]} />
-            <Text style={styles.adress}>{destination.name}</Text>
+        <View style={{ backgroundColor: '#ddd', height: StyleSheet.hairlineWidth, width: width }} />
+        <View style={{ marginHorizontal: 15, height: 86, justifyContent: 'center' }}>
+          <View style={{ height: 70 }}>
+            <View style={styles.text_cell}>
+              <View style={[styles.dot, { backgroundColor: '#FEA81C' }]} />
+              <Text style={styles.adress}>{from.name}</Text>
+            </View>
+            <View style={styles.text_cell}>
+              <View style={[styles.dot, { backgroundColor: '#7ED321' }]} />
+              <Text style={styles.adress}>{destination.name}</Text>
+            </View>
           </View>
         </View>
-        <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
-        <View style={{ height: 44, width: width, flexDirection: 'row' }}>
-          <TouchableOpacity onPress={() =>  this.setState({ selectPayShow: !selectPayShow })} activeOpacity={.7}
+        <View style={{ backgroundColor: '#ddd', height: StyleSheet.hairlineWidth, width: width }} />
+        <View style={{ width: width, flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => this.setState({ selectPayShow: !selectPayShow })} activeOpacity={.7}
             style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.cash}</Text>
           </TouchableOpacity>
-          <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
+          <View style={{ backgroundColor: '#ddd', height: 44, width: StyleSheet.hairlineWidth, }} />
           <TouchableOpacity onPress={() =>  this.setState({ timePickerShow: !timePickerShow })} 
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{this.props.i18n.now}</Text>
           </TouchableOpacity>
-          <View style={{ backgroundColor: '#ccc', height: 44, width: 1, }} />
+          <View style={{ backgroundColor: '#ddd', height: 44, width: StyleSheet.hairlineWidth, }} />
           <TouchableOpacity onPress={() =>this.setState({ remarkShow: !remarkShow })}
             activeOpacity={.7} style={{ width: (width - 2) / 3, height: 44, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#999', fontSize: 14, fontWeight: '600' }}>{'Remarks'}</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ backgroundColor: '#ccc', height: 1, width: width }} />
-        <View style={{ alignItems: 'center', marginHorizontal: 15, marginVertical: 10, }}>
+        <View style={{ backgroundColor: '#ddd', height: StyleSheet.hairlineWidth, width: width, marginBottom: 6 }} />
+        <View style={{ alignItems: 'center', marginHorizontal: 15, marginVertical: 10, marginBottom: 14 }}>
           <TouchableOpacity onPress={() => this.setState({ selectCarShow: !selectCarShow })}
-            activeOpacity={.7} style={{ height: 50, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            activeOpacity={.7} style={{ height: 48, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
               <Image style={{ height: 40, width: 40, marginHorizontal: 10 }} source={Resources.image.car_budget} />
               <Text style={{ color: '#111', fontSize: 14, fontWeight: '600' }}>{(this.props.fare === 0) ? 'Economy' : `Economy - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
@@ -546,10 +550,22 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: 'center', width: width - 30, marginHorizontal: 15, height: 56, borderRadius: 28, paddingBottom: 10 }}>
+        <View style={{ alignItems: 'center', width: width - 30, marginHorizontal: 15, height: Define.system.ios.x ? 78 : 56, borderRadius: 28, paddingBottom: 10 }}>
           <TouchableOpacity onPress={() => {
             this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_WAIT_SERVER_RESPONSE))
-          }} activeOpacity={.7} style={{ width: width - 42, height: 50, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+          }} activeOpacity={.7} style={[
+            { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
+            { 
+              width: width - 30, 
+              height: 50, 
+              borderRadius: 25, 
+              backgroundColor: '#ffb639', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              borderWidth: 4,
+              borderColor: 'white'
+            }
+          ]}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>{this.props.i18n.start}</Text>
           </TouchableOpacity>
 
@@ -560,11 +576,10 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             this.props.dispatch(booking.passengerSetValue({ payment:pay }))
           }} />
         <TimePicker visible={timePickerShow} i18n={this.props.i18n}
-          dateChange={(time) =>  {
+          dateChange={(time) => {
             this.setState({ timePickerShow: !timePickerShow })
             this.props.dispatch(booking.passengerSetValue({ time:time }))
           }} />
-        
         <SelectCar cars={['SUV', '玛莎拉蒂']} visible={selectCarShow} i18n={this.props.i18n} 
           carChange={(car, fare) => { this.setState({ selectCarShow: !selectCarShow })
           //this.props.dispatch(booking.passengerSetValue({ payment:pay }))

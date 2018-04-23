@@ -49,15 +49,20 @@ function* fetchFriends() {
 function* updateFriendsLocation() {
   while(true) {
     const selected_friends = yield select(state => state.booking.selected_friends)
-    if (selected_friends && Array.isArray(selected_friends) && selected_friends.length > 0) {
-      const params = selected_friends.map(pipe => pipe.friend_id).join(',')
-      let friends_location = yield call(Session.Location.Get, `v1/friends?reqUser_id=${params}`)
-      friends_location = friends_location.filter(pipe => (pipe.latitude && pipe.longitude))
-      yield put(circle.setValues({ friends_location }))
-    } else {
-      yield put(circle.setValues({ friends_location: [] }))
+    try {
+      if (selected_friends && Array.isArray(selected_friends) && selected_friends.length > 0) {
+        const params = selected_friends.map(pipe => pipe.friend_id).join(',')
+        let friends_location = yield call(Session.Location.Get, `v1/friends?reqUser_id=${params}`)
+        friends_location = friends_location.filter(pipe => (pipe.latitude && pipe.longitude))
+        yield put(circle.setValues({ friends_location }))
+      } else {
+        yield put(circle.setValues({ friends_location: [] }))
+      }
+    } catch (e) {
+      /* */
+    } finally {
+      yield delay(5000)
     }
-    yield delay(5000)
   }
 }
 

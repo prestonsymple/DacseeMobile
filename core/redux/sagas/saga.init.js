@@ -52,10 +52,10 @@ function* initializationFlow(action) {
   } catch (e) {
     try {
       navigator.geolocation.requestAuthorization()
-      const permissionStatus = yield call(permissionsCheck, 'location')
-      if (permissionStatus !== 'authorized') {
-        yield call(permissionsReqeust, 'location')
-      }
+      // const permissionStatus = yield call(permissionsCheck, 'location')
+      // if (permissionStatus !== 'authorized') {
+      //   yield call(permissionsReqeust, 'location')
+      // }
     } catch (e) { /* */ }
 
     if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
