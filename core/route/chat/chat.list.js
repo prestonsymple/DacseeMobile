@@ -47,7 +47,7 @@ class ChatWindow extends PureComponent {
           from_id:'5a79423ab2ccf66e117f1b7f',
           to_id:'5ac2de564647815dd78dbb07',
           avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-          content:'{"type": "text", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+          content:'{"type": "text", "content": "图片https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
           time:'1523248662'
         },
         {
@@ -153,7 +153,7 @@ class ChatWindow extends PureComponent {
     msgSend.content = JSON.stringify(content)
     data.push(msgSend)
     this.setState({data,messageContent:''})
-    setTimeout(()=>this.chatList.scrollToEnd({animated:true}),200)
+    setTimeout(()=>this.chatList.scrollToEnd({animated:true}),500)
   }
 
   _changeMethod(){
@@ -338,6 +338,11 @@ class ChatItem extends Component {
     const {content, play=()=>{}, user} = this.props
     const isSelf = user._id===content.from_id
     const msgContent = JSON.parse(content.content)
+    let reg=/((https?|ftp|file):\/\/)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
+    // if(msgContent.type==='text'){
+    //   const arr= reg.exec(msgContent.content)
+    //   console.log(arr)
+    // }
     switch (msgContent.type){
     case 'text':
       return (
@@ -350,7 +355,7 @@ class ChatItem extends Component {
           <TouchableOpacity style={styles.voiceArea} onPress={play.bind(this,msgContent.content)} activeOpacity={.7}>
             {/*<TouchableOpacity onPress={play.bind(this,msgContent.content)}>*/}
             <View style={[{width:40+(msgContent.len>1?msgContent.len*2:0),alignItems:isSelf?'flex-end':'flex-start'},isSelf?{alignItems:'flex-end',marginRight:5}:{alignItems:'flex-start',marginLeft:5}]}>
-              { Icons.Generator.Ion('logo-rss', 16, '#bbb') }
+              { isSelf ? Icons.Generator.Ion('logo-rss', 18, '#bbb',{style:{transform: [{ scaleX: -1 }]}}) : Icons.Generator.Ion('logo-rss', 18, '#bbb') }
             </View>
             {/*</TouchableOpacity>*/}
           </TouchableOpacity>
