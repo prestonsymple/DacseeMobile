@@ -12,7 +12,7 @@ const navigationMiddleware = createReactNavigationReduxMiddleware(
 )
 
 const persistConfig = {
-  key: 'v0.0.4',
+  key: 'v0.0.5',
   storage: storage,
   whitelist: ['account', 'storage', 'jobs', 'circle']
 }

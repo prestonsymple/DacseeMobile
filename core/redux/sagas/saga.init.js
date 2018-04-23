@@ -1,6 +1,5 @@
 /* global navigator */
 import moment from 'moment'
-import Permissions from 'react-native-permissions'
 
 import { fork, all, take, call, put, takeEvery, takeLatest, race, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
