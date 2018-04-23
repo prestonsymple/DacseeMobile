@@ -46,6 +46,7 @@ function* loginFlow() {
           yield put(application.showMessage(i18n.alert_sent_code))
         } catch (e) {
           if(e.response && e.response.data.code == 'MISSING_INPUT'){
+            //如果是邮箱绑定了手机，则返回手机号
             try {
               yield call(session.User.Post, 'v1/sendVerificationCode/phone', e.response.data.data)
               yield put(account.loginPutValue(2))
@@ -53,7 +54,10 @@ function* loginFlow() {
               console.log(' e.response.data', e.response.data)
              
             }
-          }  else if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
+          } else if(e.response && e.response.data.code =='INVALID_USER'){
+            //如果账号不存在,转至注册界面
+            yield put(account.loginPutValue(4))
+          } else if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
             yield put(application.showMessage(`${i18n.server_busy_code}[${e.response.data.data}]${i18n.seconds_later}`))
           } else {
             yield put(application.showMessage('无法连接到服务器，请稍后再试'))

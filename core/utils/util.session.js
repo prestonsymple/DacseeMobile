@@ -97,40 +97,54 @@ const sessionMethodBuild = (baseUrl) => {
 export default {
 
   User: sessionMethodBuild(
-    'https://user-dev.dacsee.io/api/'
+    'https://svc-prod-user.dacsee.io/api/'
+  ),
+
+  Campaign: sessionMethodBuild(
+    'https://svc-prod-campaign.dacsee.io/api/'
   ),
 
   Circle: sessionMethodBuild(
-    'https://circle-dev.dacsee.io/api/'
+    'https://svc-prod-circle.dacsee.io/api/'
   ),
 
   Booking: sessionMethodBuild(
-    'https://booking-dev.dacsee.io/api/'
-  ),
-
-  Location: sessionMethodBuild(
-    'https://location-dev.dacsee.io/api/'
+    'https://svc-prod-booking.dacsee.io/api/'
   ),
 
   Driver: sessionMethodBuild(
-    'https://driver-verification-dev.dacsee.io/api/'
+    'https://svc-prod-dv.dacsee.io/api/'
+  ),
+
+  Location: sessionMethodBuild(
+    'https://svc-prod-location.dacsee.io/api/'
   ),
 
   Push: sessionMethodBuild(
-    'https://push-dev.dacsee.io/api/'
+    'https://svc-prod-push.dacsee.io/api/'
   ),
 
+  Scheduler: sessionMethodBuild(
+    'https://svc-prod-scheduler.dacsee.io/api/'
+  ),
+
+  Rating: sessionMethodBuild(
+    'https://svc-prod-rating.dacsee.io'
+  ),
+
+
   Lookup: sessionMethodBuild(
-    'https://lookup-dev.dacsee.io/api/'
+    'https://svc-prod-lookup.dacsee.io/api/'
   ),
 
   Lookup_CN: sessionMethodBuild(
     // 'http://lookup-cn-dev.dacsee.cn'
+    // https://svc-prod-lookup-cn.dacsee.io
     'http://47.98.40.59/api/'
   ),
 
   Wallet: sessionMethodBuild(
-    'https://wallet-dev.dacsee.io/api/'
+    'https://svc-prod-wallet.dacsee.io'
   )
 }
 

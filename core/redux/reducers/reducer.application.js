@@ -34,14 +34,17 @@ const initialState = {
 
   api_maps: { // API代理映射
     main: [
-      'https://user-dev.dacsee.io/',
-      'https://circle-dev.dacsee.io/',
-      'https://booking-dev.dacsee.io/',
-      'https://location-dev.dacsee.io/',
-      'https://driver-verification-dev.dacsee.io/',
-      'https://push-dev.dacsee.io/',
-      'https://lookup-dev.dacsee.io/',
-      'https://wallet-dev.dacsee.io/'
+      'https://svc-prod-booking.dacsee.io',
+      'https://svc-prod-campaign.dacsee.io',
+      'https://svc-prod-circle.dacsee.io',
+      'https://svc-prod-dv.dacsee.io',
+      'https://svc-prod-location.dacsee.io',
+      'https://svc-prod-lookup.dacsee.io',
+      'https://svc-prod-push.dacsee.io',
+      'https://svc-prod-rating.dacsee.io',
+      'https://svc-prod-scheduler.dacsee.io',
+      'https://svc-prod-user.dacsee.io',
+      'https://svc-prod-wallet.dacsee.io'
     ],
     agent: [
       'http://47.98.40.59/'
