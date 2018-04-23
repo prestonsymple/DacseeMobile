@@ -110,7 +110,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2018042001</string>
+	<string>2018042201</string>
 	<key>CodePushDeploymentKey</key>
 	<string>xnBqrpY4wmN1izwRxCb1dlX5dn6_Sy2xqVDVM</string>
 	<key>FacebookAppID</key>
@@ -171,17 +171,17 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>Camera service needed to capture your profile photo
+</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string></string>
+	<string>To allow drivers/passengers to determine your location during trips.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Request Location Service Text</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>To allow drivers/passengers to determine your location during trips.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
+	<string>Photo album needed to save your profile photo to your photo album</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>Photo album needed to update your profile photo
+</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

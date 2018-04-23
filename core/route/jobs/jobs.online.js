@@ -56,7 +56,9 @@ export default connect(state => ({
       props.working && this.props.jobs !== props.jobs && 
       props.jobs.length > this.props.jobs.length
     ) {
-      this.sound.play()
+      if (this.sound) {
+        this.sound.play()
+      }
     }
   }
   async sliderChange(status, _id) {
