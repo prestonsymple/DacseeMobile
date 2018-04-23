@@ -330,6 +330,16 @@ const mas = {
   add_bank_info_succ:'添加银行信息成功',
   update_bank_info_succ:'修改银行信息成功',
   bank_detail_for_withdrawals:'完善银行信息以便于提现',
+
+  note_trip: 'Tinggalkan catatan kepada pemandu anda tentang perjalanan anda ',
+  remarks_apliction: 'Saya ada di pintu masuk utama',
+  vehicle_selection: 'Pilihan Kenderaan',
+  select_vehicle: 'Sila pilih kategori kenderaan di kalangan rakan-rakan yang telah anda pilih',
+  vehicle_economy: 'Bajet',
+  premiun: 'Premiun',
+  xl: 'XL',
+  indonesia:'Indonesia',
+
   chat:'聊天'
 }
 

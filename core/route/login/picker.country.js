@@ -9,13 +9,15 @@ import { Screen, Icons, Redux, Define,TextFont } from '../../utils'
 import resources from '../../resources'
 import { application as app, account } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
-
+import { connect } from 'react-redux'
 const { width, height } = Screen.window
 
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-export default class PickerCountryComponent extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages ||{}
+}))(class PickerCountryComponent extends Component {
 
   static navigationOptions = { header: null }
 
@@ -27,23 +29,28 @@ export default class PickerCountryComponent extends Component {
   }
 
   async componentDidMount() {
+    const {i18n}=this.props
     this.setState({
       source: dataContrast.cloneWithRows([{
         key: '2',
-        name: 'malaysia',
+        name: i18n.malaysia,
         code: '+60'
       }, {
         key: '1',
-        name: 'china',
+        name: i18n.china,
         code: '+86'
       }, {
         key: '3',
-        name: 'southkorea',
+        name: i18n.southkorea,
         code: '+82'
       }, {
         key: '4',
-        name: 'japan',
+        name: i18n.japan,
         code: '+81'
+      }, {
+        key: '5',
+        name: i18n.indonesia,
+        code: '+62'
       }])
     })
   }
@@ -153,7 +160,7 @@ export default class PickerCountryComponent extends Component {
       )
     })
   }
-}
+})
 
 const styles = StyleSheet.create({
 })

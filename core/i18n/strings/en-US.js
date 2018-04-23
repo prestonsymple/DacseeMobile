@@ -331,6 +331,15 @@ const en_US = {
   update_bank_info_succ:'修改银行信息成功',
   bank_detail_for_withdrawals:'完善银行信息以便于提现',
 
+  note_trip: 'Leave a note to your driver about you trip',
+  remarks_apliction: 'I\'m here at the main entrance',
+  vehicle_selection: 'Vehicle Selection',
+  select_vehicle: 'Please select vehicle category among the friends you have selected ',
+  vehicle_economy: 'Economy',
+  premiun: 'Premiun',
+  xl: 'XL',
+  indonesia:'Indonesia',
+
   chat:'聊天'
 }
 
