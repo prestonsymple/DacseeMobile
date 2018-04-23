@@ -44,7 +44,8 @@ class I18nLoadView extends PureComponent {
 } 
 
 export default connect(state => ({ 
-  nav: state.nav
+  nav: state.nav,
+  account_status: state.account.status
 }))(class AppLaunch extends PureComponent {
 
   componentDidMount() {
@@ -64,7 +65,7 @@ export default connect(state => ({
     if (!_args || _args.length === 0) return undefined
     switch (_args[0]) {
     case 'invite': 
-      this.handleInvite(_args[1], _args[2])
+      this.handleInvite(_args[1], _args[2].replace('#Intent;package=com.dacsee;end', ''))
       break
     default:
       break
@@ -72,10 +73,15 @@ export default connect(state => ({
   }
 
   handleInvite(userId, id) {
-    if (!this.props.account.status) {
+    if (!this.props.account_status) {
       this.props.dispatch(application.setReferrerValue(userId)) 
     } else {
-      this.props.dispatch(NavigationActions.navigate({ routeName: 'FriendsRequest', params: { referrer: userId, id } }))
+      this.props.dispatch(NavigationActions.navigate(
+        { 
+          routeName: 'FriendsRequest', 
+          params: { referrer: userId, id } 
+        }
+      ))
     }
   }
 

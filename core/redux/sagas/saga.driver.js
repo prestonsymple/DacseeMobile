@@ -8,6 +8,7 @@ import { delay } from 'redux-saga'
 import { driver, application } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { System, Session } from '../../utils'
+import LocationService from '../../native/location-service'
 
 const oncePosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 3000 }))
 
@@ -27,11 +28,19 @@ function* watchBooking() {
 function* updateDriverLocation() {
   while(true) {
     try {
-      const { working, map_mode } = yield select(state => ({
+      const { working, map_mode, authToken } = yield select(state => ({
         working: state.driver.working,
-        map_mode: state.application.map_mode
+        map_mode: state.application.map_mode,
+        authToken: state.account.authToken
       }))
-      if (working) {
+      const vehicle_id = '5a7843962dd97f23dc6a070c'
+
+      if (working && System.Platform.Android) {
+        yield call(LocationService.startTracking, authToken, vehicle_id)
+      } else {
+        yield call(LocationService.stopTracking)
+      }
+      if (working && System.Platform.iOS) {
         let location = { latitude: undefined, longitude: undefined }
         if (map_mode === 'AMAP') {
           location = yield select(state => state.account.location)
@@ -46,9 +55,7 @@ function* updateDriverLocation() {
           delete location.heading
           delete location.speed
         }
-        yield call(Session.Location.Put, 'v1', Object.assign(location, {
-          vehicle_id: '5a7843962dd97f23dc6a070c'
-        }))
+        yield call(Session.Location.Put, 'v1', Object.assign(location, { vehicle_id }))
       }
     } catch (e) {
       console.log(e)
@@ -79,7 +86,7 @@ function* driverStatusObserver() {
     if (working) {
       // LISTEN NEW JOBS
       try {
-        let jobs = yield call(Session.Booking.Get, `v1/bookings?role=driver&limit=10&sort=-booking_at&fields=${fields.join(',')}`)
+        let jobs = yield call(Session.Booking.Get, `v1/bookings?role=driver&limit=15&sort=-booking_at&fields=${fields.join(',')}`)
         jobs = jobs.filter(({ status }) => {
           if (
             status === 'Cancelled_by_Passenger' ||

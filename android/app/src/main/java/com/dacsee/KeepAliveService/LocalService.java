@@ -20,11 +20,13 @@ import com.dacsee.MainActivity;
 import com.dacsee.R;
 import com.dacsee.RemoteServiceInterface;
 import com.dacsee.utils.HttpConnectionUtil;
+import com.dacsee.utils.LocationManagerUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class LocalService extends Service {
   MyBinder binder;
@@ -111,18 +113,23 @@ public class LocalService extends Service {
 
               // 5s update location
               if (tick % 5 == 0) {
-                Map<String, Object> headers = new HashMap<>();
-                headers.put("Authorization", "");
+                String authorization = preferences.getString("authorization", "");
+                try {
+                  Map<String, Object> headers = new HashMap<>();
+                  headers.put("Authorization", authorization);
 
-                Map<String, Object> body = new HashMap<>();
-                body.put("latitude", "");
-                body.put("longitude", "");
+                  Map<String, Object> body = new HashMap<>();
+                  body.put("latitude", LocationManagerUtil.shareInstance().lastLocation.getLatitude());
+                  body.put("longitude", LocationManagerUtil.shareInstance().lastLocation.getLongitude());
 
-                if (vehicle_id.length() != 0) {
-                  body.put("vehicle_id", vehicle_id);
+                  if (vehicle_id.length() != 0) {
+                    body.put("vehicle_id", vehicle_id);
+                  }
+
+                  HttpConnectionUtil.getHttp().putRequset("https://location-dev.dacsee.io/api/v1", headers, body);
+                } catch (Exception e) {
+                  /*  */
                 }
-
-                HttpConnectionUtil.getHttp().postRequset("https://location-dev.dacsee.io/api/v1", headers, body);
               }
 
               tick += 1;

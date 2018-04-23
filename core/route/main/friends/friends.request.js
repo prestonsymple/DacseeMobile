@@ -1,3 +1,4 @@
+/* global store */
 import React, { PureComponent, Component } from 'react'
 import {
   Text,
@@ -20,10 +21,18 @@ import { Icons, Screen, Session,TextFont } from '../../../utils'
 
 const { width, height } = Screen.window
 
-export default connect(state => ({ account: state.account, i18n: state.intl.messages || {} }))(class FriendsCircleComponent extends Component {
+export default connect(state => ({ 
+  account: state.account, 
+  i18n: state.intl.messages || {} 
+}))(class FriendsCircleComponent extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
 
   static navigationOptions = ({ navigation }) => {
-    const {i18n} = navigation.state.params
+    const i18n = store.getState().intl.messages || {}
     return {
       drawerLockMode: 'locked-closed',
       title: i18n.send_friend_request,
@@ -38,19 +47,12 @@ export default connect(state => ({ account: state.account, i18n: state.intl.mess
     }
   }
 
-  constructor(props) {
-    super(props)
-    const { referrer, id } = props.navigation.state.params
-    this.state = { referrer, id }
-  }
-
   async componentDidMount() {
-    const {i18n} = this.props.navigation.state.params
+    const { i18n } = this.props
+    const { referrer, id } = this.props.navigation.state.params
     await InteractionManager.runAfterInteractions()
-    const { referrer, id } = this.state
     const data = await Session.User.Get(`v1/search?country=CN&userId=${referrer}`)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage(i18n.invitation_failure))
-    // console.log(data[0])
     const { _id, avatars, fullName, userId } = data[0]
     this.setState({ invite_id: _id, avatars: avatars[avatars.length - 1], fullName, userId })
   }
@@ -60,7 +62,8 @@ export default connect(state => ({ account: state.account, i18n: state.intl.mess
 
   render() {
     const { invite_id, id, avatars = { url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }, fullName, userId } = this.state
-    const {i18n} = this.props.navigation.state.params
+    const { i18n = {} } = this.props
+
     return (
       <View style={{flex:1, backgroundColor: 'white'}}>
         <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: 'white' }} style={{ flex: 1 }}>

@@ -3,20 +3,16 @@ import React from 'react'
 import { NativeModules } from 'react-native'
 
 export default class LocationService {
-  
-  constructor(option) {
-    this._service = NativeModules.LocationService
-  }
 
-  async startTracking() {
+  static startTracking(authorization, vehicleId) {
     return new Promise(resolve => {
-      this._service.startTracking(resolve)
+      NativeModules.LocationService.startTracking(authorization, vehicleId, resolve)
     })
   }
 
-  async stopTracking() {
+  static stopTracking() {
     return new Promise(resolve => {
-      this._service.stopTracking(resolve)
+      NativeModules.LocationService.stopTracking(resolve)
     })
   }
 

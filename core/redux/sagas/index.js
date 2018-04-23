@@ -54,13 +54,6 @@ import initSaga from './saga.init'
 //   }
 // }
 
-function* watchAndroidBackButton() {
-  while (true) {
-    yield take(application.onPressAndroidBackButton().type)
-    yield put(NavigationActions.back())
-  }
-}
-
 // function* watchNetworkStatus() {
 //   while (true) {
 //     const status = yield take(application.changeNetworkStatus().type)
@@ -88,7 +81,6 @@ export default function* sagaService() {
     // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
     // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
     fork(initSaga),
-    fork(watchAndroidBackButton),
     fork(watchShowMessage),
 
     fork(passengerSaga),
