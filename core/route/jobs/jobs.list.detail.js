@@ -177,10 +177,10 @@ const BookingDetailBottomView = (props) => {
   const chineseStatus = props.chineseStatus
 
   return(
-    <View style={[styles.JobDetailWrap,{ height: 61, width, backgroundColor:'#fff' }]}>
+    <View style={[styles.JobDetailWrap, { height: Define.system.ios.x ? 68 + 22 : 68, width, backgroundColor:'#fff' }]}>
       <View style={{ height: 1, backgroundColor: '#d7d7d7' }} />
       <View style={{flexDirection: 'row',flex:1, justifyContent: 'space-between',alignItems:'center'}}>
-        <View style={{ justifyContent:'center'}}>
+        <View style={{ justifyContent:'center', top: -4 }}>
           <Text style={{fontSize: 14, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
             RM
             <Text style={{fontSize: 24 , fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
@@ -459,7 +459,7 @@ export default connect(state => ({
 
 const styles = StyleSheet.create({
   JobDetailWrap: Platform.select({
-    ios: { paddingBottom: Define.system.ios.x ? 20 : 0},
+    ios: { paddingBottom: Define.system.ios.x ? 22 : 0 },
     android: {  paddingBottom: 0}
   }),
 })

@@ -675,9 +675,9 @@ const BookingDetailView = (props) => {
   const { onPress = () => { }, driver, i18n, status } = props
 
   return (
-    <View style={{ backgroundColor: 'transparent', height: 294 }}>
+    <View style={{ backgroundColor: 'transparent', height: Define.system.ios.x ? 274 : 254 }}>
       <BookingDetailHeaderView driver={driver} />
-      <DrvierCarDetail car_info={''} />
+      <DrvierCarDetail car_info={''} i18n={i18n} />
       <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
         <TouchableOpacity
           activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7}
@@ -743,15 +743,16 @@ const BookingDetailButton = (props) => {
  */
 const DrvierCarDetail = (props) => {
   const { ...car_info } = props.car_info
+  const { i18n } = props
   return (
-    <View style={{ backgroundColor: 'white', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+    <View style={{ backgroundColor: 'white', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+      <Image style={{ width: 170, height: 61 }} source={Resources.image.slice_adv_car} />
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'Standard'}</Text>
+        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15) }}>{i18n.vehicle_economy}</Text>
         {/* <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
         <Text style={styles.car_cell}>{'颜色-白色'}</Text>
         <Text style={styles.car_cell}>{'豪华跑车'}</Text> */}
       </View>
-      <Image style={{ flex: 1 }} source={Resources.image.slice_adv_car} />
     </View>
   )
 }

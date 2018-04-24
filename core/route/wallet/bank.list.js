@@ -27,6 +27,7 @@ class PickerBank extends Component {
   async componentDidMount() {
     try{
       const data = await Session.Lookup.Get('v1/lookup/banks?resultType=nameOnly')
+      console.log(data)
       this.props.dispatch(wallet.setBankValue({bank_list:data}))
     }catch (e) {
       this.props.dispatch(app.showMessage('网络状况差，请稍后再试'))
