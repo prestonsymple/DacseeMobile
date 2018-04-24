@@ -1,7 +1,7 @@
 /* global navigator */
 
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking, StyleSheet, Image, Modal, TextInput, ScrollView } from 'react-native'
+import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking, StyleSheet, Image, Platform, TextInput, ScrollView } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
@@ -489,7 +489,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
     const { timePickerShow, selectPayShow, remarkShow, selectCarShow } = this.state
     return (
       <Animated.View style={[
-        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ? height - 464 - 22 : height - 464, paddingTop: 10, justifyContent: 'center' },
+        { position: 'absolute', left: 0, right: 0, top: Define.system.ios.x ? height - 464 - 22 :Platform.OS === 'android'? height - 449:height - 464, paddingTop: 10, justifyContent: 'center' },
         { shadowOffset: { width: 0, height: 2 }, shadowColor: '#999', shadowOpacity: .5 },
         { backgroundColor: '#fff', },
         { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
