@@ -30,6 +30,7 @@ export default class VoiceModal extends Component {
 
   constructor(props) {
     super(props)
+    this.timer = null
     this.state = {
       isShow: false,
       type: '',
@@ -40,16 +41,18 @@ export default class VoiceModal extends Component {
       stoppedRecording: false,
       finished: false,
       audioPath: '' ,
+      error:false,
       hasPermission: undefined,
 
     }
   }
 
   componentDidMount() {
-    const nowPath =`${AudioUtils.DocumentDirectoryPath}/${Date.now()}.aac`
+    const nowPath =`${AudioUtils.CachesDirectoryPath}/${Date.now()}.aac`
     this.setState({audioPath:nowPath})
     this.prepareRecordingPath(nowPath)
     AudioRecorder.onProgress = (data) => {
+      console.log(data)
       this.setState({currentTime: Math.floor(data.currentTime)})
     }
     AudioRecorder.onFinished = (data) => {
@@ -58,30 +61,13 @@ export default class VoiceModal extends Component {
         this._finishRecording(data.status === 'OK', data.audioFileURL)
       }
     }
-    // this.checkAuthorizationStatus()
-    // this.requestAuthorization()
-    // this._checkPermission().then((hasPermission) => {
-    //   this.setState({ hasPermission })
-    //
-    //   if (!hasPermission) return
-    //
-    //   this.prepareRecordingPath(this.state.audioPath)
-    //
-    //
-    // })
+    this.checkAuthorizationStatus()
+    System.Platform.Android && this._checkPermission()
   }
 
   async checkAuthorizationStatus(){
     try{
       const res = await AudioRecorder.checkAuthorizationStatus()
-      console.log(res)
-    }catch (e) {
-      console.log(e)
-    }
-  }
-  async requestAuthorization(){
-    try{
-      const res = await AudioRecorder.requestAuthorization()
       console.log(res)
     }catch (e) {
       console.log(e)
@@ -101,6 +87,11 @@ export default class VoiceModal extends Component {
 
 
   show(type) {
+    const {hasPermission} = this.state
+    if (!hasPermission) {
+      console.warn('Can\'t record, no permission granted!')
+      return
+    }
     this.setState({
       isShow: true,
       type
@@ -112,20 +103,28 @@ export default class VoiceModal extends Component {
         toValue: this.props.opacity,
         duration: this.props.fadeInDuration,
       }
-    ).start(() => {
-      this.isShow = true
-    })
-    // this.prepareRecordingPath(filename)
-
+    ).start()
     this._record()
   }
 
   close() {
-    // let delay = typeof duration === 'undefined' ? this.duration : duration
-    //
-    // if(delay === DURATION.FOREVER) delay = this.props.defaultCloseDelay || 100
-    //
-    // if (!this.isShow && !this.state.isShow) return
+    console.log(this.state.currentTime)
+    const {currentTime} =this.state
+    if(currentTime<1){
+      this.setState({error:true})
+    }
+    const delay_time= currentTime<1?1000:0
+    this.timer && clearTimeout(this.timer)
+    this.timer = setTimeout(()=>this.delay_close(),delay_time)
+    this._stop()
+    currentTime>=1 && this.props.sendVoice('voice',this.state.audioPath,this.state.currentTime)
+    const nowPath =`${AudioUtils.CachesDirectoryPath}/${Date.now()}.aac`
+    this.setState({audioPath:nowPath})
+    this.prepareRecordingPath(nowPath)
+  }
+
+
+  delay_close(){
     Animated.timing(
       this.state.opacityValue,
       {
@@ -135,19 +134,10 @@ export default class VoiceModal extends Component {
     ).start(() => {
       this.setState({
         isShow: false,
+        error:false
       })
-      this.isShow = false
     })
-    this._stop()
-    console.log(this.state.currentTime)
-    if(this.state.currentTime<1) return
-    this.props.sendVoice('voice',this.state.audioPath,this.state.currentTime)
-    const nowPath =`${AudioUtils.DocumentDirectoryPath}/${Date.now()}.aac`
-    this.setState({audioPath:nowPath})
-    /this.prepareRecordingPath(nowPath)
   }
-
-
 
   async _pause() {
     if (!this.state.recording) {
@@ -179,12 +169,9 @@ export default class VoiceModal extends Component {
 
   async _stop() {
     if (!this.state.recording) {
-      console.warn('Can\'t stop, not recording!')
       return
     }
-
     this.setState({stoppedRecording: true, recording: false, paused: false})
-
     try {
       const filePath = await AudioRecorder.stopRecording()
 
@@ -197,21 +184,18 @@ export default class VoiceModal extends Component {
     }
   }
 
-  _checkPermission() {
-    if (Platform.OS !== 'android') {
-      return Promise.resolve(true)
+  async _checkPermission() {
+    try{
+      const rationale = {
+        'title': 'Microphone Permission',
+        'message': 'AudioExample needs access to your microphone so you can record audio.'
+      }
+      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale)
+      console.log(granted)
+      this.setState({hasPermission:granted === PermissionsAndroid.RESULTS.GRANTED})
+    }catch (e) {
+      console.log(e)
     }
-
-    const rationale = {
-      'title': 'Microphone Permission',
-      'message': 'AudioExample needs access to your microphone so you can record audio.'
-    }
-
-    return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale)
-      .then((result) => {
-        console.log('Permission result:', result)
-        return (result === true || result === PermissionsAndroid.RESULTS.GRANTED)
-      })
   }
 
   async _record() {
@@ -220,10 +204,6 @@ export default class VoiceModal extends Component {
       return
     }
 
-    // if (!this.state.hasPermission) {
-    //   console.warn('Can\'t record, no permission granted!')
-    //   return
-    // }
 
     if(this.state.stoppedRecording){
       this.prepareRecordingPath(this.state.audioPath)
@@ -240,12 +220,11 @@ export default class VoiceModal extends Component {
 
   _finishRecording(didSucceed, filePath) {
     this.setState({ finished: didSucceed })
-    console.log(`Finished recording of duration ${this.state.currentTime} seconds at path: ${filePath}}`)
   }
 
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
+
   }
 
   componentWillUnmount() {
@@ -257,16 +236,20 @@ export default class VoiceModal extends Component {
 
 
   _renderContent() {
-    const {type,currentTime} = this.state
+    const {type,currentTime,error} = this.state
     switch (type) {
     case 'normal':
       return (
-        <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-          { Icons.Generator.Ion('ios-mic', 70, '#fff') }
-          <Text style={{color:'#fff',marginLeft:10}} >
-            {currentTime}
-          </Text>
-        </View>
+        error ? <View style={{justifyContent:'center',alignItems:'center'}}>
+          {Icons.Generator.Awesome('exclamation', 70, '#fff')}
+          <Text style={{color:'#fff'}}>说话时间太短</Text>
+        </View>:
+          <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+            {Icons.Generator.Ion('ios-mic', 70, '#fff') }
+            <Text style={{color:'#fff',marginLeft:10}} >
+              {currentTime}
+            </Text>
+          </View>
       )
     }
   }
@@ -325,7 +308,7 @@ VoiceModal.defaultProps = {
   textStyle: styles.text,
   positionValue: 120,
   fadeInDuration: 500,
-  fadeOutDuration: 200,
+  fadeOutDuration:200,
   opacity: 1,
   sendVoice:()=>{}
 }

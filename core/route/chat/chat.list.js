@@ -33,13 +33,14 @@ class ChatWindow extends PureComponent {
       saveChangeSize:0,
       inputChangeSize:0,
       voiceLength:0,
+      voiceEnd:false,
       data:[
         {
           _id:1,
           from_id:'5a79423ab2ccf66e117f1b7f',
           to_id:'5ac2de564647815dd78dbb07',
           avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-          content:'{"type": "text", "content": "66666" }',
+          content:'{"type": "text", "content": "你好www.baidu.com" }',
           time:'1523248662'
         },
         {
@@ -47,7 +48,7 @@ class ChatWindow extends PureComponent {
           from_id:'5a79423ab2ccf66e117f1b7f',
           to_id:'5ac2de564647815dd78dbb07',
           avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-          content:'{"type": "text", "content": "图片https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+          content:'{"type": "text", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg你1好" }',
           time:'1523248662'
         },
         {
@@ -55,7 +56,7 @@ class ChatWindow extends PureComponent {
           from_id:'5a79423ab2ccf66e117f1b7f',
           to_id:'5ac2de564647815dd78dbb07',
           avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-          content:'{"type": "text", "content": "你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好" }',
+          content:'{"type": "text", "content": "你好你好你好你好你好www.baidu.com你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好" }',
           time:'1523248662'
         },
         {
@@ -63,7 +64,7 @@ class ChatWindow extends PureComponent {
           from_id:'5ac2de564647815dd78dbb07',
           to_id:'5a79423ab2ccf66e117f1b7f',
           avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-          content:'{"type": "text", "content": "你好" }',
+          content:'{"type": "text", "content": "www.baidu.com" }',
           time:'1523248652'
         },
 
@@ -92,8 +93,11 @@ class ChatWindow extends PureComponent {
     System.Platform.iOS && this._willShow()
     System.Platform.iOS && this._willHide()
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
-      this.chatList.scrollToEnd({animated:true})
+      this.time && clearTimeout(this.time)
+      this.time = setTimeout(()=>this.chatList.scrollToEnd({animated:true}),500)
+      // this.chatList.scrollToEnd({animated:true})
     })
+    this.chatList.scrollToEnd({animated:true})
   }
 
   componentWillUnmount() {
@@ -137,6 +141,9 @@ class ChatWindow extends PureComponent {
   }
 
   _sendMessage(type,messageContent,voiceLen='') {
+    if(type=='text' && messageContent.trim().length == 0 ){
+      return
+    }
     const {data} = this.state
     const {user} = this.props
     const len = data.length
@@ -153,23 +160,35 @@ class ChatWindow extends PureComponent {
     msgSend.content = JSON.stringify(content)
     data.push(msgSend)
     this.setState({data,messageContent:''})
-    setTimeout(()=>this.chatList.scrollToEnd({animated:true}),500)
+    this.time && clearTimeout(this.time)
+    this.time = setTimeout(()=>this.chatList.scrollToEnd({animated:true}),200)
   }
 
   _changeMethod(){
     this.setState({showVoice:!this.state.showVoice})
     this.setState({saveChangeSize:this.state.inputChangeSize})
-    setTimeout(()=>this.InputBar.input && this.InputBar.input.focus(),300)
+    this.time && clearTimeout(this.time)
+    this.time = setTimeout(()=>this.InputBar.input && this.InputBar.input.focus(),300)
   }
 
   _changeText(e) {
     this.setState({messageContent:e})
   }
 
-  // _del(){
-  //   const {saveChangeSize} = this.state
-  //   saveChangeSize > 0 && this.setState({saveChangeSize:0})
-  // }
+  _jump(url) {
+    const {navigation,i18n} = this.props
+    let safeUrl = this._safeUrl(url)
+    navigation.navigate('SettingWetView', {
+      title: '',
+      source: { uri: safeUrl }
+    })
+  }
+
+  _safeUrl(url){
+    if (url.indexOf('https') == 0) return url
+    if (url.indexOf('http') == 0) return url.replace('http://', 'https://')
+    if (url.indexOf('http') == -1 ) return 'https://'+url
+  }
 
   _onContentSizeChange(e) {
     const changeHeight = e.nativeEvent.contentSize.height
@@ -178,23 +197,21 @@ class ChatWindow extends PureComponent {
     this.chatList.scrollToEnd({animated:true})
   }
 
-  _onVoiceStart() {
-    try{
-
-      this.voice.show('normal')
-    } catch (e) {
-      console.log('error')
-    }
+  _onVoiceStart(e) {
+    this.voice.show('normal')
+    this.setState({voiceEnd:true})
   }
 
   _onVoiceEnd() {
     this.voice.close()
+    this.setState({voiceEnd:false})
   }
 
   _watch(){
 
   }
 
+  //TODO
   _PressAvatar(){
     // this.props.navigation.navigate('FriendsDetail', { i18n,...data })
   }
@@ -205,6 +222,7 @@ class ChatWindow extends PureComponent {
         console.log('failed to load the sound', error)
         return
       } else {
+        console.log('duration in seconds: ' + sound.getDuration())
         sound.play((success) => {
           if (success) {
             console.log('successfully finished playing')
@@ -217,7 +235,7 @@ class ChatWindow extends PureComponent {
   }
 
   render(){
-    const {data,messageContent,xHeight,visibleHeight,footerY,listVisibleHeight,inputHeight,inputChangeSize} = this.state
+    const {data,messageContent,xHeight,visibleHeight,footerY,listVisibleHeight,voiceEnd,inputChangeSize} = this.state
     const {user} = this.props
     return(
       <View style={Platform.OS==='android'?{flex:1}:{height:visibleHeight-(Define.system.ios.x?88:64)}}>
@@ -235,6 +253,7 @@ class ChatWindow extends PureComponent {
                 index={index}
                 user={user}
                 play={(_path) => this._playVoice(_path)}
+                jump={(url) => this._jump(url)}
               />
             )}
           />
@@ -250,7 +269,7 @@ class ChatWindow extends PureComponent {
           xHeight={xHeight}
           voiceStart={this._onVoiceStart.bind(this)}
           voiceEnd={this._onVoiceEnd.bind(this)}
-          // inputHeight={inputHeight}
+          isVoiceEnd={voiceEnd}
           inputChangeSize={inputChangeSize}
         />
         <Voice
@@ -264,10 +283,6 @@ class ChatWindow extends PureComponent {
 
 class InputBar extends Component {
 
-  state={
-    height:0
-  }
-
   render() {
     const {
       messageContent,
@@ -275,7 +290,7 @@ class InputBar extends Component {
       textChange = () => {}, onMethodChange = () => {}, onContentSizeChange= () => {}, del= () =>{}, voiceStart = () => {},voiceEnd = () => {},
       showVoice,
       xHeight,
-      inputHeight,
+      isVoiceEnd,
       inputChangeSize
     } = this.props
     return(
@@ -293,7 +308,7 @@ class InputBar extends Component {
                 <View style={[{justifyContent:'center',alignItems:'center',width:0.7*(width-36),height:35,flexDirection:'row'}]}>
                   { Icons.Generator.Ion('ios-mic-outline', 20, '#bbb') }
                   <Text style={{fontSize:16,color:'#4d4d4d',marginLeft:10}}>
-                      按住 说话
+                    {isVoiceEnd?'松开 结束':'按住 说话'}
                   </Text>
                 </View>
               </TouchableHighlight> : <TextInput
@@ -328,36 +343,61 @@ class InputBar extends Component {
   }
 }
 
-
+const PATTERNS = {
+  url: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/i,
+  phone: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}/,
+}
 class ChatItem extends Component {
-  state={
-    height:0
-  }
 
+  state={
+    contentWidth:undefined
+  }
   _renderContent=()=>{
-    const {content, play=()=>{}, user} = this.props
+    const {content, play=()=>{}, user, jump=() =>{}} = this.props
     const isSelf = user._id===content.from_id
     const msgContent = JSON.parse(content.content)
-    let reg=/((https?|ftp|file):\/\/)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
-    // if(msgContent.type==='text'){
-    //   const arr= reg.exec(msgContent.content)
-    //   console.log(arr)
-    // }
+    let normal = '((https|http|ftp|rtsp|mms)?://)'
+    let ftp = '?(([0-9a-z_!~*\'().&=+$%-]+: )?[0-9a-z_!~*\'().&=+$%-]+@)?'
+    let ip = '(([0-9]{1,3}.){3}[0-9]{1,3}'
+    let domain = '|([0-9a-z_!~*\'()-]+.)*'
+    let secDomain = '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].'
+    let levDomain = '[a-z]{2,6})'
+    let port = '(:[0-9]{1,4})?'
+    let slash = '((/?)|(/[0-9a-z_!~*\'().;?:@&=+$,%#-]+)+/?)'
+    let reg = PATTERNS.url
+    // let strRegex = '((https|http|ftp|rtsp|mms)?://)'
+    //   + '?(([0-9a-z_!~*\'().&=+$%-]+: )?[0-9a-z_!~*\'().&=+$%-]+@)?' //ftp的user@
+    //   + '(([0-9]{1,3}\.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
+    //   + '|' // 允许IP和DOMAIN（域名）
+    //   + '([0-9a-z_!~*\'()-]+\.)*' // 域名- www.
+    //   + '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.' // 二级域名
+    //   + '[a-z]{2,6})' // first level domain- .com or .museum
+    //   + '(:[0-9]{1,4})?' // 端口- :80
+    //   + '((/?)|' // a slash isn't required if there is no file name
+    //   + '(/[0-9a-z_!~*\'().;?:@&=+$,%#-]+)+/?)'
+    // let reg = new RegExp(strRegex)
+    let resArr,splitArr,text,url = null
+    if(msgContent.type==='text'){
+      resArr = msgContent.content.match(reg)
+      url = resArr && resArr[0]
+      splitArr = resArr && msgContent.content.split(url)
+      text=!splitArr?<View style={[styles.txtArea]}>
+        <Text selectable={true} style={{lineHeight:20}}>{msgContent.content}</Text>
+      </View>:<View style={[styles.txtArea]}>
+        <Text selectable={true} style={{lineHeight:20}}>{splitArr[0]}<Text style={{color:'green'}} onPress={jump.bind(this,url)}>{url}</Text>{splitArr[1]}</Text>
+      </View>
+    }
+
     switch (msgContent.type){
     case 'text':
-      return (
-        <View style={[styles.txtArea]}>
-          <Text selectable={true} style={{lineHeight:20}} >{msgContent.content}</Text>
-        </View>)
+      return (text)
     case 'voice':
       return (
         <View style={{flexDirection:isSelf?'row-reverse':'row',}}>
           <TouchableOpacity style={styles.voiceArea} onPress={play.bind(this,msgContent.content)} activeOpacity={.7}>
-            {/*<TouchableOpacity onPress={play.bind(this,msgContent.content)}>*/}
             <View style={[{width:40+(msgContent.len>1?msgContent.len*2:0),alignItems:isSelf?'flex-end':'flex-start'},isSelf?{alignItems:'flex-end',marginRight:5}:{alignItems:'flex-start',marginLeft:5}]}>
               { isSelf ? Icons.Generator.Ion('logo-rss', 18, '#bbb',{style:{transform: [{ scaleX: -1 }]}}) : Icons.Generator.Ion('logo-rss', 18, '#bbb') }
             </View>
-            {/*</TouchableOpacity>*/}
           </TouchableOpacity>
           <View style={{justifyContent:'flex-end'}}>
             <Text style={[{color:'#aaa',marginBottom:4,},isSelf?{marginRight:4}:{marginLeft:4}]}>
@@ -424,23 +464,26 @@ const styles= StyleSheet.create({
   },
   txtArea: {
     borderRadius: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    maxWidth: width - 160,
+    paddingHorizontal: System.Platform.iOS?10:6,
+    paddingVertical:6,
     backgroundColor: '#FFF',
-    justifyContent:'center'
+    justifyContent:'center',
+    maxWidth:width-100,
+    flexWrap:'wrap',
+    minHeight:20
   },
   voiceArea: {
     borderRadius: 4,
     maxWidth: width - 160,
     backgroundColor: '#FFF',
-    justifyContent:'center'
+    justifyContent:'center',
+    minHeight:30
   },
   avatar: {
     marginHorizontal: 8,
-    borderRadius: 20,
-    width: 40,
-    height: 40
+    borderRadius:19,
+    width: 38,
+    height: 38
   },
   triangle:{
     width:0,
