@@ -64,7 +64,7 @@ export default connect(state => ({
   }
 
   render() {
-    const { invite_id, id, avatars = { url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }, fullName, userId } = this.state
+    const { invite_id, avatars = { url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }, fullName, userId } = this.state
     const { i18n = {} } = this.props
 
     return (
@@ -91,7 +91,7 @@ export default connect(state => ({
           <View style={{ flexDirection: 'row', alignItems:'center', justifyContent: 'center'}}>
             <TouchableOpacity onPress={async () => {
               try {
-                const response = await Session.Circle.Post('v1/requests', { addFriend_id: id })
+                const response = await Session.Circle.Post('v1/requests', { addFriend_id: invite_id })
                 console.log(response)
                 this.props.dispatch(application.showMessage(i18n.already_send_wait_confirm))
               } catch (e) {
