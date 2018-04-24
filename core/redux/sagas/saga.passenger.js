@@ -144,9 +144,7 @@ function* bookingFlow() {
       )
     ) {
       // TODO: 恢复车型数据
-      console.log('[恢复数据]')
       const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=payment_method,from,destination,fare`)
-      console.log(bookingDetail)
       yield put(booking.passengerSetValue({
         destination: bookingDetail.destination,
         fare: bookingDetail.fare,
@@ -166,7 +164,7 @@ function* bookingFlow() {
 
 function* bookingBoardCastListener() {
   while(true) {
-    const i18n = yield select(state => state.intl.messages||{})
+    const i18n = yield select(state => state.intl.messages || {})
     const { payload: { action, booking_id } } = yield take(booking.passengerBoardCastListener().type)
     const status = yield select(state => state.booking.status)
 
@@ -242,13 +240,14 @@ function* passengerUpdateDriverLocation() {
 function* passengerStatusObserver() {
 
   while (true) {
-    const { booking_id, app_status, i18n } = yield select(state => ({
+    const { booking_id, app_status, i18n, map_mode } = yield select(state => ({
       booking_id: state.storage.booking_id,
       app_status: state.application.application_status === 'active',
+      map_mode: state.application.map_mode,
       i18n: state.intl.messages || {}
     }))
 
-    if (!booking_id || !app_status) {
+    if (!booking_id || !app_status || map_mode.length === 0) {
       yield delay(2500)
       continue
     } else {
@@ -291,11 +290,11 @@ function* passengerStatusObserver() {
           ])
         }
 
-        // console.log({
-        //   driver_id,
-        //   bookingStatus,
-        //   passengerStatus
-        // })
+        console.log({
+          driver_id,
+          bookingStatus,
+          passengerStatus
+        })
       } catch (e) {
         console.log(e)
       }

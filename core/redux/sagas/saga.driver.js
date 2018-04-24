@@ -12,19 +12,6 @@ import LocationService from '../../native/location-service'
 
 const oncePosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 3000 }))
 
-function* watchBooking() {
-  while(true) {
-    try {
-      const { payload } = yield take(driver.driverSetStatus().type)
-      // const { data } = yield call(Session.booking.get, `v1/bookings/${payload}?fields=type,from,notes,destination,booking_at,payment_method,fare,passenger_info`)
-      // yield put(driver.setJobs({ detail: data }))
-      // yield put(driver.showJobsDetail())
-    } catch (e) {
-      console.log(e)
-    }
-  }
-}
-
 function* updateDriverLocation() {
   while(true) {
     try {
@@ -33,29 +20,15 @@ function* updateDriverLocation() {
         map_mode: state.application.map_mode,
         authToken: state.account.authToken
       }))
-      const vehicle_id = '5a7843962dd97f23dc6a070c'
 
+      const vehicle_id = '5a7843962dd97f23dc6a070c'
       if (working && System.Platform.Android) {
         yield call(LocationService.startTracking, authToken, vehicle_id)
-      } else {
+      } else if (working && System.Platform.iOS) {
+        const location = yield select(state => state.account.location)
+        yield call(Session.Location.Put, 'v1', Object.assign({}, location, { vehicle_id }))
+      } else if (!working && System.Platform.Android) {
         yield call(LocationService.stopTracking)
-      }
-      if (working && System.Platform.iOS) {
-        let location = { latitude: undefined, longitude: undefined }
-        if (map_mode === 'AMAP') {
-          location = yield select(state => state.account.location)
-          delete location.lat
-          delete location.lng
-        } else if (map_mode === 'GOOGLEMAP') {
-          const position = yield call(oncePosition)
-          location = position.coords
-          delete location.accuracy
-          delete location.altitude
-          delete location.altitudeAccuracy
-          delete location.heading
-          delete location.speed
-        }
-        yield call(Session.Location.Put, 'v1', Object.assign(location, { vehicle_id }))
       }
     } catch (e) {
       console.log(e)
@@ -68,13 +41,19 @@ function* updateDriverLocation() {
 function* driverStatusObserver() {
   while (true) {
 
-    const { booking_id, app_status, working, logined, user_id } = yield select(state => ({
-      booking_id: state.storage.driver_booking_id,
-      app_status: state.application.application_status === 'active',
+    const { map_mode, working, logined, user_id } = yield select(state => ({
+      // booking_id: state.storage.driver_booking_id,
+      // app_status: state.application.application_status === 'active',
+      map_mode: state.application.map_mode,
       logined: state.account.status,
       working: state.driver.working,
       user_id: state.account.user._id
     }))
+
+    if (map_mode.length === 0) {
+      yield delay(2500)
+      continue
+    }
 
 
     const fields = [
@@ -122,7 +101,6 @@ function* driverStatusObserver() {
 export default function* () {
   yield all([
     fork(driverStatusObserver),
-    fork(updateDriverLocation),
-    fork(watchBooking)
+    fork(updateDriverLocation)
   ])
 }
