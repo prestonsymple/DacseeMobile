@@ -11,7 +11,7 @@ const pixelSize = 0.6
 export default class TimePicker extends PureComponent {
   constructor(props) {
     super(props)
-    this.days = [this.getDateStr(0), this.getDateStr(1), this.getDateStr(2)]
+    this.days =[]
     // this.hours = ['0点', '1点', '2点', '3点','4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点','13点','14点','15点','16点','17点','18点','19点','20点','21点','22点','23点']
     // this.minutes = ['0分','10分','20分','30分','40分','50分']
     this.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
@@ -25,10 +25,19 @@ export default class TimePicker extends PureComponent {
       minute: this.getDafultMinutes()[0],
     }
   }
-  componentDidMount() {
+  async getAllDays(n){
+    let data=[]
+    for(let i=0;i<n;i++){
+      let day=await this.getDateStr(i)
+      data.push(day)
+    }
+    return data
+  }
+  async componentDidMount() {
+    this.days = await this.getAllDays(7)
     this.setState({
-      hours: this.getDafultHours(),
-      minutes: this.getDafultMinutes(),
+      hours: await this.getDafultHours(),
+      minutes:await this.getDafultMinutes(),
     })
   }
 

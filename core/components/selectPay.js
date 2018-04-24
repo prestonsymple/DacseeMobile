@@ -15,8 +15,8 @@ const pixelSize = (function() {
 export default class SelectPay extends PureComponent {
   constructor(props) {
     super(props)
-    this.pays = [this.props.i18n.cash,this.props.i18n.credit_card]
-    this.payskey = ['cash','credit_card']
+    this.pays = [this.props.i18n.cash] //,this.props.i18n.credit_card
+    this.payskey = ['cash'] //,'credit_card'
     this.state={
       pay:this.payskey[0]
     }
