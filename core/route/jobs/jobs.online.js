@@ -14,12 +14,15 @@ import { application, driver } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
 import OnlineListItem from './components/online.listItem'
 const { height, width } = Screen.window
+import { JobsAddScreen } from './index'
+
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 
 export default connect(state => ({
   ...state.driver,
+  vehicles: state.account.user.vehicles,
   i18n: state.intl.messages || {}
 }))(class JobsOnlineScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -85,7 +88,15 @@ export default connect(state => ({
           <Text style={{ fontSize: TextFont.TextSize(25), fontWeight: 'bold', color: '#333' }}>
             {this.props.i18n.online}
           </Text>
-          <Switch value={working} onValueChange={(working) => this.props.dispatch(driver.driverSetValue({ working }))} />
+          <Switch value={working} onValueChange={(working) => {
+
+            if (this.props.vehicles.length === 0) {
+              this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsAdd'}))
+            } else {
+              this.props.dispatch(driver.driverSetValue({working}))
+            }
+          }
+          } />
         </View>
         {
           working && (jobs.rowIdentities[0].length === 0 ?

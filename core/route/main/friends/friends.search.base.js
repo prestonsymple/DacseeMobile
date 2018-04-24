@@ -36,7 +36,8 @@ export default connect(state => ({
   async componentDidMount() {
     await InteractionManager.runAfterInteractions()
     const { value, countryCode } = this.props.navigation.state.params
-
+    // console.log('value',value)
+    // console.log('coutryCode', countryCode)
     let searchStr = ''
     if (countryCode) {
       searchStr = `&phoneCountryCode=${countryCode}&phoneNo=${value}`

@@ -24,7 +24,8 @@ import {
 import {
   JobsListScreen,
   JobsOnlineScreen,
-  JobsListDetailScreen
+  JobsListDetailScreen,
+  JobsAddScreen
 } from '../route/jobs'
 
 import {
@@ -103,6 +104,7 @@ const HomeScreen = {
   JobsList: { screen: JobsListScreen },
   JobsListDetail: { screen: JobsListDetailScreen },
   JobsOnline: { screen: JobsOnlineScreen },
+  JobsAdd: { screen: JobsAddScreen },
 
   TripList: { screen: TripListScreen },
   TripListDetail: { screen: TripListDetailScreen },

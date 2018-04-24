@@ -52,6 +52,9 @@ export default connect(state => ({
     const { referrer, id } = this.props.navigation.state.params
     await InteractionManager.runAfterInteractions()
     const data = await Session.User.Get(`v1/search?country=CN&userId=${referrer}`)
+    // console.log('data', data)
+    // console.log('referrer',referrer)
+    // console.log('id', id)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage(i18n.invitation_failure))
     const { _id, avatars, fullName, userId } = data[0]
     this.setState({ invite_id: _id, avatars: avatars[avatars.length - 1], fullName, userId })
@@ -89,6 +92,7 @@ export default connect(state => ({
             <TouchableOpacity onPress={async () => {
               try {
                 const response = await Session.Circle.Post('v1/requests', { addFriend_id: id })
+                console.log(response)
                 this.props.dispatch(application.showMessage(i18n.already_send_wait_confirm))
               } catch (e) {
                 if (e.response && e.response.data && e.response.data.code === 'CIRCLE_REQUEST_EXIST') {

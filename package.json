@@ -27,6 +27,7 @@
     "react-native": "0.52.3",
     "react-native-actionsheet": "^2.3.0",
     "react-native-audio": "^4.0.0",
+    "react-native-autocomplete-input": "^3.5.0",
     "react-native-calendars": "^1.17.4",
     "react-native-camera": "^1.0.3",
     "react-native-code-push": "^5.2.1",
