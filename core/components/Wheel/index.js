@@ -8,12 +8,7 @@ import { StyleSheet, Image,View, Text, Animated, PanResponder, ViewPropTypes ,Pi
 
 import WheelItem from './WheelItem'
 import {TextFont} from '../../utils'
-const pixelSize = (function() {
-  let pixelRatio = PixelRatio.get()
-  if (pixelRatio >= 3) return 0.333
-  else if (pixelRatio >= 2) return 0.5
-  else return 1
-})()
+
 export default class Wheel extends Component {
 
   static propTypes = {
@@ -206,7 +201,7 @@ export default class Wheel extends Component {
       zIndex: 100,
     }].concat(maskStyle)
     if (holeLine === undefined) {
-      holeLine = <View style={{ height:pixelSize, backgroundColor: '#ccc' }} />
+      holeLine = <View style={{ height:0.6, backgroundColor: '#ccc' }} />
     } else if (typeof holeLine === 'number') {
       holeLine = <View style={{ height: holeLine, backgroundColor: '#ccc' }} />
     }
@@ -254,10 +249,8 @@ export default class Wheel extends Component {
         {...this.panResponder.panHandlers}
       >
         {items.map((item, index) => this.renderItem(item, index))}
-        <View style={maskStyle} />
-        {holeLine}
-        <View style={holeStyle} onLayout={e => this.onHoleLayout(e)} />
-        {holeLine}
+        <View style={[maskStyle]} />
+        <View style={[holeStyle,{ borderBottomWidth:0.6, borderTopWidth:0.6, borderColor:'#ccc'}]} onLayout={e => this.onHoleLayout(e)} />
         <View style={maskStyle} />
       </View>
     )

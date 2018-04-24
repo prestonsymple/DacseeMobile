@@ -54,8 +54,8 @@ export default connect(state => state.booking)(class SelectCarModel extends Comp
             </View>
             <View style={{ padding: 15, backgroundColor: '#fff', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
               <View style={{ }}>
-                <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{'选择车型'}</Text>
-                <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{'请选择车型'}</Text>
+                <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{i18n.vehicle_selection}</Text>
+                <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{i18n.select_vehicle}</Text>
                 <View style={{ marginTop: 15, borderRadius: 10, borderColor: '#ddd', borderWidth: StyleSheet.hairlineWidth }}>
                   {
                     this.props.vehicle_categories.map((pipe, id) => (

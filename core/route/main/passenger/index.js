@@ -479,6 +479,11 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
       selectCarShow: false
     }
   }
+  getFareText(){
+    let vehicle= this.props.vehicle||'Economy'  
+    let text=`${vehicle} - ${this.props.i18n.login==='登录'? '行程费用 ￥':'RM '}${parseInt(this.props.fare).toFixed(2)}`
+    return text
+  }
   render() {
     const { drag, from, destination, i18n, selected_friends } = this.props
     const { timePickerShow, selectPayShow, remarkShow, selectCarShow } = this.state
@@ -490,7 +495,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
         { borderTopLeftRadius: 28, borderTopRightRadius: 28 }
       ]}>
         <View style={{ marginLeft: 4, marginBottom: 6, height: 32, justifyContent: 'center' }}>
-          <Text style={[{ fontSize: TextFont.TextSize(16), backgroundColor: 'transparent' }, styles.adress]}>{'朋友圈'}</Text>
+          <Text style={[{ fontSize: TextFont.TextSize(16), backgroundColor: 'transparent' }, styles.adress]}>{i18n.mycircle}</Text>
         </View>
         <View style={{ height: 56, marginHorizontal: 18, overflow: 'hidden', flexDirection: 'row', marginBottom: 6 }}>
           <ScrollView
@@ -543,7 +548,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             activeOpacity={.7} style={{ height: 48, width: width - 30, borderRadius: 6, backgroundColor: '#ebebeb', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
               <Image style={{ height: 40, width: 40, marginHorizontal: 10 }} source={Resources.image.car_budget} />
-              <Text style={{ color: '#111', fontSize: 14, fontWeight: '600' }}>{(this.props.fare === 0) ? 'Economy' : `Economy - ${this.props.i18n.start.startsWith('Start') ? 'RM ' : '行程费用 ￥'}${parseInt(this.props.fare).toFixed(2)}`}</Text>
+              <Text style={{ color: '#111', fontSize: 14, fontWeight: '600' }}>{this.getFareText()}</Text>
             </View>
             <View style={{ alignItems: 'center', marginRight: 20, marginBottom: 6 }} >
               {Icons.Generator.Awesome('sort-desc', 20, '#6F6F6F')}

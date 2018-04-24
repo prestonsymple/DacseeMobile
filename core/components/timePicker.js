@@ -7,12 +7,7 @@ import Wheel from './Wheel'
 import _ from 'lodash'
 import moment from 'moment'
 const { height, width } = Screen.window
-const pixelSize = (function () {
-  let pixelRatio = PixelRatio.get()
-  if (pixelRatio >= 3) return 0.333
-  else if (pixelRatio >= 2) return 0.5
-  else return 1
-})()
+const pixelSize = 0.6
 export default class TimePicker extends PureComponent {
   constructor(props) {
     super(props)

@@ -52,9 +52,13 @@ export default connect(state => ({
             <View style={{ height: 40, marginTop: 40, backgroundColor: '#FDC377', borderTopLeftRadius: 20, borderTopRightRadius: 20, width: modalHeight - 60 }} />
             <View style={{ flex: 1, padding: 15, backgroundColor: '#fff', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
               <View style={{ flex: 1, }}>
-                <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{'备注'}</Text>
-                <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{'留下一段描述'}</Text>
-                <TextInput defaultValue={this.state.remark} {...Define.TextInputArgs} multiline={true} onChangeText={text => { this.setState({ remark: text }) }}
+                <Text style={{ color: '#000', fontSize: TextFont.TextSize(17), marginBottom: 5 }}>{i18n.remarks}</Text>
+                <Text style={{ color: '#ccc', fontSize: TextFont.TextSize(14) }}>{i18n.note_trip}</Text>
+                <TextInput defaultValue={this.state.remark} 
+                  {...Define.TextInputArgs} multiline={true}
+                  clearTextOnFocus={false}
+                  placeholder={i18n.remarks_apliction}
+                  onChangeText={text => { this.setState({ remark: text }) }}
                   style={{ backgroundColor: '#f1f1f1', textAlignVertical: 'top', paddingHorizontal: 8, flex: 1, marginTop: 15, borderRadius: 10 }} underlineColorAndro />
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginHorizontal: 10, justifyContent: 'space-between' }}>
