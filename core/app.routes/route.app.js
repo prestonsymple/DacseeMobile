@@ -75,7 +75,7 @@ import {
 } from '../route/income'
 
 import UpgradeDriverScreen from '../route/upgrade.driver'
-import {ChatScreen} from '../route/chat'
+// import {ChatScreen} from '../route/chat'
 
 // 登录流程
 const AuthScreen = {
@@ -144,7 +144,7 @@ const HomeScreen = {
 
   PublicPickerCountry: { screen: PickerCountryScreen },
 
-  ChatWindow: { screen: ChatScreen },
+  // ChatWindow: { screen: ChatScreen },
   BankDetail:{ screen:BankDetailScreen}
 }
 
