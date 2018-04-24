@@ -11,8 +11,8 @@ export default class DriverComponent extends React.PureComponent {
   render() {
     return (
       <View style={{ width }}>
-        {/*<JobsOnlineScreen />*/}
-        <JobsAddScreen />
+        <JobsOnlineScreen />
+        {/*<JobsAddScreen />*/}
       </View>
     )
   }
