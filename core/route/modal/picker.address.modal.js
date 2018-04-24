@@ -14,7 +14,6 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 /*****************************************************************************************************/
 import { application, booking, address as Address } from '../../redux/actions'
-import { Search } from '../../native/AMap'
 import { System, Icons, Screen, Define, Session ,TextFont } from '../../utils'
 import { Button } from '../../components'
 import { BOOKING_STATUS } from '../main'

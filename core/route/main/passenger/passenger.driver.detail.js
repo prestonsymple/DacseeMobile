@@ -7,7 +7,7 @@ import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import InteractionManager from 'InteractionManager'
 import ActionSheet from 'react-native-actionsheet'
 
-import { MapView, Marker, Utils, Polyline } from '../../../native/AMap'
+import { MapView, Marker, Utils, Polyline } from 'react-native-amap3d'
 import { Screen, Icons, Define, System, Session, TextFont } from '../../../utils'
 import { booking, application } from '../../../redux/actions'
 import { Button } from '../../../components'

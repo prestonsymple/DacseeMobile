@@ -129,7 +129,7 @@ export default {
   ),
 
   Rating: sessionMethodBuild(
-    'https://svc-prod-rating.dacsee.io'
+    'https://svc-prod-rating.dacsee.io/api/'
   ),
 
 
@@ -144,7 +144,7 @@ export default {
   ),
 
   Wallet: sessionMethodBuild(
-    'https://svc-prod-wallet.dacsee.io'
+    'https://svc-prod-wallet.dacsee.io/api/'
   )
 }
 

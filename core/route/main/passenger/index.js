@@ -14,7 +14,7 @@ import ModalDriverRespond from './passenger.modal.wait.driver'
 import HeaderSection from '../components/navigator.header.selector'
 import CircleBar from '../components/circle.bar'
 
-import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../../native/AMap'
+import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from 'react-native-amap3d'
 import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Screen, Icons, Define, Session, UtilMath, TextFont } from '../../../utils'
 import { booking, account, application } from '../../../redux/actions'
@@ -175,19 +175,6 @@ export default connect(state => ({
     if (!this.props.booking_id) {
       this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_INIT))
     }
-
-    if (this.props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode === 'GOOGLEMAP') {
-      this.geoWatch = navigator.geolocation.watchPosition(this.geoWatchFunction.bind(this), (e) => console.log(e), { timeout: 1000 })
-    }
-  }
-
-  geoWatchFunction(position) {
-    const { coords: { latitude, longitude } } = position
-    this.onLocationListener({ nativeEvent: { latitude, longitude } })
-  }
-
-  componentWillUnmount() {
-    this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
   }
 
   mathDistanceZoom(distance) {
@@ -207,36 +194,38 @@ export default connect(state => ({
     return zoom
   }
 
-  async onLocationListener({ nativeEvent }) {
+  // async onLocationListener({ nativeEvent }) {
+  //   const {
+  //     latitude = nativeEvent.coordinate.latitude,
+  //     longitude = nativeEvent.coordinate.longitude
+  //   } = nativeEvent
+
+  //   if (latitude === 0 || longitude === 0) return
+  //   if (!this.ready && this.props.map_mode.length > 0) {
+  //     await InteractionManager.runAfterInteractions()
+  //     if (this.map.animateTo) {
+  //       this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
+  //     } else {
+  //       this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
+  //     }
+  //     this.ready = true
+  //   }
+  //   this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
+  //   // try {
+  //   //   await Session.Location.Put('v1', { latitude, longitude })
+  //   // } catch (e) { /**/ }
+  // }
+
+
+  onMapDragEvent({ nativeEvent }) {
+  }
+
+  onMapLocationEvent({ nativeEvent }) {
     const {
       latitude = nativeEvent.coordinate.latitude,
       longitude = nativeEvent.coordinate.longitude
     } = nativeEvent
-
-    if (latitude === 0 || longitude === 0) return
-    if (!this.ready && this.props.map_mode.length > 0) {
-      await InteractionManager.runAfterInteractions()
-      if (this.map.animateTo) {
-        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
-      } else {
-        this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
-      }
-      this.ready = true
-    }
-    this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
-    // try {
-    //   await Session.Location.Put('v1', { latitude, longitude })
-    // } catch (e) { /**/ }
   }
-
-
-  onMapDragEvent() {
-  }
-
-  onMapLocationEvent() {
-
-  }
-
 
   onStatusChangeListener(region) {
     const { nativeEvent = {} } = region
@@ -314,6 +303,7 @@ export default connect(state => ({
       this.setState({ drag: false })
     }
   }
+  
   render() {
     const { drag, polyline } = this.state
     const { status, from, destination, map_mode, location, driver_info, friends_location } = this.props
@@ -326,7 +316,10 @@ export default connect(state => ({
       mapType: 'standard',
       locationEnabled: true, // TODO: REDUX
       locationInterval: 1000,
-      onLocation: this.onLocationListener.bind(this),
+      zoomLevel: 16,
+      coordinate: {
+        latitude: location.lat, longitude: location.lng
+      },
 
       /* GOOGLE MAPS */
       pitchEnabled: false,
@@ -384,8 +377,11 @@ export default connect(state => ({
       }}>
         {
           map_mode === '' && (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="small" color="#333" style={{ top: -64 }} />
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f2f2f2' }}>
+              <ActivityIndicator size="small" color="#333" style={{ top: -18 }} />
+              <View>
+                <Text style={{ color: '#999' }}>Loading</Text>
+              </View>
             </View>
           )
         }
@@ -432,7 +428,11 @@ export default connect(state => ({
           )
         }
 
-        {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<HeaderSection />)}
+        {
+          (
+            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
+            map_mode.length > 0
+          ) && (<HeaderSection />)}
 
         {
           (
@@ -442,13 +442,18 @@ export default connect(state => ({
         }
 
         {
-          (
+          ((
             status === BOOKING_STATUS.PASSGENER_BOOKING_INIT ||
             status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS
+          ) && map_mode.length > 0
           ) && (<CircleBar init={true} />)
         }
 
-        {status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && (<PickerAddress timing={this.ui} drag={drag} />)}
+        {
+          (
+            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
+            map_mode.length > 0
+          ) && (<PickerAddress timing={this.ui} drag={drag} />)}
         {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (
           <PickerOptions />
         )}
@@ -680,9 +685,9 @@ const BookingDetailView = (props) => {
   const { onPress = () => { }, driver, i18n, status } = props
 
   return (
-    <View style={{ backgroundColor: 'transparent', height: 294 }}>
+    <View style={{ backgroundColor: 'transparent', height: Define.system.ios.x ? 274 : 254 }}>
       <BookingDetailHeaderView driver={driver} />
-      <DrvierCarDetail car_info={''} />
+      <DrvierCarDetail car_info={''} i18n={i18n} />
       <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
         <TouchableOpacity
           activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7}
@@ -748,15 +753,16 @@ const BookingDetailButton = (props) => {
  */
 const DrvierCarDetail = (props) => {
   const { ...car_info } = props.car_info
+  const { i18n } = props
   return (
-    <View style={{ backgroundColor: 'white', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+    <View style={{ backgroundColor: 'white', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
+      <Image style={{ width: 170, height: 61 }} source={Resources.image.slice_adv_car} />
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15), marginVertical: 5 }}>{'Standard'}</Text>
+        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15) }}>{i18n.vehicle_economy}</Text>
         {/* <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
         <Text style={styles.car_cell}>{'颜色-白色'}</Text>
         <Text style={styles.car_cell}>{'豪华跑车'}</Text> */}
       </View>
-      <Image style={{ flex: 1 }} source={Resources.image.slice_adv_car} />
     </View>
   )
 }

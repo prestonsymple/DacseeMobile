@@ -13,6 +13,7 @@ import driverSaga from './saga.driver'
 import circleSaga from './saga.circle'
 import networkSaga from './saga.network'
 import initSaga from './saga.init'
+import locationSaga from './saga.location'
 
 
 /******************************************************************************/
@@ -89,6 +90,7 @@ export default function* sagaService() {
     fork(loginSaga),
     fork(circleSaga),
 
-    fork(networkSaga)
+    fork(networkSaga),
+    fork(locationSaga)
   ])
 }

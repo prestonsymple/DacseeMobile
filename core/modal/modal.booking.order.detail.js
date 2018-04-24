@@ -15,7 +15,7 @@ import { NavigationActions, SafeAreaView } from 'react-navigation'
 import { System, Icons, Screen, Define, Session,TextFont } from '../utils'
 import { Button } from '../components'
 import { jobs as Jobs } from '../redux/actions'
-import { MapView, Search, Marker, Polyline, Utils } from '../native/AMap'
+import { MapView, Search, Marker, Polyline, Utils } from 'react-native-amap3d'
 /*****************************************************************************************************/
 
 const MAP_DEFINE = {

@@ -58,12 +58,14 @@ export default connect(state => ({
     // this.props.dispatch(application.showHUD())
     try {
       const resp = await Session.Wallet.Get('v1/wallets')
+      console.log('返回的数据', resp)
       this.props.dispatch(Wallet.setValues({ walletList: resp }))
       this.setState({
         detail: dataContrast.cloneWithRows(resp),
         loading: false
       })
     } catch (e) {
+      console.log(e)
       this.props.dispatch(application.showMessage('无法连接到服务器'))
       this.setState({
         loading: false

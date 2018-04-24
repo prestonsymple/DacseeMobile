@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { SafeAreaView } from 'react-navigation'
 
-import { Screen, Icons, Redux, Define, System, Session,TextFont } from '../../utils'
-import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from '../../native/AMap'
+import { Screen, Icons, Redux, Define, System, Session, TextFont } from '../../utils'
+import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from 'react-native-amap3d'
 import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Button } from '../../components'
 import Resources from '../../resources'
@@ -42,8 +42,6 @@ const BookingDetailButton = (props) => {
  * @desc bookingDetail 顶部View，用户信息，拨打电话，发送短信
  */
 const BookingDetailHeaderView = (props) => {
-  console.log(props)
-
   const { passenger_info } = props
   const { avatars = [], fullName, userId, phoneCountryCode, phoneNo } = passenger_info
   return(
@@ -109,7 +107,7 @@ const BookingDetailView = (props) => {
   return(
     <View style={{backgroundColor: 'transparent', height: height / 2  }}>
       <BookingDetailHeaderView passenger_info={passenger_info}/>
-      <ScrollView style={{flex:1}}>
+      <ScrollView style={{flex: 1}}>
         <View style={{backgroundColor: '#eee', width, height: 0.8}}/>
         {/* <BookingDetailListItem
           title={time}
@@ -177,10 +175,10 @@ const BookingDetailBottomView = (props) => {
   const chineseStatus = props.chineseStatus
 
   return(
-    <View style={[styles.JobDetailWrap,{ height: 61, width, backgroundColor:'#fff' }]}>
+    <View style={[styles.JobDetailWrap, { height: Define.system.ios.x ? 68 + 22 : 68, width, backgroundColor:'#fff' }]}>
       <View style={{ height: 1, backgroundColor: '#d7d7d7' }} />
       <View style={{flexDirection: 'row',flex:1, justifyContent: 'space-between',alignItems:'center'}}>
-        <View style={{ justifyContent:'center'}}>
+        <View style={{ justifyContent:'center', top: -4 }}>
           <Text style={{fontSize: 14, marginLeft:24, color: 'rgba(0,0,0,0.75)'}}>
             RM
             <Text style={{fontSize: 24 , fontWeight:'bold'}}>{` ${fare.toFixed(2)}`}</Text>
@@ -308,7 +306,7 @@ export default connect(state => ({
           { text: this.props.i18n.cancel},
           { text: this.props.i18n.confirm, onPress: async () => {
             try {
-              await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
+              await Session.Booking.Put(`v1/${_id}`, { action: 'no_show' })
               this.props.navigation.goBack()
             } catch (e) {
               this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
@@ -459,7 +457,7 @@ export default connect(state => ({
 
 const styles = StyleSheet.create({
   JobDetailWrap: Platform.select({
-    ios: { paddingBottom: Define.system.ios.x ? 20 : 0},
+    ios: { paddingBottom: Define.system.ios.x ? 22 : 0 },
     android: {  paddingBottom: 0}
   }),
 })

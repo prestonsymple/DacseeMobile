@@ -6,12 +6,12 @@ import android.content.Intent;
 
 import com.airbnb.android.react.maps.MapsPackage;
 import com.dacsee.KeepAliveService.LocalService;
-import com.dacsee.nativeBridge.AMap.AMap3DPackage;
 import com.dacsee.nativeBridge.LocationService.LocationServicePackage;
 import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.dacsee.nativeBridge.Utils.UtilsPackages;
 import com.facebook.react.ReactApplication;
+import cn.qiuxiang.react.amap3d.AMap3DPackage;
 import com.horcrux.svg.SvgPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
 import com.wenkesj.voice.VoicePackage;
