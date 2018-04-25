@@ -27,13 +27,14 @@ export default class OfflineListItem extends Component {
       onMoveShouldSetPanResponderCapture: (e, gestureState) => false,
       onPanResponderGrant: (e, gestureState) => this.onPanResponderGrant(e, gestureState),
       onPanResponderMove: (e, gestureState) => this.onPanResponderMove(e, gestureState),
-      onPanResponderTerminationRequest: (e, gestureState) => true,
+      onPanResponderTerminationRequest: (e, gestureState) => false,
       onPanResponderRelease: (e, gestureState) => this.onPanResponderRelease(e, gestureState),
       onPanResponderTerminate: (e, gestureState) => null,
       onShouldBlockNativeResponder: (e, gestureState) => true,
     })
   }
   onPanResponderGrant(e, gestureState) {
+    this.props.sliderScorll(false)
     this.currentPosition.stopAnimation()
     this.prevTouches = e.nativeEvent.touches
     this.firstTouche = e.nativeEvent.touches
@@ -72,6 +73,7 @@ export default class OfflineListItem extends Component {
     this.currentPosition.setValue(pos)
   }
   onPanResponderRelease(e, gestureState) {
+    this.props.sliderScorll(true)
     let status = this.getIsMid(this.prevTouches[0].pageX)
     switch (status) {
     case 0:this.currentPosition.setValue(0)
