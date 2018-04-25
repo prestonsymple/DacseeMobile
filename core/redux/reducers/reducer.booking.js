@@ -24,7 +24,8 @@ const initialState = {
   status: 0,
   driver_id: '',
   driver: {},
-  driver_info: {}
+  driver_info: {},
+  vehicle_info:{}
 }
 
 export default handleActions({

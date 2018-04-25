@@ -257,7 +257,8 @@ function* passengerStatusObserver() {
         const driver_id = bookingDetail.driver_id
         const bookingStatus = bookingDetail.status
         const driver_info = bookingDetail.driver_info
-
+        const vehicle_info=bookingDetail.vehicle_info
+        console.log('vehicle_info',vehicle_info,bookingDetail)
         if (bookingStatus === 'No_Taker') {
           yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
           yield put(application.showMessage(i18n.order_timeout))

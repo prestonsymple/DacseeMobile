@@ -307,7 +307,7 @@ export default connect(state => ({
   
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode, location, driver_info, friends_location } = this.props
+    const { status, from, destination, map_mode, location, driver_info,vehicle_info, friends_location } = this.props
 
     const MAP_SETTER = {
       /* A MAP */
@@ -469,7 +469,7 @@ export default connect(state => ({
             } catch (e) {
               this.props.dispatch(application.showMessage('无法连接到服务器'))
             }
-          }} driver={driver_info} i18n={this.props.i18n} />
+          }} driver={driver_info} car={vehicle_info} i18n={this.props.i18n} />
         )}
         <ModalDriverRespond />
       </View>
@@ -685,12 +685,12 @@ class MapPin extends PureComponent {
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { onPress = () => { }, driver, i18n, status } = props
+  const { onPress = () => { }, driver, i18n, status ,car} = props
 
   return (
     <View style={{ backgroundColor: 'transparent', height: Define.system.ios.x ? 274 : 254 }}>
       <BookingDetailHeaderView driver={driver} />
-      <DrvierCarDetail car_info={''} i18n={i18n} />
+      <DrvierCarDetail car_info={car} i18n={i18n} />
       <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
         <TouchableOpacity
           activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7}
@@ -723,7 +723,7 @@ const BookingDetailHeaderView = (props) => {
           source={{ uri: avatars[avatars.length - 1].url }}
           style={{ width: 54, height: 54, borderRadius: 27, marginLeft: 14 }} />
         <View style={{ justifyContent: 'center' }}>
-          <Text style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{fullName}</Text>
+          <Text numberOfLines={1} style={{ marginLeft: 10, marginTop: 5, fontSize: TextFont.TextSize(17), color: '#000', fontWeight: 'bold' }}>{fullName}</Text>
           {/* <Text style={{ marginLeft: 10, marginTop: 2, fontSize: TextFont.TextSize(14), color: 'rgba(0, 0, 0, 0.5)' }}>{`User ID: ${userId}`}</Text> */}
         </View>
       </View>
@@ -755,16 +755,16 @@ const BookingDetailButton = (props) => {
  * @desc DrvierCarDetail 车详情
  */
 const DrvierCarDetail = (props) => {
-  const { ...car_info } = props.car_info
+  const { registrationNo, color } = props.car_info
   const { i18n } = props
   return (
     <View style={{ backgroundColor: 'white', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
       <Image style={{ width: 170, height: 61 }} source={Resources.image.slice_adv_car} />
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text style={{ color: '#333', fontSize: TextFont.TextSize(15) }}>{i18n.vehicle_economy}</Text>
-        {/* <Text style={styles.car_cell}>{'沪A-98556656'}</Text>
-        <Text style={styles.car_cell}>{'颜色-白色'}</Text>
-        <Text style={styles.car_cell}>{'豪华跑车'}</Text> */}
+        <Text style={styles.car_cell}>{registrationNo}</Text>
+        <Text style={styles.car_cell}>{color}</Text>
+        {/* <Text style={styles.car_cell}>{'豪华跑车'}</Text> */}
       </View>
     </View>
   )
