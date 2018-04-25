@@ -223,12 +223,12 @@ export default connect(state => ({
             renderSectionHeader={(data, section) => {
               return (data.length > 0) && (
                 <View>
-                  <View style={{ height: 34,flexDirection:'row', justifyContent: 'space-between', backgroundColor: 'white' }}>
+                  <View style={{ height: 34, flexDirection:'row', justifyContent: 'space-between', backgroundColor: 'white' }}>
                     <View style={{marginTop: 16}}>
                       <Text style={{ fontSize: TextFont.TextSize(12), color: '#8c8c8c', fontWeight: '600' }}>{ section === '0' ? i18n.friend_waitfor_accept : i18n.friend_my }</Text>
                     </View>
                     {section !== '0' ?
-                      <TouchableOpacity onPress={()=>this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{backgroundColor:selectedAll?'#7ed321':'#e7e7e7', marginTop:13}]}>
+                      <TouchableOpacity onPress={() => this.selectAllFriends(data, section)} hitSlop={{top: 27, left: 40, bottom: 27, right: 0}} activeOpacity={.7} style={[styles.circle,{ backgroundColor: selectedAll ? '#7ed321' : '#e7e7e7', marginTop: 8 }]}>
                         { selectedAll ?Icons.Generator.Material('check', 18, 'white'):null }
                       </TouchableOpacity>
                       :
@@ -333,8 +333,8 @@ class ItemPerson extends Component {
           <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[avatars.length - 1].url }} />
           <View style={{ right: 2, bottom: 2, position: 'absolute', backgroundColor: '#7ED321', width: 12, height: 12, borderRadius: 6 }} />
         </View>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400' }}>{fullName}</Text>
+        <View style={{ flex: 1, paddingRight: 15 }}>
+          <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{fullName}</Text>
           {/* <Text style={{ fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400', marginBottom: 5 }}>{fullName}</Text>
           <Text style={{ fontSize: TextFont.TextSize(13), color: '#999' }}>0次行程</Text> */}
         </View>
