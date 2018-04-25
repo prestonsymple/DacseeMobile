@@ -138,37 +138,55 @@ export default connect(state => ({
   }
 
 
+  stripscript(s) {
+    let pattern = new RegExp('[`~!@#$^&*()=|{}\':;\',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“\'。，、？]')
+
+    // pattern = new RegExp('[A-Za-z0-9\u4e00-\u9fa5@\\.\\+]')
+
+    // let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
+    let rs = ''
+    for (let i = 0; i < s.length; i++) {
+      rs = rs+s.substr(i, 1).replace(pattern, '')
+      console.log(rs)
+    }
+
+    return rs
+  }
+
   searchByRegExp(text){
     let friends = this.props.friend
+    // console.log(friends)
+
+    let handleText = this.stripscript(text)
+    console.log(handleText)
 
     if(!(friends instanceof Array)){
       return
     }
     let len = friends.length
     let arr = []
-    // for(var i=0;i<len;i++){
-    //如果字符串中不包含目标字符会返回-1
-    //   let fullName = friends[i].friend_info.fullName
-    //   if(fullName.toLowerCase().indexOf(text) >= 0){
-    //     arr.push(fullName)
-    //   }
-    // }
-    // return arr
+    for(let i = 0 ; i < len ; i++){
+    // 如果字符串中不包含目标字符会返回-1
+      let fullName = friends[i].friend_info.fullName.toLowerCase()
+      let phoneNo = friends[i].friend_info.phoneNo
+      let email = ''
 
-    let reg = new RegExp(text)
-    for(let i=0 ; i<len ; i++){
-      let fullName = friends[i].friend_info.fullName
-      //如果字符串中不包含目标字符会返回-1
-      if(fullName.toLowerCase().match(reg)){
+      if (friends[i].friend_info.email !== null ){
+        email = friends[i].friend_info.email
+      }
+
+      // console.log('fullName: ', fullName, 'phoneNo: ', phoneNo, 'email: ', email)
+
+      if(fullName.indexOf(handleText) >= 0 || phoneNo.indexOf(handleText) >= 0 || email.indexOf(handleText) >= 0){
         arr.push(friends[i])
       }
     }
-
     return arr
   }
 
   searchBarChange(text){
     const searchFriends =  this.searchByRegExp(text)
+
 
     let requestor = []
 
