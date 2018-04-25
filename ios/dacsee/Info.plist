@@ -184,8 +184,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo album needed to update your profile photo
 </string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Speech Recognition is needed to allow user to send voice message through our chat system</string>
+<!--  <key>NSSpeechRecognitionUsageDescription</key>-->
+<!--  <string>Speech Recognition is needed to allow user to send voice message through our chat system</string>-->
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
