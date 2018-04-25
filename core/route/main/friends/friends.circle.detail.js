@@ -95,13 +95,13 @@ export default connect(state => ({
     return (
       <View style={{ flex: 1, backgroundColor:'white' }}>
         <ScrollView contentContainerStyle={{}} style={{ backgroundColor: 'white' }}>
-          <View style={{ height: height * 0.25, backgroundColor: '#1ab2fd', alignItems: 'center' }}>
+          <View style={{ height: height * 0.25, backgroundColor: '#1ab2fd', alignItems: 'center', paddingHorizontal: 25 }}>
             {/*<View style={{marginTop: 10}}>*/}
             <View style={{marginTop: 10}}>
               <Image style={styles.avatar} source={{ uri: avatars[avatars.length - 1].url }} />
               <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 8, right: 8, borderRadius: 9 }} />
             </View>
-            <Text style={{ color: 'white', fontSize: TextFont.TextSize(25), marginTop: 10 }}>{ fullName }</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ color: 'white', fontSize: TextFont.TextSize(22), marginTop: 10 }}>{ fullName }</Text>
             {/*</View>*/}
           </View>
           <View style={{ paddingHorizontal: 20,  marginTop: 10,  }}>

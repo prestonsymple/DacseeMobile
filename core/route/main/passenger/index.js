@@ -361,8 +361,8 @@ export default connect(state => ({
     // if (driver.latitude && driver.longitude) {
     //   driver_coords = { latitude: driver.latitude + .0002, longitude: driver.longitude }
     // }
-    from_coords = { latitude: parseFloat(from_coords.lat), longitude: parseFloat(from_coords.lng) }
-    destination_coords = { latitude: destination_coords.lat, longitude: destination_coords.lng }
+    from_coords = { latitude: parseFloat(from_coords.lat || 1), longitude: parseFloat(from_coords.lng || 1) }
+    destination_coords = { latitude: parseFloat(destination_coords.lat || 1), longitude: parseFloat(destination_coords.lng || 1) }
     /** FIX ANDROID LOCATION SERVICE CRASH */
 
     /* CAR POLYLINE */

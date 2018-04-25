@@ -92,7 +92,6 @@ export default connect(state => ({
             <TouchableOpacity onPress={async () => {
               try {
                 const response = await Session.Circle.Post('v1/requests', { addFriend_id: invite_id })
-                console.log(response)
                 this.props.dispatch(application.showMessage(i18n.already_send_wait_confirm))
               } catch (e) {
                 if (e.response && e.response.data && e.response.data.code === 'CIRCLE_REQUEST_EXIST') {

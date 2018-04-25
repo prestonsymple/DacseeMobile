@@ -37,7 +37,12 @@ function* GetCountry() {
       language
     }
   } catch (e) {
-    return false
+    // return false
+    return {
+      map_mode: 'GOOGLEMAP',
+      country: 'MY',
+      language: 'en-US'
+    }
   }
 }
 
@@ -45,18 +50,10 @@ function* InitProfile() {
   // 初始化配置
   try {
     while(true) {
-      const value = yield call(GetVehicleGroupsAndCategories)
-      if (!value) {
-        yield delay(2500)
-        continue
-      } else {
-        yield put(booking.passengerSetValue({ vehicleGroups: value.vehicleGroups, vehicleCategories: value.vehicleCategories }))
-        break
-      }
-    }
-
-    while(true) {
       const value = yield call(GetCountry)
+      try {
+        navigator.geolocation.requestAuthorization()
+      } catch (e) {/* */}
       if (!value) {
         yield delay(2500)
         continue
@@ -69,6 +66,17 @@ function* InitProfile() {
         break
       }
     }
+
+    while(true) {
+      const value = yield call(GetVehicleGroupsAndCategories)
+      if (!value) {
+        yield delay(2500)
+        continue
+      } else {
+        yield put(booking.passengerSetValue({ vehicleGroups: value.vehicleGroups, vehicleCategories: value.vehicleCategories }))
+        break
+      }
+    }
   } catch (e) {
     /* */
   }
@@ -77,6 +85,12 @@ function* InitProfile() {
 function* WatchLocationChange() {
   try {
     while(true) {
+      const login = yield select(state => state.account.status)
+      if (!login) {
+        yield delay(1000)
+        continue
+      }
+      
       // 设置位置信息
       const { coords } = yield call(oncePosition)
       const { latitude, longitude } = coords 
@@ -98,6 +112,7 @@ function* WatchLocationChange() {
       navigator.geolocation.requestAuthorization()
     } catch (e) {/**/}
     if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
+    yield delay(2500)
   }
 }
 

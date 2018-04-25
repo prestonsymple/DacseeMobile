@@ -41,7 +41,7 @@ export default connect(state => state.booking)(class SelectCarModel extends Comp
         animationType='fade'           //渐变
         transparent={true}             // 不透明
         visible={visible}    // 根据isModal决定是否显示
-        onRequestClose={() => this.props.carChange()}  // android必须实现 安卓返回键调用
+        onRequestClose={() => this.props.onClose()}  // android必须实现 安卓返回键调用
       >
         <View style={[
           { width: width, height: height, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(57, 56, 67, 0.4)' },

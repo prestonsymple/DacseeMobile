@@ -409,14 +409,15 @@ class ChatItem extends Component {
   }
 
   render(){
-    const {user,content, } = this.props
+    const { user, content } = this.props
+    const { avatars = [] } = user
     const isSelf = user._id===content.from_id
     return(
       <TouchableWithoutFeedback>
         <View style={[styles.chat, isSelf?styles.right:styles.left]}  ref={(e)=>this.content=e} >
           <TouchableOpacity onPress={() => {}} activeOpacity={.7}>
             <Image
-              source={[{uri: isSelf?user.avatars[user.avatars.length-1].url:content.avatar, width: 30, height: 30}]}
+              source={[{uri: isSelf ? avatars[avatars.length - 1].url : content.avatar, width: 30, height: 30}]}
               style={styles.avatar} />
           </TouchableOpacity>
           <View style={[isSelf?styles.right:styles.left]}>

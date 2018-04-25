@@ -39,7 +39,8 @@ function* networkObserver() {
     
     const enableAgent = localTime > minAgent.average ? true : false
     if (enableAgent) {
-      yield put(application.setAgentSvr(minAgent.server))
+      // yield put(application.setAgentSvr(minAgent.server))
+      yield put(application.setAgentSvr(''))
     } else {
       yield put(application.setAgentSvr(''))
     }
