@@ -355,6 +355,7 @@ const zh_CN = {
   car_color: '颜色',
 
   input_prompt: '请输入',
+  error_params_empty: '参数不能为空',
 
 }
 

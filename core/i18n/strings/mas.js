@@ -359,6 +359,8 @@ const mas = {
 
   input_prompt: 'Sila masukkan di sini',
 
+  error_params_empty: 'Sila masukkan parameter (Malay)',
+
 }
 
 export default mas

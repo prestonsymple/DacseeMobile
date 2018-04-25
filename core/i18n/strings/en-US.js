@@ -359,6 +359,8 @@ const en_US = {
 
   input_prompt: 'Please enter here',
 
+  error_params_empty: 'Parameter cannot be empty',
+
 }
 
 export default en_US

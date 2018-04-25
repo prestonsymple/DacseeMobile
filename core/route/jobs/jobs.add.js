@@ -233,10 +233,11 @@ export default connect(state => ({
 
        } catch (e) {
          console.log(e)
-         this.props.dispatch(application.showMessage('网络错误，请稍后重试'))
+         this.props.dispatch(application.hideHUD())
+         this.props.dispatch(application.showMessage(this.props.i18n.error_try_again))
        }
      } else {
-       this.props.dispatch(application.showMessage('参数不能为空'))
+       this.props.dispatch(application.showMessage(this.props.i18n.error_params_empty))
      }
    }
 
