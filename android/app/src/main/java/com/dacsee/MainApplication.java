@@ -14,7 +14,6 @@ import com.facebook.react.ReactApplication;
 import cn.qiuxiang.react.amap3d.AMap3DPackage;
 import com.horcrux.svg.SvgPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
-import com.wenkesj.voice.VoicePackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -62,7 +61,6 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new MainReactPackage());
       packages.add(new SvgPackage());
       packages.add(new ReactNativeAudioPackage());
-      packages.add(new VoicePackage());
       packages.add(new RNSoundPackage());
       packages.add(new LottiePackage());
       packages.add(new RNCameraPackage());
