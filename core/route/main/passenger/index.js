@@ -282,8 +282,8 @@ export default connect(state => ({
         place = {
           placeId: place_id,
           coords: {
-            lng: geometry.location.lng,
-            lat: geometry.location.lat
+            lng: parseFloat(geometry.location.lng),
+            lat: parseFloat(geometry.location.lat)
           },
           name: combine_name,
           address: formatted_address
@@ -293,11 +293,12 @@ export default connect(state => ({
         const resp = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
         place = resp.data
       }
+      console.log(place)
 
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
     } catch (e) {
       this.props.dispatch(booking.passengerSetValue({
-        from: { address: '自定义位置', name: this.props.i18n.location, coords: { lng: longitude, lat: latitude } }
+        from: { address: '自定义位置', name: this.props.i18n.location, coords: { lng: parseFloat(longitude), lat: parseFloat(latitude) } }
       }))
     } finally {
       this.setState({ drag: false })
@@ -370,6 +371,8 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
+    
+    // console.log(_polyline)
 
     return (
       <View style={{
