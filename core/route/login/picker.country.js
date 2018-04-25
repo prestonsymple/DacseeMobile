@@ -147,9 +147,7 @@ export default connect(state => ({
                   this.props.navigation.goBack()
                 }} style={{ flex: 1, height: 52, justifyContent: 'center', backgroundColor: 'white' }}>
                   <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>
-                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>
-                      <FormattedMessage id={ row.name } />
-                    </Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{ row.name }</Text>
                     <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({ row.code })</Text>
                   </View>
                 </TouchableOpacity>
