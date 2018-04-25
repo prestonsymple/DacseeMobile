@@ -273,7 +273,7 @@ export default connect(state => ({
                         returnKeyType={'done'}
                         onChangeText={text => {
                           this.setState({ value: text })
-                          if (this.isEmail(text)) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear }).start()
+                          if (text.indexOf('@') !== -1 || text.indexOf('.') !== -1) return Animated.timing(this.animated.isMail, { toValue: 1, duration: 250, easing: Easing.linear }).start()
                           Animated.timing(this.animated.isMail, { toValue: 0, duration: 250, easing: Easing.linear }).start()
                         }}
                         style={[styles.stdInput, { flex: 7, borderColor: '#f2f2f2', borderBottomWidth: 1, height: 44 }]} />

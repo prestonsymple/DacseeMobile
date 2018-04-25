@@ -105,7 +105,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 18042401
-        versionName "1.0.1"
+        versionName "1.0.2"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -161,7 +161,6 @@ dependencies {
     compile project(':react-native-amap3d')
     compile project(':react-native-svg')
     compile project(':react-native-audio')
-    compile project(':react-native-voice')
     compile project(':react-native-sound')
     compile project(':react-native-code-push')
     compile project(':rn-splash-screen')

@@ -127,6 +127,9 @@ export default connect(state => ({
       const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
       const passengerCoords = [from.coords.lng, from.coords.lat]
 
+      console.log(driverCoords)
+      console.log(passengerCoords)
+
       if (passengerCoords[0] === 0 || passengerCoords[1] === 0.05) return
 
       if (this.map.animateTo) {
@@ -177,6 +180,11 @@ export default connect(state => ({
     }
   }
 
+  componentWillUnmount() {
+    this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
+    this.geoWatch = undefined
+  }
+
   mathDistanceZoom(distance) {
     const km = distance / 1000
 
@@ -194,27 +202,32 @@ export default connect(state => ({
     return zoom
   }
 
-  // async onLocationListener({ nativeEvent }) {
-  //   const {
-  //     latitude = nativeEvent.coordinate.latitude,
-  //     longitude = nativeEvent.coordinate.longitude
-  //   } = nativeEvent
+  geoWatchFunction(position) {
+    const { coords: { latitude, longitude } } = position
+    this.onLocationListener({ nativeEvent: { latitude, longitude } })
+  }
 
-  //   if (latitude === 0 || longitude === 0) return
-  //   if (!this.ready && this.props.map_mode.length > 0) {
-  //     await InteractionManager.runAfterInteractions()
-  //     if (this.map.animateTo) {
-  //       this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
-  //     } else {
-  //       this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
-  //     }
-  //     this.ready = true
-  //   }
-  //   this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
-  //   // try {
-  //   //   await Session.Location.Put('v1', { latitude, longitude })
-  //   // } catch (e) { /**/ }
-  // }
+  async onLocationListener({ nativeEvent }) {
+    const {
+      latitude = nativeEvent.coordinate.latitude,
+      longitude = nativeEvent.coordinate.longitude
+    } = nativeEvent
+
+    if (latitude === 0 || longitude === 0) return
+    if (!this.ready && this.props.map_mode.length > 0) {
+      await InteractionManager.runAfterInteractions()
+      if (this.map.animateTo) {
+        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
+      } else {
+        this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
+      }
+      this.ready = true
+    }
+    this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
+    // try {
+    //   await Session.Location.Put('v1', { latitude, longitude })
+    // } catch (e) { /**/ }
+  }
 
 
   onMapDragEvent({ nativeEvent }) {
@@ -318,9 +331,9 @@ export default connect(state => ({
       locationEnabled: true, // TODO: REDUX
       locationInterval: 1000,
       zoomLevel: 16,
-      coordinate: {
-        latitude: location.lat, longitude: location.lng
-      },
+      // coordinate: {
+      //   latitude: location.lat, longitude: location.lng
+      // },
 
       /* GOOGLE MAPS */
       pitchEnabled: false,
