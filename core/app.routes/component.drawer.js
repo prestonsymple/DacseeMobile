@@ -36,12 +36,12 @@ const MENUS_OPTIONS = [{
   icon: Icons.Generator.Material('settings', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
 },
-// {
-//   key: '6',
-//   name: 'chat',
-//   icon: Icons.Generator.Material('chat', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
-//   onPress: ({ navigation }) => navigation.navigate('ChatWindow')
-// }
+{
+  key: '6',
+  name: 'chat',
+  icon: Icons.Generator.Material('chat', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('ChatWindow')
+}
 
 // {
 //   key: '1',

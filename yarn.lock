@@ -4583,10 +4583,6 @@ react-native-vector-icons@^4.5.0:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native-voice@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/react-native-voice/-/react-native-voice-0.2.6.tgz#f6c67fac932a511475ddc4c7b6ff0efeb540cc19"
-
 react-native@0.52.3:
   version "0.52.3"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.52.3.tgz#e11698e19bbc8f98135f82d40ac82ccb046641fd"
