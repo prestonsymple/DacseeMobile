@@ -92,11 +92,11 @@ export default connect(state => ({
           </Text>
           <Switch value={working} onValueChange={(working) => {
             // console.log(this.props.vehicles)
-            // if (this.props.vehicles.length === 0) {
-            //   this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsAdd'}))
-            // } else {
-            this.props.dispatch(driver.driverSetValue({working}))
-            // }
+            if (this.props.vehicles.length === 0) {
+              this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsAdd'}))
+            } else {
+              this.props.dispatch(driver.driverSetValue({working}))
+            }
           }
           } />
         </View>
