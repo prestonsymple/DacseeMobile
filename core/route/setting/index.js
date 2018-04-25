@@ -182,12 +182,12 @@ const SettingAccountScreen = connect(state => ({
             }
           })
         },{
-          title: '我的二维码',
+          title: i18n.my_qr_code,
           type: 'icon',
           value: Icons.Generator.Awesome('qrcode', 25, '#bbb'),
           editable: false,
           onPress: () => navigation.navigate('SettingQrCode', {
-            title: '我的二维码',
+            title: i18n.my_qr_code,
             editorName: 'String',
             option: {
               userId: user.userId,

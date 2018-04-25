@@ -15,11 +15,15 @@ import {
 import QRCode from 'react-native-qrcode-svg'
 
 import { Icons, Screen, Session, TextFont } from '../../utils'
+import {connect} from 'react-redux'
 
 const { width, height } = Screen.window
 
 
-export default class SettingQrCode extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages || {},
+  user: state.account.user,
+})) (class SettingQrCode extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const {title, option} = navigation.state.params
@@ -49,8 +53,7 @@ export default class SettingQrCode extends Component {
       <View style={styles.container}>
 
         <Text style={{textAlign: 'center', fontSize: 13, color:'#000', opacity: 0.7, marginTop:70, marginHorizontal: 50}}>
-          Show this QR code to your friends to allow them
-          to add you into their circle
+          {this.props.i18n.qr_code_introduce}
         </Text>
         <View style={{marginBottom: 100}}>
           <QRCode
@@ -62,7 +65,7 @@ export default class SettingQrCode extends Component {
       </View>
     )
   }
-}
+})
 
 const styles = StyleSheet.create({
   container: {

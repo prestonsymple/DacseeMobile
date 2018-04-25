@@ -346,6 +346,19 @@ const en_US = {
   xl: 'XL',
   indonesia:'Indonesia',
 
+  my_qr_code: 'My Qr Code',
+  qr_code_introduce: 'Show this QR code to your friends to allow them to add you into their circle',
+
+
+  car_add_vehicle: 'ADD VEHICLE',
+  car_registration_number: 'Registration Number',
+  car_manufacturer: 'Manufacturer',
+  car_modal: 'Modal',
+  car_manufacture_year: 'Manufacture Year',
+  car_color: 'Color',
+
+  input_prompt: 'Please enter here',
+
 }
 
 export default en_US

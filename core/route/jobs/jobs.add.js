@@ -28,6 +28,13 @@ export default connect(state => ({
   user: state.account.user,
 }))(class JobsAdd extends Component {
 
+  static navigationOptions = ({ navigation }) => {
+    const reducer = global.store.getState()
+    return {
+      drawerLockMode: 'locked-closed',
+      title: reducer.intl.messages.car_add_vehicle,
+    }
+  }
 
   constructor(props) {
     super(props)
@@ -88,7 +95,6 @@ export default connect(state => ({
   }
 
   keyboardWillShow = (event) => {
-    console.log('键盘高度', event.endCoordinates.height)
     this.setState({keyboardHeight: event.endCoordinates.height, iosBottomViewHeight: 0})
   };
 
@@ -196,18 +202,17 @@ export default connect(state => ({
 
 
    onSubmit = async () => {
-     console.log('carNumber', this.state.carNumber)
-     console.log('manufacturer', this.state.manufacturer)
-     console.log('carModel', this.state.carModel)
-     console.log('manufactureYear', this.state.manufactureYear)
-     console.log('color', this.state.color)
+     // console.log('carNumber', this.state.carNumber)
+     // console.log('manufacturer', this.state.manufacturer)
+     // console.log('carModel', this.state.carModel)
+     // console.log('manufactureYear', this.state.manufactureYear)
+     // console.log('color', this.state.color)
 
      const { carNumber, manufacturer, carModel, manufactureYear, color } = this.state
 
      if (carNumber && manufacturer && carModel && manufactureYear && color){
-
+       this.props.dispatch(application.showHUD())
        try {
-
          let vehicleData = await Session.User.Put('v1/profile/vehicle',{
            registrationNo: carNumber,
            manufacturer: manufacturer,
@@ -220,9 +225,11 @@ export default connect(state => ({
            user: Object.assign({}, this.props.user, {vehicles: vehicleData.vehicles})
          }))
 
+         this.props.dispatch(application.hideHUD())
+
          this.props.navigation.pop()
 
-         console.log(vehicleData)
+         // console.log(vehicleData)
 
        } catch (e) {
          console.log(e)
@@ -235,10 +242,14 @@ export default connect(state => ({
 
   cancelPress = () => {
     this.props.navigation.pop()
+
+    // this.props.dispatch(application.showHUD())
   }
 
   render() {
     const { manufacturer, isManufacturerFocus, carModel, isCarModelFocus } = this.state
+
+    const { i18n } = this.props;
 
     const handleManufacturer = this.searchByRegExp(manufacturer, 'manufacturer')
 
@@ -256,7 +267,7 @@ export default connect(state => ({
           <ScrollView keyboardShouldPersistTaps='always'
             style={{ backgroundColor:'white'}}
           >
-            <InfoInput title={'Registration Number'} placeholder={'Please enter here'}
+            <InfoInput title={i18n.car_registration_number} placeholder={i18n.input_prompt}
               onChangeText={(text)=>{
                 // console.log(text)
                 this.setState({
@@ -269,7 +280,7 @@ export default connect(state => ({
               data={handleManufacturer}
               containerStyle={[styles.autocompleteContainer]}
               renderTextInput={()=>
-                <InfoInput title={'Manufacturer'} placeholder={'Please enter here'}
+                <InfoInput title={i18n.car_manufacturer} placeholder={i18n.input_prompt}
                   onChangeText={(text)=>{this.setState({manufacturer: text, isManufacturerFocus: false})}}
                   value={manufacturer}
                   onFocus={this.manufacturerInputOnFocus}
@@ -294,7 +305,7 @@ export default connect(state => ({
               data={handleCarModel}
               containerStyle={[styles.autocompleteContainer, {top: 170,  zIndex: 999}]}
               renderTextInput={()=>
-                <InfoInput title={'Model'} placeholder={'Please enter here'}
+                <InfoInput title={i18n.car_modal} placeholder={i18n.input_prompt}
                   onChangeText={(text)=>{this.setState({carModel: text, isCarModelFocus: false})}}
                   value={carModel}
                   onFocus={this.carModelInputOnFocus}
@@ -315,14 +326,14 @@ export default connect(state => ({
               )}
             />
             <View style={{marginTop: 180}}>
-              <InfoInput title={'Manufacture Year'}  placeholder={'Please enter here'}
+              <InfoInput title={i18n.car_manufacture_year}  placeholder={i18n.input_prompt}
                 onChangeText={(text)=>{
                   this.setState({
                     manufactureYear: text,
                   })
                 }}
               />
-              <InfoInput title={'Color'} placeholder={'Please enter here'}
+              <InfoInput title={i18n.car_color} placeholder={i18n.input_prompt}
                 onChangeText={(text)=>{
                   // console.log(text)
                   this.setState({
@@ -335,8 +346,8 @@ export default connect(state => ({
           </ScrollView>
         </View>
         <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
-          <TouchButton title={'CANCEL'} backgroundColor={'#cfcfcf'} onPress={this.cancelPress}/>
-          <TouchButton title={'SUBMIT'} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>
+          <TouchButton title={i18n.cancel} backgroundColor={'#cfcfcf'} onPress={this.cancelPress}/>
+          <TouchButton title={i18n.sub} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>
         </View>
       </View>
     )}
