@@ -8,6 +8,7 @@ import {Screen, Icons, Session, TextFont, Define, System} from '../../utils'
 import {connect} from 'react-redux'
 import {application} from '../../redux/actions'
 import Voice from './voice.modal'
+import {SvgIcon,iconPath} from './chatIcon'
 const { height, width } = Screen.window
 import Sound from 'react-native-sound'
 const toName = 'jacky'
@@ -298,7 +299,7 @@ class InputBar extends Component {
         <View style={{flexDirection:'row',alignItems:'center',marginVertical:5}}>
           <View style={{ width: (width - 36) * 0.1,height:34,justifyContent:'center',alignItems:'center'}} activeOpacity={.7}>
             <TouchableOpacity onPress={onMethodChange} style={{width:34,height:34,justifyContent:'center',alignItems:'center',borderColor:'#ddd',borderWidth:0.8,borderRadius:17}}>
-              { Icons.Generator.Material(showVoice?'keyboard':'mic', 20, '#bbb') }
+              <SvgIcon size={20} fill={['#bbb']} path={showVoice?iconPath.keyboard:iconPath.leftVoice}/>
             </TouchableOpacity>
           </View>
           <View style={{backgroundColor:'#fff',borderRadius:4,borderColor:'#ddd',borderWidth:0.6,marginHorizontal:8,justifyContent:'center'}}
@@ -319,7 +320,7 @@ class InputBar extends Component {
                 onContentSizeChange={onContentSizeChange}
                 underlineColorAndroid='transparent'
                 onChangeText={textChange}
-                style={[ styles.commentBar__input,{height:Math.max(35,inputChangeSize),  paddingHorizontal:8,paddingTop:System.Platform.iOS?7:0}]}
+                style={[ styles.commentBar__input,{height:Math.max(35,inputChangeSize),  paddingHorizontal:8,paddingTop:System.Platform.iOS?8:0}]}
               />
             }
           </View>
@@ -396,7 +397,7 @@ class ChatItem extends Component {
         <View style={{flexDirection:isSelf?'row-reverse':'row',}}>
           <TouchableOpacity style={styles.voiceArea} onPress={play.bind(this,msgContent.content)} activeOpacity={.7}>
             <View style={[{width:40+(msgContent.len>1?msgContent.len*2:0),alignItems:isSelf?'flex-end':'flex-start'},isSelf?{alignItems:'flex-end',marginRight:5}:{alignItems:'flex-start',marginLeft:5}]}>
-              { isSelf ? Icons.Generator.Ion('logo-rss', 18, '#bbb',{style:{transform: [{ scaleX: -1 }]}}) : Icons.Generator.Ion('logo-rss', 18, '#bbb') }
+              <SvgIcon size={20} fill={['#aaa']} path={isSelf?iconPath.rightVoiceThree:iconPath.leftVoiceThree}/>
             </View>
           </TouchableOpacity>
           <View style={{justifyContent:'flex-end'}}>
