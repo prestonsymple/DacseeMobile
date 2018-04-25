@@ -14,6 +14,9 @@ export default class OfflineListItem extends Component {
     this.sliderWidth = 0
     this.currentPosition = new Animated.Value(0)
     this.createPanResponder()
+    this.state={
+      canscoll:true
+    }
   }
 
   onLayout(e) {
@@ -21,7 +24,7 @@ export default class OfflineListItem extends Component {
   }
   createPanResponder() {
     this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: (e, gestureState) => true,
+      onStartShouldSetPanResponder: (e, gestureState) => this.state.canscoll,
       onStartShouldSetPanResponderCapture: (e, gestureState) => false,
       onMoveShouldSetPanResponder: (e, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (e, gestureState) => false,
@@ -72,7 +75,7 @@ export default class OfflineListItem extends Component {
     let pos = this.currentPosition._value + dy
     this.currentPosition.setValue(pos)
   }
-  onPanResponderRelease(e, gestureState) {
+  async onPanResponderRelease(e, gestureState) {
     this.props.sliderScorll(true)
     let status = this.getIsMid(this.prevTouches[0].pageX)
     switch (status) {
@@ -83,7 +86,10 @@ export default class OfflineListItem extends Component {
     case 1:this.currentPosition.setValue(this.sliderWidth / 2 - 25)
       break
     }
-    this.props.sliderChange(status)
+    if (status !== 0) {
+      this.setState({canscoll:false})
+      await this.props.sliderChange(status)
+    }
   }
   handlePositionChange(value) {
 

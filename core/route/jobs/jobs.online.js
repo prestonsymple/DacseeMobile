@@ -72,18 +72,16 @@ export default connect(state => ({
   }
 
   async sliderChange(status, _id) {
-    if (status !== 0) {
-      try {
-        this.props.dispatch(application.showHUD())
-        await Session.Booking.Put(`v1/${_id}`, { action: status === -1 ? 'reject' : 'accept' })
-        if (status !== -1) {
-          this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: this.props.jobs.find(pipe => pipe._id === _id) } }))
-        }
-      } catch (e) {
-        this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+    try {
+      this.props.dispatch(application.showHUD())
+      await Session.Booking.Put(`v1/${_id}`, { action: status === -1 ? 'reject' : 'accept' })
+      if (status !== -1) {
+        this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: this.props.jobs.find(pipe => pipe._id === _id) } }))
       }
-      this.props.dispatch(application.hideHUD())
+    } catch (e) {
+      this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
     }
+    this.props.dispatch(application.hideHUD())
   }
   goJobsListDetail(row) {
     this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: row } }))
