@@ -240,25 +240,26 @@ function* passengerUpdateDriverLocation() {
 function* passengerStatusObserver() {
 
   while (true) {
-    const { booking_id, app_status, i18n, map_mode } = yield select(state => ({
+    const { booking_id, app_status, i18n, map_mode, main_run } = yield select(state => ({
       booking_id: state.storage.booking_id,
       app_status: state.application.application_status === 'active',
       map_mode: state.application.map_mode,
-      i18n: state.intl.messages || {}
+      i18n: state.intl.messages || {},
+      main_run: state.application.main_run
     }))
 
-    if (!booking_id || !app_status || map_mode.length === 0) {
+    if (!booking_id || !app_status || map_mode.length === 0 || !main_run) {
       yield delay(2500)
       continue
     } else {
       try {
         const passengerStatus = yield select(state => state.booking.status)
-        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=driver_id,status,driver_info`)
+        const bookingDetail = yield call(Session.Booking.Get, `v1/bookings/${booking_id}?fields=driver_id,status,driver_info,vehicle_info`)
         const driver_id = bookingDetail.driver_id
         const bookingStatus = bookingDetail.status
         const driver_info = bookingDetail.driver_info
-        const vehicle_info=bookingDetail.vehicle_info
-        console.log('vehicle_info',vehicle_info,bookingDetail)
+        const vehicle_info = bookingDetail.vehicle_info
+
         if (bookingStatus === 'No_Taker') {
           yield put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
           yield put(application.showMessage(i18n.order_timeout))
@@ -271,22 +272,22 @@ function* passengerStatusObserver() {
           passengerStatus < STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY
         ) {
           yield all([
-            put(booking.passengerSetValue({ driver_id, driver_info })),
+            put(booking.passengerSetValue({ driver_id, driver_info, vehicle_info })),
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY))
           ])
         } else if (bookingStatus === 'Arrived') {
           yield all([
-            put(booking.passengerSetValue({ driver_id, driver_info })),
+            put(booking.passengerSetValue({ driver_id, driver_info, vehicle_info })),
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_DRIVER_ARRIVED))
           ])
         } else if (bookingStatus === 'On_Board') {
           yield all([
-            put(booking.passengerSetValue({ driver_id, driver_info })),
+            put(booking.passengerSetValue({ driver_id, driver_info, vehicle_info })),
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_ON_BOARD))
           ])
         } else if (bookingStatus === 'Completed') {
           yield all([
-            put(booking.passengerSetValue({ driver_id: '', driver_info: {} })),
+            put(booking.passengerSetValue({ driver_id: '', driver_info: {}, vehicle_info })),
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_INIT))
           ])
         }

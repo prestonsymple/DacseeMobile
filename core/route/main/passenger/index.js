@@ -18,7 +18,7 @@ import { MapView as AMapView, Marker as AMarker, Polyline as APolyline } from 'r
 import GoogleMapView, { Marker as GoogleMarker, Polyline as GooglePolyline } from 'react-native-maps'
 import { Screen, Icons, Define, Session, UtilMath, TextFont } from '../../../utils'
 import { booking, account, application } from '../../../redux/actions'
-import { BOOKING_STATUS } from '..'
+import { BOOKING_STATUS, FriendsDetailScreen } from '..'
 import TimePicker from '../../../components/timePicker'
 import SelectPay from '../../../components/selectPay'
 import SelectCar from './components/modal.select.car'
@@ -37,6 +37,7 @@ export default connect(state => ({
   vehicleGroups: state.booking.vehicleGroups,
   friends_location: state.circle.friends_location,
   location: state.account.location,
+  main_run: state.application.main_run,
   i18n: state.intl.messages
 }))(class PassengerComponent extends Component {
 
@@ -63,13 +64,19 @@ export default connect(state => ({
   async componentWillReceiveProps(props) {
     const { map_mode } = props
 
-    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode !== map_mode && map_mode === 'GOOGLEMAP') {
-      this.geoWatch = navigator.geolocation.watchPosition(this.geoWatchFunction.bind(this), (e) => console.log(e), { timeout: 1000 })
-    }
+    if (
+      props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && 
+      this.props.map_mode !== map_mode &&
+      map_mode.length > 0
+    ) {
+      const { location } = props
+      const { longitude, latitude } = location
 
-    if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_INIT && this.props.map_mode !== map_mode && map_mode === 'AMAP') {
-      this.geoWatch && navigator.geolocation.clearWatch(this.geoWatch)
-      this.geoWatch = undefined
+      if (this.map && this.map.animateTo) {
+        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
+      } else {
+        this.onLocationSearch(longitude, latitude)
+      }
     }
 
     // 选择地址时，如果为手动输入起点的位置，将地图中心点移动到新的起点
@@ -124,11 +131,8 @@ export default connect(state => ({
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY && props.driver !== this.props.driver && ('latitude' in props.driver)) {
       const { driver, from } = props
-      const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
+      const driverCoords = [parseFloat(driver.longitude), parseFloat(driver.latitude)]
       const passengerCoords = [from.coords.lng, from.coords.lat]
-
-      console.log(driverCoords)
-      console.log(passengerCoords)
 
       if (passengerCoords[0] === 0 || passengerCoords[1] === 0.05) return
 
@@ -151,7 +155,7 @@ export default connect(state => ({
 
     if (props.status === BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD && props.driver !== this.props.driver && ('latitude' in props.driver)) {
       const { driver, destination } = props
-      const driverCoords = [parseFloat(driver.longitude.toFixed(6)), parseFloat(driver.latitude.toFixed(6))]
+      const driverCoords = [parseFloat(driver.longitude), parseFloat(driver.latitude)]
       const destinationCoords = [destination.coords.lng, destination.coords.lat]
 
       if (this.map.animateTo) {
@@ -201,34 +205,6 @@ export default connect(state => ({
     zoom -= 1
     return zoom
   }
-
-  geoWatchFunction(position) {
-    const { coords: { latitude, longitude } } = position
-    this.onLocationListener({ nativeEvent: { latitude, longitude } })
-  }
-
-  async onLocationListener({ nativeEvent }) {
-    const {
-      latitude = nativeEvent.coordinate.latitude,
-      longitude = nativeEvent.coordinate.longitude
-    } = nativeEvent
-
-    if (latitude === 0 || longitude === 0) return
-    if (!this.ready && this.props.map_mode.length > 0) {
-      await InteractionManager.runAfterInteractions()
-      if (this.map.animateTo) {
-        this.map.animateTo({ zoomLevel: 16, coordinate: { latitude, longitude } }, 500)
-      } else {
-        this.onStatusChangeListener({ nativeEvent: { longitude, latitude } })
-      }
-      this.ready = true
-    }
-    this.props.dispatch(account.updateLocation({ lat: latitude, lng: longitude, latitude, longitude }))
-    // try {
-    //   await Session.Location.Put('v1', { latitude, longitude })
-    // } catch (e) { /**/ }
-  }
-
 
   onMapDragEvent({ nativeEvent }) {
   }
@@ -306,8 +282,6 @@ export default connect(state => ({
         const resp = await Session.Lookup_CN.Get(`v1/map/search/geo/${latitude},${longitude}`)
         place = resp.data
       }
-      console.log(place)
-
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
     } catch (e) {
       this.props.dispatch(booking.passengerSetValue({
@@ -320,36 +294,37 @@ export default connect(state => ({
   
   render() {
     const { drag, polyline } = this.state
-    const { status, from, destination, map_mode, location, driver_info,vehicle_info, friends_location } = this.props
+    const { status, from, destination, map_mode, location, driver_info, vehicle_info, friends_location, main_run } = this.props
 
     const MAP_SETTER = {
-      /* A MAP */
-      tiltEnabled: false,
-      showsTraffic: false,
-      showsZoomControls: false, /* android fix */
-      mapType: 'standard',
-      locationEnabled: true, // TODO: REDUX
-      locationInterval: 1000,
-      zoomLevel: 16,
-      // coordinate: {
-      //   latitude: location.lat, longitude: location.lng
-      // },
-
-      /* GOOGLE MAPS */
-      pitchEnabled: false,
-      provider: 'google',
-      showsMyLocationButton: false,
-      initialRegion: {
-        latitude: location.lat, longitude: location.lng,
-        latitudeDelta: 0.005, longitudeDelta: 0.005 * (width / height)
-      },
-
       /* GLOBAL */
       minZoomLevel: 4,
       showsScale: false,
       showsCompass: false,
       rotateEnabled: false,
       ref: (e) => this.map = e
+    }
+
+    /* GOOGLE MAPS */
+    if (map_mode === 'GOOGLEMAP') {
+      MAP_SETTER.pitchEnabled = false
+      MAP_SETTER.provider = 'google'
+      MAP_SETTER.showsMyLocationButton = false
+      MAP_SETTER.initialRegion = {
+        latitude: location.lat, longitude: location.lng,
+        latitudeDelta: 0.005, longitudeDelta: 0.005 * (width / height)
+      }     
+    }
+
+    if (map_mode === 'AMAP') {
+      MAP_SETTER.tiltEnabled = false
+      MAP_SETTER.showsTraffic = false
+      MAP_SETTER.showsZoomControls = false /* android fix */
+      MAP_SETTER.mapType = 'standard'
+      MAP_SETTER.locationEnabled = true
+      MAP_SETTER.locationInterval = 1000
+      MAP_SETTER.zoomLevel = 16
+      MAP_SETTER.coordinate = { latitude: location.lat, longitude: location.lng }
     }
 
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) {
@@ -386,21 +361,21 @@ export default connect(state => ({
     /* CAR POLYLINE */
     
     // console.log(_polyline)
+    if (!main_run) {
+      return (
+        <View style={{ flex: 1, width }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f2f2f2' }}>
+            <ActivityIndicator size="small" color="#333" style={{ top: -18 }} />
+            <View>
+              <Text style={{ color: '#999' }}>Loading</Text>
+            </View>
+          </View>
+        </View>
+      )
+    }
 
     return (
-      <View style={{
-        flex: 1, width
-      }}>
-        {
-          map_mode === '' && (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f2f2f2' }}>
-              <ActivityIndicator size="small" color="#333" style={{ top: -18 }} />
-              <View>
-                <Text style={{ color: '#999' }}>Loading</Text>
-              </View>
-            </View>
-          )
-        }
+      <View style={{ flex: 1, width }}>
         {
           map_mode === 'AMAP' && (
             <AMapView style={{ flex: 1 }} {...MAP_SETTER}>
@@ -411,7 +386,7 @@ export default connect(state => ({
               {
                 friends_location.length > 0 && (
                   friends_location.map((pipe, index) => (
-                    <AMarker key={index} image={'rn_car_rookie'} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }} />
+                    <AMarker key={index} image={'rn_car_rookie'} coordinate={{ latitude: parseFloat(pipe.latitude), longitude: parseFloat(pipe.longitude) }} />
                   ))
                 )
               }
@@ -430,60 +405,57 @@ export default connect(state => ({
               <GoogleMarker coordinate={_polyline[0]}>
                 <Image source={Resources.image.map_car_pin} />
               </GoogleMarker>
-              <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
+
               {
-                friends_location.length > 0 && (
-                  friends_location.map((pipe, index) => (
-                    <GoogleMarker key={index} coordinate={{ latitude: pipe.latitude, longitude: pipe.longitude }}>
-                      <Image source={Resources.image.car_rookie} />
-                    </GoogleMarker>
-                  ))
+                (
+                  status < BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY
+                ) && (
+                  friends_location.length > 0 && (
+                    friends_location.map((pipe, index) => (
+                      <GoogleMarker key={index} coordinate={{ latitude: parseFloat(pipe.latitude), longitude: parseFloat(pipe.longitude) }}>
+                        <Image source={Resources.image.car_rookie} />
+                      </GoogleMarker>
+                    ))
+                  )
                 )
               }
+              <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
             </GoogleMapView>
           )
         }
 
         {
-          (
-            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
-            map_mode.length > 0
-          ) && (<HeaderSection />)}
+          (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (<HeaderSection />)}
 
         {
-          (
-            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
-            map_mode.length > 0
-          ) && (<MapPin timing={this.pin} />)
+          (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (<MapPin timing={this.pin} />)
         }
 
         {
-          ((
+          (
             status === BOOKING_STATUS.PASSGENER_BOOKING_INIT ||
             status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS
-          ) && map_mode.length > 0
           ) && (<CircleBar init={true} />)
         }
 
         {
-          (
-            status === BOOKING_STATUS.PASSGENER_BOOKING_INIT &&
-            map_mode.length > 0
-          ) && (<PickerAddress timing={this.ui} drag={drag} />)}
-        {status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS && (
-          <PickerOptions />
-        )}
+          (status === BOOKING_STATUS.PASSGENER_BOOKING_INIT) && (<PickerAddress timing={this.ui} drag={drag} />)}
+        {
+          (status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) && (<PickerOptions />)
+        }
 
-        {status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY && (
-          <BookingDetailView status={status} onPress={async () => {
-            try {
-              await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
-              this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
-            } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器'))
-            }
-          }} driver={driver_info} car={vehicle_info} i18n={this.props.i18n} />
-        )}
+        {
+          (status >= BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY) && (
+            <BookingDetailView vehicle_info={vehicle_info} status={status} onPress={async () => {
+              try {
+                await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
+                this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
+              } catch (e) {
+                this.props.dispatch(application.showMessage('无法连接到服务器'))
+              }
+            }} driver={driver_info} car={vehicle_info} i18n={this.props.i18n} />
+          )
+        }
         <ModalDriverRespond />
       </View>
     )
@@ -698,12 +670,12 @@ class MapPin extends PureComponent {
  * @desc bookingDetail 详情View
  */
 const BookingDetailView = (props) => {
-  const { onPress = () => { }, driver, i18n, status ,car} = props
+  const { onPress = () => { }, driver, i18n, status, vehicle_info} = props
 
   return (
     <View style={{ backgroundColor: 'transparent', height: Define.system.ios.x ? 274 : 254 }}>
       <BookingDetailHeaderView driver={driver} />
-      <DrvierCarDetail car_info={car} i18n={i18n} />
+      <DrvierCarDetail vehicle_info={vehicle_info} i18n={i18n} />
       <View style={{ backgroundColor: '#fff', alignItems: 'center', paddingBottom: 22, height: Define.system.ios.x ? 60 + 22 : 60 }}>
         <TouchableOpacity
           activeOpacity={status >= BOOKING_STATUS.PASSGENER_BOOKING_ON_BOARD ? 1 : .7}
@@ -768,17 +740,19 @@ const BookingDetailButton = (props) => {
  * @desc DrvierCarDetail 车详情
  */
 const DrvierCarDetail = (props) => {
-  const { registrationNo, color } = props.car_info
+  console.log(props.vehicle_info)
+  const { registrationNo, color, manufacturer, model } = props.vehicle_info
   const { i18n } = props
   return (
-    <View style={{ backgroundColor: 'white', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
-      <Image style={{ width: 170, height: 61 }} source={Resources.image.slice_adv_car} />
+    <View style={{ backgroundColor: 'white', flexDirection: 'row', flex: 1, paddingHorizontal: 20, alignItems: 'center' }}>
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text style={{ color: '#333', fontSize: TextFont.TextSize(15) }}>{i18n.vehicle_economy}</Text>
-        <Text style={styles.car_cell}>{registrationNo}</Text>
-        <Text style={styles.car_cell}>{color}</Text>
-        {/* <Text style={styles.car_cell}>{'豪华跑车'}</Text> */}
+        {/* <Text style={{ color: '#333', fontSize: TextFont.TextSize(15) }}>{ i18n.vehicle_economy }</Text> */}
+        <Text style={[styles.car_cell, { color: '#333', fontSize: 15, marginBottom: 8 }]}>{ manufacturer }</Text>
+        <Text style={[styles.car_cell, { color: '#999', fontSize: 12, marginBottom: 0 }]}>{ model }</Text>
+        <Text style={[styles.car_cell, { color: '#999', fontSize: 12 }]}>{ color } - { registrationNo }</Text>
+        {/* <Text style={[styles.car_cell, { color: '#999', fontSize: 12 }]}>{  }</Text> */}
       </View>
+      <Image style={{ width: 170, height: 61 }} source={Resources.image.slice_adv_car} />
     </View>
   )
 }

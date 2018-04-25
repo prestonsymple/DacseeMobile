@@ -12,8 +12,7 @@ import passengerSaga from './saga.passenger'
 import driverSaga from './saga.driver'
 import circleSaga from './saga.circle'
 import networkSaga from './saga.network'
-import initSaga from './saga.init'
-import locationSaga from './saga.location'
+import restoreSaga from './saga.restore'
 
 
 /******************************************************************************/
@@ -81,7 +80,7 @@ export default function* sagaService() {
   yield all([
     // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
     // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
-    fork(initSaga),
+    fork(restoreSaga),
     fork(watchShowMessage),
 
     fork(passengerSaga),
@@ -90,7 +89,6 @@ export default function* sagaService() {
     fork(loginSaga),
     fork(circleSaga),
 
-    fork(networkSaga),
-    fork(locationSaga)
+    fork(networkSaga)
   ])
 }

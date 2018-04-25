@@ -32,6 +32,8 @@ const initialState = {
   map_mode: '', // 地图模块
   gps_access: true, // gps权限
 
+  main_run: false,
+
   api_maps: { // API代理映射
     main: [
       'https://svc-prod-booking.dacsee.io',

@@ -107,7 +107,7 @@ export default connect(state => ({
           />
 
           {/* WECHAT SESSION */}
-          <BlockWrap
+          {/* <BlockWrap
             iconBackgroundColor={'#f4a951'}
             icon={Icons.Generator.Awesome('wechat', 28, 'white')}
             title={i18n.wechat_friend}
@@ -122,10 +122,10 @@ export default connect(state => ({
                 (arg) => { console.log(arg) }
               )
             }}
-          />
+          /> */}
 
           {/* WECHAT CIRCLE */}
-          <BlockWrap
+          {/* <BlockWrap
             iconBackgroundColor={'#f4a951'}
             icon={<Image source={require('../../../resources/images/wechat_moments.png')} />}
             title={i18n.wechat_moment}
@@ -140,15 +140,15 @@ export default connect(state => ({
                 (arg) => { console.log(arg) }
               )
             }}
-          />
+          /> */}
 
           {/* WECHAT CIRCLE */}
-          <BlockWrap
+          {/* <BlockWrap
             iconBackgroundColor={'#f4a951'}
             icon={Icons.Generator.Awesome('weibo', 32, 'white')}
             title={i18n.weibo}
             describer={i18n.wechat_shareto_weibo}
-          />
+          /> */}
         </ScrollView>
       </View>
     )

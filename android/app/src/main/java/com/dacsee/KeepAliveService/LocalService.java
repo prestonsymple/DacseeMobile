@@ -107,9 +107,14 @@ public class LocalService extends Service {
               long _second = tick % 60;
               String second = padRight(String.valueOf(_second), 2, '0');
 
-              notification.setContent(remoteView);
-              remoteView.setTextViewText(R.id.current_time, String.format("%s:%s:%s", hour, minute, second));
-              serviceManager.notify(SERVICE_ID, notification.build());
+              try {
+                notification.setContent(remoteView);
+                remoteView.setTextViewText(R.id.current_time, String.format("%s:%s:%s", hour, minute, second));
+                serviceManager.notify(SERVICE_ID, notification.build());
+              } catch (Exception e) {
+                /* */
+              }
+
 
               // 5s update location
               if (tick % 5 == 0) {
@@ -138,7 +143,11 @@ public class LocalService extends Service {
               editor.putLong(date, tick);
               editor.apply();
             } else {
-              serviceManager.cancel(SERVICE_ID);
+              try {
+                serviceManager.cancel(SERVICE_ID);
+              } catch (Exception e) {
+                /* */
+              }
             }
 
             try {
