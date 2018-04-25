@@ -36,7 +36,8 @@ export default connect(state => ({
     super(props)
     this.state = {
       loading: false,
-      jobs: dataContrast.cloneWithRows([])
+      jobs: dataContrast.cloneWithRows([]),
+      scrolllist:true
     }
     this.sound = null
   }
@@ -64,6 +65,12 @@ export default connect(state => ({
       }
     }
   }
+  sliderScorll(start){
+    this.setState({
+      scrolllist:start
+    })
+  }
+
   async sliderChange(status, _id) {
     if (status !== 0) {
       try {
@@ -84,6 +91,7 @@ export default connect(state => ({
   render() {
     const { working } = this.props
     const { loading, jobs } = this.state
+
     return (
       <View style={{ flex: 1, backgroundColor: '#f8f8f8', }}>
         <View style={{ paddingHorizontal: 20, paddingTop: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width }}>
@@ -118,9 +126,10 @@ export default connect(state => ({
               <ListView
                 dataSource={jobs}
                 enableEmptySections={true}
+                alwaysBounceVertical={this.state.scrolllist}
                 renderRow={(row, rowid, keyid) => (
                   <TouchableOpacity activeOpacity={.7} onPress={() => this.goJobsListDetail(row)} style={{ marginTop: keyid == 0 ? 10 : 0 }}>
-                    <OnlineListItem itemData={row} sliderChange={(status) => this.sliderChange(status, row._id)} i18n={this.props.i18n} />
+                    <OnlineListItem itemData={row} sliderScorll={(start)=>this.sliderScorll(start)} sliderChange={(status) => this.sliderChange(status, row._id)} i18n={this.props.i18n} />
                   </TouchableOpacity>
                 )}
                 style={{ marginBottom: 15 }}
@@ -132,4 +141,3 @@ export default connect(state => ({
     )
   }
 })
-
