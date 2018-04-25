@@ -75,13 +75,6 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "dacsee-tvOS";
 		};
-		D8277FB92089D0D0004D194B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1A00398E8AA44D638DB1BCD7 /* Voice.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DC0729B51EF78E41004EBC83;
-			remoteInfo = Voice;
-		};
 		F5202EB82074E504005A951B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5202EB32074E504005A951B /* ART.xcodeproj */;
@@ -419,7 +412,6 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dacsee/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = dacsee/main.m; sourceTree = "<group>"; };
 		17FBB5766AB646F386552AD7 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		1A00398E8AA44D638DB1BCD7 /* Voice.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Voice.xcodeproj; path = "../node_modules/react-native-voice/ios/Voice.xcodeproj"; sourceTree = "<group>"; };
 		2979DA50C3384904B1FCF9E8 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2BCC9AAC98CB40EB91AAA263 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* dacsee-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "dacsee-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -678,7 +670,6 @@
 				F5A3367D2073766A0057CB84 /* RCTWebSocket.xcodeproj */,
 				F5A33674207376600057CB84 /* RCTPushNotification.xcodeproj */,
 				F5A336412073764F0057CB84 /* React.xcodeproj */,
-				1A00398E8AA44D638DB1BCD7 /* Voice.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -707,14 +698,6 @@
 				00E356EE1AD99517003FC87E /* dacseeTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* dacsee-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* dacsee-tvOSTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		D8277FB62089D0CF004D194B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D8277FBA2089D0D0004D194B /* libVoice.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1122,10 +1105,6 @@
 					ProductGroup = F5A336422073764F0057CB84 /* Products */;
 					ProjectRef = F5A336412073764F0057CB84 /* React.xcodeproj */;
 				},
-				{
-					ProductGroup = D8277FB62089D0CF004D194B /* Products */;
-					ProjectRef = 1A00398E8AA44D638DB1BCD7 /* Voice.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1138,13 +1117,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		D8277FBA2089D0D0004D194B /* libVoice.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libVoice.a;
-			remoteRef = D8277FB92089D0D0004D194B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		F5202EB92074E504005A951B /* libART.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
