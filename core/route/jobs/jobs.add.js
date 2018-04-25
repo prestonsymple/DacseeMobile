@@ -18,11 +18,15 @@ import Input from '../../components/input'
 import {System, Screen, Define, Session} from '../../utils'
 
 import AutoComplete from 'react-native-autocomplete-input'
-import {application} from '../../redux/actions'
+import {application, account} from '../../redux/actions'
+import {connect} from 'react-redux'
 
 const { width, height } = Screen.window
 
-export default class JobsAdd extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages || {},
+  user: state.account.user,
+}))(class JobsAdd extends Component {
 
 
   constructor(props) {
@@ -198,7 +202,6 @@ export default class JobsAdd extends Component {
      console.log('manufactureYear', this.state.manufactureYear)
      console.log('color', this.state.color)
 
-
      const { carNumber, manufacturer, carModel, manufactureYear, color } = this.state
 
      if (carNumber && manufacturer && carModel && manufactureYear && color){
@@ -213,13 +216,20 @@ export default class JobsAdd extends Component {
            color: color
          })
 
+         this.props.dispatch(account.setAccountValue({
+           user: Object.assign({}, this.props.user, {vehicles: vehicleData.vehicles})
+         }))
+
+         this.props.navigation.pop()
+
          console.log(vehicleData)
 
        } catch (e) {
          console.log(e)
+         this.props.dispatch(application.showMessage('网络错误，请稍后重试'))
        }
      } else {
-       alert('参数不能为空')
+       this.props.dispatch(application.showMessage('参数不能为空'))
      }
    }
 
@@ -329,18 +339,9 @@ export default class JobsAdd extends Component {
           <TouchButton title={'SUBMIT'} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>
         </View>
       </View>
-  )}
-}
+    )}
+})
 
-
-
-
-// {/*{this.isBottomView ? null :*/}
-// {/*<View style={{flexDirection: 'row', height: this.state.keyboardHeight, justifyContent: 'center', }}>*/}
-// {/*<TouchButton title={'CANCEL'} backgroundColor={'#cfcfcf'} />*/}
-// {/*<TouchButton title={'SUBMIT'} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>*/}
-// {/*</View>*/}
-// {/*}*/}
 
 function TouchButton(props) {
   const { style, title, backgroundColor, onPress } = props
