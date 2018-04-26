@@ -49,6 +49,7 @@ export default {
 
     loader_multi_line: require('./animation/loader_multi_line.json'),
     loader_radar: require('./animation/loader_radar.json'),
-    loader_star: require('./animation/loader_star.json')
+    loader_star: require('./animation/loader_star.json'),
+    speech_start: require('./animation/voice.json')
   }
 }

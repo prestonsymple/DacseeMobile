@@ -10,19 +10,15 @@ import {
   Dimensions,
   Text,
   ViewPropTypes as RNViewPropTypes,
-  PermissionsAndroid,Platform
+  PermissionsAndroid,Platform,ActivityIndicator
 } from 'react-native'
 
 import {Screen, Icons, Session, TextFont, Define, System} from '../../utils'
-// import Voice from 'react-native-voice'
+import Lottie from 'lottie-react-native'
+import Resources from '../../resources'
 import {AudioRecorder, AudioUtils} from 'react-native-audio'
 import PropTypes from 'prop-types'
-
 const ViewPropTypes = RNViewPropTypes || View.propTypes
-export const DURATION = {
-  LENGTH_SHORT: 500,
-  FOREVER: 0,
-}
 
 const {height, width} = Dimensions.get('window')
 
@@ -33,8 +29,8 @@ export default class VoiceModal extends Component {
     this.timer = null
     this.state = {
       isShow: false,
-      type: '',
       opacityValue: new Animated.Value(this.props.opacity),
+      progress: new Animated.Value(0),
       currentTime: 0.0,
       recording: false,
       paused: false,
@@ -43,17 +39,15 @@ export default class VoiceModal extends Component {
       audioPath: '' ,
       error:false,
       hasPermission: undefined,
-
+      waiting:true,
+      volume:0
     }
   }
 
   componentDidMount() {
-    const nowPath =`${AudioUtils.CachesDirectoryPath}/${Date.now()}.aac`
-    this.setState({audioPath:nowPath})
-    this.prepareRecordingPath(nowPath)
+    this.initPath()
     AudioRecorder.onProgress = (data) => {
-      console.log(data)
-      this.setState({currentTime: Math.floor(data.currentTime)})
+      this.setState({waiting:false,currentTime: Math.floor(data.currentTime),volume: Math.floor(data.currentMetering)})
     }
     AudioRecorder.onFinished = (data) => {
       // Android callback comes in the form of a promise instead.
@@ -62,12 +56,21 @@ export default class VoiceModal extends Component {
       }
     }
     this.checkAuthorizationStatus()
+    this.requestAuthorization()
     System.Platform.Android && this._checkPermission()
   }
 
   async checkAuthorizationStatus(){
     try{
       const res = await AudioRecorder.checkAuthorizationStatus()
+      console.log(res)
+    }catch (e) {
+      console.log(e)
+    }
+  }
+  async requestAuthorization(){
+    try{
+      const res = await AudioRecorder.requestAuthorization()
       console.log(res)
     }catch (e) {
       console.log(e)
@@ -81,20 +84,20 @@ export default class VoiceModal extends Component {
       Channels: 1,
       AudioQuality: 'High',
       AudioEncoding: 'aac',
-      AudioEncodingBitRate: 32000
+      AudioEncodingBitRate: 32000,
+      MeteringEnabled: true,
     })
   }
 
 
-  show(type) {
+  show() {
     const {hasPermission} = this.state
-    if (!hasPermission) {
+    if (System.Platform.Android && !hasPermission) {
       console.warn('Can\'t record, no permission granted!')
       return
     }
     this.setState({
       isShow: true,
-      type
     })
 
     Animated.timing(
@@ -105,6 +108,7 @@ export default class VoiceModal extends Component {
       }
     ).start()
     this._record()
+    this._setProgress()
   }
 
   close() {
@@ -118,11 +122,14 @@ export default class VoiceModal extends Component {
     this.timer = setTimeout(()=>this.delay_close(),delay_time)
     this._stop()
     currentTime>=1 && this.props.sendVoice('voice',this.state.audioPath,this.state.currentTime)
-    const nowPath =`${AudioUtils.CachesDirectoryPath}/${Date.now()}.aac`
-    this.setState({audioPath:nowPath})
-    this.prepareRecordingPath(nowPath)
+    this.initPath()
   }
 
+  initPath(){
+    const nowPath =`${AudioUtils.CachesDirectoryPath}/voice${Date.now()}.aac`
+    this.setState({audioPath:nowPath,currentTime:0})
+    this.prepareRecordingPath(nowPath)
+  }
 
   delay_close(){
     Animated.timing(
@@ -134,8 +141,10 @@ export default class VoiceModal extends Component {
     ).start(() => {
       this.setState({
         isShow: false,
-        error:false
+        error:false,
+        waiting:true
       })
+      this._reload()
     })
   }
 
@@ -204,9 +213,8 @@ export default class VoiceModal extends Component {
       return
     }
 
-
     if(this.state.stoppedRecording){
-      this.prepareRecordingPath(this.state.audioPath)
+      this.initPath()
     }
 
     this.setState({recording: true, paused: false})
@@ -222,13 +230,25 @@ export default class VoiceModal extends Component {
     this.setState({ finished: didSucceed })
   }
 
+  _setProgress(){
+    Animated.loop(Animated.timing(this.state.progress, {
+      toValue: 1,
+      duration: 3000,
+    }).start())
+  }
+
+  _reload(){
+    Animated.timing(this.state.progress, {
+      toValue: 0,
+      duration: 3000,
+    }).start()
+  }
 
   componentWillReceiveProps(nextProps) {
 
   }
 
   componentWillUnmount() {
-    // Voice.destroy().then(Voice.removeAllListeners)
   }
 
 
@@ -236,22 +256,25 @@ export default class VoiceModal extends Component {
 
 
   _renderContent() {
-    const {type,currentTime,error} = this.state
-    switch (type) {
-    case 'normal':
-      return (
-        error ? <View style={{justifyContent:'center',alignItems:'center'}}>
-          {Icons.Generator.Awesome('exclamation', 70, '#fff')}
-          <Text style={{color:'#fff'}}>说话时间太短</Text>
-        </View>:
-          <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            {Icons.Generator.Ion('ios-mic', 70, '#fff') }
-            <Text style={{color:'#fff',marginLeft:10}} >
-              {currentTime}
-            </Text>
-          </View>
-      )
-    }
+    const {currentTime,error,waiting} = this.state
+    return (
+      error ? <View style={{justifyContent:'center',alignItems:'center'}}>
+        {Icons.Generator.Awesome('exclamation', 70, '#fff')}
+        <Text style={{color:'#fff'}}>说话时间太短</Text>
+      </View>:
+        <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+          {/*{Icons.Generator.Ion('ios-mic', 70, '#fff') }*/}
+          {/*<Text style={{color:'#fff',marginLeft:10}} >*/}
+          {/*{currentTime}*/}
+          {/*</Text>*/}
+          {
+            waiting ? <ActivityIndicator color={'#fff'} size="large"/> :
+              <View style={{width:140,height:140}}>
+                <Lottie source={Resources.animation.speech_start} progress={this.state.progress} loop={true}/>
+              </View>
+          }
+        </View>
+    )
   }
 
   render() {

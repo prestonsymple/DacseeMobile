@@ -1,7 +1,7 @@
 import React, { PureComponent, Component } from 'react'
 import {
   Text, View, Image, TouchableOpacity, FlatList, Keyboard, TextInput, StyleSheet, Platform,LayoutAnimation,KeyboardAvoidingView,
-  TouchableWithoutFeedback,TouchableHighlight
+  TouchableWithoutFeedback,TouchableHighlight,Animated
 } from 'react-native'
 
 import {Screen, Icons, Session, TextFont, Define, System} from '../../utils'
@@ -74,7 +74,7 @@ class ChatWindow extends PureComponent {
           from_id:'5a79423ab2ccf66e117f1b7f',
           to_id:'5ac2de564647815dd78dbb07',
           avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
-          content:'{"type": "voice", "content": "/Users/joe/Library/Developer/CoreSimulator/Devices/895029F4-B29A-432E-8E87-72FAB6CA4942/data/Containers/Data/Application/B4005FAE-F04E-465F-9DCF-164FCA1812F1/Documents/test.aac","len":"14" }',
+          content:'{"type": "voice", "content": "http://mp3.9ku.com/m4a/66946.m4a","len":"100" }',
           time:'1523248662'
         },
         // {
@@ -95,7 +95,7 @@ class ChatWindow extends PureComponent {
     System.Platform.iOS && this._willHide()
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
       this.time && clearTimeout(this.time)
-      this.time = setTimeout(()=>this.chatList.scrollToEnd({animated:true}),500)
+      this.time = setTimeout(()=>this.chatList.scrollToEnd({animated:true}),200)
       // this.chatList.scrollToEnd({animated:true})
     })
     this.chatList.scrollToEnd({animated:true})
@@ -199,8 +199,9 @@ class ChatWindow extends PureComponent {
   }
 
   _onVoiceStart(e) {
-    this.voice.show('normal')
+    this.chatItem._voiceStop()
     this.setState({voiceEnd:true})
+    this.voice.show()
   }
 
   _onVoiceEnd() {
@@ -217,32 +218,32 @@ class ChatWindow extends PureComponent {
     // this.props.navigation.navigate('FriendsDetail', { i18n,...data })
   }
 
-  _playVoice(_path) {
-    let sound = new Sound(_path, '', (error) => {
-      if (error) {
-        console.log('failed to load the sound', error)
-        return
-      } else {
-        console.log('duration in seconds: ' + sound.getDuration())
-        sound.play((success) => {
-          if (success) {
-            console.log('successfully finished playing')
-          } else {
-            console.log('playback failed due to audio decoding errors')
-          }
-        })
-      }
-    })
-  }
+  // _playVoice(_path) {
+  //   let sound = new Sound(_path, '', (error) => {
+  //     if (error) {
+  //       console.log('failed to load the sound', error)
+  //       return
+  //     } else {
+  //       console.log('duration in seconds: ' + sound.getDuration())
+  //       sound.play((success) => {
+  //         if (success) {
+  //           console.log('successfully finished playing')
+  //         } else {
+  //           console.log('playback failed due to audio decoding errors')
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
 
   render(){
-    const {data,messageContent,xHeight,visibleHeight,footerY,listVisibleHeight,voiceEnd,inputChangeSize} = this.state
+    const {data,messageContent,xHeight,visibleHeight,voiceEnd,inputChangeSize} = this.state
     const {user} = this.props
     return(
       <View style={Platform.OS==='android'?{flex:1}:{height:visibleHeight-(Define.system.ios.x?88:64)}}>
         <View style={{flex:1}}>
           <FlatList
-            onLayout={(e)=>{this.setState({listVisibleHeight:e.nativeEvent.layout.height})}}           //勿删！
+            onLayout={()=>{}}           //勿删！
             ref={e => this.chatList = e}
             data={data}
             keyExtractor={(item, index)=>item._id}
@@ -253,7 +254,7 @@ class ChatWindow extends PureComponent {
                 msgData={data}
                 index={index}
                 user={user}
-                play={(_path) => this._playVoice(_path)}
+                speeching={voiceEnd}
                 jump={(url) => this._jump(url)}
               />
             )}
@@ -348,35 +349,27 @@ const PATTERNS = {
   url: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/i,
   phone: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}/,
 }
-class ChatItem extends Component {
 
-  state={
-    contentWidth:undefined
+class ChatItem extends Component {
+  constructor(props){
+    super(props)
+    this.timer=null
+    this.sound=null
+    this.state={
+      playing:false,
+      progress:2,
+      leftIcons:[iconPath.leftVoiceOne,iconPath.leftVoiceTwo,iconPath.leftVoiceThree],
+      rightIcons:[iconPath.rightVoiceOne,iconPath.rightVoiceTwo,iconPath.rightVoiceThree],
+      loading:false
+    }
   }
+
   _renderContent=()=>{
-    const {content, play=()=>{}, user, jump=() =>{}} = this.props
+    const {content, user, jump=() =>{}} = this.props
+    const {loading} = this.state
     const isSelf = user._id===content.from_id
     const msgContent = JSON.parse(content.content)
-    let normal = '((https|http|ftp|rtsp|mms)?://)'
-    let ftp = '?(([0-9a-z_!~*\'().&=+$%-]+: )?[0-9a-z_!~*\'().&=+$%-]+@)?'
-    let ip = '(([0-9]{1,3}.){3}[0-9]{1,3}'
-    let domain = '|([0-9a-z_!~*\'()-]+.)*'
-    let secDomain = '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].'
-    let levDomain = '[a-z]{2,6})'
-    let port = '(:[0-9]{1,4})?'
-    let slash = '((/?)|(/[0-9a-z_!~*\'().;?:@&=+$,%#-]+)+/?)'
     let reg = PATTERNS.url
-    // let strRegex = '((https|http|ftp|rtsp|mms)?://)'
-    //   + '?(([0-9a-z_!~*\'().&=+$%-]+: )?[0-9a-z_!~*\'().&=+$%-]+@)?' //ftp的user@
-    //   + '(([0-9]{1,3}\.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
-    //   + '|' // 允许IP和DOMAIN（域名）
-    //   + '([0-9a-z_!~*\'()-]+\.)*' // 域名- www.
-    //   + '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.' // 二级域名
-    //   + '[a-z]{2,6})' // first level domain- .com or .museum
-    //   + '(:[0-9]{1,4})?' // 端口- :80
-    //   + '((/?)|' // a slash isn't required if there is no file name
-    //   + '(/[0-9a-z_!~*\'().;?:@&=+$,%#-]+)+/?)'
-    // let reg = new RegExp(strRegex)
     let resArr,splitArr,text,url = null
     if(msgContent.type==='text'){
       resArr = msgContent.content.match(reg)
@@ -390,29 +383,80 @@ class ChatItem extends Component {
     }
 
     switch (msgContent.type){
-    case 'text':
-      return (text)
-    case 'voice':
-      return (
-        <View style={{flexDirection:isSelf?'row-reverse':'row',}}>
-          <TouchableOpacity style={styles.voiceArea} onPress={play.bind(this,msgContent.content)} activeOpacity={.7}>
-            <View style={[{width:40+(msgContent.len>1?msgContent.len*2:0),alignItems:isSelf?'flex-end':'flex-start'},isSelf?{alignItems:'flex-end',marginRight:5}:{alignItems:'flex-start',marginLeft:5}]}>
-              <SvgIcon size={20} fill={['#aaa']} path={isSelf?iconPath.rightVoiceThree:iconPath.leftVoiceThree}/>
+      case 'text':
+        return (text)
+      case 'voice':
+        return (
+          <View style={{flexDirection:isSelf?'row-reverse':'row',}}>
+            <TouchableOpacity style={[styles.voiceArea,loading?{backgroundColor:'#dfdfdf'}:{backgroundColor:'#fff'}]} onPress={()=>{!loading && this._playVoice(msgContent.content,msgContent.len)}} activeOpacity={.7}>
+              <View style={[{width:40+(msgContent.len>1?msgContent.len*2:0),alignItems:isSelf?'flex-end':'flex-start'},isSelf?{alignItems:'flex-end',marginRight:5}:{alignItems:'flex-start',marginLeft:5}]}>
+                <SvgIcon size={20} fill={['#aaa']} path={isSelf?this.state.rightIcons[this.state.progress]:this.state.leftIcons[this.state.progress]}/>
+              </View>
+            </TouchableOpacity>
+            <View style={{justifyContent:'flex-end'}}>
+              <Text style={[{color:'#aaa',marginBottom:4,},isSelf?{marginRight:4}:{marginLeft:4}]}>
+                {`${msgContent.len}"`}
+              </Text>
             </View>
-          </TouchableOpacity>
-          <View style={{justifyContent:'flex-end'}}>
-            <Text style={[{color:'#aaa',marginBottom:4,},isSelf?{marginRight:4}:{marginLeft:4}]}>
-              {`${msgContent.len}"`}
-            </Text>
-          </View>
-        </View>)
+          </View>)
     }
   }
 
+
+  _play(){
+    this.timer && clearInterval(this.timer)
+    let index = 0
+    const {progress} = this.state
+    if(progress===2) index=2
+    this.timer=setInterval(()=>{
+      if(index===2 ){
+        index=-1
+      }
+      index+=1
+      this.setState({progress:index})
+    },400)
+  }
+
+  _voiceStop(){
+    this.sound && this.sound.stop()
+    this.timer && clearInterval(this.timer)
+    this.setState({playing:false,progress:2})
+  }
+
+  _playVoice(_path,len) {
+    const {playing} =this.state
+    if(this.sound && playing){
+      this._voiceStop()
+      return
+    }
+    this.setState({loading:true})
+    this.sound = new Sound(_path, '', (error) => {
+      if (error) {
+        console.log('failed to load the sound', error)
+        return
+      } else {
+        this._play(len)
+        this.setState({playing:true,loading:false})
+        this.sound.play((success) => {
+          if (success) {
+            this.timer && clearInterval(this.timer)
+            this.setState({playing:false,progress:2})
+            console.log('successfully finished playing')
+            this.sound=null
+          } else {
+            console.log('playback failed due to audio decoding errors')
+          }
+        })
+      }
+    })
+  }
+
+
   render(){
     const { user, content } = this.props
-    const { avatars = [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = user
+    const { avatars = [] } = user
     const isSelf = user._id===content.from_id
+    const {loading} = this.state
     return(
       <TouchableWithoutFeedback>
         <View style={[styles.chat, isSelf?styles.right:styles.left]}  ref={(e)=>this.content=e} >
@@ -422,7 +466,7 @@ class ChatItem extends Component {
               style={styles.avatar} />
           </TouchableOpacity>
           <View style={[isSelf?styles.right:styles.left]}>
-            <View style={[styles.triangle, isSelf?styles.right_triangle:styles.left_triangle]} />
+            <View style={[styles.triangle, isSelf?styles.right_triangle:styles.left_triangle,loading?{borderColor:'#dfdfdf'}:{borderColor:'#fff'}]} />
             {this._renderContent()}
           </View>
         </View>
@@ -477,7 +521,6 @@ const styles= StyleSheet.create({
   voiceArea: {
     borderRadius: 4,
     maxWidth: width - 160,
-    backgroundColor: '#FFF',
     justifyContent:'center',
     minHeight:30
   },
@@ -491,7 +534,6 @@ const styles= StyleSheet.create({
     width:0,
     height:0,
     borderWidth:8,
-    borderColor:'#fff',
     borderTopColor:'transparent',
     borderBottomColor:'transparent',
     marginTop:12
