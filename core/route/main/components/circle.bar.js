@@ -12,7 +12,7 @@ import { BOOKING_STATUS } from '..'
 const { height, width } = Screen.window
 export default connect(state => ({ 
   ...state.circle,
-  selected_friends: state.booking.selected_friends,
+  selected_friends: state.booking.selected_friends || [],
   selected: state.booking.type === 'circle',
   status: state.booking.status,
   i18n: state.intl.messages
@@ -36,7 +36,7 @@ export default connect(state => ({
   }
 
   render() {
-    const { selected_friends, selected, loading, friend, status, i18n } = this.props
+    const { selected_friends = [], selected, loading, friend, status, i18n } = this.props
     let bottom = Define.system.ios.x ? 128 + 22 : 128
     if (status === BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS) {
       bottom = Define.system.ios.x ? 168 + 22 : 168

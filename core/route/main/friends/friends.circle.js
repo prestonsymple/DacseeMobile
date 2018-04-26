@@ -75,7 +75,7 @@ export default connect(state => ({
 
   componentWillReceiveProps(props) {
     if (this.props.friend !== props.friend || this.props.requestor !== props.requestor) {
-      const { selected_friends } = props.booking
+      const { selected_friends = [] } = props.booking
       const _friend = props.friend.map(pipe => Object.assign({}, pipe, {
         checked: (this.state.selected.find(sub => sub._id === pipe._id) !== undefined)
       }))
