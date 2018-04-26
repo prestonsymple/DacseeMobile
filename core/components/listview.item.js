@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react'
 import { Text, View, Animated, TouchableOpacity, Image, ListView, Alert, Button } from 'react-native'
 
 import {
-  Screen, Icons, Define,TextFont
+  Screen, Icons, Define, TextFont
 } from '../utils'
 
 export default class ListViewItem extends PureComponent {
