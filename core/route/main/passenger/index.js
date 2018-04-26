@@ -90,7 +90,9 @@ export default connect(state => ({
           this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: nextCoords.lat, longitude: nextCoords.lng } }, 500)
         } else {
           let region = Object.assign({}, { latitude: nextCoords.lat, longitude: nextCoords.lng }, { latitudeDelta: 0.025, longitudeDelta: 0.025 * (width / height) })
-          this.map.animateToRegion(region, 500)
+          if (region.latitude > 1 && region.longitude > 1) {
+            this.map.animateToRegion(region, 500)
+          }
         }
       } catch (e) {/* */ }
     }
@@ -101,7 +103,9 @@ export default connect(state => ({
         this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: lat, longitude: lng } }, 500)
       } else {
         let region = Object.assign({}, { latitude: lat, longitude: lng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
-        this.map.animateToRegion(region, 500)
+        if (region.latitude > 1 && region.longitude > 1) {
+          this.map.animateToRegion(region, 500)
+        }
       }
       this.setState({ polyline: [] })
     }
@@ -119,7 +123,9 @@ export default connect(state => ({
         this.map.animateTo({ zoomLevel: zoom, coordinate: { latitude: mLat, longitude: mLng } }, 500)
       } else {
         let region = Object.assign({}, { latitude: mLat, longitude: mLng }, { latitudeDelta: 0.5, longitudeDelta: 0.5 * (width / height) })
-        this.map.animateToRegion(region, 500)
+        if (region.latitude > 1 && region.longitude > 1) {
+          this.map.animateToRegion(region, 500)
+        }
       }
 
       const vehicleGroupsId = props.vehicleGroups.find(pipe => pipe.name === 'My Circle' || pipe.name === '朋友圈')._id
@@ -145,7 +151,9 @@ export default connect(state => ({
         this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
         this.map.animateTo({ zoomLevel: 15, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
       } else {
-        this.map.animateToCoordinate({ latitude: driverCoords[1], longitude: driverCoords[0] }, 500)
+        if (!driverCoords[1] && driverCoords[1] !== 0 && !driverCoords[0] && driverCoords[0] === 0) {
+          this.map.animateToCoordinate({latitude: driverCoords[1], longitude: driverCoords[0]}, 500)
+        }
       }
     }
 
@@ -167,7 +175,9 @@ export default connect(state => ({
         this.setState({ polyline: lnglat }) // 更新路径，30s刷新一次
         this.map.animateTo({ zoomLevel: 16, coordinate: { latitude: driverCoords[1], longitude: driverCoords[0] } }, 500)
       } else {
-        this.map.animateToCoordinate({ latitude: driverCoords[1], longitude: driverCoords[0] }, 500)
+        if (!driverCoords[1] && driverCoords[1] !== 0 && !driverCoords[0] && driverCoords[0] === 0) {
+          this.map.animateToCoordinate({ latitude: driverCoords[1], longitude: driverCoords[0] }, 500)
+        }
       }
     }
 
