@@ -193,13 +193,14 @@ const SettingAccountScreen = connect(state => ({
               id: user._id,
             }
           })
-        }], [{
-          title: i18n.bind_wechat, type: 'text', value: '', onPress: () => { this.props }
-        },{
-          title: i18n.bind_weibo, type: 'text', value: '', onPress: () => {}
-        }, {
-          title: i18n.bind_qq, type: 'text', value: '', onPress: () => {}
         }]
+        // , [{
+        //   title: i18n.bind_wechat, type: 'text', value: '', onPress: () => { this.props }
+        // },{
+        //   title: i18n.bind_weibo, type: 'text', value: '', onPress: () => {}
+        // }, {
+        //   title: i18n.bind_qq, type: 'text', value: '', onPress: () => {}
+        // }]
       ]} />
     )
   }
