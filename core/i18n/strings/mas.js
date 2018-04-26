@@ -350,12 +350,14 @@ const mas = {
   qr_code_introduce: 'Tunjukkan kod QR ini kepada rakan anda untuk membolehkan mereka menambahkan anda ke kalangan mereka',
 
 
+  myvehicle:'Kenderaan Saya',
   car_add_vehicle: 'Tambah Kereta',
   car_registration_number: 'Nombor pendaftaran',
   car_manufacturer: 'Pengilang kereta',
-  car_modal: 'Model Kereta',
+  car_model: 'Model Kereta',
   car_manufacture_year: 'Tahun Pembuatan',
   car_color: 'Warna',
+  car_update: 'Kemaskini',
 
   input_prompt: 'Sila masukkan di sini',
 

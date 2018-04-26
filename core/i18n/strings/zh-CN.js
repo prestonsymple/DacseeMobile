@@ -346,13 +346,15 @@ const zh_CN = {
   my_qr_code: '我的二维码',
   qr_code_introduce: '向您的朋友展示此二维码以允许他们将您添加到他们的圈子中',
 
-
+  myvehicle: '我的车辆',
   car_add_vehicle: '添加车辆',
+  car_update_vehicle: '我的车辆',
   car_registration_number: '注册号码',
   car_manufacturer: '汽车制造商',
-  car_modal: '车型',
+  car_model: '车型',
   car_manufacture_year: '汽车制造年份',
   car_color: '颜色',
+  car_update: '更新',
 
   input_prompt: '请输入',
   error_params_empty: '参数不能为空',

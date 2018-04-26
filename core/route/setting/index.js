@@ -133,7 +133,6 @@ const SettingAccountScreen = connect(state => ({
   }
 
 
-  // TODO 二维码多语言
   render() {
     const { navigation, dispatch, user, i18n } = this.props
     const {avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }]}=user

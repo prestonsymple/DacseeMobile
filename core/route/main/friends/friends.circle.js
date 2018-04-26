@@ -139,11 +139,8 @@ export default connect(state => ({
 
 
   stripscript(s) {
-    let pattern = new RegExp('[`~!@#$^&*()=|{}\':;\',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“\'。，、？]')
+    let pattern = new RegExp('[`~!#$^&*()=|{}\':;\',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“\'。，、？]')
 
-    // pattern = new RegExp('[A-Za-z0-9\u4e00-\u9fa5@\\.\\+]')
-
-    // let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
     let rs = ''
     for (let i = 0; i < s.length; i++) {
       rs = rs+s.substr(i, 1).replace(pattern, '')
@@ -155,7 +152,6 @@ export default connect(state => ({
 
   searchByRegExp(text){
     let friends = this.props.friend
-    // console.log(friends)
 
     let handleText = this.stripscript(text)
     console.log(handleText)
@@ -174,9 +170,6 @@ export default connect(state => ({
       if (friends[i].friend_info.email !== null ){
         email = friends[i].friend_info.email
       }
-
-      // console.log('fullName: ', fullName, 'phoneNo: ', phoneNo, 'email: ', email)
-
       if(fullName.indexOf(handleText) >= 0 || phoneNo.indexOf(handleText) >= 0 || email.indexOf(handleText) >= 0){
         arr.push(friends[i])
       }
@@ -186,7 +179,6 @@ export default connect(state => ({
 
   searchBarChange(text){
     const searchFriends =  this.searchByRegExp(text)
-
 
     let requestor = []
 

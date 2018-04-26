@@ -47,7 +47,6 @@ export default connect(state => ({
     }
   }
 
-  // TODO 扫二维码的多语言
   render() {
     return (
       <View style={styles.container}>

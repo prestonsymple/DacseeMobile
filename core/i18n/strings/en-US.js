@@ -349,13 +349,15 @@ const en_US = {
   my_qr_code: 'My Qr Code',
   qr_code_introduce: 'Show this QR code to your friends to allow them to add you into their circle',
 
-
-  car_add_vehicle: 'ADD VEHICLE',
+  myvehicle:'My Vehicle',
+  car_add_vehicle: 'Add Vehicle',
+  car_update_vehicle: 'My Vehicle',
   car_registration_number: 'Registration Number',
   car_manufacturer: 'Manufacturer',
-  car_modal: 'Modal',
+  car_model: 'Model',
   car_manufacture_year: 'Manufacture Year',
   car_color: 'Color',
+  car_update: 'Update',
 
   input_prompt: 'Please enter here',
 

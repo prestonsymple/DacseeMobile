@@ -32,6 +32,11 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('DownLineTotal')
 }, {
   key: '5',
+  name: 'myvehicle',
+  icon: Icons.Generator.Material('directions-car', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('JobsAdd', {type:'update'})
+}, {
+  key: '6',
   name: 'settings',
   icon: Icons.Generator.Material('settings', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
