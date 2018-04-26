@@ -20,7 +20,6 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* dacseeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* dacseeTests.m */; };
 		4DB98CD5049A4889BD799906 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF5E87C75CCF40D1946A1A7C /* Entypo.ttf */; };
-		5430CBEAAA0646F4A55586E2 /* libVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EC6D152E25C4F22A65CE9F2 /* libVoice.a */; };
 		58036141D7594B1284443C56 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 779B2CE0BEF64E19A5E78A13 /* FontAwesome.ttf */; };
 		64E3E153D6D4411EAA7B5699 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01961A7BE2A24DE2BD327480 /* Ionicons.ttf */; };
 		85AAEFF8393A4B10885CAFF9 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F83003D7435241979684458E /* Foundation.ttf */; };
@@ -526,7 +525,6 @@
 				F5A3368C207376B90057CB84 /* libRCTWebSocket.a in Frameworks */,
 				CA21C2261C164142A11E011A /* libz.tbd in Frameworks */,
 				DA486C8FE346747F4CCC6679 /* libPods-dacsee.a in Frameworks */,
-				5430CBEAAA0646F4A55586E2 /* libVoice.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
