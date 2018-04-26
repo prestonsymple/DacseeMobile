@@ -132,7 +132,7 @@ export default connect(state => ({
       this.onPressCheckAll()
     } else {
       if (selected.length >= 20) return this.props.dispatch(application.showMessage(this.props.i18n.max_twenty_friends))
-      this.props.dispatch(booking.passengerSetValue({ selected_friends: selected }))
+      this.props.dispatch(booking.passengerSetValue({ selected_friends: selected || [] }))
       this.props.navigation.goBack()
     }
   }

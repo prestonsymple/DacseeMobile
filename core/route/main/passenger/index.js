@@ -489,7 +489,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
   }
 
   render() {
-    const { drag, from, destination, i18n, selected_friends } = this.props
+    const { drag, from, destination, i18n, selected_friends = [] } = this.props
     const { timePickerShow, selectPayShow, remarkShow, selectCarShow } = this.state
     return (
       <Animated.View style={[
