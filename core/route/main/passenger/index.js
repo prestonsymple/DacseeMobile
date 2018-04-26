@@ -285,7 +285,7 @@ export default connect(state => ({
       this.props.dispatch(booking.passengerSetValue({ from: place || {} }))
     } catch (e) {
       this.props.dispatch(booking.passengerSetValue({
-        from: { address: '自定义位置', name: this.props.i18n.location, coords: { lng: parseFloat(longitude), lat: parseFloat(latitude) } }
+        from: { address: this.props.i18n.location, name: this.props.i18n.location, coords: { lng: parseFloat(longitude), lat: parseFloat(latitude) } }
       }))
     } finally {
       this.setState({ drag: false })
@@ -359,8 +359,7 @@ export default connect(state => ({
     let direction = _polyline.length === 0 ? 0 : UtilMath.carDirection(_polyline[0].latitude, _polyline[0].longitude, _polyline[1].latitude, _polyline[1].longitude)
     direction += 1
     /* CAR POLYLINE */
-    
-    // console.log(_polyline)
+
     if (!main_run) {
       return (
         <View style={{ flex: 1, width }}>
@@ -396,16 +395,26 @@ export default connect(state => ({
         {
           map_mode === 'GOOGLEMAP' && (
             <GoogleMapView style={{ flex: 1 }} {...MAP_SETTER}>
-              <GoogleMarker coordinate={from_coords}>
-                <Image source={Resources.image.map_from_pin} />
-              </GoogleMarker>
-              <GoogleMarker coordinate={destination_coords}>
-                <Image source={Resources.image.map_destination_pin} />
-              </GoogleMarker>
-              <GoogleMarker coordinate={_polyline[0]}>
-                <Image source={Resources.image.map_car_pin} />
-              </GoogleMarker>
-
+              {
+                (from_coords && typeof(from_coords.latitude) === 'number' && typeof(from_coords.longitude) === 'number') && (
+                  <GoogleMarker coordinate={from_coords}>
+                    <Image source={Resources.image.map_from_pin} />
+                  </GoogleMarker>
+                )
+              }
+              {
+                (destination_coords && typeof(destination_coords.latitude) === 'number' && typeof(destination_coords.longitude) === 'number') && (
+                  <GoogleMarker coordinate={destination_coords}>
+                    <Image source={Resources.image.map_destination_pin} />
+                  </GoogleMarker>
+                )
+              }
+              {/*{
+                (_polyline.length > 0 && _polyline[0] && typeof(_polyline[0].latitude) === 'number' && typeof(_polyline[0].longitude) === 'number') && (
+                  <GooglePolyline coordinates={_polyline} >
+                  </GooglePolyline>
+                )
+              }*/}
               {
                 (
                   status < BOOKING_STATUS.PASSGENER_BOOKING_DRIVER_ON_THE_WAY
@@ -419,7 +428,7 @@ export default connect(state => ({
                   )
                 )
               }
-              <GooglePolyline coordinates={_polyline} width={6} color={'#666'} />
+              {/*<GooglePolyline coordinates={_polyline} width={6} color={'#666'} />*/}
             </GoogleMapView>
           )
         }
@@ -472,11 +481,13 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
       selectCarShow: false
     }
   }
+
   getFareText(){
-    let vehicle= this.props.vehicle||'Economy'  
-    let text=`${vehicle} - ${this.props.i18n.login==='登录'? '行程费用 ￥':'RM '}${parseInt(this.props.fare).toFixed(2)}`
+    let vehicle = this.props.vehicle ||'Economy'
+    let text = `${vehicle} - ${this.props.i18n.login==='登录'? '行程费用 ￥':'RM '}${parseInt(this.props.fare).toFixed(2)}`
     return text
   }
+
   render() {
     const { drag, from, destination, i18n, selected_friends } = this.props
     const { timePickerShow, selectPayShow, remarkShow, selectCarShow } = this.state
