@@ -353,7 +353,7 @@ const en_US = {
   car_add_vehicle: 'ADD VEHICLE',
   car_registration_number: 'Registration Number',
   car_manufacturer: 'Manufacturer',
-  car_modal: 'Modal',
+  car_model: 'Model',
   car_manufacture_year: 'Manufacture Year',
   car_color: 'Color',
 

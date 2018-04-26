@@ -133,7 +133,6 @@ const SettingAccountScreen = connect(state => ({
   }
 
 
-  // TODO 二维码多语言
   render() {
     const { navigation, dispatch, user, i18n } = this.props
 

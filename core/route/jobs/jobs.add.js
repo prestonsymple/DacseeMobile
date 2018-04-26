@@ -57,8 +57,8 @@ export default connect(state => ({
   }
 
   componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this))
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this))
+    // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this))
+    // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this))
     if(System.Platform.iOS) {
       this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
       this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
@@ -71,27 +71,8 @@ export default connect(state => ({
       this.keyboardWillShowSub.remove()
       this.keyboardWillHideSub.remove()
     }
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
-    // this.keyboardWillShowSub.remove()
-    // this.keyboardWillHideSub.remove()
-  }
-
-  _keyboardDidShow(e){
-    // this.setState({keyboardHeight: 216})
-    // this.setState({
-    //   isBottomViewHidden:true,
-    //   keyboardHeight: 0
-    // })
-
-  }
-
-  _keyboardDidHide(e){
-    // this.setState({keyboardHeight: 0})
-    // this.setState({
-    //   isBottomViewHidden: false,
-    //   keyboardHeight: 85
-    // })
+    // this.keyboardDidShowListener.remove()
+    // this.keyboardDidHideListener.remove()
   }
 
   keyboardWillShow = (event) => {
@@ -121,125 +102,62 @@ export default connect(state => ({
     }
   }
 
-  async fetchCarModel() {
+  async fetchCarModel(text) {
+    this.setState({manufacturer: text})
     try {
-      let carModeData = await Session.Lookup.Get(`v1/lookup/vehicleModels?manufacturerName=${this.state.manufacturer}`)
+      let carModelData = await Session.Lookup.Get(`v1/lookup/vehicleModels?manufacturerName=${this.state.manufacturer}`)
+      carModelData = await Session.Lookup.Get(`v1/lookup/vehicleModels?manufacturerName=${text}`)
+
       let dataArray = []
-      carModeData.map(item => {
+      carModelData.map(item => {
         dataArray.push(item.name)
       })
+      // console.log(carModelData)
       this.setState({ carModelData: dataArray })
     } catch (e) {
       console.log(e)
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    // console.log(this.state.manufacturer)
-    // console.log(nextState.manufacturer)
 
-    if (nextState.manufacturer !== this.state.manufacturer){
-      this.setState({carModel: ''})
-    }
+  onSubmit = async () => {
+    // console.log('carNumber', this.state.carNumber)
+    // console.log('manufacturer', this.state.manufacturer)
+    // console.log('carModel', this.state.carModel)
+    // console.log('manufactureYear', this.state.manufactureYear)
+    // console.log('color', this.state.color)
 
-    return true
-  }
+    const { carNumber, manufacturer, carModel, manufactureYear, color } = this.state
 
-  searchByRegExp(text, type){
-    let data = []
+    if (carNumber && manufacturer && carModel && manufactureYear && color){
+      this.props.dispatch(application.showHUD())
+      try {
+        let vehicleData = await Session.User.Put('v1/profile/vehicle',{
+          registrationNo: carNumber,
+          manufacturer: manufacturer,
+          model: carModel,
+          manufactureYear: manufactureYear,
+          color: color
+        })
 
-    if (type === 'manufacturer') {
-      data = this.state.manufacturerData
-    }else if (type === 'carModel') {
-      data = this.state.carModelData
-    }
+        this.props.dispatch(account.setAccountValue({
+          user: Object.assign({}, this.props.user, {vehicles: vehicleData.vehicles})
+        }))
 
-    if(!(data instanceof Array)){
-      return
-    }
-    let len = data.length
-    let arr = []
+        this.props.dispatch(application.hideHUD())
 
-    let reg = new RegExp(text.toLowerCase())
+        this.props.navigation.pop()
 
-    for(let i=0 ; i<len ; i++){
-      let fullName = data[i]
-      //如果字符串中不包含目标字符会返回-1
-      if(fullName.toLowerCase().match(reg)){
-        arr.push(data[i])
+        // console.log(vehicleData)
+
+      } catch (e) {
+        console.log(e)
+        this.props.dispatch(application.hideHUD())
+        this.props.dispatch(application.showMessage(this.props.i18n.error_try_again))
       }
-    }
-
-    return arr
-  }
-
-  manufacturerInputOnFocus = () => {
-    this.isBottomView = true
-    this.handleInputFocus(false, 'manufacturer')
-  }
-
-  manufacturerInputOnBlur = () => {
-    this.isBottomView = false
-    this.fetchCarModel()
-    this.handleInputFocus(true, 'manufacturer')
-
-  }
-
-  carModelInputOnFocus = () => {
-    this.handleInputFocus(false, 'carModel')
-  }
-
-  carModelInputOnBlur = () => {
-    this.handleInputFocus(true, 'carModel')
-  }
-
-  handleInputFocus = (isFocus, type) => {
-    if (type === 'manufacturer') {
-      this.setState({isManufacturerFocus: isFocus})
-    }else if (type === 'carModel') {
-      this.setState({isCarModelFocus: isFocus})
+    } else {
+      this.props.dispatch(application.showMessage(this.props.i18n.error_params_empty))
     }
   }
-
-
-   onSubmit = async () => {
-     // console.log('carNumber', this.state.carNumber)
-     // console.log('manufacturer', this.state.manufacturer)
-     // console.log('carModel', this.state.carModel)
-     // console.log('manufactureYear', this.state.manufactureYear)
-     // console.log('color', this.state.color)
-
-     const { carNumber, manufacturer, carModel, manufactureYear, color } = this.state
-
-     if (carNumber && manufacturer && carModel && manufactureYear && color){
-       this.props.dispatch(application.showHUD())
-       try {
-         let vehicleData = await Session.User.Put('v1/profile/vehicle',{
-           registrationNo: carNumber,
-           manufacturer: manufacturer,
-           model: carModel,
-           manufactureYear: manufactureYear,
-           color: color
-         })
-
-         this.props.dispatch(account.setAccountValue({
-           user: Object.assign({}, this.props.user, {vehicles: vehicleData.vehicles})
-         }))
-
-         this.props.dispatch(application.hideHUD())
-
-         this.props.navigation.pop()
-
-         // console.log(vehicleData)
-
-       } catch (e) {
-         console.log(e)
-         this.props.dispatch(application.hideHUD())
-         this.props.dispatch(application.showMessage(this.props.i18n.error_try_again))
-       }
-     } else {
-       this.props.dispatch(application.showMessage(this.props.i18n.error_params_empty))
-     }
-   }
 
   cancelPress = () => {
     this.props.navigation.pop()
@@ -250,11 +168,13 @@ export default connect(state => ({
   render() {
     const { manufacturer, isManufacturerFocus, carModel, isCarModelFocus } = this.state
 
-    const { i18n } = this.props;
+    const { i18n } = this.props
 
-    const handleManufacturer = this.searchByRegExp(manufacturer, 'manufacturer')
+    // const handleManufacturer = this.searchByRegExp(manufacturer, 'manufacturer')
 
-    let handleCarModel = this.searchByRegExp(carModel, 'carModel')
+    // let handleCarModel = this.searchByRegExp(carModel, 'carModel')
+
+    const { manufacturerData, carModelData } = this.state
 
     const androidStyle = System.Platform.Android ? {left: 20, position: 'absolute', top: height - 85-70 } : null
 
@@ -276,57 +196,32 @@ export default connect(state => ({
                 })
               }}
             />
-            <AutoComplete autoCapitalize={'none'}
-              hideResults={isManufacturerFocus}
-              data={handleManufacturer}
-              containerStyle={[styles.autocompleteContainer]}
-              renderTextInput={()=>
-                <InfoInput title={i18n.car_manufacturer} placeholder={i18n.input_prompt}
-                  onChangeText={(text)=>{this.setState({manufacturer: text, isManufacturerFocus: false})}}
-                  value={manufacturer}
-                  onFocus={this.manufacturerInputOnFocus}
-                  onBlur={this.manufacturerInputOnBlur}
-                />}
-              inputContainerStyle={styles.inputContainerStyle}
-              listContainerStyle={styles.listContainerStyle}
-              listStyle={styles.listStyle}
-              renderSeparator={()=><View style={{width, backgroundColor:'#ddd',height:1}}/>}
-              renderItem={item => (
-                <TouchableOpacity onPress={() => {
-                  // console.log(item)
-                  this.setState({ manufacturer: item, isManufacturerFocus: true })
-                }}
-                style={styles.itemStyle}>
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              )}
+
+
+            <AutoInfoInput
+              data={manufacturerData}
+              title={i18n.car_manufacturer}
+              placeholder={i18n.input_prompt}
+              type={'manufacturer'}
+              inputChangeText={(text)=>{
+                this.fetchCarModel(text)
+              }}
             />
-            <AutoComplete
-              hideResults={isCarModelFocus}
-              data={handleCarModel}
-              containerStyle={[styles.autocompleteContainer, {top: 170,  zIndex: 999}]}
-              renderTextInput={()=>
-                <InfoInput title={i18n.car_modal} placeholder={i18n.input_prompt}
-                  onChangeText={(text)=>{this.setState({carModel: text, isCarModelFocus: false})}}
-                  value={carModel}
-                  onFocus={this.carModelInputOnFocus}
-                  onBlur={this.carModelInputOnBlur}
-                />}
-              inputContainerStyle={styles.inputContainerStyle}
-              listContainerStyle={styles.listContainerStyle}
-              listStyle={styles.listStyle}
-              renderSeparator={()=><View style={{width, backgroundColor:'#ddd',height:1}}/>}
-              renderItem={item => (
-                <TouchableOpacity onPress={() => {
-                  // console.log(item)
-                  this.setState({ carModel: item, isCarModelFocus: true })
-                }}
-                style={styles.itemStyle}>
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              )}
+
+
+            <AutoInfoInput
+              placeholder={i18n.input_prompt}
+              title={i18n.car_model}
+              data={carModelData}
+              type={'model'}
+              style={{top: 160,  zIndex: 999}}
+              inputChangeText={(text)=>{
+                // console.log(text)
+                this.setState({carModel: text})
+              }}
             />
-            <View style={{marginTop: 180}}>
+
+            <View style={{marginTop: 170}}>
               <InfoInput title={i18n.car_manufacture_year}  placeholder={i18n.input_prompt}
                 onChangeText={(text)=>{
                   this.setState({
@@ -336,14 +231,12 @@ export default connect(state => ({
               />
               <InfoInput title={i18n.car_color} placeholder={i18n.input_prompt}
                 onChangeText={(text)=>{
-                  // console.log(text)
                   this.setState({
                     color: text,
                   })
                 }}
               />
             </View>
-
           </ScrollView>
         </View>
         <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
@@ -355,50 +248,113 @@ export default connect(state => ({
 })
 
 
-function TouchButton(props) {
-  const { style, title, backgroundColor, onPress } = props
-  return(
-    <TouchableOpacity style={[styles.touchButton,{backgroundColor}, style]} onPress={onPress}>
-      <Text style={{fontSize: 18, color:'black', fontWeight: 'bold'}}>{title}</Text>
-    </TouchableOpacity>
-  )
-}
 
 class AutoInfoInput extends Component{
 
   constructor(props){
     super(props)
     this.state = {
-      isFocus: false,
+      isFocusHide: true,
       data: this.props.data,
-      handleData: this.props.handleData,
-      inputValue: this.props.inputValue,
-      // inputChangeText: this.props
+      type: this.props.type
     }
   }
+
+  componentDidMount() {
+    // console.log('type', this.props.type)
+    // console.log('data', this.props.data)
+  }
+
+  handleText(s) {
+    let pattern = new RegExp('[`~!#$^&*()=|{}\':;\',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“\'。，、？]')
+    let rs = ''
+    for (let i = 0; i < s.length; i++) {
+      rs = rs+s.substr(i, 1).replace(pattern, '')
+    }
+    return rs
+  }
+
+  carInfoChangeText = (text) => {
+
+    let handleText = this.handleText(text)
+
+    let data = this.props.data
+
+    if(!(data instanceof Array)){
+      return
+    }
+    let len = data.length
+    let arr = []
+    for(let i = 0 ; i < len ; i++){
+      let title = data[i]
+
+      if(title.toLowerCase().indexOf(handleText) >= 0){
+        arr.push(data[i])
+      }
+    }
+
+    this.setState({
+      data: arr
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.type === 'manufacturer') {
+      // console.log(nextProps)
+      this.setState({
+        data: nextProps.data
+      })
+    }
+    if (nextProps.type === 'model') {
+      // console.log(nextProps)
+      this.setState({
+        data: nextProps.data
+      })
+    }
+  }
+
+  onFocus = () => {
+    this.inputWithHidden(false)
+  }
+
+  onBlur = () => {
+    this.inputWithHidden(true)
+    this.props.onBlur && this.props.onBlur()
+  }
+
+  inputWithHidden = (focus: boolean) => {
+    this.setState({isFocusHide: focus})
+  }
+
   render() {
-    const { data, isFocus, inputValue } = this.state
-    const { inputChangeText, handleData } = this.props
-    // console.log(this.props.handleData)
+
+    const { data, isFocusHide, inputValue,  } = this.state
+    const { inputChangeText, style, placeholder, title } = this.props
+
     return(
       <AutoComplete autoCapitalize={'none'}
-        // hideResults={isFocus}
-        data={handleData}
+        hideResults={isFocusHide}
+        data={data}
+        containerStyle={[styles.autocompleteContainer, style]}
         renderTextInput={()=>
-          <InfoInput title={'Manufacturer'} placeholder={'Please enter here'}
-            onChangeText={(text)=>{this.setState({manufacturer: text, isManufacturerFocus: false})}}
+          <InfoInput title={title} placeholder={placeholder}
             value={inputValue}
-            // onFocus={this.manufacturerInputOnFocus}
-            // onBlur={this.manufacturerInputOnBlur}
+            onChangeText={(text)=>{
+              this.carInfoChangeText(text)
+              this.setState({inputValue: text, isFocusHide: false})
+              inputChangeText(text)
+            }}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
           />}
         inputContainerStyle={styles.inputContainerStyle}
         listContainerStyle={styles.listContainerStyle}
         listStyle={styles.listStyle}
-        renderSeparator={()=><View style={{width, backgroundColor:'#ddd',height:1}}/>}
+        renderSeparator={()=><View style={{width, backgroundColor:'#ddd', height:1}}/>}
         renderItem={item => (
           <TouchableOpacity onPress={() => {
-            console.log(item)
-            this.setState({ manufacturer: item, isManufacturerFocus: true })
+            this.setState({inputValue: item, isFocusHide: true})
+            inputChangeText(item)
           }}
           style={styles.itemStyle}>
             <Text>
@@ -409,6 +365,15 @@ class AutoInfoInput extends Component{
       />
     )
   }
+}
+
+function TouchButton(props) {
+  const { style, title, backgroundColor, onPress } = props
+  return(
+    <TouchableOpacity style={[styles.touchButton,{backgroundColor}, style]} onPress={onPress}>
+      <Text style={{fontSize: 18, color:'black', fontWeight: 'bold'}}>{title}</Text>
+    </TouchableOpacity>
+  )
 }
 
 function InfoInput(props) {
@@ -426,7 +391,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    // height
   },
   inputContainerStyle:{
     borderColor:'white',
@@ -439,7 +403,7 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
     right: 0,
-    top: 85,
+    top: 80,
     zIndex: 10000
   },
   listContainerStyle:{

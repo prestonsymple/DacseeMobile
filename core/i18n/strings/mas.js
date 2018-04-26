@@ -353,7 +353,7 @@ const mas = {
   car_add_vehicle: 'Tambah Kereta',
   car_registration_number: 'Nombor pendaftaran',
   car_manufacturer: 'Pengilang kereta',
-  car_modal: 'Model Kereta',
+  car_model: 'Model Kereta',
   car_manufacture_year: 'Tahun Pembuatan',
   car_color: 'Warna',
 
