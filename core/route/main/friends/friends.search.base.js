@@ -79,7 +79,7 @@ export default connect(state => ({
               dataSource={this.state.dataSource}
               enableEmptySections={true}
               renderSeparator={() => (<View style={{ paddingLeft: 15 }}><View style={{ height: .8, backgroundColor: '#f2f2f2' }} /></View>)}
-              renderRow={({ _id, avatars, fullName, userId }) => (
+              renderRow={({ _id, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName, userId }) => (
                 <TouchableOpacity activeOpacity={.7} onPress={() => this.props.navigation.navigate('FriendsRequest', { referrer: userId, id: _id, i18n})} style={{ height: 58, backgroundColor: 'white', paddingHorizontal: 15 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
                     <View style={{ justifyContent: 'center', marginRight: 12 }}>

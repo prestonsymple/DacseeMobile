@@ -136,11 +136,11 @@ const SettingAccountScreen = connect(state => ({
   // TODO 二维码多语言
   render() {
     const { navigation, dispatch, user, i18n } = this.props
-
+    const {avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }]}=user
     return (
       <Settings producer={[
         [{
-          title: i18n.my_avatar, type: 'image', value: { uri: user.avatars[user.avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar',{i18n})
+          title: i18n.my_avatar, type: 'image', value: { uri: avatars[avatars.length - 1].url }, onPress: () => navigation.navigate('ProfileChangeAvatar',{i18n})
         }],[{
           title: i18n.phone, type: 'text', value: `(${user.phoneCountryCode})${user.phoneNo}`, editable: false
         }, {

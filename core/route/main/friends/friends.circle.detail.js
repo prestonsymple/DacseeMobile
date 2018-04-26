@@ -22,7 +22,7 @@ export default connect(state => ({
 
   static navigationOptions = ({ navigation }) => {
     const { _id, checked, friend_id, friend_info,i18n} = navigation.state.params
-    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
+    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = friend_info
 
     return {
       drawerLockMode: 'locked-closed',
@@ -91,7 +91,7 @@ export default connect(state => ({
     const { i18n } = this.props
     const { dataSource } = this.state
     const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
-    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
+    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = friend_info
     return (
       <View style={{ flex: 1, backgroundColor:'white' }}>
         <ScrollView contentContainerStyle={{}} style={{ backgroundColor: 'white' }}>

@@ -61,7 +61,7 @@ export default connect(state => ({ account: state.account }))(class LoginSelectA
 class RowItem extends Component {
   render() {
     const { onPress = () => {} } = this.props
-    const { _id, avatars, fullName } = this.props.data
+    const { _id, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName } = this.props.data
     // console.log(rights)
     // const role = rights.reduce((prev, next) => prev + `, ${next}`)
 

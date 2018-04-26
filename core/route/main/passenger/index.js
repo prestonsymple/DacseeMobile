@@ -596,7 +596,7 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
 const SelectButton = (props) => {
   const { data } = props
   const { _id, friend_id, friend_info } = data
-  const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
+  const { avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
   return (
     <View key={_id} style={{ backgroundColor: '#f2f2f2', marginRight: 10, height: 46, borderRadius: 23 }}>
       <Image style={{ height: 46, width: 46, borderRadius: 23 }} source={{ uri: avatars[avatars.length - 1].url }} />

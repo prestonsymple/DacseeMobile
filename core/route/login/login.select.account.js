@@ -106,7 +106,7 @@ export default connect(state => ({ account: state.account, i18n: state.intl.mess
 class RowItem extends Component {
   render() {
     const { onPress = () => { }, isMail, i18n } = this.props
-    const { _id, avatars, fullName, phoneNo } = this.props.data
+    const { _id, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName, phoneNo } = this.props.data
     // const role = rights.reduce((prev, next) => prev + `, ${next}`)
 
     return (

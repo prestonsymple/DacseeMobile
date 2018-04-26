@@ -127,7 +127,7 @@ class SelectButton extends PureComponent {
   render() {
     const { data } = this.props
     const { _id, friend_id, friend_info } = data
-    const { avatars, email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
+    const { avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], email, fullName, phoneCountryCode, phoneNo, userId } = friend_info
 
     return (
       <View key={_id} style={{ backgroundColor: '#f2f2f2', marginRight:10, borderRadius: 23 }}>

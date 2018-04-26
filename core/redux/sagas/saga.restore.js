@@ -29,7 +29,7 @@ function* GetVehicleGroupsAndCategories() {
 function* GetCountry() {
   try {
     const {code, language} = yield call(Session.Lookup.Get, 'v1/lookup/country')
-    const map_mode = code === 'CN' ? 'GOOGLEMAP' : 'GOOGLEMAP'
+    const map_mode = code === 'CN' ? 'AMAP' : 'GOOGLEMAP'
     return {
       map_mode,
       country: code,

@@ -411,7 +411,7 @@ class ChatItem extends Component {
 
   render(){
     const { user, content } = this.props
-    const { avatars = [] } = user
+    const { avatars = [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = user
     const isSelf = user._id===content.from_id
     return(
       <TouchableWithoutFeedback>

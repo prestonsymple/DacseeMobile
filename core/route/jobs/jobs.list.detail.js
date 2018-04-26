@@ -43,7 +43,7 @@ const BookingDetailButton = (props) => {
  */
 const BookingDetailHeaderView = (props) => {
   const { passenger_info } = props
-  const { avatars = [], fullName, userId, phoneCountryCode, phoneNo } = passenger_info
+  const { avatars = [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName, userId, phoneCountryCode, phoneNo } = passenger_info
   return(
     <View style={{height:80, flexDirection: 'row', alignItems:'center', justifyContent:'space-between', borderTopLeftRadius:20, borderTopRightRadius: 20,
       backgroundColor: 'white'

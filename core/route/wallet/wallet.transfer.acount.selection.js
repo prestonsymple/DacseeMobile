@@ -87,9 +87,10 @@ class AccountItem extends Component {
 
   render() {
     const { data } = this.props
+    const {avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }]}=data
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Image source={{ uri: data.avatars[0].url }} style={{ margin: 15, width: 66, height: 66, borderRadius: 33 }}/>
+        <Image source={{ uri: avatars[0].url }} style={{ margin: 15, width: 66, height: 66, borderRadius: 33 }}/>
         <View style={{ justifyContent: 'center'}}>
           <Text style={{ fontSize: TextFont.TextSize(11), opacity: 0.6 }}>{ data.userId }</Text>
           <Text style={{ fontSize: TextFont.TextSize(17) }}>{ data.fullName }</Text>

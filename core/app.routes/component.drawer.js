@@ -67,7 +67,7 @@ export default connect(state => ({
   }
 
   render() {
-    const { fullName, avatars } = this.props.user
+    const { fullName, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = this.props.user
     return (
       <View style={{ flex: 1 }}>
         {/* TODO: Fix iPhone X */}

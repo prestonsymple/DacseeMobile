@@ -254,7 +254,7 @@ class DriverOnTheWayLabel extends Component {
 
 class DriverStatusPanel extends Component {
   render() {
-    const { avatars, fullName, phoneCountryCode, phoneNo } = this.props
+    const { avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName, phoneCountryCode, phoneNo } = this.props
 
     return (
       <View style={[
