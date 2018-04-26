@@ -48,7 +48,7 @@ function* loginFlow() {
           yield call(session.User.Post, url, body)
           yield put(application.showMessage(i18n.alert_sent_code))
         } catch (e) {
-          //alert(JSON.stringify(e.response))
+          //console.log( e.response)
           if(e.response && e.response.data.code == 'MULTIPLE_USER_ACCOUNT'){
             //选择账号
             yield put(NavigationActions.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value,type:'EMAIL_LOGIN' } }))
@@ -60,7 +60,6 @@ function* loginFlow() {
           }else if(e.response && e.response.data.code =='MISSING_INPUT'){
             //邮箱单账号登录
             try {
-              yield put(application.setMailModeValue({phone_info:e.response.data.data}))
               yield call(session.User.Post, 'v1/sendVerificationCode/phone', e.response.data.data)
               yield put(account.loginPutValue(2))
             } catch (e) {
@@ -100,11 +99,13 @@ function* loginFlow() {
           if (!body._id) {
             delete body._id
           }
+          //console.log( path, body)
           const data = yield call(session.User.Post, path, body)
 
           yield call(loginSuccess, data) // 登录成功
 
         } catch (e) {
+          // console.log('err', e)
           let { isMail, id } = value
           if (e.response && (
             e.response.data.code == 'INVALID_VERIFICATION_CODE' ||

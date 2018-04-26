@@ -86,14 +86,14 @@ export default connect(state => ({
               { marginTop: 10 },
               { color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: TextFont.TextSize(18) }
             ]}>{ fullName }</Text>
-            <View style={[
+            {/* <View style={[
               { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.8 },
               { backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }
             ]}>
               <Text style={{ color: '#666', fontWeight: '600', fontSize: TextFont.TextSize(12) }}>
                 <FormattedMessage id={'passenger'}/>
               </Text>
-            </View>
+            </View> */}
           </View>
 
           <View style={{ height: 1, backgroundColor: '#f1f1f1', marginHorizontal: 27, marginBottom: 12, borderRadius: 2 }} />
