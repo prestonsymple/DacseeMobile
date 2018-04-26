@@ -94,7 +94,7 @@ export default connect(state => ({ account: state.account, i18n: state.intl.mess
             <TouchableOpacity style={{ flex: 1, marginBottom: Define.system.ios.x ? 32 : 10, marginTop: 6, justifyContent: 'center', alignItems: 'center', borderRadius: 22, backgroundColor: '#ffa81d' }}
               onPress={() => this.props.dispatch(account.loginNext({ stage: 7, value: value }))}
             >
-              <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>Bind account </Text>
+              <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>new account </Text>
             </TouchableOpacity >
           </View >
         }
