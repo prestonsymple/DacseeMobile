@@ -351,7 +351,6 @@ const en_US = {
 
   myvehicle:'My Vehicle',
   car_add_vehicle: 'Add Vehicle',
-  car_update_vehicle: 'My Vehicle',
   car_registration_number: 'Registration Number',
   car_manufacturer: 'Manufacturer',
   car_model: 'Model',

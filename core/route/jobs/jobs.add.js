@@ -42,12 +42,23 @@ export default connect(state => ({
 
   constructor(props) {
     super(props)
+
+    const user = this.props.user
+    const type = props.navigation.state.params.type
+
+    let vehicles = []
+    if (user.vehicles.length > 0 && type === 'update') {
+      vehicles = user.vehicles[0]
+    }
+
+    console.log(vehicles)
+
     this.state = {
-      carNumber: '',
-      manufacturer: '',
-      carModel: '',
-      manufactureYear: '',
-      color: '',
+      carNumber: vehicles ? vehicles.registrationNo : '',
+      manufacturer: vehicles ? vehicles.manufacturer : '',
+      carModel: vehicles ? vehicles.model : '',
+      manufactureYear: vehicles ? vehicles.manufactureYear : '',
+      color: vehicles ? vehicles.color : '',
 
       manufacturerData: [],
       isManufacturerFocus: true,
@@ -62,7 +73,9 @@ export default connect(state => ({
 
   componentDidMount() {
 
-    console.log(this.props.navigation.state.params)
+    // console.log(this.props.navigation.state.params)
+
+    // console.log(this.props.user)
 
     // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this))
     // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this))
@@ -78,8 +91,7 @@ export default connect(state => ({
       this.keyboardWillShowSub.remove()
       this.keyboardWillHideSub.remove()
     }
-    // this.keyboardDidShowListener.remove()
-    // this.keyboardDidHideListener.remove()
+
   }
 
   keyboardWillShow = (event) => {
@@ -173,15 +185,16 @@ export default connect(state => ({
   }
 
   render() {
-    const { manufacturer, isManufacturerFocus, carModel, isCarModelFocus } = this.state
+    // const { manufacturer, isManufacturerFocus, carModel, isCarModelFocus } = this.state
 
     const { i18n } = this.props
 
     const { type } = this.props.navigation.state.params
 
-    const { manufacturerData, carModelData } = this.state
+    const { manufacturerData, carModelData, carNumber, manufacturer, carModel, manufactureYear, color } = this.state
 
     const androidStyle = System.Platform.Android ? {left: 20, position: 'absolute', top: height - 85-70 } : null
+
 
     return (
       <View style={[styles.container]}>
@@ -193,9 +206,10 @@ export default connect(state => ({
           <ScrollView keyboardShouldPersistTaps='always'
             style={{ backgroundColor:'white'}}
           >
-            <InfoInput title={i18n.car_registration_number} placeholder={i18n.input_prompt}
+            <InfoInput
+              title={i18n.car_registration_number} placeholder={i18n.input_prompt}
+              value={carNumber}
               onChangeText={(text)=>{
-                // console.log(text)
                 this.setState({
                   carNumber: text,
                 })
@@ -208,6 +222,7 @@ export default connect(state => ({
               title={i18n.car_manufacturer}
               placeholder={i18n.input_prompt}
               type={'manufacturer'}
+              value={manufacturer}
               inputChangeText={(text)=>{
                 this.fetchCarModel(text)
 
@@ -220,6 +235,7 @@ export default connect(state => ({
               title={i18n.car_model}
               data={carModelData}
               type={'model'}
+              value={carModel}
               style={{top: 160,  zIndex: 999}}
               inputChangeText={(text)=>{
                 // console.log(text)
@@ -228,14 +244,19 @@ export default connect(state => ({
             />
 
             <View style={{marginTop: 170}}>
-              <InfoInput title={i18n.car_manufacture_year}  placeholder={i18n.input_prompt}
+              <InfoInput
+                title={i18n.car_manufacture_year}  placeholder={i18n.input_prompt}
+                value={manufactureYear}
                 onChangeText={(text)=>{
                   this.setState({
                     manufactureYear: text,
                   })
                 }}
               />
-              <InfoInput title={i18n.car_color} placeholder={i18n.input_prompt}
+              <InfoInput
+                title={i18n.car_color}
+                value={color}
+                placeholder={i18n.input_prompt}
                 onChangeText={(text)=>{
                   this.setState({
                     color: text,
@@ -248,9 +269,9 @@ export default connect(state => ({
         {
           type === 'update' ?
             <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
-            <TouchButton title={i18n.car_update} style={{width: width - 40}} backgroundColor={'#5FD700'} onPress={this.onSubmit}/>
+              <TouchButton title={i18n.car_update} style={{width: width - 40}} backgroundColor={'#5FD700'} onPress={this.onSubmit}/>
             </View>
-              :
+            :
             <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
               <TouchButton title={i18n.cancel} backgroundColor={'#cfcfcf'} onPress={this.cancelPress}/>
               <TouchButton title={i18n.sub} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>
@@ -269,7 +290,8 @@ class AutoInfoInput extends Component{
     this.state = {
       isFocusHide: true,
       data: this.props.data,
-      type: this.props.type
+      type: this.props.type,
+      inputValue: this.props.value
     }
   }
 
@@ -390,13 +412,17 @@ function TouchButton(props) {
 }
 
 function InfoInput(props) {
-  const { style, placeholder, title } = props
+  const { style, placeholder, title, value } = props
+  let inputValue = props.value
   return(
     <View style={[{paddingHorizontal: 20}, style]}>
       <Text style={{fontSize: 16, color: '#000', opacity: 0.8, paddingTop: 10,}}>{title}</Text>
-      <Input {...Define.TextInputArgs} clearTextOnFocus={false}
-             placeholder={placeholder} style={{height: 44, paddingLeft: 4, fontSize: 15, }}
-             {...props}
+      <Input
+        {...Define.TextInputArgs}
+        clearTextOnFocus={false}
+        value={inputValue}
+        placeholder={placeholder} style={{height: 44, paddingLeft: 4, fontSize: 15, }}
+        {...props}
       />
       <View style={{height: 1, backgroundColor:'#ddd',}}/>
     </View>

@@ -348,8 +348,7 @@ const zh_CN = {
 
   myvehicle: '我的车辆',
   car_add_vehicle: '添加车辆',
-  car_update_vehicle: '我的车辆',
-  car_registration_number: '注册号码',
+  car_registration_number: '我的车牌',
   car_manufacturer: '汽车制造商',
   car_model: '车型',
   car_manufacture_year: '汽车制造年份',
