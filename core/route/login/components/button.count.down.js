@@ -36,8 +36,10 @@ export default class CountDownButton extends Component {
   }
   startCountDown = async () => {
     if (!this.state.started) {
-      await this.props.sendCode()
-      this.startInterval()
+      let status=await this.props.sendCode()
+      if(status){
+        this.startInterval()
+      }
     }
   }
   componentWillUnmount() {
@@ -47,7 +49,7 @@ export default class CountDownButton extends Component {
     const { show, style, i18n } = this.props
     const { time, started } = this.state
     return (
-      <TouchableOpacity activeOpacity={1} onPress={this.startCountDown} style={[styles.buttonWrap, style]} >
+      <TouchableOpacity activeOpacity={started?1:.9} onPress={this.startCountDown} style={[styles.buttonWrap, style]} >
         <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: '600', color: 'white'}}>{started ? `${this.state.time} ${i18n.seconds_later}` : i18n.send_code}</Text>
       </TouchableOpacity>
     )

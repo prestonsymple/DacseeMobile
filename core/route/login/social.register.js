@@ -20,7 +20,6 @@ export default connect(state => ({
   i18n: state.intl.messages
 }))(class SocialRegisterScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    console.log(navigation.state.params.userInfo, 'fa')
     const reducer = store.getState()
     return {
       drawerLockMode: 'locked-closed',
@@ -65,16 +64,20 @@ export default connect(state => ({
       this.props.dispatch(application.updatePushToken())
     } catch (e) {
       if (e.response && e.response.data.code === 'MULTIPLE_USER_ACCOUNT') {
-        let par = {
+        let value = {
           _id: e.response.data.data[0]._id,
           fullName: this.state.fullName,
           phoneVerificationCode: this.state.phoneVerificationCode,
+          phoneCountryCode: this.state.phoneCountryCode,
+          phoneNo: this.state.phoneNo,
+          referralUserId: this.state.referralUserId,
           oAuth: {
             provider: this.props.navigation.state.params.provider,
             id: this.state.userInfo.uid
           }
         }
-        this.props.dispatch(account.loginNext({ stage: 6, value:par  }))
+        //this.props.navigation.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value,type:'BIND_PHONE' } })
+        this.props.dispatch(account.loginNext({ stage: 6, value  }))
         //   const data =await Session.User.Post('v1/register/bind', par)
       }
     } finally {
@@ -89,8 +92,10 @@ export default connect(state => ({
     try {
       const data = await Session.User.Post('v1/sendVerificationCode/phone', body)
       this.props.dispatch(application.showMessage(this.props.i18n.alert_sent_code))
+      return data
     } catch (e) {
       this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+      return false
     }
   }
   render() {

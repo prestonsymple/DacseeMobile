@@ -101,7 +101,8 @@ export default connect(state => ({
             if (this.props.vehicles.length === 0) {
               this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsAdd'}))
             } else {
-              this.props.dispatch(driver.driverSetValue({working}))
+              this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsAdd', params: {type:'add'}}))
+              // this.props.dispatch(driver.driverSetValue({working}))
             }
           }
           } />

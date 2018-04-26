@@ -56,7 +56,7 @@ export default connect(state => ({
     // console.log('referrer',referrer)
     // console.log('id', id)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage(i18n.invitation_failure))
-    const { _id, avatars, fullName, userId } = data[0]
+    const { _id, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName, userId } = data[0]
     this.setState({ invite_id: _id, avatars: avatars[avatars.length - 1], fullName, userId })
   }
 

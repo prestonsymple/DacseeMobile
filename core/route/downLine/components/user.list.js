@@ -34,7 +34,7 @@ export default class UserList extends PureComponent {
 class UserCell extends PureComponent {
   render(){
     const { itemData } = this.props
-    const { fullName, userId, avatars, totalDownline } = itemData
+    const { fullName, userId, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], totalDownline } = itemData
     return(
       <View style={{ paddingVertical: 10,  flexDirection: 'row',justifyContent:'space-between',alignItems: 'center' }}>
         <View style={{flexDirection: 'row',alignItems: 'center'}}>

@@ -7,7 +7,7 @@ import {TextFont} from '../../../utils'
 export default class UserDetail extends PureComponent {
   render() {
     const {data}=this.props
-    const { userId, fullName, avatars } = data
+    const { userId, fullName, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = data
     return (
       <View style={{backgroundColor: '#1AB2FD',paddingBottom:20}}>
         <View style={{flexDirection: 'row',alignItems: 'center'}}>

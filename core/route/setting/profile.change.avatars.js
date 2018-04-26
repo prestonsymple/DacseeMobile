@@ -137,7 +137,7 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
           } })
           this.uploadImage(response.data)
         }
-      });
+      })
     }
   }
 
@@ -161,7 +161,7 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
   render() {
     // const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
     // const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
-    const { avatars } = this.props.account.user
+    const { avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = this.props.account.user
     const { media, uploading = false } = this.state
     const {state} = this.props.navigation
     return ( 

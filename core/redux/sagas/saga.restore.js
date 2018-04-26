@@ -1,12 +1,12 @@
 /* global navigator */
 import moment from 'moment'
 
-import { fork, all, take, call, put, takeEvery, takeLatest, race, select, cancel } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
-import { application, account, booking, intl } from '../actions'
-import { Session } from '../../utils'
+import {fork, all, take, call, put, takeEvery, takeLatest, race, select, cancel} from 'redux-saga/effects'
+import {delay} from 'redux-saga'
+import {application, account, booking, intl} from '../actions'
+import {Session} from '../../utils'
 
-const GetPosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), { timeout: 5000 }))
+const GetPosition = () => new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(p => resolve(p), e => reject(e), {timeout: 5000}))
 const ForkService = {
   LocationService: null
 }
@@ -28,8 +28,8 @@ function* GetVehicleGroupsAndCategories() {
 
 function* GetCountry() {
   try {
-    const { code, language } = yield call(Session.Lookup.Get, 'v1/lookup/country')
-    const map_mode = code === 'CN' ? 'GOOGLEMAP' : 'GOOGLEMAP'
+    const {code, language} = yield call(Session.Lookup.Get, 'v1/lookup/country')
+    const map_mode = code === 'CN' ? 'AMAP' : 'GOOGLEMAP'
     return {
       map_mode,
       country: code,
@@ -46,44 +46,46 @@ function* GetCountry() {
 }
 
 function* AutoLocationService() {
-  while(true) {
+  while (true) {
     try {
-      const { coords } = yield call(GetPosition)
-      const { latitude, longitude } = coords 
+      const {coords} = yield call(GetPosition)
+      const {latitude, longitude} = coords
       yield all([
-        put(application.setValues({ gps_access: true })),
-        put(account.updateLocation({ latitude, longitude, lat: latitude, lng: longitude }))
+        put(application.setValues({gps_access: true})),
+        put(account.updateLocation({latitude, longitude, lat: latitude, lng: longitude}))
       ])
     } catch (e) {
-      try { navigator.geolocation.requestAuthorization() } catch (e) {/* */}
-      if (e.code === 1 || e.code === 2) yield put(application.setValues({ gps_access: false }))
+      try {
+        navigator.geolocation.requestAuthorization()
+      } catch (e) {/* */
+      }
+      if (e.code === 1 || e.code === 2) yield put(application.setValues({gps_access: false}))
     }
     yield delay(2500)
   }
 }
 
 function* initializationFlow(action) {
-  const { local_language, account_status } = yield select(state => ({
+  const {local_language, account_status} = yield select(state => ({
     local_language: state.account.language,
     account_status: state.account.status
   }))
   yield put(intl.update(local_language))
 
+  // 启动GPS监听服务
+  ForkService.LocationService = yield fork(AutoLocationService)
+
   // 已登录状态
   if (account_status) {
-    // 启动GPS监听服务
-    ForkService.LocationService = yield fork(AutoLocationService)
-
     // 获取国家及地图信息
-    while(true) {
+    while (true) {
       const value = yield call(GetCountry)
       if (!value) {
         yield delay(2000)
-        continue
       } else {
         yield all([
-          put(application.setValues({ map_mode: value.map_mode })),
-          put(account.setAccountValue({ country: value.country, language: value.language })),
+          put(application.setValues({map_mode: value.map_mode})),
+          put(account.setAccountValue({country: value.country, language: value.language})),
           put(intl.update(value.language))
         ])
         break
@@ -91,18 +93,20 @@ function* initializationFlow(action) {
     }
 
     // 获取车型数据
-    while(true) {
+    while (true) {
       const value = yield call(GetVehicleGroupsAndCategories)
       if (!value) {
         yield delay(2000)
-        continue
       } else {
-        yield put(booking.passengerSetValue({ vehicleGroups: value.vehicleGroups, vehicleCategories: value.vehicleCategories }))
+        yield put(booking.passengerSetValue({
+          vehicleGroups: value.vehicleGroups,
+          vehicleCategories: value.vehicleCategories
+        }))
         break
       }
     }
-  } 
-  
+  }
+
   // 未登录
   if (!account_status) {
     if (ForkService.LocationService) {
@@ -111,18 +115,18 @@ function* initializationFlow(action) {
     // TODO:
   }
 
-  yield put(application.setValues({ main_run: true }))
+  yield put(application.setValues({main_run: true}))
 }
 
 export default function* initializationSaga() {
   yield takeLatest(action => {
-    const { type } = action
+    const {type} = action
     return (
-      (type === 'persist/REHYDRATE') || 
+      (type === 'persist/REHYDRATE') ||
       // (type === application.changeApplicationStatus().type) ||
-      // (type === application.updatePushToken().type) || 
-      (type === account.saveLogin().type)
-      // (type === application.updateLocationStatus().type)
+      // (type === application.updatePushToken().type) ||
+      (type === account.saveLogin().type) ||
+      (type === application.updateLocationStatus().type)
     )
   }, initializationFlow)
 }

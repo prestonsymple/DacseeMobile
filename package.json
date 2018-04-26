@@ -1,14 +1,15 @@
 {
   "name": "dacsee",
   "version": "0.0.1",
+  "description": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/dacsee/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "build:android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
-    "air:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 1.0.1 -e index.js",
+    "air:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 1.0.2 -e index.js",
     "air:ios:release": "appcenter codepush promote -a quzhi0323/Dacsee-iOS -s debug -d release",
-    "air:android:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-Android -t \"1.0.1\" -e index.js",
+    "air:android:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-Android -t 1.0.2 -e index.js",
     "air:android:release": "appcenter codepush promote -a quzhi0323/Dacsee-Android -s debug -d release",
     "air:update": "npm run air:ios:debug && npm run air:ios:release && npm run air:android:debug && npm run air:android:release",
     "test": "jest"

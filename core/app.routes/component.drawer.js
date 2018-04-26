@@ -32,6 +32,11 @@ const MENUS_OPTIONS = [{
   onPress: ({ navigation }) => navigation.navigate('DownLineTotal')
 }, {
   key: '5',
+  name: 'myvehicle',
+  icon: Icons.Generator.Material('directions-car', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
+  onPress: ({ navigation }) => navigation.navigate('JobsAdd', {type:'update'})
+}, {
+  key: '6',
   name: 'settings',
   icon: Icons.Generator.Material('settings', TextFont.TextSize(24), ICONS_COLOR, { style: { left: 1.5 } }),
   onPress: ({ navigation }) => navigation.navigate('SettingMenu')
@@ -67,7 +72,7 @@ export default connect(state => ({
   }
 
   render() {
-    const { fullName, avatars } = this.props.user
+    const { fullName, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = this.props.user
     return (
       <View style={{ flex: 1 }}>
         {/* TODO: Fix iPhone X */}
@@ -86,14 +91,14 @@ export default connect(state => ({
               { marginTop: 10 },
               { color: '#333', fontWeight: System.Platform.Android ? '400' : '600', fontSize: TextFont.TextSize(18) }
             ]}>{ fullName }</Text>
-            <View style={[
+            {/* <View style={[
               { marginTop: 10, paddingHorizontal: 20, height: 26, borderRadius: 13, borderColor: '#e8e8e8', borderWidth: 0.8 },
               { backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center' }
             ]}>
               <Text style={{ color: '#666', fontWeight: '600', fontSize: TextFont.TextSize(12) }}>
                 <FormattedMessage id={'passenger'}/>
               </Text>
-            </View>
+            </View> */}
           </View>
 
           <View style={{ height: 1, backgroundColor: '#f1f1f1', marginHorizontal: 27, marginBottom: 12, borderRadius: 2 }} />

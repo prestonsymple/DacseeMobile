@@ -94,6 +94,7 @@ export default connect(state => ({
     const { wallet, transfering } = this.state
     const { amount, userList, remark } = this.state.transferInfo
     const user = userList[0]
+    const {avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }]}=user
     // console.log(userList)
     return (
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} horizontal={false} >
@@ -121,7 +122,7 @@ export default connect(state => ({
               <FormattedMessage id={'recipient_account'}/>
             </Text>
             <View style={{ flexDirection: 'row' }}>
-              <Image source={{ uri: user.avatars[0].url}} style={{ marginVertical: 15, marginRight: 15, width: 66, height: 66, borderRadius: 33 }}/>
+              <Image source={{ uri: avatars[0].url}} style={{ marginVertical: 15, marginRight: 15, width: 66, height: 66, borderRadius: 33 }}/>
               <View style={{ justifyContent: 'center'}}>
                 <Text style={{ fontSize: TextFont.TextSize(11), opacity: 0.6 }}>{ user.userId }</Text>
                 <Text style={{ fontSize: TextFont.TextSize(17) }}>{ user.fullName }</Text>

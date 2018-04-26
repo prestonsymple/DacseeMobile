@@ -46,7 +46,8 @@ export default connect(state => ({
       referralUserId: props.referrer_id || '',
       fullName: '',
       countryCode: '+60',
-      selectAccount: []
+      selectAccount: [],
+      resetCount:true
     }
     this.codeInput = {}
     this.animated = {}
@@ -168,10 +169,16 @@ export default connect(state => ({
     var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
     return reg.test(val)
   }
-  sendCode = async () => {
-    const { value, countryCode } = this.state
-    let body = { phoneCountryCode: countryCode, phoneNo: value }
-    await Session.User.Post('v1/sendVerificationCode/phone', body)
+  async sendCode(num, code) {
+    let body = { phoneCountryCode: code, phoneNo: num }
+    try {
+      const data = await Session.User.Post('v1/sendVerificationCode/phone', body)
+      this.props.dispatch(app.showMessage(this.props.i18n.alert_sent_code))
+      return data
+    } catch (e) {
+      this.props.dispatch(app.showMessage('无法连接到服务器，请稍后再试'))
+      return false
+    }
   }
   async _facebookAuth(user) {
     try {
@@ -181,13 +188,10 @@ export default connect(state => ({
       this.props.dispatch(account.saveLogin(data))
       this.props.dispatch(app.hideProgress())
       this.props.dispatch(app.updatePushToken())
-      // console.log('facebook登录', data)
     } catch (e) {
-      console.log(e)
-      // console.log('facebook登录失败', e)
-      if (e.response &&e.response.data.code == 'INVALID_USER') {
-        this.props.navigation.navigate('SocialRegister', { userInfo: user ,provider:'facebook'})
-      }else{
+      if (e.response && e.response.data.code == 'INVALID_USER') {
+        this.props.navigation.navigate('SocialRegister', { userInfo: user, provider: 'facebook' })
+      } else {
         console.log('facebook登录失败', e)
       }
     }
@@ -282,7 +286,7 @@ export default connect(state => ({
                 </FormattedMessage>
               </View>
             </Animated.View>
-            {/* 输入验证码 */}        
+            {/* 输入验证码 */}
             <Animated.View style={[
               { position: 'absolute', right: 0, top: (height / 2) - 60 },
               { justifyContent: 'center' },
@@ -351,7 +355,7 @@ export default connect(state => ({
               { /* 重发验证码按钮 */
                 (this.props.stage === 2 || this.props.stage === 3) &&
                 <View style={{ borderRadius: 22, flex: 2, marginLeft: 10, backgroundColor: '#ffa81d' }} >
-                  <CountDownButton sendCode={this.sendCode} style={{ flex: 1 }} i18n={i18n} />
+                  <CountDownButton sendCode={() => this.sendCode(this.state.value, this.state.countryCode)} style={{ flex: 1 }} i18n={i18n} />
                 </View>
               }
             </Animated.View>
@@ -365,8 +369,8 @@ export default connect(state => ({
               <Text style={{ flex: 1, color: '#d2d2d2', textAlign: 'center' }}>
                 <FormattedMessage id={'login_social'} />
               </Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'center', width: 150, marginTop: 25 }}>   
-              
+              <View style={{ flexDirection: 'row', justifyContent: 'center', width: 150, marginTop: 25 }}>
+
                 <Button onPress={() => {
                   ShareUtile.auth(7, (code, result, message) => {
                     try {
@@ -411,7 +415,7 @@ export default connect(state => ({
                   <View style={{ flexDirection: 'row', marginBottom: 15 }}>
                     <Button
                       onPress={() => this.props.navigation.navigate('PickerCountry', {
-                        onPress: ({ name, code }) => this.setState({ countryCode: code })
+                        onPress: ({ name, code }) => this.setState({ countryCode: code,resetCount:true })
                       })}
                       activeOpacity={0.9}
                       style={[{ borderColor: '#f2f2f2', marginRight: 15, borderBottomWidth: 1, width: 70, height: 44, justifyContent: 'center' }]}
@@ -423,7 +427,7 @@ export default connect(state => ({
                       clearTextOnFocus={false}
                       placeholderTextColor={'#999'}
                       placeholder={i18n.enter_phone}
-                      onChangeText={value_extend => this.setState({ value_extend })}
+                      onChangeText={value_extend => this.setState({ value_extend ,resetCount:true})}
                       style={[styles.stdInput, {
                         flex: 1,
                         height: 44,
@@ -454,26 +458,11 @@ export default connect(state => ({
                         color: 'white'
                       }]}
                     />
-                    <Button
-                      onPress={async () => {
-                        try {
-                          const { verify_code_extend, value_extend } = this.state
-                          await Session.User.Post('v1/sendVerificationCode/phone', {
-                            phoneCountryCode: this.state.countryCode,
-                            phoneNo: value_extend
-                          })
-                          this.props.dispatch(app.showMessage(i18n.alert_sent_code))
-                        } catch (e) {
-                          this.props.dispatch(app.showMessage(i18n.error_try_again))
-                        }
-                      }}
-                      activeOpacity={0.9}
-                      style={[{ marginLeft: 15, backgroundColor: '#ffa81d', borderRadius: 22, width: 120, height: 44, justifyContent: 'center' }]}
-                    >
-                      <Text style={styles.stdInput}>
-                        <FormattedMessage id={'send_code'} />
-                      </Text>
-                    </Button>
+                    <CountDownButton sendCode={() => this.sendCode(this.state.value_extend, this.state.countryCode)}
+                      stop={this.state.resetCount} style={{ marginLeft: 15, backgroundColor: '#ffa81d', borderRadius: 22, width: 120, height: 44, justifyContent: 'center' }} i18n={i18n} />
+
+
+
                   </View>
                 )
               }

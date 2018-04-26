@@ -30,9 +30,13 @@ export default connect(state => ({
 
   static navigationOptions = ({ navigation }) => {
     const reducer = global.store.getState()
+    const type = navigation.state.params.type
+
+    let title = type === 'update' ? reducer.intl.messages.myvehicle : reducer.intl.messages.car_add_vehicle
+    
     return {
       drawerLockMode: 'locked-closed',
-      title: reducer.intl.messages.car_add_vehicle,
+      title: title,
     }
   }
 
@@ -57,6 +61,9 @@ export default connect(state => ({
   }
 
   componentDidMount() {
+
+    console.log(this.props.navigation.state.params)
+
     // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this))
     // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this))
     if(System.Platform.iOS) {
@@ -170,9 +177,7 @@ export default connect(state => ({
 
     const { i18n } = this.props
 
-    // const handleManufacturer = this.searchByRegExp(manufacturer, 'manufacturer')
-
-    // let handleCarModel = this.searchByRegExp(carModel, 'carModel')
+    const { type } = this.props.navigation.state.params
 
     const { manufacturerData, carModelData } = this.state
 
@@ -205,6 +210,7 @@ export default connect(state => ({
               type={'manufacturer'}
               inputChangeText={(text)=>{
                 this.fetchCarModel(text)
+
               }}
             />
 
@@ -239,10 +245,17 @@ export default connect(state => ({
             </View>
           </ScrollView>
         </View>
-        <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
-          <TouchButton title={i18n.cancel} backgroundColor={'#cfcfcf'} onPress={this.cancelPress}/>
-          <TouchButton title={i18n.sub} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>
-        </View>
+        {
+          type === 'update' ?
+            <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
+            <TouchButton title={i18n.car_update} style={{width: width - 40}} backgroundColor={'#5FD700'} onPress={this.onSubmit}/>
+            </View>
+              :
+            <View style={[{flexDirection: 'row', height: this.state.iosBottomViewHeight, left: 20, backgroundColor:'white'}, androidStyle]}>
+              <TouchButton title={i18n.cancel} backgroundColor={'#cfcfcf'} onPress={this.cancelPress}/>
+              <TouchButton title={i18n.sub} backgroundColor={'#5FD700'} style={{marginLeft: 10}} onPress={this.onSubmit}/>
+            </View>
+        }
       </View>
     )}
 })
@@ -381,7 +394,10 @@ function InfoInput(props) {
   return(
     <View style={[{paddingHorizontal: 20}, style]}>
       <Text style={{fontSize: 16, color: '#000', opacity: 0.8, paddingTop: 10,}}>{title}</Text>
-      <Input {...Define.TextInputArgs} clearTextOnFocus={false} placeholder={placeholder} style={{height: 44, paddingLeft: 4, fontSize: 15, }} {...props}/>
+      <Input {...Define.TextInputArgs} clearTextOnFocus={false}
+             placeholder={placeholder} style={{height: 44, paddingLeft: 4, fontSize: 15, }}
+             {...props}
+      />
       <View style={{height: 1, backgroundColor:'#ddd',}}/>
     </View>
   )
