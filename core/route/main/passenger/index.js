@@ -517,7 +517,9 @@ const PickerOptions = connect(state => ({ ...state.booking, i18n: state.intl.mes
             showsHorizontalScrollIndicator={false}
             style={{ flex: 1 }}
           >
-            {selected_friends.map((pipe, index) => (<SelectButton key={index} data={pipe} />))}
+            {
+              selected_friends && selected_friends.map((pipe, index) => (<SelectButton key={index} data={pipe} />))
+            }
           </ScrollView>
 
           <TouchableOpacity onPress={() => {

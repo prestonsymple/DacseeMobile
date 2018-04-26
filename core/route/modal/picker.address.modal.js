@@ -113,19 +113,22 @@ export default connect(state => ({
           console.log(lat, lng)
 
           if (map_mode === 'GOOGLEMAP') {
-            const _query = keywords.replace(' ', '+')
-            const {data} = await Axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat},${lng}&radius=${1000 * 350}&query=${_query}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
-            const {results} = data
+            // const _query = keywords.replace(' ', '+')
+            // const {data} = await Axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat},${lng}&radius=${500}&query=${_query}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
+            const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${1000 * 100}&keyword=${keywords}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
+            const { results } = data
 
             const resultMap = results
               .filter(pipe => (pipe.geometry && pipe.geometry.location && pipe.geometry.location.lng && pipe.geometry.location.lat))
               .map(pipe => ({
                 star: favorite.find(sub => pipe.place_id === sub.placeId),
-                placeIddata: pipe.place_id, name: pipe.name, address: pipe.vicinity,
+                placeId: pipe.place_id, name: pipe.name, address: pipe.vicinity,
                 coords: {
                   lng: parseFloat(pipe.geometry.location.lng), lat: parseFloat(pipe.geometry.location.lat)
                 }
               }))
+
+            console.log(resultMap)
             this.setState({dataSource: dataContrast.cloneWithRows(resultMap), data: resultMap})
           } else {
             const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)
