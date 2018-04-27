@@ -46,16 +46,16 @@ export default connect(() => ({}))(class DownLineDetailScreen extends Component 
     this.setState({
       loading: true
     })
+    const { state } = this.props.navigation
+    const { params, i18n } = state
     try {
-      const { state } = this.props.navigation
-      const { params } = state
       const data = await Session.User.Get(`v1/downline/user/${params._id}`)
       this.setState({
         loading: false,
         data: data
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
+      this.props.dispatch(application.showMessage(i18n.unable_connect_server_pls_retry_later))
       this.setState({
         loading: false
       })

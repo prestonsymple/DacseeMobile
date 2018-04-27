@@ -26,11 +26,12 @@ class PickerBank extends Component {
 
   async componentDidMount() {
     try{
-      const data = await Session.Lookup.Get('v1/lookup/banks?resultType=nameOnly')
-      console.log(data)
+      const {account} = this.props
+      const data = await Session.Lookup.Get(`v1/lookup/banks?resultType=nameOnly&country=${account.country}`)
       this.props.dispatch(wallet.setBankValue({bank_list:data}))
     }catch (e) {
-      this.props.dispatch(app.showMessage('网络状况差，请稍后再试'))
+      console.log(e)
+      this.props.dispatch(app.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
   }
   componentWillUnmount() {}
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
 })
 
 export default connect(state => ({
+  account:state.account,
   user: state.account.user,
   i18n: state.intl.messages || {},
   wallet: state.wallet || {}

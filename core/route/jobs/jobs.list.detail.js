@@ -264,7 +264,7 @@ export default connect(state => ({
               await Session.Booking.Put(`v1/${_id}`, { action: 'reject' })
               this.props.navigation.goBack()
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])
@@ -272,7 +272,7 @@ export default connect(state => ({
         try {
           await Session.Booking.Put(`v1/${_id}`, { action: 'accept' })
         } catch (e) {
-          this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+          this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
         }
       } }
     case 'On_The_Way':
@@ -284,7 +284,7 @@ export default connect(state => ({
               await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
               this.props.navigation.goBack()
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])
@@ -295,7 +295,7 @@ export default connect(state => ({
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'arrived' })
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])
@@ -309,7 +309,7 @@ export default connect(state => ({
               await Session.Booking.Put(`v1/${_id}`, { action: 'no_show' })
               this.props.navigation.goBack()
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])
@@ -320,7 +320,7 @@ export default connect(state => ({
             try {
               await Session.Booking.Put(`v1/${_id}`, { action: 'on_board' })
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])
@@ -334,7 +334,7 @@ export default connect(state => ({
               await Session.Booking.Put(`v1/${_id}`, { action: 'cancel' })
               this.props.navigation.goBack()
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])
@@ -346,7 +346,7 @@ export default connect(state => ({
               await Session.Booking.Put(`v1/${_id}`, { action: 'completed' })
               this.props.navigation.goBack()
             } catch (e) {
-              this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+              this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
             }
           } }
         ])

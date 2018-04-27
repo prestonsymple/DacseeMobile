@@ -118,7 +118,7 @@ function* bookingFlow() {
           yield put(application.showMessage(i18n.no_driver_order))
         } else {
           // yield put(application.showMessage(`${code}${message}`))
-          yield put(application.showMessage('无法连接到服务器，请检查网络'))
+          yield put(application.showMessage(i18n.unable_connect_server_pls_retry_later))
         }
         yield put(booking.passengerSaveStatus(STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
         continue

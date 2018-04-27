@@ -470,7 +470,7 @@ export default connect(state => ({
                 await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
                 this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               } catch (e) {
-                this.props.dispatch(application.showMessage('无法连接到服务器'))
+                this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
               }
             }} driver={driver_info} car={vehicle_info} i18n={this.props.i18n} />
           )

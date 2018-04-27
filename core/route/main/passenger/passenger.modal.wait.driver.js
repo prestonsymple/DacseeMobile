@@ -76,7 +76,7 @@ export default connect(state => ({ status: state.booking.status, booking_id: sta
                 await Session.Booking.Put(`v1/${this.props.booking_id}`, { action: 'cancel' })
                 this.props.dispatch(booking.passengerSetStatus(BOOKING_STATUS.PASSGENER_BOOKING_PICKED_ADDRESS))
               } catch(e) {
-                this.props.dispatch(application.showMessage('无法连接到服务器'))
+                this.props.dispatch(application.showMessage(i18n.unable_connect_server_pls_retry_later))
               }
             }} style={{ backgroundColor: active ? '#e54224' : '#ccc', borderRadius: 4, height: 44, marginHorizontal: 10 }}>
               <Text style={{ fontSize: TextFont.TextSize(16), color: 'white' }}>{i18n.cancel}</Text>

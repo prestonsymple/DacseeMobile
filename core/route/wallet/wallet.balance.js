@@ -66,7 +66,7 @@ export default connect(state => ({
       })
     } catch (e) {
       console.log(e)
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
       this.setState({
         loading: false
       })

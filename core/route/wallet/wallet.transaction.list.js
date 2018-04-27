@@ -71,7 +71,7 @@ export default connect(state => ({
         detail: dataContrast.cloneWithRows(resp)
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
       this.setState({
         loading: false
       })

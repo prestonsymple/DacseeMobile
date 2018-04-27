@@ -111,7 +111,7 @@ export default connect(state => ({ data: state.booking,i18n: state.intl.messages
                 </View>
               </View>
               <View style={{ backgroundColor: 'white', width: width - 30, marginTop: 12, flexDirection: 'row', paddingHorizontal: 15, height: 48, justifyContent: 'flex-end', alignItems: 'center' }}>
-                <Button onPress={() => this.props.dispatch(application.showMessage('无法请求到服务器'))} style={{ paddingHorizontal: 10, height: 28, backgroundColor: '#e5e5e5', borderRadius: 4 }}>
+                <Button onPress={() => this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))} style={{ paddingHorizontal: 10, height: 28, backgroundColor: '#e5e5e5', borderRadius: 4 }}>
                   <Text style={{ fontSize: TextFont.TextSize(12), color: '#7d7d7d', fontWeight: System.Platform.Android ? '400' : '600' }}>出售</Text>
                 </Button>
               </View>

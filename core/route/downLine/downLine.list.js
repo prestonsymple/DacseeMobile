@@ -50,9 +50,9 @@ export default connect(state => ({
     this.setState({
       loading: true
     })
+    const { state } = this.props.navigation
+    const { params, i18n } = state
     try {
-      const { state } = this.props.navigation
-      const { params } = state
       const data = await Session.User.Get(`v1/downline/level/${params.level}`)
       this.setState({
         loading: false,
@@ -60,14 +60,14 @@ export default connect(state => ({
       })
       // console.log(data)
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
+      this.props.dispatch(application.showMessage(i18n.unable_connect_server_pls_retry_later))
       this.setState({
         loading: false
       })
     }
   }
   goUserDetails(_id) {
-    const {i18n} = this.props;
+    const {i18n} = this.props
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'DownLineDetail',
       params: {

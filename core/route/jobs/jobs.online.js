@@ -79,7 +79,7 @@ export default connect(state => ({
         this.props.dispatch(NavigationActions.navigate({ routeName: 'JobsListDetail', params: { jobDetail: this.props.jobs.find(pipe => pipe._id === _id) } }))
       }
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
     this.props.dispatch(application.hideHUD())
   }

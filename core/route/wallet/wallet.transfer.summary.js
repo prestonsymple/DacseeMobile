@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
 })
 
 export default connect(state => ({
-  ...state.wallet
+  ...state.wallet,
+  i18n: state.intl.messages
 })) (class WalletTransferSummaryScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const reducer = global.store.getState()
@@ -68,7 +69,7 @@ export default connect(state => ({
       await Session.Wallet.Post('v1/transferTransactions', body)
 
       this.props.dispatch(Wallet.setBalanceValue({amount: amount}))
-      this.props.dispatch(application.showMessage('转账成功'))
+      this.props.dispatch(application.showMessage(this.props.i18n.transfer_success))
       this.props.navigation.dispatch(NavigationActions.reset({
         index: 2,
         actions: [NavigationActions.navigate({ routeName: 'Main' }),
@@ -80,7 +81,7 @@ export default connect(state => ({
       if (e.response && e.response.data.message) {
         this.props.dispatch(application.showMessage(e.response.data.message))  
       } else {
-        this.props.dispatch(application.showMessage('无法请求到服务器'))
+        this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
       }
       
       this.setState({

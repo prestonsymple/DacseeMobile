@@ -94,7 +94,7 @@ export default connect(state => ({
       // this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
 
       if (resp.length == 0) {
-        this.props.dispatch(application.showMessage('账号信息错误，未找到对应的账号'))
+        this.props.dispatch(application.showMessage(this.props.i18n.error_unable_find_account))
         this.setState({
           searching: false
         })
@@ -108,7 +108,7 @@ export default connect(state => ({
         })
       }
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
       this.setState({
         searching: false
       })

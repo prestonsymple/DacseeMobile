@@ -71,7 +71,7 @@ function* loginFlow() {
           } else if (e.response && e.response.data.code == 'VERIFICATION_CODE_RESEND_WAIT') {
             yield put(application.showMessage(`${i18n.server_busy_code}[${e.response.data.data}]${i18n.seconds_later}`))
           } else {
-            yield put(application.showMessage('无法连接到服务器，请稍后再试'))
+            yield put(application.showMessage(i18n.unable_connect_server_pls_retry_later))
           }
           continue
         }
@@ -151,7 +151,7 @@ function* loginFlow() {
           } else {
             const flow = [
               put(application.hideProgress()),
-              put(application.showMessage('无法连接到服务器，请稍后再试')),
+              put(application.showMessage(i18n.unable_connect_server_pls_retry_later)),
             ]
             if (isMail) {
               flow.push(put(account.loginPutValue(1)))
@@ -202,7 +202,7 @@ function* loginFlow() {
             yield all([
               put(account.loginPutValue(1)),
               put(application.hideProgress()),
-              put(application.showMessage('无法连接到服务器，请稍后再试')),
+              put(application.showMessage(i18n.unable_connect_server_pls_retry_later)),
             ])
           }
           continue
@@ -217,7 +217,7 @@ function* loginFlow() {
           const register=yield call(session.User.Post, 'v1/register/bind',value)
           yield call(loginSuccess, register) // 登录成功
         } catch (e) {
-          yield put(application.showMessage('无法连接到服务器，请稍后再试'))
+          yield put(application.showMessage(i18n.unable_connect_server_pls_retry_later))
         }
         continue
       }
@@ -227,7 +227,7 @@ function* loginFlow() {
           const register=yield call(session.User.Post, 'v1/register/multi',value)
           yield call(loginSuccess, register) // 登录成功
         } catch (e) {
-          yield put(application.showMessage('无法连接到服务器，请稍后再试'))
+          yield put(application.showMessage(i18n.unable_connect_server_pls_retry_later))
         }
         continue
       }

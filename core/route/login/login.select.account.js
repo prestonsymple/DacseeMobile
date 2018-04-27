@@ -44,7 +44,7 @@ export default connect(state => ({ account: state.account, i18n: state.intl.mess
           this.props.dispatch(account.loginPutValue(2))
           this.props.dispatch(application.setMailModeValue(row._id))
         } catch (e) {
-          this.props.dispatch(application.showMessage('无法连接到服务器，请稍后再试'))
+          this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
         }
       }else{
         this.props.dispatch(account.loginPutValue(4))

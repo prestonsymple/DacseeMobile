@@ -80,7 +80,7 @@ export default connect( state => ({
         // detail: dataContrast.cloneWithRows(resp.data)
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法请求到服务器'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
       this.setState({
         loading: false
       })

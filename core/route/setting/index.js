@@ -89,7 +89,7 @@ const SettingAccountScreen = connect(state => ({
       }))
       this.props.dispatch(application.showMessage('全名修改成功'))
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
   }
 
@@ -101,7 +101,7 @@ const SettingAccountScreen = connect(state => ({
       }))
       this.props.dispatch(application.showMessage('邮箱修改成功'))
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
   }
 
@@ -128,7 +128,7 @@ const SettingAccountScreen = connect(state => ({
       }))
       this.props.dispatch(application.showMessage(bankInfo != null?i18n.update_bank_info_succ:i18n.add_bank_info_succ))
     } catch (e) {
-      this.props.dispatch(application.showMessage('网络状况差，请稍后再试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
   }
 

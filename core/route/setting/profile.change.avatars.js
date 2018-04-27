@@ -34,7 +34,7 @@ const PICKER_OPTIONS = {
   }
 }
 **/
-export default connect(state => ({ account: state.account }))(class ProfileChangeAvatarsScreen extends PureComponent {
+export default connect(state => ({ account: state.account,i18n: state.intl.messages }))(class ProfileChangeAvatarsScreen extends PureComponent {
 
 
   static navigationOptions = ({ navigation }) => {
@@ -150,9 +150,9 @@ export default connect(state => ({ account: state.account }))(class ProfileChang
       this.props.dispatch(account.setAccountValue({
         user: Object.assign({}, this.props.account.user, { avatars: data.avatars })
       }))
-      this.props.dispatch(application.showMessage('头像已上传'))
+      this.props.dispatch(application.showMessage(this.props.i18n.already_upload_avatar))
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器，请稍后重试'))
+      this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     } finally {
       this.setState({ uploading: false })
     }

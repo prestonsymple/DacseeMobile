@@ -50,6 +50,7 @@ export default connect(state => ({
     this.setState({
       loading: true
     })
+    const { i18n } = this.props
     try {
       //获取列表
       const data = await Session.User.Get('v1/downline/level/0')
@@ -58,7 +59,7 @@ export default connect(state => ({
         data:data
       })
     } catch (e) {
-      this.props.dispatch(application.showMessage('无法连接到服务器'))
+      this.props.dispatch(application.showMessage(i18n.unable_connect_server_pls_retry_later))
       this.setState({
         loading: false
       })
