@@ -3,19 +3,24 @@ import {
   Text, View, Image, TouchableOpacity, ListView, Animated, PanResponder, StyleSheet
 } from 'react-native'
 import moment from 'moment'
-import { Screen, Icons, Session, TextFont } from '../../../utils'
+import { Screen, Icons, Session,UtilMath, TextFont } from '../../../utils'
 import Resources from '../../../resources'
 import OrderSlider from './order.slider'
+import { connect } from 'react-redux'
 const { height, width } = Screen.window
 
-export default class OfflineListItem extends Component {
+export default connect(state => ({
+  i18n: state.intl.messages,
+  location: state.account.location||{}
+}))(class OfflineListItem extends Component {
   constructor(props) {
     super(props)
     this.sliderWidth = 0
     this.currentPosition = new Animated.Value(0)
     this.createPanResponder()
     this.state={
-      canscoll:true
+      canscoll:true,
+      distance:0
     }
   }
 
@@ -94,18 +99,25 @@ export default class OfflineListItem extends Component {
   handlePositionChange(value) {
 
   }
-
+  componentWillReceiveProps(nextProps){
+    const {latitude ,longitude}=nextProps.location
+    const {lng ,lat}=nextProps.itemData.from.coords
+    let distance=parseFloat(UtilMath.distance(longitude,latitude,lng,lat)/1000).toFixed(1)
+    if(!(this.state.distance-distance===0)){
+      this.setState({distance})
+    }
+  }
   render() {
     const { itemData, itemDay, onPress = () => { } } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
-
+    const {lng ,lat}=from.coords
     return (
       <View style={styles.container}>
         <View style={[styles.text_cell, { justifyContent: 'space-between' }]}>
           <View style={{ flexDirection: 'row' ,alignItems:'center'}}>
             <Text style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
             <Image source={Resources.image.distance} resizeMode='contain' style={{height:18,width:20,marginLeft:10}}/>
-            <Text style={styles.order_status}>{'~ 15km'}</Text>
+            <Text style={styles.order_status}>{`${this.state.distance===0?'<1':this.state.distance}km`}</Text>
           </View>
           <Text style={styles.fare}>{`RM ${parseFloat(fare).toFixed(2)}`}</Text>
         </View>
@@ -126,7 +138,7 @@ export default class OfflineListItem extends Component {
       </View>
     )
   }
-}
+})
 
 const styles = StyleSheet.create({
   container: {
