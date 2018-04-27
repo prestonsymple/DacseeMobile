@@ -11,7 +11,8 @@ const initialState = {
   requestor: [],
   loading: false,
   friends_location: [],
-  page: 0
+  page: 0,
+  more:true
 }
 
 export default handleActions({

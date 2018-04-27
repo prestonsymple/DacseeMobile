@@ -117,7 +117,7 @@ export default connect(state => ({
           <View style={{ flexDirection: 'row' ,alignItems:'center'}}>
             <Text style={styles.orderDate}>{moment(booking_at).format('MM-DD HH:mm')}</Text>
             <Image source={Resources.image.distance} resizeMode='contain' style={{height:18,width:20,marginLeft:10}}/>
-            <Text style={styles.order_status}>{`${this.state.distance===0?'<1':this.state.distance}km`}</Text>
+            <Text style={styles.order_status}>{this.state.distance===0?'<100m':(this.state.distance+'km')}</Text>
           </View>
           <Text style={styles.fare}>{`RM ${parseFloat(fare).toFixed(2)}`}</Text>
         </View>

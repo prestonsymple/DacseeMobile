@@ -171,17 +171,20 @@ export default connect(state => ({
     }
     return arr
   }
+  onEndReached() {
+    const { loading } =this.props
+    if (loading) {
+      return
+    }
+    this.props.dispatch(circle.asyncFetchFriends())
+  }
 
   searchBarChange(text){
     const searchFriends =  this.searchByRegExp(text)
-
     let requestor = []
-
     if (text === ''){
       requestor = this.props.requestor
     }
-
-
     const _dataSource = dataContrast.cloneWithRowsAndSections([
       requestor,
       searchFriends
@@ -256,6 +259,8 @@ export default connect(state => ({
                   </Text>
                 </View></TouchableWithoutFeedback>:null
             )}
+            onEndReached={this.onEndReached.bind(this)}
+            onEndReachedThreshold={10}
             renderRow={(data, section, rowId) =>
               section === '0' ?
                 (<RequestorPerson
