@@ -9,7 +9,7 @@ import ActionSheet from 'react-native-actionsheet'
 import { join } from 'redux-saga/effects'
 
 import { application, circle } from '../../../redux/actions'
-import { Icons, Screen, Session,TextFont } from '../../../utils'
+import { Icons, Screen, Session, TextFont, Define } from '../../../utils'
 
 const { width, height } = Screen.window
 
@@ -21,9 +21,7 @@ export default connect(state => ({
 }))(class FriendsCircleDetailComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
-    const { _id, checked, friend_id, friend_info,i18n} = navigation.state.params
-    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = friend_info
-
+    const { i18n } = navigation.state.params
     return {
       drawerLockMode: 'locked-closed',
       headerRight: (
@@ -65,11 +63,11 @@ export default connect(state => ({
   }
 
   _pressActionSheet(index) {
-    const {i18n} = this.props.navigation.state.params
+    const { i18n, type } = this.props.navigation.state.params
     if (index === 0) {
       this.props.dispatch(application.showMessage(i18n.already_report_check))
     }
-    if (index === 1) {
+    if (index === 1 && type === 'FRIEND') {
       Alert.alert(i18n.friend_delete, i18n.del_friend_confirm, [{
         text: i18n.confirm,
         onPress: async () => {
@@ -83,32 +81,54 @@ export default connect(state => ({
             this.props.dispatch(application.showMessage(i18n.timeout_try_again))
           }
         }
-      }, { text: i18n.cancel}])
+      }, { text: i18n.cancel }])
     }
   }
-
+  async onPressAccept(requestor_id){
+    const { i18n } = this.props.navigation.state.params
+    try {
+      const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'accept' })
+    } catch (e) {
+      this.props.dispatch(application.showMessage(i18n.error_try_again))
+    } finally {
+      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+    }
+    this.props.navigation.goBack()
+  }
+  async onPressReject(requestor_id){
+    const { i18n } = this.props.navigation.state.params
+    try {
+      const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
+    } catch (e) {
+      this.props.dispatch(application.showMessage(i18n.error_try_again))
+    } finally {
+      this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+    }
+    this.props.navigation.goBack()
+  }
   render() {
     const { i18n } = this.props
     const { dataSource } = this.state
-    const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
-    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = friend_info
+    const { _id, checked, friend_id, friend_info = this.props.navigation.state.params.requestor_info, requestor_id, type } = this.props.navigation.state.params
+    const { fullName, email, phoneCountryCode, phoneNo, userId, avatars = [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = friend_info
+   
     return (
-      <View style={{ flex: 1, backgroundColor:'white' }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <ScrollView contentContainerStyle={{}} style={{ backgroundColor: 'white' }}>
           <View style={{ height: height * 0.25, backgroundColor: '#1ab2fd', alignItems: 'center', paddingHorizontal: 25 }}>
             {/*<View style={{marginTop: 10}}>*/}
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <Image style={styles.avatar} source={{ uri: avatars[avatars.length - 1].url }} />
               <View style={{ backgroundColor: '#7ed321', height: 18, width: 18, position: 'absolute', bottom: 8, right: 8, borderRadius: 9 }} />
             </View>
-            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ color: 'white', fontSize: TextFont.TextSize(22), marginTop: 10 }}>{ fullName }</Text>
+            <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ color: 'white', fontSize: TextFont.TextSize(22), marginTop: 10 }}>{fullName}</Text>
             {/*</View>*/}
           </View>
-          <View style={{ paddingHorizontal: 20,  marginTop: 10,  }}>
-            <ListItem i18n={i18n.userid} params={userId}/>
-            <ListItem i18n={i18n.phone} params={phoneCountryCode}/>
-            <ListItem i18n={i18n.email} params={email || i18n.no_content}/>
-            <ListItem i18n={i18n.country} params={i18n.no_content}/>
+          <View style={{ paddingHorizontal: 20, marginTop: 10, }}>
+            <ListItem i18n={i18n.userid} params={userId} />
+            <ListItem i18n={i18n.phone} params={phoneCountryCode} />
+            <ListItem i18n={i18n.email} params={email || i18n.no_content} />
+            <ListItem i18n={i18n.country} params={i18n.no_content} />
 
             {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'green' }}>*/}
             {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>*/}
@@ -128,30 +148,45 @@ export default connect(state => ({
             {/*</View>*/}
           </View>
         </ScrollView>
-        <View style={{ flexDirection: 'row', alignItems:'center', justifyContent: 'center'}}>
-          <TouchableOpacity onPress={async () => {
-            Alert.alert(i18n.friend_delete, i18n.del_friend_confirm, [{
-              text: i18n.confirm,
-              onPress: async () => {
-                try {
-                  const { _id } = this.props.navigation.state.params
-                  await Session.Circle.Delete(`v1/circle/${_id}`)
-                  this.props.dispatch(circle.asyncFetchFriends({ init: true }))
-                  Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
-                } catch (e) {
-                  console.log(e)
-                  this.props.dispatch(application.showMessage(i18n.timeout_try_again))
+
+        { type === 'FRIEND' && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <TouchableOpacity onPress={async () => {
+              Alert.alert(i18n.friend_delete, i18n.del_friend_confirm, [{
+                text: i18n.confirm,
+                onPress: async () => {
+                  try {
+                    const { _id } = this.props.navigation.state.params
+                    await Session.Circle.Delete(`v1/circle/${_id}`)
+                    this.props.dispatch(circle.asyncFetchFriends({ init: true }))
+                    Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
+                  } catch (e) {
+                    console.log(e)
+                    this.props.dispatch(application.showMessage(i18n.timeout_try_again))
+                  }
                 }
-              }
-            }, { text: i18n.cancel}])
-          }} activeOpacity={.7} style={styles.sendRequest}>
-            <Text style={{ color: 'white', fontSize: TextFont.TextSize(18), fontWeight: 'bold' }}>{i18n.friend_delete}</Text>
-          </TouchableOpacity>
-        </View>
+              }, { text: i18n.cancel }])
+            }} activeOpacity={.7} style={styles.sendRequest}>
+              <Text style={{ color: 'white', fontSize: TextFont.TextSize(18), fontWeight: 'bold' }}>{i18n.friend_delete}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        { type === 'REQUEST' && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',marginHorizontal:20, marginBottom:Define.system.ios.x ?42: 20 }}>
+            <TouchableOpacity onPress={() => this.onPressReject(_id)}
+              activeOpacity={.7} style={{ width: width/3, height: 40, borderRadius: 25, backgroundColor: '#D8D8D8', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.reject}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() =>this.onPressAccept(_id)} 
+              activeOpacity={.7} style={{ width:  width/3, height: 40, borderRadius: 25, backgroundColor: '#ffb639', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: '#000', fontSize: TextFont.TextSize(15), fontWeight: '600' }}>{i18n.accept}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <ActionSheet
           ref={e => this.ActionSheet = e}
           title={i18n.more}
-          options={[i18n.friend_report, i18n.friend_delete, i18n.cancel]}
+          options={type === 'FRIEND' ? [i18n.friend_report, i18n.friend_delete, i18n.cancel] : [i18n.friend_report, i18n.cancel]}
           cancelButtonIndex={2}
           destructiveButtonIndex={0}
           onPress={this._pressActionSheet.bind(this)}
@@ -163,10 +198,10 @@ export default connect(state => ({
 
 function ListItem(props) {
   const { i18n, params } = props
-  return(
-    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
-      <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400' }}>{ i18n }</Text>
-      { params && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400' }}>{ params }</Text>) }
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
+      <Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400' }}>{i18n}</Text>
+      {params && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(16), color: '#333', fontWeight: '400' }}>{params}</Text>)}
     </View>
   )
 }
@@ -180,9 +215,9 @@ const styles = StyleSheet.create({
     borderColor: '#106e9d',
     backgroundColor: '#1ab2fd',
   },
-  sendRequest:{
+  sendRequest: {
     height: 66,
-    marginBottom: 20,
+    marginBottom:Define.system.ios.x ?42: 20,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

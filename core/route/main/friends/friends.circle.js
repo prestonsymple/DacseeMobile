@@ -140,11 +140,9 @@ export default connect(state => ({
 
   stripscript(s) {
     let pattern = new RegExp('[`~!#$^&*()=|{}\':;\',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“\'。，、？]')
-
     let rs = ''
     for (let i = 0; i < s.length; i++) {
       rs = rs+s.substr(i, 1).replace(pattern, '')
-      console.log(rs)
     }
 
     return rs
@@ -152,10 +150,7 @@ export default connect(state => ({
 
   searchByRegExp(text){
     let friends = this.props.friend
-
     let handleText = this.stripscript(text)
-    console.log(handleText)
-
     if(!(friends instanceof Array)){
       return
     }
@@ -273,6 +268,7 @@ export default connect(state => ({
                       this.props.dispatch(circle.asyncFetchFriends({ init: true }))
                     }
                   }}
+                  onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data,type:'REQUEST' })}
                   onPressReject={async (requestor_id) => {
                     try {
                       const data = await Session.Circle.Put(`v1/requests/${requestor_id}`, { action: 'reject' })
@@ -286,7 +282,7 @@ export default connect(state => ({
                 (<ItemPerson
                   data={data}
                   onPressCheck={() => this.onPressCheck(data)}
-                  onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data })}
+                  onPressDetail={() => this.props.navigation.navigate('FriendsDetail', { i18n,...data,type:'FRIEND' })}
                 />)
             }
             renderSeparator={() => (
@@ -360,12 +356,12 @@ class ItemPerson extends Component {
 
 class RequestorPerson extends Component {
   render() {
-    const { onPressAccept = () => {}, onPressReject = () => {}, data } = this.props
-    const { _id, requestor_id, requestor_info } = data
+    const { onPressDetail = () => {}, onPressAccept = () => {}, onPressReject = () => {}, data } = this.props
+    const { _id, requestor_id, requestor_info  } = data
     const { avatars = [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], email, fullName, phoneCountryCode, phoneNo, userId } = requestor_info
 
     return (
-      <View activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+      <TouchableOpacity  onPress={() => onPressDetail()} activeOpacity={.7} style={{ height: 84, backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
         <View style={{ justifyContent: 'center', marginRight: 10 }}>
           <Image style={{ width: 56, height: 56, borderRadius: 28 }} source={{ uri: avatars[avatars.length - 1].url }} />
         </View>
@@ -382,7 +378,7 @@ class RequestorPerson extends Component {
             { Icons.Generator.Material('check', 18, 'white') }
           </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
