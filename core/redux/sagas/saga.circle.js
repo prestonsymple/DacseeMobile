@@ -6,7 +6,7 @@ import { circle, application } from '../actions'
 import { NavigationActions } from 'react-navigation'
 import { System, Session } from '../../utils'
 
-const DEFAULT_LIMIT =100
+const DEFAULT_LIMIT =20
 
 function* fetchFriends() {
   while (true) {
@@ -24,10 +24,12 @@ function* fetchFriends() {
       }
 
       let { requestor, friend } = yield all({
-        requestor: call(Session.Circle.Get, 'v1/requests?skip=0&limit=100'),
+        requestor: call(Session.Circle.Get, 'v1/requests?skip=0&limit=20'),
         friend: call(Session.Circle.Get, `v1/circle?skip=${page * limit}&limit=${limit}`)
       })
-      
+      // if(friend.lenght<limit){
+      //   yield put(circle.setValues({ more: false }))
+      // }
       if (!init) {
         const clone = circleReducer.friend.splice(0)
         friend = clone.concat(friend)
