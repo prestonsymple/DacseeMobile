@@ -50,8 +50,8 @@ export default connect(state => ({
   render() {
     const { selected_wallet,i18n } = this.props
     const { name, country, countryFlag, availableAmount } = selected_wallet
-    let countryName=name.split(' ')[0];
-    let walletName=name.split(' ')[1];
+    let countryName=name.split(' ')[0]
+    let walletName=name.split(' ')[1]
 
     console.log(availableAmount)
     return (
@@ -82,10 +82,10 @@ class ScrollTabView extends Component {
 
   _goToPage(pageNum, scrollAnimation = true) {
     if (this._scrollView && this._scrollView.scrollTo) {
-      this._scrollView.scrollTo({x: pageNum * width, scrollAnimation});
+      this._scrollView.scrollTo({x: pageNum * width, scrollAnimation})
       this.setState({
         currentPage: pageNum,
-      });
+      })
     }
   }
   _renderTabView() {
@@ -116,7 +116,6 @@ class ScrollTabView extends Component {
   }
 
   _renderScrollContent() {
-    console.log(this.props.walletInfo)
     let array = [<OverView key={1} onNavigate={ this.props.onNavigate } walletInfo={ this.props.walletInfo }/>,
       <WalletTransactionListScreen key={2} walletInfo={ this.props.walletInfo }/>]
     if(this.props.walletInfo.type == 'DS-US') array.push(<IncomeList key={3} walletInfo={ this.props.walletInfo }/>)

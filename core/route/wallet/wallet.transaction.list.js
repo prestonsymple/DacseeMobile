@@ -99,8 +99,10 @@ export default connect(state => ({
           dataSource={detail}
           enableEmptySections={true}
           renderRow={(row) => <DetailItem data={row} />}
+          renderSectionHeader={() => (
+            <View style={{ height: 2 }}></View>
+          )}
           renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
-          style={{ flex: 1, height: 30, marginTop: 15 }}
         />
       </View>
     )
@@ -111,26 +113,35 @@ class DetailItem extends Component {
 
   render() {
     const { data } = this.props
-    const { type, amount, remarks, yourRef } = data
-    console.log(data.timestamp)
+    const { type, amount, remarks, yourRef = '' } = data
     const timestamp = moment( new Date(data.timestamp).getTime()).format('YYYY-MM-DD HH:mm:ss')
     return (
-      <View style={{ paddingHorizontal: 26, flex: 1, height: 104, backgroundColor: 'white', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View style={{ paddingHorizontal: 26, paddingVertical: 14, flex: 1, backgroundColor: 'white', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
         {/* <View style={{  }}> */}
         <View style={{ width: 40 }}>
-          {
-            amount > 0 ?
-              Icons.Generator.Material('arrow-upward', 18, '#e74a6e') :
-              Icons.Generator.Material('arrow-downward', 18, '#6bd19e')
-          }
+          <Image source={amount > 0 ?Resources.image.transfer_in:Resources.image.transfer_out} />
+          {/*{*/}
+
+            {/*amount > 0?*/}
+          {/*Icons.Generator.Material('arrow-upward', 18, '#e74a6e') :*/}
+          {/*Icons.Generator.Material('arrow-downward', 18, '#6bd19e')*/}
+          {/*}*/}
         </View>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: TextFont.TextSize(14), color: '#555', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 8 }}>{ type }</Text>
-          <View style={{ flexDirection: 'row' }}>
-            {/* <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text> */}
-            <Text style={{ fontSize: TextFont.TextSize(13), color: '#999', fontWeight: '400', fontFamily: 'Cochin', top: .5 }}>{ timestamp }</Text>
-          </View>
-          <Text style={{ marginTop: 10, fontSize: TextFont.TextSize(13) }}>{ yourRef }</Text>
+          <Text ellipsizeMode={'middle'} numberOfLines={1} style={{ fontSize: TextFont.TextSize(15), color: '#333', fontWeight: System.Platform.Android ? '400' : '600', marginBottom: 4 }}>{ type }</Text>
+          {
+            yourRef.length === 0 ? (
+              <Text style={{ fontSize: TextFont.TextSize(12), color: '#666' }}>{ yourRef.toUpperCase() }</Text>
+            ) : (
+              <View>
+                <View style={{ flexDirection: 'row', marginBottom: 4 }}>
+                  {/* <Text style={{ fontSize: 11, color: '#999', fontWeight: '400' }}>今天 </Text> */}
+                  <Text style={{ fontSize: TextFont.TextSize(12), color: '#666', fontWeight: '400', top: .5 }}>{ timestamp }</Text>
+                </View>
+                <Text style={{ fontSize: TextFont.TextSize(12), color: '#666' }}>{ yourRef.toUpperCase() }</Text>
+              </View>
+            )
+          }
         </View>
         <View style={{ width: 80, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
           {/* {

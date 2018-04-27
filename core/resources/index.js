@@ -26,7 +26,8 @@ export default {
     distance:require ('./images/distance.png'),
     slice_adv_car:require('./images/Slice_Adv_Car.png'),
     car_dafult:require('./images/car_dafult.png'),
-    
+    transfer_in:require('./images/arrow_in.png'),
+    transfer_out:require('./images/arrow_out.png'),
     car_budget: require('./images/car_budget.png'),
     car_premium: require('./images/car_premium.png'),
     car_rookie: require('./images/car_rookie.png'),
