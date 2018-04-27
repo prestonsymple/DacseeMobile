@@ -3,64 +3,79 @@ import {
   Text, View, Image, TouchableOpacity, ListView, ScrollView, RefreshControl, StyleSheet
 } from 'react-native'
 import moment from 'moment'
-import { Screen, Icons, Session, TextFont } from '../../../utils'
+import { Screen, Icons, Session,UtilMath, TextFont } from '../../../utils'
 import { connect } from 'react-redux'
 const { height, width } = Screen.window
 
 export default connect(state => ({
-  i18n: state.intl.messages || {}
+  i18n: state.intl.messages || {},
+  location: state.account.location||{}
 }))(class OfflineListItem extends Component {
+  constructor(props) {
+    super(props)
+    this.state={
+      distance:0
+    }
+  }
+  distance
   _getStatus(str) {
     let json={}
     let {i18n}=this.props
     switch(str) {
     case 'Pending_Acceptance':
-      json.text=i18n.Pending_Acceptance;
+      json.text=i18n.Pending_Acceptance
       json.color= '#2ed37e'
       return json
     case 'On_The_Way':
-      json.text=i18n.On_The_Way;
+      json.text=i18n.On_The_Way
       json.color= '#2ed37e'
       return json
     case 'Arrived':
-      json.text=i18n.Arrived;
+      json.text=i18n.Arrived
       json.color= '#2ed37e'
       return json
     case 'No_Show':
-      json.text=i18n.No_Show;
+      json.text=i18n.No_Show
       json.color= '#ccc'
       return json
     case 'On_Board':
-      json.text=i18n.On_Board;
+      json.text=i18n.On_Board
       json.color= '#2ed37e'
       return json
     case 'Completed':
-      json.text=i18n.Completed;
+      json.text=i18n.Completed
       json.color= '#2ed37e'
       return json
     case 'Cancelled_by_Passenger':
-      json.text=i18n.Cancelled_by_Passenger;
+      json.text=i18n.Cancelled_by_Passenger
       json.color= '#ccc'
       return json
     case 'Cancelled_by_Driver':
-      json.text=i18n.Cancelled_by_Driver;
+      json.text=i18n.Cancelled_by_Driver
       json.color= '#ccc'
       return json
     case 'Rejected_by_Driver':
-      json.text=i18n.Rejected_by_Driver;
+      json.text=i18n.Rejected_by_Driver
       json.color= '#red'
       return json
     case 'No_Taker':
-      json.text=i18n.No_Taker;
+      json.text=i18n.No_Taker
       json.color= '#ccc'
       return json
+    }
+  }
+  componentWillReceiveProps(nextProps){
+    const {latitude ,longitude}=nextProps.location
+    const {lng ,lat}=nextProps.itemData.from.coords
+    let distance=parseFloat(UtilMath.distance(longitude,latitude,lng,lat)/1000).toFixed(1)
+    if(!(this.state.distance-distance===0)){
+      this.setState({distance})
     }
   }
   render() {
     const { itemData,itemIndex, itemDay, onPress = () => { }, working } = this.props
     const { from, destination, booking_at, payment_method, fare, status } = itemData
     const optionObject = this._getStatus(status)
-    console.log(itemIndex,'itemIndex')
     return (
       <TouchableOpacity activeOpacity={.7} onPress={onPress}>
         <View style={[styles.container,{marginTop:itemIndex==0?15:0}]}>
