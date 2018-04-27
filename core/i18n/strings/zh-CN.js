@@ -358,6 +358,7 @@ const zh_CN = {
   input_prompt: '请输入',
   error_params_empty: '参数不能为空',
 
+  update_succ:'修改成功'
 }
 
 export default zh_CN

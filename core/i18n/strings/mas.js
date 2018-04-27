@@ -363,6 +363,7 @@ const mas = {
 
   error_params_empty: 'Sila masukkan parameter (Malay)',
 
+  update_succ:'Berjaya dikemaskini'
 }
 
 export default mas

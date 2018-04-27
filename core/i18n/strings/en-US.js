@@ -362,6 +362,8 @@ const en_US = {
 
   error_params_empty: 'Parameter cannot be empty',
 
+  update_succ:'Updated successfully'
+
 }
 
 export default en_US

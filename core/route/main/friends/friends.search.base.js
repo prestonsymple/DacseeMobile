@@ -58,7 +58,7 @@ export default connect(state => ({
         const searchRet = await Session.User.Get(`v1/search?country=CN&${searchStr}`)
         this.setState({ dataSource: dataContrast.cloneWithRows(searchRet) })
       } catch (err) {
-        this.props.dispatch(application.showMessage('请确认输入是否正确，并再次尝试'))
+        this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
         this.props.navigation.goBack()
       }
     }

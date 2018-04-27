@@ -87,7 +87,7 @@ const SettingAccountScreen = connect(state => ({
       this.props.dispatch(account.setAccountValue({
         user: Object.assign({}, this.props.user, { fullName: resp.fullName })
       }))
-      this.props.dispatch(application.showMessage('全名修改成功'))
+      this.props.dispatch(application.showMessage(this.props.i18n.update_succ))
     } catch (e) {
       this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
@@ -99,7 +99,7 @@ const SettingAccountScreen = connect(state => ({
       this.props.dispatch(account.setAccountValue({
         user: Object.assign({}, this.props.user, { email: data.email })
       }))
-      this.props.dispatch(application.showMessage('邮箱修改成功'))
+      this.props.dispatch(application.showMessage(this.props.i18n.update_succ))
     } catch (e) {
       this.props.dispatch(application.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
     }
