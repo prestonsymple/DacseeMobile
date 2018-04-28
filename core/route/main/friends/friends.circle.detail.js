@@ -77,7 +77,6 @@ export default connect(state => ({
             this.props.dispatch(circle.asyncFetchFriends({ init: true }))
             Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
           } catch (e) {
-            console.log(e)
             this.props.dispatch(application.showMessage(i18n.timeout_try_again))
           }
         }
@@ -129,23 +128,6 @@ export default connect(state => ({
             <ListItem i18n={i18n.phone} params={phoneCountryCode} />
             <ListItem i18n={i18n.email} params={email || i18n.no_content} />
             <ListItem i18n={i18n.country} params={i18n.no_content} />
-
-            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'green' }}>*/}
-            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.userid }</Text>*/}
-            {/*{ userId && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ userId }</Text>) }*/}
-            {/*</View>*/}
-            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>*/}
-            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.phone }</Text>*/}
-            {/*{ phoneNo && (<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>({ phoneCountryCode }) { phoneNo }</Text>) }*/}
-            {/*</View>*/}
-            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>*/}
-            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.email }</Text>*/}
-            {/*<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ email || i18n.no_content}</Text>*/}
-            {/*</View>*/}
-            {/*<View style={{ marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between' }}>*/}
-            {/*<Text style={{ fontSize: TextFont.TextSize(16), color: '#999', fontWeight: '400', marginBottom: 6 }}>{ i18n.country }</Text>*/}
-            {/*<Text style={{ top: -1.5, fontSize: TextFont.TextSize(14), color: '#333', fontWeight: '400' }}>{ i18n.no_content }</Text>*/}
-            {/*</View>*/}
           </View>
         </ScrollView>
 
@@ -161,7 +143,6 @@ export default connect(state => ({
                     this.props.dispatch(circle.asyncFetchFriends({ init: true }))
                     Alert.alert(i18n.finish, i18n.already_del_friend, [{ text: i18n.confirm, onPress: () => this.props.navigation.goBack() }])
                   } catch (e) {
-                    console.log(e)
                     this.props.dispatch(application.showMessage(i18n.timeout_try_again))
                   }
                 }

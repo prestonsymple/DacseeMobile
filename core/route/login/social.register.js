@@ -1,16 +1,13 @@
 /* global store */
 import React, { Component } from 'react'
 import {
-  Text, View, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
+  Text, View, Image,TextInput, ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
-import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
 import { Screen, Icons, Redux, Define, System, Session } from '../../utils'
 import { Button } from '../../components'
-import Resources from '../../resources'
 import { application, account, booking } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
 import CountDownButton from './components/button.count.down'
@@ -53,7 +50,6 @@ export default connect(state => ({
         provider: this.props.navigation.state.params.provider,
         id: this.state.userInfo.uid
       },
-      // _id: '5a4dfb482dd97f23dc6a06c4',
       referralUserId: this.state.referralUserId
     }
     try {
@@ -76,9 +72,7 @@ export default connect(state => ({
             id: this.state.userInfo.uid
           }
         }
-        //this.props.navigation.navigate({ routeName: 'LoginSelectAccount', params: { data: e.response.data.data, value,type:'BIND_PHONE' } })
         this.props.dispatch(account.loginNext({ stage: 6, value  }))
-        //   const data =await Session.User.Post('v1/register/bind', par)
       }
     } finally {
       this.setState({

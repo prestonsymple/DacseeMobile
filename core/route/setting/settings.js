@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, Component } from 'react'
+import React, { Component } from 'react'
 import { StyleSheet, View, ListView, TouchableOpacity, Text, Switch, InteractionManager, Image } from 'react-native'
 import { connect } from 'react-redux'
 // import InteractionManager from 'InteractionManager'

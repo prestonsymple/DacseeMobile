@@ -27,23 +27,6 @@ export default connect(state => ({
     }
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      // dataSource: dataContrast.cloneWithRows([
-      //   { describer: '使用电话号码进行搜索', label: '电话号码', icon: Icons.Generator.Awesome('phone', 36, '#666', { style: { left: 5 } }) },
-      //   { describer: '使用邮箱/用户账号进行搜索', label: '邮箱/用户账号', icon: Icons.Generator.Awesome('envelope', 36, '#666', { style: { left: 2 } }) },
-      //   { describer: '通过微信邀请好友', onPress: () => this.ActionSheet.show(), label: '微信', icon: Icons.Generator.Awesome('weixin', 36, '#666', { style: { left: 0 } }) },
-      //   { describer: '分享邀请链接到微博', onPress: () => this.props.dispatch(application.showMessage('微博授权获取失败')), label: '微博', icon: Icons.Generator.Awesome('weibo', 36, '#666', { style: { left: 1.5 } }) },
-      //   // { describer: '从Facebook好友列表中查找', label: 'Facebook', icon: Icons.Generator.Awesome('facebook', 36, '#333', { style: { left: 8 } }) }
-      // ])
-    }
-  }
-
-  async componentDidMount() {
-    console.log(this.props)
-  }
-
   render() {
     const { dataSource } = this.state
     const { i18n } = this.props
@@ -105,50 +88,6 @@ export default connect(state => ({
               this.props.navigation.navigate('CommonScanQRCode',{i18n} )
             }}
           />
-
-          {/* WECHAT SESSION */}
-          {/* <BlockWrap
-            iconBackgroundColor={'#f4a951'}
-            icon={Icons.Generator.Awesome('wechat', 28, 'white')}
-            title={i18n.wechat_friend}
-            describer={i18n.wechat_shareto_friend}
-            onPress={async () => {
-              await ShareUtil.share(
-                '分享至微信',
-                'http://clientstaging.incredible-qr.com/clients/dacsee/dacsee-logo.png',
-                `http://clientstaging.incredible-qr.com/clients/dacsee/redirect-page/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
-                '加入DACSEE',
-                2,
-                (arg) => { console.log(arg) }
-              )
-            }}
-          /> */}
-
-          {/* WECHAT CIRCLE */}
-          {/* <BlockWrap
-            iconBackgroundColor={'#f4a951'}
-            icon={<Image source={require('../../../resources/images/wechat_moments.png')} />}
-            title={i18n.wechat_moment}
-            describer={i18n.wechat_shareto_moment}
-            onPress={async () => {
-              await ShareUtil.share(
-                '分享至微信',
-                'http://clientstaging.incredible-qr.com/clients/dacsee/dacsee-logo.png',
-                `http://clientstaging.incredible-qr.com/clients/dacsee/redirect-page/?referrer=${this.props.account.user.userId}&id=${this.props.account.user._id}`,
-                '加入DACSEE',
-                3,
-                (arg) => { console.log(arg) }
-              )
-            }}
-          /> */}
-
-          {/* WECHAT CIRCLE */}
-          {/* <BlockWrap
-            iconBackgroundColor={'#f4a951'}
-            icon={Icons.Generator.Awesome('weibo', 32, 'white')}
-            title={i18n.weibo}
-            describer={i18n.wechat_shareto_weibo}
-          /> */}
         </ScrollView>
       </View>
     )

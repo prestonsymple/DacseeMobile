@@ -1,27 +1,13 @@
-import React, { Component, PureComponent } from 'react'
+import React, { Component } from 'react'
 import {
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
+  Text, View, Image, TouchableOpacity,  ListView
 } from 'react-native'
-import InteractionManager from 'InteractionManager'
-import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
 import { Screen, Icons, Redux, Define, System ,TextFont } from '../../utils'
-import { Button } from '../../components'
-import Resources from '../../resources'
-import { application, wallet } from '../../redux/actions'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 const {height, width} = Screen.window
-
-const styles = StyleSheet.create({
-  pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
-  itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
-  itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
-  itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
-})
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
@@ -39,7 +25,6 @@ export default connect( state=>({
   constructor(props){
     super(props)
     this.state={
-      // walletInfo: this.props.selected_wallet,
       transferInfo: this.props.navigation.state.params.transferInfo,
       detail: dataContrast.cloneWithRows(this.props.navigation.state.params.transferInfo.userList)
     }

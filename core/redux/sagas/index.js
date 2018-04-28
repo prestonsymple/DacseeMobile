@@ -19,48 +19,6 @@ import restoreSaga from './saga.restore'
 /******************************* WATCHERS *************************************/
 /******************************************************************************/
 
-// function* watchClientVersion(action) {
-//   try {
-//     const { payload } = action
-//     console.log(payload)
-//     if (payload !== 'inactive') return
-
-//     console.log('[检查更新]')
-//     const remoteBundle = yield call(CodePush.checkForUpdate)
-//     console.log('[BUNDLE]', remoteBundle)
-//     if (!remoteBundle) return
-    
-//     yield delay(1000)
-
-//     yield put(application.startUpdate(remoteBundle))
-//   } catch (e) {
-//     console.log(e)
-//   }
-// }
-
-// function* watchiOSDrawerEvent() {
-//   while(true) {
-//     yield take(application.openDrawer().type)
-//     // yield put(application.hideStatusBar())
-//     // yield put(application.showStatusBar())
-//     yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
-//   }
-// }
-
-// function* watchAndroidDrawerEvent() {
-//   while(true) {
-//     yield take(application.openDrawer().type)
-//     yield put(NavigationActions.navigate({ routeName: 'DrawerOpen' }))
-//   }
-// }
-
-// function* watchNetworkStatus() {
-//   while (true) {
-//     const status = yield take(application.changeNetworkStatus().type)
-//     console.log(status)
-//   }
-// }
-
 function* watchShowMessage() {
   while (true) {
     const { payload } = yield take(application.showMessage().type)
@@ -78,8 +36,6 @@ function* watchShowMessage() {
 
 export default function* sagaService() {
   yield all([
-    // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
-    // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
     fork(restoreSaga),
     fork(watchShowMessage),
 

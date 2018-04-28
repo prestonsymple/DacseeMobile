@@ -291,12 +291,6 @@ function* passengerStatusObserver() {
             put(booking.passengerSetStatus(STATUS.PASSGENER_BOOKING_INIT))
           ])
         }
-
-        console.log({
-          driver_id,
-          bookingStatus,
-          passengerStatus
-        })
       } catch (e) {
         console.log(e)
       }

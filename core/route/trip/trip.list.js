@@ -1,27 +1,16 @@
-import React, { Component, PureComponent } from 'react'
+import React, { Component } from 'react'
 import {
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView, RefreshControl, Switch
+  Text, View,Image, TouchableOpacity,  ListView, ScrollView, RefreshControl
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
-import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import moment from 'moment'
 import { Screen, Icons, Redux, Define, System, Session ,TextFont} from '../../utils'
 import Resources from '../../resources'
 import { application, booking } from '../../redux/actions'
 
-
 const { height, width } = Screen.window
-
-const styles = StyleSheet.create({
-  pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
-  itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
-  itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
-  itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
-})
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
@@ -38,19 +27,15 @@ export default connect(state => ({
 
   constructor(props) {
     super(props)
-    const todayUtc = new Date().toISOString()
 
     this.state = {
-      // dateDic: null,
       loading: false,
       detail: dataContrast.cloneWithRows([]),
-      // selectedDate: todayUtc,
-      // switchValue: false
     }
   }
 
   async componentWillMount() {
-    // await InteractionManager.runAfterInteractions()
+    await InteractionManager.runAfterInteractions()
     this._fetchData()
   }
 
@@ -58,16 +43,9 @@ export default connect(state => ({
     this.setState({
       loading: true
     })
-    // const resp = await Session.booking.get(`v1/bookings?date_from=2018-03-10T22:59:40.632Z&date_to=${new Date().toISOString()}`)
-
     try {
-      // console.log(this.state.selectedDate)
-      // const dateFrom = this._getFormatterDate(this.state.selectedDate).dateFrom
-      // const dateTo = this._getFormatterDate(this.state.selectedDate).dateTo
       const data = await Session.Booking.Get('v1/bookings?role=passenger')
-
       this.setState({
-        // dateDic: dateDic,
         loading: false,
         detail: dataContrast.cloneWithRows(data)
       })
@@ -129,7 +107,6 @@ export default connect(state => ({
                   </TouchableOpacity>
                 )
               }}
-              // renderSeparator={() => <View style={{ height: 2, backgroundColor: '#f2f2f2' }} />}
               style={{ flex: 1 }}
             />)
         }

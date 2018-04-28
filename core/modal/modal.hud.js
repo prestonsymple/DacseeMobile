@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
-import { Animated, StyleSheet, Modal, Platform, View, ActivityIndicator } from 'react-native'
+import { Modal, View, ActivityIndicator } from 'react-native'
 
 import { connect } from 'react-redux'
-import { application } from '../redux/actions'
 
 export default connect((state)=>({
   hudModalVisible: state.application.hud_modal_visible
 }))(class Hud extends Component {
-  constructor(props) {
-    super(props);
-    // 初始状态
-    // this.state = {};
-  }
-
-  // async componentWillMount() {}
 
   render() {
     const { hudModalVisible } = this.props

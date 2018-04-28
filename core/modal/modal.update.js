@@ -1,26 +1,13 @@
-/* eslint-disable */
-import React, { Component, PureComponent } from 'react'
-import { View, TouchableHighlight, Modal, Text, Animated, Alert, AppState } from 'react-native'
+
+import React, { Component } from 'react'
+import { View, Modal, Text } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import * as Progress from 'react-native-progress'
 import CodePush from 'react-native-code-push'
-import { connect } from 'react-redux'
 
 /*****************************************************************************************************/
 import { System, Icons, Screen,TextFont } from '../utils'
-import { application } from '../redux/actions'
 /*****************************************************************************************************/
-
-/* eslint-enable */
-
-/***
-****
-
-appVersion, deploymentKey, description, download,
-downloadUrl, failedInstall, isMandatory, isPending,
-label, packageHash, packageSize
-
-***/
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
@@ -35,26 +22,6 @@ class CodePushComponent extends Component {
     }
     this.running = false
   }
-
-  // codePushStatusDidChange(status) {
-  //   switch(status) {
-  //   case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
-  //     console.log('Checking for updates.')
-  //     break
-  //   case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
-  //     console.log('Downloading package.')
-  //     break
-  //   case CodePush.SyncStatus.INSTALLING_UPDATE:
-  //     console.log('Installing update.')
-  //     break
-  //   case CodePush.SyncStatus.UP_TO_DATE:
-  //     console.log('Up-to-date.')
-  //     break
-  //   case CodePush.SyncStatus.UPDATE_INSTALLED:
-  //     console.log('Update installed.')
-  //     break
-  //   }
-  // }
 
   async componentDidMount() {
     const remoteBundle = await CodePush.checkForUpdate()
@@ -129,10 +96,5 @@ class CodePushComponent extends Component {
   }
 
 }
-
-// const CODE_PUSH_OPTIONS = {
-//   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
-//   installMode: CodePush.InstallMode.IMMEDIATE
-// }
 
 export default CodePushComponent

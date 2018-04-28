@@ -62,9 +62,6 @@ class RowItem extends Component {
   render() {
     const { onPress = () => {} } = this.props
     const { _id, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName } = this.props.data
-    // console.log(rights)
-    // const role = rights.reduce((prev, next) => prev + `, ${next}`)
-
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={.7} style={{ height: 68, backgroundColor: 'white', justifyContent: 'center' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 15 }}>

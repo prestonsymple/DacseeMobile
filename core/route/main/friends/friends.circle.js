@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import {
-  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform, StatusBar,StyleSheet,TouchableWithoutFeedback
+  Text, View, TouchableOpacity, DeviceEventEmitter, ListView, TextInput, Image, RefreshControl, Platform,StyleSheet,TouchableWithoutFeedback
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { connect } from 'react-redux'

@@ -1,12 +1,10 @@
-import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, StyleSheet, StatusBar, Image,
-  TouchableOpacity, TouchableHighlight, DeviceEventEmitter, TextInput,
-  ScrollView, Platform, FlatList, ListView } from 'react-native'
+import React, { Component } from 'react'
+import {
+  Text, View, StatusBar, TouchableOpacity, TextInput, Platform, ListView
+} from 'react-native'
 import InteractionManager from 'InteractionManager'
-import { NavigationActions, SafeAreaView } from 'react-navigation'
 
-import { Screen, Icons, Redux, Define,TextFont } from '../../utils'
-import resources from '../../resources'
+import { Screen, Icons, Redux, Define, TextFont } from '../../utils'
 import { application as app, account } from '../../redux/actions'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
@@ -16,7 +14,7 @@ const { width, height } = Screen.window
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default connect(state => ({
-  i18n: state.intl.messages ||{}
+  i18n: state.intl.messages || {}
 }))(class PickerCountryComponent extends Component {
 
   static navigationOptions = { header: null }
@@ -29,7 +27,7 @@ export default connect(state => ({
   }
 
   async componentDidMount() {
-    const {i18n}=this.props
+    const { i18n } = this.props
     this.setState({
       source: dataContrast.cloneWithRows([{
         key: '2',
@@ -54,12 +52,12 @@ export default connect(state => ({
       }])
     })
   }
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
 
   render() {
     const {
-      onPress = () => {}
+      onPress = () => { }
     } = this.props.navigation.state.params
 
     return Platform.select({
@@ -72,7 +70,7 @@ export default connect(state => ({
                 style={{ width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
                 onPress={() => this.props.navigation.goBack()}
               >
-                { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
+                {Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f')}
               </TouchableOpacity>
               <FormattedMessage id={'choose_country'}>
                 {
@@ -101,8 +99,8 @@ export default connect(state => ({
                   this.props.navigation.goBack()
                 }} style={{ flex: 1, height: 52, justifyContent: 'center', backgroundColor: 'white' }}>
                   <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>
-                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{ row.name }</Text>
-                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({ row.code })</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{row.name}</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({row.code})</Text>
                   </View>
                 </TouchableOpacity>
               )}
@@ -120,7 +118,7 @@ export default connect(state => ({
                 style={{ width: 54, paddingLeft: 8, justifyContent: 'center', alignItems: 'flex-start' }}
                 onPress={() => this.props.navigation.goBack()}
               >
-                { Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f') }
+                {Icons.Generator.Material('keyboard-arrow-left', 30, '#2f2f2f')}
               </TouchableOpacity>
               <FormattedMessage id={'choose_country'}>
                 {
@@ -147,8 +145,8 @@ export default connect(state => ({
                   this.props.navigation.goBack()
                 }} style={{ flex: 1, height: 52, justifyContent: 'center', backgroundColor: 'white' }}>
                   <View style={{ flexDirection: 'row', paddingHorizontal: 15, alignItems: 'center' }}>
-                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{ row.name }</Text>
-                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({ row.code })</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}>{row.name}</Text>
+                    <Text style={{ color: '#333', fontSize: 16, fontWeight: '600' }}> ({row.code})</Text>
                   </View>
                 </TouchableOpacity>
               )}
@@ -158,7 +156,4 @@ export default connect(state => ({
       )
     })
   }
-})
-
-const styles = StyleSheet.create({
 })

@@ -109,12 +109,7 @@ export default connect(state => ({
         try {
           const {map_mode, from = {coords: {}}, location, favorite} = this.props
           const {lat = location.lat, lng = location.lng} = from.coords
-
-          console.log(lat, lng)
-
           if (map_mode === 'GOOGLEMAP') {
-            // const _query = keywords.replace(' ', '+')
-            // const {data} = await Axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat},${lng}&radius=${500}&query=${_query}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
             const { data } = await Axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${1000 * 100}&keyword=${keywords}&key=AIzaSyA5BPIUMN2CkQq9dpgzBr6XYOAtSdHsYb0`)
             const { results } = data
 
@@ -127,8 +122,6 @@ export default connect(state => ({
                   lng: parseFloat(pipe.geometry.location.lng), lat: parseFloat(pipe.geometry.location.lat)
                 }
               }))
-
-            console.log(resultMap)
             this.setState({dataSource: dataContrast.cloneWithRows(resultMap), data: resultMap})
           } else {
             const city = await Session.Lookup_CN.Get(`v1/map/search/city/${lat},${lng}`)

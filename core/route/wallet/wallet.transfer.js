@@ -1,27 +1,17 @@
 import React, { Component, PureComponent } from 'react'
 import {
-  Text, View, Animated, StyleSheet, StatusBar, Image, TouchableOpacity, TouchableHighlight,
-  DeviceEventEmitter, TextInput, Easing, ListView, ScrollView
+  Text, View,  ScrollView
 } from 'react-native'
 import InteractionManager from 'InteractionManager'
-import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Input from '../../components/input'
 import { Screen, Icons, Redux, Define, System, Session ,TextFont} from '../../utils'
 import { Button } from '../../components'
-import Resources from '../../resources'
 import { application, wallet } from '../../redux/actions'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const {height, width} = Screen.window
 
-const styles = StyleSheet.create({
-  pageWrap: { width: width, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white' },
-  itemWrap: { alignItems: 'center', justifyContent: 'center' },
-  itemTitle: { color: '#666', fontSize: TextFont.TextSize(14), fontWeight: '100', marginBottom: 8 },
-  itemImageContent: { marginHorizontal: 6, width: 68, height: 68, borderRadius: 33, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderWidth: 3 },
-  itemImage: { opacity: 0.7, width: 66, height: 66, borderRadius: 33, borderWidth: 1.5, borderColor: 'white', resizeMode: 'cover' }
-})
 
 export default connect(state => ({
   ...state.wallet,
@@ -83,15 +73,11 @@ export default connect(state => ({
         searching: true
       })
       const resp = await Session.User.Get('v1/search?' + url)
-      // console.log('[账户]' + resp)
       const transferInfo = {
-        // wallet: this.props.navigation.state.params.walletInfo,
         userList: resp,
         amount:  amount,
         remark: remark
       }
-      // console.log(transferInfo)
-      // this.props.navigation.navigate('WalletTransferSelection', { transferInfo: transferInfo })
 
       if (resp.length == 0) {
         this.props.dispatch(application.showMessage(this.props.i18n.error_unable_find_account))

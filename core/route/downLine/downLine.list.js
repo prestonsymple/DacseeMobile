@@ -58,7 +58,6 @@ export default connect(state => ({
         loading: false,
         data: data
       })
-      // console.log(data)
     } catch (e) {
       this.props.dispatch(application.showMessage(i18n.unable_connect_server_pls_retry_later))
       this.setState({

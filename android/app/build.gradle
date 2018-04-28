@@ -165,7 +165,6 @@ dependencies {
     compile project(':react-native-code-push')
     compile project(':rn-splash-screen')
     compile project(':react-native-vector-icons')
-    compile project(':react-native-picker')
     compile project(':react-native-image-picker')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')

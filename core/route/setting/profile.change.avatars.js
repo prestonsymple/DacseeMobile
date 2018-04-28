@@ -14,27 +14,11 @@ import { Icons, Screen, Session, Define } from '../../utils'
 
 const { width } = Screen.window
 
-/**
- *  多语言原因，此处先注释
-const PICKER_OPTIONS = {
-  title: '相册',
-  storageOptions: { skipBackup: true, path: 'images' },
-  quality: 0.8,
-  mediaType: 'photo',
-  cancelButtonTitle: '取消',
-  takePhotoButtonTitle: '拍照',
-  chooseFromLibraryButtonTitle: '从手机相册选择',
-  allowsEditing: true,
-  noData: false,
-  maxWidth: 1000,
-  maxHeight: 1000,
-  permissionDenied: {
-    title: '无法访问', text: '请前往 设置 - Dacsee 中开启相机及相册权限',
-    reTryTitle: '重试', okTitle: '好的'
-  }
-}
-**/
-export default connect(state => ({ account: state.account,i18n: state.intl.messages }))(class ProfileChangeAvatarsScreen extends PureComponent {
+
+export default connect(state => ({
+  account: state.account,
+  i18n: state.intl.messages
+}))(class ProfileChangeAvatarsScreen extends PureComponent {
 
 
   static navigationOptions = ({ navigation }) => {
@@ -79,12 +63,12 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
     this.subscription && this.subscription.remove()
   }
 
-  _getOptions=()=>{
-    const {state} = this.props.navigation
-    const {i18n} = state.params
+  _getOptions = () => {
+    const { state } = this.props.navigation
+    const { i18n } = state.params
     return {
       title: '相册',
-      storageOptions: {skipBackup: true, path: 'images'},
+      storageOptions: { skipBackup: true, path: 'images' },
       quality: 0.8,
       mediaType: 'photo',
       cancelButtonTitle: i18n.cancel,
@@ -102,21 +86,23 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
   }
 
   _pressActionSheet(index) {
-    const {state} = this.props.navigation
-    const {i18n} = state.params
+    const { state } = this.props.navigation
+    const { i18n } = state.params
     if (index === 0) {
       ImagePicker.launchCamera(this._getOptions(), (response) => {
-        if (response.didCancel) { 
-          return 
+        if (response.didCancel) {
+          return
         } else if (response.error) {
           let label = response.error.startsWith('Photo') ? i18n.photo : i18n.camera
           return Alert.alert(`${i18n.pls_auth_fore} ${label} ${i18n.pls_auth_back} ${label}。`)
         } else {
-          this.setState({ media: {
-            id: `${(new Date).getTime()}`,
-            uri: response.uri,
-            feature: 'image'
-          }})
+          this.setState({
+            media: {
+              id: `${(new Date).getTime()}`,
+              uri: response.uri,
+              feature: 'image'
+            }
+          })
           this.uploadImage(response.data)
         }
       })
@@ -124,17 +110,19 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
 
     if (index === 1) {
       ImagePicker.launchImageLibrary(this._getOptions(), (response) => {
-        if (response.didCancel) { 
-          return 
+        if (response.didCancel) {
+          return
         } else if (response.error) {
           let label = response.error.startsWith('Photo') ? i18n.photo : i18n.camera
           return Alert.alert(`${i18n.pls_auth_fore} ${label} ${i18n.pls_auth_back} ${label}。`)
         } else {
-          this.setState({ media: { 
-            id: `${(new Date).getTime()}`,
-            uri: response.uri,
-            feature: 'image'
-          } })
+          this.setState({
+            media: {
+              id: `${(new Date).getTime()}`,
+              uri: response.uri,
+              feature: 'image'
+            }
+          })
           this.uploadImage(response.data)
         }
       })
@@ -159,12 +147,10 @@ export default connect(state => ({ account: state.account,i18n: state.intl.messa
   }
 
   render() {
-    // const { _id, checked, friend_id, friend_info } = this.props.navigation.state.params
-    // const { fullName, email, phoneCountryCode, phoneNo, userId, avatars } = friend_info
-    const { avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = this.props.account.user
+    const { avatars = [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }] } = this.props.account.user
     const { media, uploading = false } = this.state
-    const {state} = this.props.navigation
-    return ( 
+    const { state } = this.props.navigation
+    return (
       <View style={{ flex: 1, backgroundColor: '#000' }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'#151416'} barStyle={'light-content'} />
         <View style={{ flex: 1, top: Define.system.ios.x ? -44 : -22, justifyContent: 'center', alignItems: 'center' }}>

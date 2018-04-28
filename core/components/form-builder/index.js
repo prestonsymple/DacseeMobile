@@ -111,9 +111,6 @@ class FormBuilder extends FormComponentBase<FormComponentInterface> {
 
       render() {
         const { props } = this
-
-        console.log(props)
-
         return (
           <FormContainer>
             {
