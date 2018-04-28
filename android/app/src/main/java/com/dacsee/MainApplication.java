@@ -11,6 +11,7 @@ import com.dacsee.nativeBridge.PushService.ReactNativePushNotificationPackage;
 import com.dacsee.nativeBridge.UMeng.DplusReactPackage;
 import com.dacsee.nativeBridge.Utils.UtilsPackages;
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
 import cn.qiuxiang.react.amap3d.AMap3DPackage;
 import com.horcrux.svg.SvgPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
@@ -59,6 +60,7 @@ public class MainApplication extends Application implements ReactApplication {
 
       List<ReactPackage> packages = new ArrayList<>();
       packages.add(new MainReactPackage());
+      packages.add(new RNFirebasePackage());
       packages.add(new SvgPackage());
       packages.add(new ReactNativeAudioPackage());
       packages.add(new RNSoundPackage());

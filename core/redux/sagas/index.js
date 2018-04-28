@@ -1,18 +1,44 @@
 import { Platform } from 'react-native'
 import { fork, all, take, call, put, takeEvery, takeLatest, apply } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { NavigationActions, NavigationState } from 'react-navigation'
-import CodePush from 'react-native-code-push'
-import Toast from 'react-native-root-toast'
 
-import { application, account } from '../actions'
-import { System, Session } from '../../utils'
-import loginSaga from './saga.login'
-import passengerSaga from './saga.passenger'
-import driverSaga from './saga.driver'
-import circleSaga from './saga.circle'
-import networkSaga from './saga.network'
-import restoreSaga from './saga.restore'
+import Other from './other'
+import Country_CN from './cn'
+
+const middlewareHandle = (region) => {
+  region.filter()
+}
+
+const GetGPS = () => {
+
+}
+
+// 确认国家信息
+export default function* MainSaga() {
+
+  // 获取GPS位置
+  yield call(GetGPS)
+
+  // 触发器, 每当GPS服务权限发生变更时，触发功能开关
+
+  // 根据GPS位置获取特定逻辑包
+
+  // 过滤器, 每当位置发生大幅度改变时，重新进行区域判定 >= 50km
+
+  // 如果国家信息发生变更，重置Reducer数据，并刷新Saga逻辑层
+
+  // 动态注入视图依赖包
+
+  const sagaPipe = [
+    Country_CN,
+    Other
+  ]
+
+  yield fork(middlewareHandle, sagaPipe)
+
+}
+
+
 
 
 /******************************************************************************/
@@ -76,19 +102,19 @@ function* watchShowMessage() {
   }
 }
 
-export default function* sagaService() {
-  yield all([
-    // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
-    // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
-    fork(restoreSaga),
-    fork(watchShowMessage),
-
-    fork(passengerSaga),
-    fork(driverSaga),
-    
-    fork(loginSaga),
-    fork(circleSaga),
-
-    fork(networkSaga)
-  ])
-}
+// export default function* sagaService() {
+//   yield all([
+//     // takeLatest(application.changeApplicationStatus().type, watchClientVersion),
+//     // fork(Platform.select({ ios: watchiOSDrawerEvent, android: watchAndroidDrawerEvent })),
+//     fork(restoreSaga),
+//     fork(watchShowMessage),
+//
+//     fork(passengerSaga),
+//     fork(driverSaga),
+//
+//     fork(loginSaga),
+//     fork(circleSaga),
+//
+//     fork(networkSaga)
+//   ])
+// }

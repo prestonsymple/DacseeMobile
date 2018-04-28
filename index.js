@@ -1,4 +1,5 @@
 import { AppRegistry } from 'react-native'
-import AppCore from './core'
+// import AppCore from './core'
+import ApplicationCore from './application'
 
-AppRegistry.registerComponent('dacsee', () => AppCore)
+AppRegistry.registerComponent('dacsee', () => ApplicationCore)

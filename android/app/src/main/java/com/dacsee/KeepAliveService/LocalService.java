@@ -161,20 +161,25 @@ public class LocalService extends Service {
       threadHandle.start();
     }
 
-    notification = new Notification.Builder(this.getApplicationContext())
-            .setContent(remoteView)
-            .setPriority(Notification.PRIORITY_MAX)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setOngoing(true)
-            .setWhen(System.currentTimeMillis());
+    try {
+      notification = new Notification.Builder(this.getApplicationContext())
+              .setContent(remoteView)
+              .setPriority(Notification.PRIORITY_MAX)
+              .setSmallIcon(R.mipmap.ic_launcher)
+              .setOngoing(true)
+              .setWhen(System.currentTimeMillis());
 
-    Intent _intent = new Intent(this, MainActivity.class);
-    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    notification.setContentIntent(pendingIntent);
+      Intent _intent = new Intent(this, MainActivity.class);
+      PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      notification.setContentIntent(pendingIntent);
 
 
 
-    serviceManager.notify(SERVICE_ID, notification.build());
+      serviceManager.notify(SERVICE_ID, notification.build());
+    } catch (Exception e) {
+      /*  */
+    }
+
 
     return START_STICKY;
   }

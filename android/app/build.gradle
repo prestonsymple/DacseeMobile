@@ -1,5 +1,14 @@
 apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
+apply plugin: 'bugly'
+
+bugly {
+    appId = "71b843ec39"
+    appKey = "e08ca2fc-25e0-4f9b-bb10-09b6bfcb3453"
+    debug = true
+    appVersion = "1.0.2"
+    appPackage = "com.dacsee"
+}
 
 import com.android.build.OutputFile
 
@@ -104,8 +113,8 @@ android {
         applicationId "com.dacsee"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18042501
-        versionName "1.0.2"
+        versionCode 18042801
+        versionName "1.0.3"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -158,6 +167,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-firebase')
     compile project(':react-native-amap3d')
     compile project(':react-native-svg')
     compile project(':react-native-audio')
@@ -165,7 +175,6 @@ dependencies {
     compile project(':react-native-code-push')
     compile project(':rn-splash-screen')
     compile project(':react-native-vector-icons')
-    compile project(':react-native-picker')
     compile project(':react-native-image-picker')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')

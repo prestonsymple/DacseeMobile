@@ -1,0 +1,553 @@
+import React, { PureComponent, Component } from 'react'
+import {
+  Text, View, Image, TouchableOpacity, FlatList, Keyboard, TextInput, StyleSheet, Platform,LayoutAnimation,KeyboardAvoidingView,
+  TouchableWithoutFeedback,TouchableHighlight,Animated
+} from 'react-native'
+
+import {Screen, Icons, Session, TextFont, Define, System} from '../../utils'
+import {connect} from 'react-redux'
+import {application} from '../../redux/actions'
+import Voice from './voice.modal'
+import {SvgIcon,iconPath} from './chatIcon'
+const { height, width } = Screen.window
+import Sound from 'react-native-sound'
+const toName = 'jacky'
+const to_id = '5a79423ab2ccf66e117f1b7f' //此处从导航中获取
+const avatar = 'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg'  //此处从导航中获取
+class ChatWindow extends PureComponent {
+  static navigationOptions = {
+    drawerLockMode: 'locked-closed',
+    title: toName
+  }
+
+  constructor(props){
+    super(props)
+    this.time=null
+    this.state = {
+      messageContent:'',
+      listVisibleHeight:0,
+      keyboardShow:false,
+      keyboardHeight:0,
+      visibleHeight:height,
+      showVoice:false,
+      xHeight:20,
+      saveChangeSize:0,
+      inputChangeSize:0,
+      voiceLength:0,
+      voiceEnd:false,
+      data:[
+        {
+          _id:1,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "你好www.baidu.com" }',
+          time:'1523248662'
+        },
+        {
+          _id:2,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg你1好" }',
+          time:'1523248662'
+        },
+        {
+          _id:3,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "你好你好你好你好你好www.baidu.com你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好" }',
+          time:'1523248662'
+        },
+        {
+          _id:4,
+          from_id:'5ac2de564647815dd78dbb07',
+          to_id:'5a79423ab2ccf66e117f1b7f',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "text", "content": "www.baidu.com" }',
+          time:'1523248652'
+        },
+
+        {
+          _id:5,
+          from_id:'5a79423ab2ccf66e117f1b7f',
+          to_id:'5ac2de564647815dd78dbb07',
+          avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+          content:'{"type": "voice", "content": "http://mp3.9ku.com/m4a/66946.m4a","len":"100" }',
+          time:'1523248662'
+        },
+        // {
+        //   _id:6,
+        //   from_id:'5a79423ab2ccf66e117f1b7f',
+        //   to_id:'5ac2de564647815dd78dbb07',
+        //   avatar:'https://storage.googleapis.com/dacsee-service-user/5a79423ab2ccf66e117f1b7f/1522737857978_avatar.jpeg',
+        //   content:'{"type": "image", "content": "https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg" }',
+        //   time:'1523248662'
+        // }
+      ]
+    }
+  }
+
+
+  componentDidMount() {
+    System.Platform.iOS && this._willShow()
+    System.Platform.iOS && this._willHide()
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+      this.time && clearTimeout(this.time)
+      this.time = setTimeout(()=>this.chatList.scrollToEnd({animated:true}),200)
+      // this.chatList.scrollToEnd({animated:true})
+    })
+    this.chatList.scrollToEnd({animated:true})
+  }
+
+  componentWillUnmount() {
+    System.Platform.iOS && this._willRemove()
+    this.keyboardDidShowListener.remove()
+
+  }
+
+  _willShow() {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', (e) => {
+      const visibleHeight = height - e.endCoordinates.height
+      LayoutAnimation.configureNext(LayoutAnimation.create(
+        e.duration,
+        LayoutAnimation.Types[e.easing],
+        LayoutAnimation.Properties.height
+      ))
+
+      this.setState({
+        visibleHeight,xHeight:0,keyboardHeight:e.endCoordinates.height,keyboardShow:true
+      })
+      this.chatList.scrollToEnd({animated:true})
+      // this.setState({keyboardHeight:e.endCoordinates.height,keyboardShow:true})
+    })
+  }
+
+  _willHide() {
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', (e) => {
+      LayoutAnimation.configureNext(LayoutAnimation.create(
+        e.duration,
+        LayoutAnimation.Types[e.easing],
+        LayoutAnimation.Properties.height
+      ))
+      this.setState({keyboardHeight:0,keyboardShow:false,visibleHeight:height,xHeight:20})
+    })
+  }
+
+
+  _willRemove(){
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
+  }
+
+  _sendMessage(type,messageContent,voiceLen='') {
+    if(type=='text' && messageContent.trim().length == 0 ){
+      return
+    }
+    const {data} = this.state
+    const {user} = this.props
+    const len = data.length
+    let newId = len>0?data[len-1]._id+1:1
+    let content={}
+    content.type = type
+    content.content = messageContent
+    if(voiceLen>=1) content.len=voiceLen
+    let msgSend={}
+    msgSend.from_id=user._id
+    msgSend._id=newId
+    msgSend.to_id=to_id
+    msgSend.avatar=avatar
+    msgSend.content = JSON.stringify(content)
+    data.push(msgSend)
+    this.setState({data,messageContent:''})
+    this.time && clearTimeout(this.time)
+    this.time = setTimeout(()=>this.chatList.scrollToEnd({animated:true}),200)
+  }
+
+  _changeMethod(){
+    this.setState({showVoice:!this.state.showVoice})
+    this.setState({saveChangeSize:this.state.inputChangeSize})
+    this.time && clearTimeout(this.time)
+    this.time = setTimeout(()=>this.InputBar.input && this.InputBar.input.focus(),300)
+  }
+
+  _changeText(e) {
+    this.setState({messageContent:e})
+  }
+
+  _jump(url) {
+    const {navigation,i18n} = this.props
+    let safeUrl = this._safeUrl(url)
+    navigation.navigate('SettingWetView', {
+      title: '',
+      source: { uri: safeUrl }
+    })
+  }
+
+  _safeUrl(url){
+    if (url.indexOf('https') == 0) return url
+    if (url.indexOf('http') == 0) return url.replace('http://', 'https://')
+    if (url.indexOf('http') == -1 ) return 'https://'+url
+  }
+
+  _onContentSizeChange(e) {
+    const changeHeight = e.nativeEvent.contentSize.height
+    if(changeHeight==34) return
+    this.setState({inputChangeSize: changeHeight<=70?changeHeight:70})
+    this.chatList.scrollToEnd({animated:true})
+  }
+
+  _onVoiceStart(e) {
+    this.chatItem._voiceStop()
+    this.setState({voiceEnd:true})
+    this.voice.show()
+  }
+
+  _onVoiceEnd() {
+    this.voice.close()
+    this.setState({voiceEnd:false})
+  }
+
+  _watch(){
+
+  }
+
+  //TODO
+  _PressAvatar(){
+    // this.props.navigation.navigate('FriendsDetail', { i18n,...data })
+  }
+
+  // _playVoice(_path) {
+  //   let sound = new Sound(_path, '', (error) => {
+  //     if (error) {
+  //       console.log('failed to load the sound', error)
+  //       return
+  //     } else {
+  //       console.log('duration in seconds: ' + sound.getDuration())
+  //       sound.play((success) => {
+  //         if (success) {
+  //           console.log('successfully finished playing')
+  //         } else {
+  //           console.log('playback failed due to audio decoding errors')
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
+
+  render(){
+    const {data,messageContent,xHeight,visibleHeight,voiceEnd,inputChangeSize} = this.state
+    const {user} = this.props
+    return(
+      <View style={Platform.OS==='android'?{flex:1}:{height:visibleHeight-(Define.system.ios.x?88:64)}}>
+        <View style={{flex:1}}>
+          <FlatList
+            onLayout={()=>{}}           //勿删！
+            ref={e => this.chatList = e}
+            data={data}
+            keyExtractor={(item, index)=>item._id}
+            renderItem={({item,index}) =>(
+              <ChatItem
+                ref={e => this.chatItem = e}
+                content={item}
+                msgData={data}
+                index={index}
+                user={user}
+                speeching={voiceEnd}
+                jump={(url) => this._jump(url)}
+              />
+            )}
+          />
+        </View>
+        <InputBar
+          ref={e => this.InputBar = e}
+          onMethodChange={this._changeMethod.bind(this)}
+          showVoice={this.state.showVoice}
+          onSubmitEditing={(type,content) => this._sendMessage(type,content)}
+          messageContent={messageContent}
+          textChange={this._changeText.bind(this)}
+          onContentSizeChange={this._onContentSizeChange.bind(this)}
+          xHeight={xHeight}
+          voiceStart={this._onVoiceStart.bind(this)}
+          voiceEnd={this._onVoiceEnd.bind(this)}
+          isVoiceEnd={voiceEnd}
+          inputChangeSize={inputChangeSize}
+        />
+        <Voice
+          ref={(e)=> this.voice=e}
+          sendVoice={(type,content,voiceLen) => this._sendMessage(type,content,voiceLen)}
+        />
+      </View>
+    )
+  }
+}
+
+class InputBar extends Component {
+
+  render() {
+    const {
+      messageContent,
+      onSubmitEditing = () => {},
+      textChange = () => {}, onMethodChange = () => {}, onContentSizeChange= () => {}, del= () =>{}, voiceStart = () => {},voiceEnd = () => {},
+      showVoice,
+      xHeight,
+      isVoiceEnd,
+      inputChangeSize
+    } = this.props
+    return(
+      <View style={[styles.commentBar,{paddingBottom:Define.system.ios.x?xHeight:0}]} >
+        <View style={{flexDirection:'row',alignItems:'center',marginVertical:5}}>
+          <View style={{ width: (width - 36) * 0.1,height:34,justifyContent:'center',alignItems:'center'}} activeOpacity={.7}>
+            <TouchableOpacity onPress={onMethodChange} style={{width:34,height:34,justifyContent:'center',alignItems:'center',borderColor:'#ddd',borderWidth:0.8,borderRadius:17}}>
+              <SvgIcon size={20} fill={['#bbb']} path={showVoice?iconPath.keyboard:iconPath.leftVoice}/>
+            </TouchableOpacity>
+          </View>
+          <View style={{backgroundColor:'#fff',borderRadius:4,borderColor:'#ddd',borderWidth:0.6,marginHorizontal:8,justifyContent:'center'}}
+          >
+            {showVoice?
+              <TouchableHighlight onPressIn={voiceStart} onPressOut={voiceEnd} activeOpacity={.7} underlayColor={'#eee'}>
+                <View style={[{justifyContent:'center',alignItems:'center',width:0.7*(width-36),height:35,flexDirection:'row'}]}>
+                  { Icons.Generator.Ion('ios-mic-outline', 20, '#bbb') }
+                  <Text style={{fontSize:16,color:'#4d4d4d',marginLeft:10}}>
+                    {isVoiceEnd?'松开 结束':'按住 说话'}
+                  </Text>
+                </View>
+              </TouchableHighlight> : <TextInput
+                ref={e=>this.input=e}
+                multiline = {true}
+                blurOnSubmit={false}
+                value={ messageContent }
+                onContentSizeChange={onContentSizeChange}
+                underlineColorAndroid='transparent'
+                onChangeText={textChange}
+                style={[ styles.commentBar__input,{height:Math.max(35,inputChangeSize),  paddingHorizontal:8,paddingTop:System.Platform.iOS?8:0}]}
+              />
+            }
+          </View>
+          {/*注释右边按钮*/}
+          {/*<View style={{ width: (width - 36) * 0.2, alignItems:'center', justifyContent:'space-around', flexDirection:'row'}}>*/}
+          {/*<TouchableOpacity>*/}
+          {/*{ Icons.Generator.Awesome('smile-o', 32, '#bbb') }*/}
+          {/*</TouchableOpacity>*/}
+          {/*<TouchableOpacity>*/}
+          {/*{ Icons.Generator.Ion('ios-add-circle', 32, '#bbb') }*/}
+          {/*</TouchableOpacity>*/}
+          {/*</View>*/}
+          <View style={{ width: (width - 36) * 0.2, alignItems:'center', justifyContent:'center'}}>
+            <TouchableOpacity style={{paddingHorizontal:15,paddingVertical:8,backgroundColor:'#7ED321',borderRadius:4}} onPress={onSubmitEditing.bind(this,'text',messageContent)} activeOpacity={.7}>
+              <Text style={{color:'#fff'}}>发送</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
+
+const PATTERNS = {
+  url: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/i,
+  phone: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}/,
+}
+
+class ChatItem extends Component {
+  constructor(props){
+    super(props)
+    this.timer=null
+    this.sound=null
+    this.state={
+      playing:false,
+      progress:2,
+      leftIcons:[iconPath.leftVoiceOne,iconPath.leftVoiceTwo,iconPath.leftVoiceThree],
+      rightIcons:[iconPath.rightVoiceOne,iconPath.rightVoiceTwo,iconPath.rightVoiceThree],
+      loading:false
+    }
+  }
+
+  _renderContent=()=>{
+    const {content, user, jump=() =>{}} = this.props
+    const {loading} = this.state
+    const isSelf = user._id===content.from_id
+    const msgContent = JSON.parse(content.content)
+    let reg = PATTERNS.url
+    let resArr,splitArr,text,url = null
+    if(msgContent.type==='text'){
+      resArr = msgContent.content.match(reg)
+      url = resArr && resArr[0]
+      splitArr = resArr && msgContent.content.split(url)
+      text=!splitArr?<View style={[styles.txtArea]}>
+        <Text selectable={true} style={{lineHeight:20}}>{msgContent.content}</Text>
+      </View>:<View style={[styles.txtArea]}>
+        <Text selectable={true} style={{lineHeight:20}}>{splitArr[0]}<Text style={{color:'green'}} onPress={jump.bind(this,url)}>{url}</Text>{splitArr[1]}</Text>
+      </View>
+    }
+
+    switch (msgContent.type){
+      case 'text':
+        return (text)
+      case 'voice':
+        return (
+          <View style={{flexDirection:isSelf?'row-reverse':'row',}}>
+            <TouchableOpacity style={[styles.voiceArea,loading?{backgroundColor:'#dfdfdf'}:{backgroundColor:'#fff'}]} onPress={()=>{!loading && this._playVoice(msgContent.content,msgContent.len)}} activeOpacity={.7}>
+              <View style={[{width:40+(msgContent.len>1?msgContent.len*2:0),alignItems:isSelf?'flex-end':'flex-start'},isSelf?{alignItems:'flex-end',marginRight:5}:{alignItems:'flex-start',marginLeft:5}]}>
+                <SvgIcon size={20} fill={['#aaa']} path={isSelf?this.state.rightIcons[this.state.progress]:this.state.leftIcons[this.state.progress]}/>
+              </View>
+            </TouchableOpacity>
+            <View style={{justifyContent:'flex-end'}}>
+              <Text style={[{color:'#aaa',marginBottom:4,},isSelf?{marginRight:4}:{marginLeft:4}]}>
+                {`${msgContent.len}"`}
+              </Text>
+            </View>
+          </View>)
+    }
+  }
+
+
+  _play(){
+    this.timer && clearInterval(this.timer)
+    let index = 0
+    const {progress} = this.state
+    if(progress===2) index=2
+    this.timer=setInterval(()=>{
+      if(index===2 ){
+        index=-1
+      }
+      index+=1
+      this.setState({progress:index})
+    },400)
+  }
+
+  _voiceStop(){
+    this.sound && this.sound.stop()
+    this.timer && clearInterval(this.timer)
+    this.setState({playing:false,progress:2})
+  }
+
+  _playVoice(_path,len) {
+    const {playing} =this.state
+    if(this.sound && playing){
+      this._voiceStop()
+      return
+    }
+    this.setState({loading:true})
+    this.sound = new Sound(_path, '', (error) => {
+      if (error) {
+        console.log('failed to load the sound', error)
+        return
+      } else {
+        this._play(len)
+        this.setState({playing:true,loading:false})
+        this.sound.play((success) => {
+          if (success) {
+            this.timer && clearInterval(this.timer)
+            this.setState({playing:false,progress:2})
+            console.log('successfully finished playing')
+            this.sound=null
+          } else {
+            console.log('playback failed due to audio decoding errors')
+          }
+        })
+      }
+    })
+  }
+
+
+  render(){
+    const { user, content } = this.props
+    const { avatars = [] } = user
+    const isSelf = user._id===content.from_id
+    const {loading} = this.state
+    return(
+      <TouchableWithoutFeedback>
+        <View style={[styles.chat, isSelf?styles.right:styles.left]}  ref={(e)=>this.content=e} >
+          <TouchableOpacity onPress={() => {}} activeOpacity={.7}>
+            <Image
+              source={[{uri: isSelf ? avatars[avatars.length - 1].url : content.avatar, width: 30, height: 30}]}
+              style={styles.avatar} />
+          </TouchableOpacity>
+          <View style={[isSelf?styles.right:styles.left]}>
+            <View style={[styles.triangle, isSelf?styles.right_triangle:styles.left_triangle,loading?{borderColor:'#dfdfdf'}:{borderColor:'#fff'}]} />
+            {this._renderContent()}
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+}
+
+const styles= StyleSheet.create({
+  commentBar: {
+    width:width,
+    backgroundColor:'#F8F8F8',
+    borderTopWidth: 0.8,
+    borderColor: '#DDD',
+    alignItems:'center'
+  },
+  commentBar__input:{
+    // paddingHorizontal: 10,
+    height:26,
+    width:0.7*(width-36),
+    padding:0,
+  },
+  circle:{
+    width:34,
+    height:34,
+    borderRadius:17,
+    justifyContent:'center',
+    alignItems:'center',
+    borderColor:'#ddd',
+    borderWidth:0.8,
+  },
+  chat: {
+    marginHorizontal: 4,
+    marginVertical: 10
+  },
+  right: {
+    flexDirection: 'row-reverse',
+  },
+  left: {
+    flexDirection: 'row',
+  },
+  txtArea: {
+    borderRadius: 4,
+    paddingHorizontal: System.Platform.iOS?10:6,
+    paddingVertical:6,
+    backgroundColor: '#FFF',
+    justifyContent:'center',
+    maxWidth:width-100,
+    flexWrap:'wrap',
+    minHeight:20
+  },
+  voiceArea: {
+    borderRadius: 4,
+    maxWidth: width - 160,
+    justifyContent:'center',
+    minHeight:30
+  },
+  avatar: {
+    marginHorizontal: 8,
+    borderRadius:19,
+    width: 38,
+    height: 38
+  },
+  triangle:{
+    width:0,
+    height:0,
+    borderWidth:8,
+    borderTopColor:'transparent',
+    borderBottomColor:'transparent',
+    marginTop:12
+  },
+  left_triangle:{
+    borderLeftWidth:0
+  },
+  right_triangle:{
+    borderRightWidth:0
+  }
+})
+
+
+export default connect(state => ({
+  user: state.account.user,
+  i18n: state.intl.messages || {}
+}))(ChatWindow)

@@ -8,7 +8,7 @@ target 'dacsee' do
 #    pod 'AMapLocation'
     
     pod 'Bugly'
-
+    
     pod 'UMCCommon'
     pod 'UMCSecurityPlugins'
     # U-Share SDK UI模块（分享面板，建议添加）
@@ -68,7 +68,6 @@ target 'dacsee' do
     
     pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
-    pod 'Picker', :path => '../node_modules/react-native-picker'
     pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
     pod 'CodePush', :path => '../node_modules/react-native-code-push'
     pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
@@ -79,6 +78,7 @@ target 'dacsee' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
   pod 'RNAudio', :path => '../node_modules/react-native-audio'
+  
   pod 'react-native-amap3d', path: '../node_modules/react-native-amap3d/lib/ios'
 
 end

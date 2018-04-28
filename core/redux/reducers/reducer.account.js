@@ -9,7 +9,7 @@ import { handleActions } from 'redux-actions'
 const initialState = {
   status: false,
   authToken: '',
-  user: {},
+  user: { },
   location: { lat: 0, lng: 0, latitude: 0, longitude: 0 },
   country: '',
   language: ''

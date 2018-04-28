@@ -41,7 +41,7 @@ const SHARE_MEDIA = {
   TWITTER: Platform.select({ ios: 17, android: 8 })
 }
 global.store = Store()
-global.unit = Unit
+global.$$ = Unit
 
 class Core extends PureComponent {
 

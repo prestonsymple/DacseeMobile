@@ -1,17 +1,17 @@
 {
   "name": "dacsee",
   "version": "0.0.1",
-  "description": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/dacsee/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "build:android": "cd android && ./gradlew assembleRelease && mv ./app/build/outputs/apk/app-release.apk ~/Packages/Android/dacsee/release.apk",
-    "air:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t 1.0.2 -e index.js",
+    "air:ios:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-iOS -t \"~1.0.0\" -e index.js",
     "air:ios:release": "appcenter codepush promote -a quzhi0323/Dacsee-iOS -s debug -d release",
-    "air:android:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-Android -t 1.0.2 -e index.js",
+    "air:android:debug": "appcenter codepush release-react -d debug -a quzhi0323/Dacsee-Android -t \"~1.0.0\" -e index.js",
     "air:android:release": "appcenter codepush promote -a quzhi0323/Dacsee-Android -s debug -d release",
     "air:update": "npm run air:ios:debug && npm run air:ios:release && npm run air:android:debug && npm run air:android:release",
+    "bug:clear": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
     "test": "jest"
   },
   "dependencies": {
@@ -22,8 +22,6 @@
     "marked": "^0.3.19",
     "moment": "^2.21.0",
     "react": "16.2.0",
-    "react-intl": "^2.4.0",
-    "react-intl-redux": "^0.7.0",
     "react-native": "0.52.3",
     "react-native-actionsheet": "^2.3.0",
     "react-native-amap3d": "^1.0.0-beta.1",
@@ -33,6 +31,7 @@
     "react-native-camera": "^1.0.3",
     "react-native-code-push": "^5.2.1",
     "react-native-device-info": "^0.21.4",
+    "react-native-firebase": "^4.0.6",
     "react-native-fs": "^2.9.7",
     "react-native-image-picker": "^0.26.7",
     "react-native-map-link": "^1.1.1",
@@ -54,7 +53,8 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "5.6.12",
     "redux-saga": "^0.16.0",
-    "rn-splash-screen": "^5.2.0"
+    "rn-splash-screen": "^5.2.0",
+    "socket.io-client": "^2.1.0"
   },
   "devDependencies": {
     "appcenter": "^1.1.0",
