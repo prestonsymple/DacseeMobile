@@ -4,8 +4,6 @@ import {
   TouchableOpacity, TextInput, Easing, Platform, Keyboard, StatusBar,
   ScrollView
 } from 'react-native'
-// import InteractionManager from 'InteractionManager'
-// import { NavigationActions, SafeAreaView } from 'react-navigation'
 import marked from 'marked'
 
 import { Screen, Icons, Define, Session, TextFont } from '../../utils'
@@ -192,7 +190,7 @@ export default connect(state => ({
       if (e.response && e.response.data.code == 'INVALID_USER') {
         this.props.navigation.navigate('SocialRegister', { userInfo: user, provider: 'facebook' })
       } else {
-        console.log('facebook登录失败', e)
+        this.props.dispatch(app.showMessage(this.props.i18n.unable_connect_server_pls_retry_later))
       }
     }
   }
@@ -207,7 +205,7 @@ export default connect(state => ({
     return (
       <View style={{ flex: 1 }}>
         <StatusBar animated={true} hidden={false} backgroundColor={'black'} barStyle={'light-content'} />
-        {/**/}
+        {/*背景*/}
         <Image resizeMode={'cover'} style={{ width, height }} source={resources.image.login_bg} />
         <Animated.View style={[
           { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
@@ -460,9 +458,6 @@ export default connect(state => ({
                     />
                     <CountDownButton sendCode={() => this.sendCode(this.state.value_extend, this.state.countryCode)}
                       stop={this.state.resetCount} style={{ marginLeft: 15, backgroundColor: '#ffa81d', borderRadius: 22, width: 120, height: 44, justifyContent: 'center' }} i18n={i18n} />
-
-
-
                   </View>
                 )
               }

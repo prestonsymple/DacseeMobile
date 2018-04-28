@@ -1,6 +1,3 @@
-/* eslint disable: 0 */
-
-// import intl from 'intl' // FIX ANDROID BUG
 
 export { default as en_us } from './strings/en-US'
 export { default as en_mas } from './strings/mas'

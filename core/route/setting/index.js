@@ -1,7 +1,6 @@
 // @flow
 import React, { PureComponent} from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
 
 import Settings from './settings'
 import SettingAboutScreen from './setting.about'
@@ -17,7 +16,6 @@ import {Icons, Session} from '../../utils'
 import {
   account, application, intl
 } from '../../redux/actions'
-import {DeviceEventEmitter} from 'react-native'
 
 // 主菜单
 const SettingMenuScreen = connect(state => ({
@@ -282,9 +280,6 @@ const SettingLanguageRegionScreen = connect(state => ({
             }
           })
         }
-        // , {
-        //   title: i18n.region, type: 'text', value: '中国大陆', editable: true, onPress: () => {}
-        // }
         ]
       ]} />
     )
@@ -296,7 +291,6 @@ const SettingLanguageChooseScreen = connect(state => ({
   i18n: state.intl.messages || {},
   language: state.account.language
 }))(class SettingLanguageChooseScreen extends PureComponent {
-  // static navigationOptions = { title: '语言选择' }
   static navigationOptions = ({ navigation }) => {
     const reducer = global.store.getState()
     return {

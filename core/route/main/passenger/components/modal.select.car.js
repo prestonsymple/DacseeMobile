@@ -9,9 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Modal,
-  TextInput,
-  ScrollView
+  Modal
 } from 'react-native'
 import { connect } from 'react-redux'
 

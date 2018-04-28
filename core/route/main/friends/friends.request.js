@@ -4,11 +4,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  DeviceEventEmitter,
   ScrollView,
-  TextInput,
   Image,
-  RefreshControl,
   ActivityIndicator,
   StyleSheet
 } from 'react-native'
@@ -52,16 +49,12 @@ export default connect(state => ({
     const { referrer, id } = this.props.navigation.state.params
     await InteractionManager.runAfterInteractions()
     const data = await Session.User.Get(`v1/search?country=CN&userId=${referrer}`)
-    // console.log('data', data)
-    // console.log('referrer',referrer)
-    // console.log('id', id)
     if (!data || data.length === 0) return this.props.dispatch(application.showMessage(i18n.invitation_failure))
     const { _id, avatars= [{ url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }], fullName, userId } = data[0]
     this.setState({ invite_id: _id, avatars: avatars[avatars.length - 1], fullName, userId })
   }
 
-  omponentWillUnmount() {
-  }
+  omponentWillUnmount() {  }
 
   render() {
     const { invite_id, avatars = { url: 'https://storage.googleapis.com/dacsee-service-user/_shared/default-profile.jpg' }, fullName, userId } = this.state
@@ -105,12 +98,6 @@ export default connect(state => ({
             }} activeOpacity={.7} style={styles.sendRequest}>
               <Text style={{ color: 'black', fontSize: TextFont.TextSize(18), fontWeight: 'bold' }}>{i18n.send_friend_request}</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity onPress={async () => {
-        const response = await Session.circle.put(`v1/requests/${invite_id}`, { 'action': 'reject' })
-        console.log(response)
-        }} activeOpacity={.7} style={{ backgroundColor: '#f8f8f8', height: 38, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ color: '#666', fontSize: 15, fontWeight: '400' }}>拒绝</Text>
-        </TouchableOpacity> */}
           </View>
         )}
       </View>

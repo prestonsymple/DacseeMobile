@@ -3,9 +3,6 @@ import React, { Component, PureComponent } from 'react'
 import type { StackNavigatorConfig } from 'react-navigation'
 import { BackHandler } from 'react-native'
 import InteractionManager from 'InteractionManager'
-// import { connect } from 'react-redux'
-
-// import {} from '../redux/actions'
 import {
   Screen, Icons, Define
 } from '../utils'
@@ -21,14 +18,7 @@ export default class BaseScreenComponent extends Component {
   }
 
   onBackButtonPressAndroid = () => {
-    console.log(this)
     return true
-    // if (this.isSelectionModeEnabled()) {
-    //   this.disableSelectionMode()
-    //   return true
-    // } else {
-    //   return false
-    // }
   };
 
   get define() {

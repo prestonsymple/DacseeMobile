@@ -7,9 +7,7 @@ import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
-  View,
-  Image,
-  TouchableOpacity,
+  View
 } from 'react-native'
 
 import QRCode from 'react-native-qrcode-svg'
@@ -27,7 +25,6 @@ export default connect(state => ({
 
   static navigationOptions = ({ navigation }) => {
     const {title, option} = navigation.state.params
-    const reducer = global.store.getState()
     return {
       drawerLockMode: 'locked-closed',
       title: title,
@@ -37,7 +34,6 @@ export default connect(state => ({
   constructor(props) {
     super(props)
     const { option } = props.navigation.state.params
-    console.log(option)
     this.state = {
       userId: option.userId,
       user:{

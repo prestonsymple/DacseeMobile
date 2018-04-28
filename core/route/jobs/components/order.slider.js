@@ -4,8 +4,6 @@ import {
   View,
   Dimensions,
   Animated,
-  PanResponder,
-  Easing,
   StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';

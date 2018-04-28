@@ -1,7 +1,6 @@
 import DriverAndPassengerScreen from './main'
 // import BookingOptionsScreen from './booking.options'
 import PassengerDriverDetailScreen from './passenger/passenger.driver.detail'
-import PassengerCompleteScreen from './passenger/passenger.complete'
 
 import FriendsCircleScreen from './friends/friends.circle'
 import FriendsCircleAddScreen from './friends/friends.circle.add'
@@ -16,8 +15,6 @@ export {
   DriverAndPassengerScreen,
   
   PassengerDriverDetailScreen,
-  PassengerCompleteScreen,
-
   FriendsCircleScreen,
   FriendsCircleAddScreen,
   FriendsDetailScreen,

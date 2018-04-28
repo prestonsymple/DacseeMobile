@@ -1,23 +1,17 @@
-/* eslint-disable */
-import React, { Component, PureComponent } from 'react'
-import { View, TouchableOpacity, Modal, Text, Animated, Alert, AppState, TextInput, ScrollView, ListView } from 'react-native'
+import React, { Component } from 'react'
+import { View, Modal, Animated } from 'react-native'
 import InteractionManager from 'InteractionManager'
-import CodePush from 'react-native-code-push'
 import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
 
 /*****************************************************************************************************/
 import Resources from '../resources'
-import { System, Icons, Screen } from '../utils'
-import { Button, Progress } from '../components'
 /*****************************************************************************************************/
-
 
 export default connect(({ application }) => ({ 
   progressModalVisible: application.progress_modal_visible
 }))(
   class ProgressModal extends Component {
-
     constructor(props) {
       super(props)
       this.animated = new Animated.Value(0)

@@ -1,4 +1,4 @@
-import DriverAndPassengerScreen from './main'
+
 // import BookingOptionsScreen from './booking.options'
 import CircleBar from './circle.bar'
 import NavigatorBarSwitcher from './navigator.bar.switcher'

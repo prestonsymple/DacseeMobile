@@ -1,14 +1,10 @@
 /* @flow */
 
-import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, Image, Alert, ScrollView } from 'react-native'
+import React, { Component } from 'react'
+import { Text, View, TouchableOpacity, Image, Alert, ScrollView } from 'react-native'
 import InteractionManager from 'InteractionManager'
-import lodash from 'lodash'
-import moment from 'moment'
 import CodePush from 'react-native-code-push'
-// import fs, { DocumentDirectoryPath } from 'react-native-fs'
 import { connect } from 'react-redux'
-// import marked from 'marked'
 
 /*****************************************************************************************************/
 import {

@@ -49,10 +49,6 @@ instance.interceptors.response.use((response) => {
 
   const _response = response || { data: null }
 
-  // if (url.toLowerCase().endsWith('v1/agent')) {
-  //   console.log(`[SESSION][${method.toUpperCase()}][${headers['Origin-Url']}][AGENT MODE]`, _response.data)
-  // } else {
-  //   console.log(`[SESSION][${method.toUpperCase()}][${url}]`, _response.data)
   // }
   return _response.data || {}
 }, (err) => {
@@ -61,9 +57,6 @@ instance.interceptors.response.use((response) => {
     const { data = {}, status = 0 } = err.response
     console.log(`[SESSION][${method.toUpperCase()}][${url}][${status}][${data.code}]`, err.response)
 
-    // if (status === 400 && data.code === 'INVALID_AUTHORIZATION_TOKEN') {
-    //   store.dispatch(account.asyncLogout())
-    // }
   } else {
     console.log(err) 
   }
@@ -138,8 +131,6 @@ export default {
   ),
 
   Lookup_CN: sessionMethodBuild(
-    // 'http://lookup-cn-dev.dacsee.cn'
-    // https://svc-prod-lookup-cn.dacsee.io
     'http://47.98.40.59/api/'
   ),
 

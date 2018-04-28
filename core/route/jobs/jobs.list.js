@@ -10,14 +10,10 @@ import moment from 'moment'
 
 import { Screen, Icons, Session, TextFont } from '../../utils'
 import Resources from '../../resources'
-import { application, driver } from '../../redux/actions'
-import { FormattedMessage } from 'react-intl'
 import OfflineListItem from './components/offline.listItem'
 const { height, width } = Screen.window
 
 const dataContrast = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-
-
 
 export default connect(state => ({
   ...state.driver,

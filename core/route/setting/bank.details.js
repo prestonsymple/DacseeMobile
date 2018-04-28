@@ -1,6 +1,6 @@
 
 import React, { PureComponent, Component} from 'react'
-import { View, TouchableOpacity, Image, Alert, Text, ActivityIndicator, DeviceEventEmitter, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Text,  StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import Settings from './settings'
 

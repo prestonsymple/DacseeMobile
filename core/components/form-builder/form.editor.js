@@ -108,9 +108,6 @@ class FormEditorScreen extends Component {
     const { state } = this.props.navigation
     const { params } = state
     const NodeComponent = Components[params.editorName]
-
-    console.log(NodeComponent)
-
     return NodeComponent ? (
       <ScrollView style={{ flex: 1, backgroundColor: '#f8f8f8' }} contentContainerStyle={{ backgroundColor: '#f8f8f8', paddingTop: 15 }}>
         <NodeComponent {...this.props} option={params.option} />

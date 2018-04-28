@@ -10,8 +10,6 @@ import {
 import {
   DriverAndPassengerScreen,
 
-  PassengerCompleteScreen,
-
   FriendsCircleScreen,
   FriendsCircleAddScreen,
   FriendsRequestScreen,
@@ -35,8 +33,6 @@ import {
 
 import {
   WalletBalanceScreen,
-  WalletWithdrawScreen,
-  WalletBalanceListScreen,
   WalletTransactionListScreen,
   WalletDetailScreen,
   WalletTransferScreen,
@@ -75,7 +71,6 @@ import {
   IncomeListScreen
 } from '../route/income'
 
-import UpgradeDriverScreen from '../route/upgrade.driver'
 import {ChatScreen} from '../route/chat'
 
 // 登录流程
@@ -90,8 +85,6 @@ const AuthScreen = {
 // 首页流程
 const HomeScreen = {
   Main: { screen: DriverAndPassengerScreen },
-
-  PassengerCompleteScreen: { screen: PassengerCompleteScreen },
 
   FriendsCircle: { screen: FriendsCircleScreen },
   FriendsCircleAdd: { screen: FriendsCircleAddScreen },
@@ -110,8 +103,6 @@ const HomeScreen = {
   TripListDetail: { screen: TripListDetailScreen },
 
   WalletBalance: { screen: WalletBalanceScreen },
-  WalletWithdraw: { screen: WalletWithdrawScreen },
-  WalletBalanceList: { screen: WalletBalanceListScreen },
   WalletTransaction: { screen: WalletTransactionListScreen },
   WalletDetail: { screen: WalletDetailScreen },
 
@@ -139,8 +130,6 @@ const HomeScreen = {
   DownLineDetail: { screen: DownLineDetailScreen },
 
   ProfileChangeAvatar: { screen: ProfileChangeAvatarScreen },
-
-  UpgradeDriver: { screen: UpgradeDriverScreen },
 
   FormEditor: { screen: FormEditorScreen },
 

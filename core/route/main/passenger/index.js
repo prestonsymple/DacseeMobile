@@ -1,13 +1,12 @@
 /* global navigator */
 
 import React, { Component, PureComponent } from 'react'
-import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking, StyleSheet, Image, Platform, TextInput, ScrollView } from 'react-native'
+import { Text, View, Animated, TouchableOpacity, ActivityIndicator, Linking, StyleSheet, Image, Platform, ScrollView } from 'react-native'
 import InteractionManager from 'InteractionManager'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Lottie from 'lottie-react-native'
 import axios from 'axios'
-import moment from 'moment'
 import Resources from '../../../resources'
 import ModalDriverRespond from './passenger.modal.wait.driver'
 
@@ -763,7 +762,6 @@ const BookingDetailButton = (props) => {
  * @desc DrvierCarDetail 车详情
  */
 const DrvierCarDetail = (props) => {
-  console.log(props.vehicle_info)
   const { registrationNo, color, manufacturer, model } = props.vehicle_info
   const { i18n } = props
   return (
