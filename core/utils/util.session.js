@@ -1,15 +1,6 @@
 /* global store */
 import axios from 'axios'
-import { account } from '../redux/actions'
-
-const FILTER_DOMAIN_MAPS = [
-  'http://47.98.40.59/'
-]
-
-const FILTER_MESSAGE_MAPS = [
-  'https://booking-dev.dacsee.io/api/v1/booking',
-  'https://location-dev.dacsee.io/api/v1?reqUser'
-]
+import Server from '../server.json'
 
 const SESSION_TIMEOUT = 10000
 
@@ -89,53 +80,29 @@ const sessionMethodBuild = (baseUrl) => {
 
 export default {
 
-  User: sessionMethodBuild(
-    'https://svc-prod-user.dacsee.io/api/'
-  ),
+  User: sessionMethodBuild(Server.User),
 
-  Campaign: sessionMethodBuild(
-    'https://svc-prod-campaign.dacsee.io/api/'
-  ),
+  Campaign: sessionMethodBuild(Server.Campaign),
 
-  Circle: sessionMethodBuild(
-    'https://svc-prod-circle.dacsee.io/api/'
-  ),
+  Circle: sessionMethodBuild(Server.Circle),
 
-  Booking: sessionMethodBuild(
-    'https://svc-prod-booking.dacsee.io/api/'
-  ),
+  Booking: sessionMethodBuild(Server.Booking),
 
-  Driver: sessionMethodBuild(
-    'https://svc-prod-dv.dacsee.io/api/'
-  ),
+  Driver: sessionMethodBuild(Server.Driver),
 
-  Location: sessionMethodBuild(
-    'https://svc-prod-location.dacsee.io/api/'
-  ),
+  Location: sessionMethodBuild(Server.Location),
 
-  Push: sessionMethodBuild(
-    'https://svc-prod-push.dacsee.io/api/'
-  ),
+  Push: sessionMethodBuild(Server.Push),
 
-  Scheduler: sessionMethodBuild(
-    'https://svc-prod-scheduler.dacsee.io/api/'
-  ),
+  Scheduler: sessionMethodBuild(Server.Scheduler),
 
-  Rating: sessionMethodBuild(
-    'https://svc-prod-rating.dacsee.io/api/'
-  ),
+  Rating: sessionMethodBuild(Server.Rating),
 
 
-  Lookup: sessionMethodBuild(
-    'https://svc-prod-lookup.dacsee.io/api/'
-  ),
+  Lookup: sessionMethodBuild(Server.Lookup),
 
-  Lookup_CN: sessionMethodBuild(
-    'http://47.98.40.59/api/'
-  ),
+  Lookup_CN: sessionMethodBuild(Server.Lookup_CN),
 
-  Wallet: sessionMethodBuild(
-    'https://svc-prod-wallet.dacsee.io/api/'
-  )
+  Wallet: sessionMethodBuild(Server.Wallet)
 }
 
