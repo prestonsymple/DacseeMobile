@@ -1,0 +1,25 @@
+{
+  "User": "https://svc-prod-user.dacsee.io/api/",
+
+  "Campaign": "https://svc-prod-campaign.dacsee.io/api/",
+
+  "Circle": "https://svc-prod-circle.dacsee.io/api/",
+
+  "Booking": "https://svc-prod-booking.dacsee.io/api/",
+
+  "Driver": "https://svc-prod-dv.dacsee.io/api/",
+
+  "Location": "https://svc-prod-location.dacsee.io/api/",
+
+  "Push": "https://svc-prod-push.dacsee.io/api/",
+
+  "Scheduler": "https://svc-prod-scheduler.dacsee.io/api/",
+
+  "Rating": "https://svc-prod-rating.dacsee.io/api/",
+
+  "Lookup": "https://svc-prod-lookup.dacsee.io/api/",
+
+  "Lookup_CN": "http://47.98.40.59/api/",
+
+  "Wallet": "https://svc-prod-wallet.dacsee.io/api/"
+}
